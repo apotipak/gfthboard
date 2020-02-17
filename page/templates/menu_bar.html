@@ -8,7 +8,14 @@
         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
+        {% if request.path|slice:":7" == '/leave/' %}
+        <h3>E-Leave</h3>
+        {% endif %}
+
+        {% if request.path|slice:":10" == '/contract/' %}
         <h3>Daily Guard Information</h3>
+        {% endif %}
+
       </li>          
     </ul>
 

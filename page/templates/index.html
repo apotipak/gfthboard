@@ -3,48 +3,71 @@
 
 {% block content %}
       <div class="container">
+
+
         <div class="row">
-
-          <div class="col-lg-4">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-title m-0"><i class="fas fa-business-time"></i>&nbsp;&nbsp;<b>E-Leave</b></h5>
+          <div class="col-12 col-sm-4 col-md-3">
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><a href="leave/leave-history"><i class="fas fa-business-time"></i></a></span>
+              <div class="info-box-content">
+                <span class="info-box-text"><b>E-Leave</b></span>
+                <span class="info-box-number"><small>&nbsp;</small></span>
+                <a href="leave/leave-history" type="button" class="btn btn-block btn-outline-primary btn-xs">ใช้งาน</a>               
               </div>
-              <div class="card-body">
-                <p class="card-text">ส่งคำขอลางานผ่านระบบออนไลน์</p>
-                <a href="leave/leave-history" class="btn btn-primary">เข้าใช้งาน</a>
-              </div>
+              <!-- /.info-box-content -->
             </div>
+            <!-- /.info-box -->
           </div>
-          <!-- /.col-md-4 -->
+          <!-- /.col -->
+          <div class="col-12 col-sm-4 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-primary elevation-1"><a href="contract/contract-list"><i class="fas fa-calendar-alt"></i></a></span>
 
-          <div class="col-lg-4">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-title m-0"><i class="fas fa-calendar-alt"></i>&nbsp;&nbsp;<b>Daily Guard Information</b></h5>
+              <div class="info-box-content">
+                <span class="info-box-text"><b>Daily Guard Information</b></span>
+                <span class="info-box-number"><small>&nbsp;</small></span>
+                <a href="contract/contract-list" type="button" class="btn btn-block btn-outline-primary btn-xs">ใช้งาน</a>
               </div>
-              <div class="card-body">
-                <p class="card-text">ดูข้อมูลสัญญาเบื้องต้น</p>
-                <a href="contract/contract-list" class="btn btn-primary">เข้าใช้งาน</a>
-              </div>
+              <!-- /.info-box-content -->
             </div>
+            <!-- /.info-box -->
           </div>
-          <!-- /.col-md-4 -->
+          <!-- /.col -->
 
-          <div class="col-lg-4">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-title m-0"><i class="fas fa-check"></i>&nbsp;&nbsp;<b>Company Information</b></h5>
+          <!-- fix for small devices only -->
+          <div class="clearfix hidden-md-up"></div>
+
+          <div class="col-12 col-sm-4 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-success elevation-1"><a href="#"><i class="fas fa-cog"></i></a></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text"><b>ระบบ 3</b></span>
+                <span class="info-box-number"><small>&nbsp;</small></span>
+                <a href="#" type="button" class="btn btn-block btn-outline-secondary btn-xs">ใช้งาน</a>
               </div>
-              <div class="card-body">
-                <p class="card-text">คำอธิบายระบบ</p>
-                <a href="#" class="btn btn-primary">เข้าใช้งาน</a>
-              </div>
+              <!-- /.info-box-content -->
             </div>
+            <!-- /.info-box -->
           </div>
-          <!-- /.col-md-4 -->
+          <!-- /.col -->
+          <div class="col-12 col-sm-4 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-warning elevation-1"><a href="#"><i class="fas fa-cog"></i></a></span>
 
+              <div class="info-box-content">
+                <span class="info-box-text"><b>ระบบ 4</b></span>
+                <span class="info-box-number"><small>&nbsp;</small></span>
+                <a href="#" type="button" class="btn btn-block btn-outline-secondary btn-xs">ใช้งาน</a>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
         </div>
+        <!-- /.row -->
+
         <!-- /.row -->
       </div><!-- /.container-fluid -->
 {% endblock %}
