@@ -1,0 +1,153 @@
+{% extends "page_daterange.html" %}
+
+{% block title %}ประวัติการลา{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">ประวัติการลา</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">หน้าแรก</a></li>
+              <li class="breadcrumb-item active">ระบบลางาน</li>
+              <li class="breadcrumb-item">ประวัติการลา</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-12">
+
+            {% if object_list %}
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <!--<th scope="col">วันที่สร้าง</th>-->
+                        <th scope="col">ประเภทการลา</th>
+                        <th scope="col">ลาวันที่</th>
+                        <th scope="col">ถึงวันที่</th>
+                        <th scope="col">จำนวน</th>                        
+                        <th scope="col">สถานะ</th>
+                        <td scope="col">&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for leave in object_list %}
+                    <tr>
+                        <!--<td>{{leave.created_date|date:'d F Y'}}</td>-->
+                        <td>{{leave.leave_type}}</td>
+                        <td>{{leave.start_date|date:"d F Y h:i A"}}</td>
+                        <td>{{leave.end_date|date:"d F Y H:i A"}}</td>
+                        <td>
+                        {% if leave.lve_act != 0 %}
+                            {{leave.lve_act}} วัน
+                            {% if leave.lve_act_hr != 0 %}
+                              | {{leave.lve_act_hr}} ชั่วโมง
+                            {% endif %}
+                        {% else %}
+                            {{leave.lve_act_hr}} ชั่วโมง
+                        {% endif %}
+                        </td>
+                        <td>
+                            {% if leave.status == 'a' %}
+                                <span class="badge badge-success">อนุมัติ</span>
+                            {% elif leave.status == 'p' %}
+                                <span class="badge badge-warning">รออนุมัติ</span>
+                            {% elif leave.status == 'r' %}
+                                <span class="badge badge-danger">ไม่อนุมัติ</span>
+                            {% elif leave.status == 'c' %}
+                                <span class="badge badge-primary">ยกเลิก</span>
+                            {% else %}
+                                ข้อมูลผิดพลาด
+                            {% endif %}
+                        </td>
+                        <td class="text-right py-0 align-middle">
+                          <div class="btn-group btn-group-sm">
+                             {% if leave.status == 'p' %}
+                             <a href="/leave/leave-history/{{leave.id}}/delete" class="btn btn-danger"><i class="fas fa-trash"></i> ลบ</a>
+                             {% else %}
+                                &nbsp;
+                             {% endif %}
+                          </div>
+                        </td>                        
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">หน้าแรก</a>
+                        <a href="?page={{ page_obj.previous_page_number }}"><<</a>
+                    {% endif %}
+
+                    <span class="current">
+                        หน้า {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">>></a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">หน้าสุดท้าย</a>
+                    {% endif %}
+                </span>
+            </div>
+
+            {% else %}
+              <div class="col-lg-12">
+                <div class="alert alert-success" role="alert">
+                    <i class="fa fa-info-circle"></i>&nbsp;&nbsp;ยังไม่มีรายการอยู่ในระบบ | หากต้องการใช้วันลางาน &nbsp;
+                    <a href="{% url 'employee_create' %}">คลิกที่นี่</a>
+                    &nbsp;<a href="{% url 'employee_create' %}"><i class="nav-icon fas fa-plus"></i></a>
+                </div>           
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <div class="modal fade" id="modal-danger">
+    <div class="modal-dialog">
+      <div class="modal-content bg-danger">
+        <div class="modal-header">
+          <h4 class="modal-title">ยกเลิกรายการ</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>กดปุ่มยืนยันหากต้องการลบรายการนี้</p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-light" data-dismiss="modal">ยกเลิก</button>
+          <button type="button" class="btn btn-outline-light">ยืนยัน</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+{% endblock %}

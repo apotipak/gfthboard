@@ -1,0 +1,112 @@
+{% extends "page_base_generic.html" %}
+
+{% block title %}สิทธิการลา{% endblock %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">อนุมัติใบลา</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">หน้าแรก</a></li>
+              <li class="breadcrumb-item active">ระบบลางาน</li>
+              <li class="breadcrumb-item">อนุมัติใบลา</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-12">
+
+            {% if object_list %}
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">พนักงาน</th>
+                        <th scope="col">ประเภทการลา</th>
+                        <th scope="col">ลาวันที่</th>
+                        <th scope="col">สถานะ</th>
+                        <td scope="col">&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for leave in object_list %}
+                    <tr>
+                        <td>{{leave.emp_fname_th}} {{leave.emp_lname_th}}</td>
+                        <td>{{leave.leave_type}}</td>
+                        <td>{{leave.start_date|date:'d F Y h:00'}} - {{leave.end_date|date:'d F Y h:00'}}</td>
+                        <td>
+                            {% if leave.status == 'a' %}
+                                <span class="badge badge-success">อนุมัติ</span>
+                            {% elif leave.status == 'p' %}
+                                <span class="badge badge-warning">รออนุมัติ</span>
+                            {% elif leave.status == 'r' %}
+                                <span class="badge badge-danger">ไม่อนุมัติ</span>
+                            {% elif leave.status == 'c' %}
+                                <span class="badge badge-primary">ยกเลิก</span>
+                            {% else %}
+                                ข้อมูลผิดพลาด
+                            {% endif %}
+                        </td>
+                        <td class="text-right py-0 align-middle">
+                          <div class="btn-group btn-group-sm">
+                             {% if leave.status == 'p' %}
+                             <a href="/leave/leave-approval/{{leave.id}}/approve" class="btn btn-success"><i class="fas fa-check"></i> อนุมัติ</a>&nbsp;
+                             <a href="/leave/leave-approval/{{leave.id}}/reject" class="btn btn-danger"><i class="fas fa-times"></i> ไม่อนุมัติ</a>
+                             {% else %}
+                                &nbsp;
+                             {% endif %}
+                          </div>
+                        </td>                        
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">หน้าแรก</a>
+                        <a href="?page={{ page_obj.previous_page_number }}"><<</a>
+                    {% endif %}
+
+                    <span class="current">
+                        หน้า {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">>></a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">หน้าสุดท้าย</a>
+                    {% endif %}
+                </span>
+            </div>
+
+            {% else %}
+            <div class="col-lg-12">
+              <div class="alert alert-success" role="alert">
+                  <i class="fa fa-info-circle"></i>&nbsp;&nbsp;ยังไม่มีรายการอยู่ในระบบ</a>
+              </div>           
+            </div>
+            {% endif %}
+          </div>
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+{% endblock %}

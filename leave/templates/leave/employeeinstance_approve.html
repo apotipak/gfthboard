@@ -1,0 +1,55 @@
+{% extends "page_default.html" %}
+
+{% block title %}อนุมัติประวัติการลา{% endblock %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">อนุมัติวันลา</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">หน้าแรก</a></li>
+              <li class="breadcrumb-item active">ระบบลางาน</li>
+              <li class="breadcrumb-item">ประวัติการลา</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-12">
+
+            <form action="" method="POST">
+              {% csrf_token %}
+
+              <p>กรุณาตรวจสอบข้อมูลอีกครั้งและกดปุ่มยืนยันการทำรายการ<br><br>
+              <b>พนักงาน:</b> {{ employee_leave_instance.employee.emp_fname_th }} {{ employee_leave_instance.employee.emp_lname_th }}<br>
+              <b>ประเภทการลา:</b> {{ employee_leave_instance.leave_type }}<br>
+              <b>ลาวันที่:</b> {{ employee_leave_instance.start_date|date:'d F Y'}} - {{ employee_leave_instance.end_date|date:'d F Y'}}</p>
+
+              <input type="button" class="btn btn-secondary" onclick="history.back()" value="ยกเลิก" />
+              <input type="submit" class="btn btn-danger" action="" value="ยืนยัน" />
+            </form>
+
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+{% endblock %}
