@@ -1,0 +1,7 @@
+applicationinsights==0.11.9
+Django==2.2.10
+django-mssql-backend==2.5.0
+pyodbc==4.0.28
+pytz==2019.3
+sqlparse==0.3.0
+wfastcgi==3.0.0
