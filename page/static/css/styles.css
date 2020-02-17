@@ -1,0 +1,23 @@
+.login-box, .register-box {
+    width: 400px;
+}
+
+.brand-link {
+    display: block;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    padding: .8125rem .5rem;
+    transition: width .3s ease-in-out;
+    white-space: nowrap;
+}
+
+/*
+.card-header {
+    background-color: transparent;
+    border-bottom: none;
+    padding: .75rem 1.25rem;
+    position: relative;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+*/
