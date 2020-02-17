@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <title>GFTH Board | {% block title %}{% endblock %}</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
+  {% load static %}
+  <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- daterange picker -->
+  <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">  
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+  <!-- Custom style -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+
+<div class="wrapper">
+
+  {% include "menu_bar.html" %}
+
+  <!-- Main Sidebar Container -->
+  {% include "left_menu.html" %}
+
+    {% block content %}{% endblock %}
+  
+  {% include "footer.html" %}
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- DataTables -->
+<script src="{% static '/plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
+<!-- InputMask -->
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/inputmask/min/jquery.inputmask.bundle.min.js' %}"></script>
+<!-- date-range-picker -->
+<script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="{% static 'dist/js/demo.js' %}"></script>
+<!-- Page script -->
+
+<!-- page script -->
+<script>
+  $(function () {
+    $('#contract_list_table').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": false,
+      "autoWidth": false,
+      "pageLength": 10,
+      "lengthMenu": [[10, 20, 25, 50, -1], [10, 20, 25, 50, "All"]],
+      "search": {
+          "caseInsensitive": true
+      },      
+      "oLanguage": {
+         "sSearch": "ค้นหา"
+       },
+      "language": {
+        "paginate": {
+          "previous": "ย้อนกลับ",
+          "next": "ถัดไป",
+        },
+        "lengthMenu": '_MENU_ &nbsp;&nbsp;&nbsp;&nbsp;เลือกจำนวนแสดงรายการ',
+            "search": '<i class="fa fa-search"></i>',
+            "searchPlaceholder": "ค้นหา",
+            "paginate": {
+            "previous": '<i class="fa fa-angle-left"></i>',
+                "next": '<i class="fa fa-angle-right"></i>'
+        }
+      },
+      "columnDefs": [
+        //{ "orderable": false, "targets": 4 }
+      ]           
+    });
+    $('#phone_directory_list_table').DataTable({
+      "paging": true,
+      "pageLength": 15,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": false,
+      "info": false,
+      "autoWidth": false,
+      "oLanguage": {
+         "sSearch": "ค้นหา",
+      },
+      "language": {
+          "lengthMenu": '_MENU_ bản ghi trên trang',
+              "search": '<i class="fa fa-search"></i>',
+              "searchPlaceholder": "ค้นหา",
+              "paginate": {
+              "previous": '<i class="fa fa-angle-left"></i>',
+                  "next": '<i class="fa fa-angle-right"></i>'
+          }
+      }          
+    });
+  });
+</script>
+
+</body>
+</html>

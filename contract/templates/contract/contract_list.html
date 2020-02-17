@@ -1,0 +1,83 @@
+{% extends "page_default.html" %}
+
+{% block title %}รายการสัญญา{% endblock %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">รายการสัญญา</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">หน้าแรก</a></li>
+              <li class="breadcrumb-item active">Daily Guard Information</li>
+              <li class="breadcrumb-item">รายการสัญญา</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-12">
+
+		        {% if tclcontractqty_list %}
+              <table id="contract_list_table" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th scope="col">เลขที่</th>
+                  <th scope="col">ชื่อลูกค้า</th>
+                  <th scope="col">โซน</th>
+                  <th scope="col">จังหวัด</th>                        
+                  <!--<td scope="col">&nbsp;</td>-->
+                </tr>
+                </thead>
+                <tbody>
+                {% for contract in tclcontractqty_list %}
+                    <tr>
+                        <td>{{contract.cnt_id}}</td>
+                        <td><a href="{% url 'contract-detail' contract.cnt_id %}" target="_blank">{{contract.cus_name_th}}</a></td>
+                        <td>{{contract.zone_en}}</td>
+                        <td>{{contract.city_th}}</td>
+                        <!--
+                        <td class="text-right py-0 align-middle">
+                          <div class="btn-group btn-group-sm">
+                             <a href="{% url 'contract-detail' contract.cnt_id %}" class="btn btn-primary" target="_blank"> ดูเพิ่มเติม </a>
+                          </div>
+                        </td>
+                        -->                   
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+            {% else %}
+              <div class="col-lg-12">
+                <div class="alert alert-success" role="alert">
+                    <i class="fa fa-info-circle"></i>&nbsp;&nbsp;ยังไม่มีรายการอยู่ในระบบ
+                </div>           
+              </div>
+            {% endif %}
+
+            <br>
+          </div>
+
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+{% endblock %}

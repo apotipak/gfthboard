@@ -26,8 +26,26 @@
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout'%}?next=/accounts/login"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;ออกจากระบบ</a>
+          <a class="nav-link" href="#">
+              {% if user.is_authenticated %}
+                  {% if user.is_superuser %}
+                      ยินดีต้อนรับ <b>Admin</b>
+                  {% else %}
+                      ยินดีต้อนรับ <b>{{ user.get_short_name }}</b>
+                  {% endif %}
+              {% endif %}
+          </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+              |
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout'%}?next=/accounts/login">
+            <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+          </a>
+        </li>        
       </ul>
     </div>
   </nav>

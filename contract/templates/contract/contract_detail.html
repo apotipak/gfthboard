@@ -1,0 +1,106 @@
+{% extends "page_default.html" %}
+
+{% block title %}รายละเอียดสัญญา{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">เลขที่ {{tclcontractqty.cnt_id}}</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">หน้าแรก</a></li>
+              <li class="breadcrumb-item active">ระบบลูกค้าและสัญญา</li>
+              <li class="breadcrumb-item">รายละเอียดสัญญา</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h4 class="text-primary">{{tclcontractqty.cus_name_th}}</h4>
+          <h5>
+          <small><b>ที่อยู่</b>&nbsp;&nbsp;&nbsp;{{tclcontractqty.cus_add1_th}}, {{tclcontractqty.city_th}}</small><br>
+          <small><b>โซน</b>&nbsp;&nbsp;&nbsp;{{tclcontractqty.zone_en}}</small><br>
+          <small><b>สัญญาเริ่ม</b>&nbsp;&nbsp;&nbsp;{{tclcontractqty.cnt_sign_frm}}&nbsp;&nbsp;&nbsp;<b>สิ้นสุด</b>&nbsp;&nbsp;&nbsp;{{tclcontractqty.cnt_sign_to}}</small><br>
+          <small><b>วันที่ทำงาน</b>&nbsp;&nbsp;&nbsp;{{tclcontractqty.dly_date}}</small><br>
+        </h5>
+        </div>
+
+        <div class="card-body">
+
+          <div class="row">            
+            <div class="col-12 col-md-12 col-lg-12 order-1 order-md-1">
+              <h5>                
+              <small><b>สัญญาจ้างทั้งหมด</b>&nbsp;&nbsp;&nbsp;{{tclcontractqty.cqty}}&nbsp;&nbsp;&nbsp;คน</small><br>
+              <small><b>ทำงานในวันหยุด (DOF)</b>&nbsp;&nbsp;&nbsp;{{tclcontractqty.dly_dof}}&nbsp;&nbsp;&nbsp;คน</small>
+              </h5>
+              <ul class="list-unstyled">
+                <li>
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th class="text-center" scope="col">&nbsp;</th>
+                        <th class="text-center" scope="col">สัญญา</th>
+                        <th class="text-center" scope="col">รับแจ้ง</th>
+                        <th class="text-center" scope="col">ขาด</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">สัญญาจ้าง Day</th>
+                        <td class="text-center">{{tclcontractqty.sd}}</td>
+                        <td class="text-center">{{tclcontractqty.dly_sd}}</td>
+                        <td class="text-center">{{tclcontractqty.dly_std}}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">สัญญาจ้าง Night</th>
+                        <td class="text-center">{{tclcontractqty.sn}}</td>
+                        <td class="text-center">{{tclcontractqty.dly_sn}}</td>
+                        <td class="text-center">{{tclcontractqty.dly_stn}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-right" colspan="4"><small><i class="far fa-clock"></i>&nbsp;&nbsp;อัพเดทข้อมูลล่าสุดวันที่&nbsp;&nbsp;{{tclcontractqty.upd_date}}</small></td>
+                      </tr>
+                    </tbody>
+                  </table>                              
+                </li>
+                <li>
+                  <a href="#" class="btn-link text-secondary">&nbsp;</a>
+                </li>
+              </ul>
+              <!--            
+              <div class="text-center mt-5 mb-3">
+                <input type="button" class="btn btn-sm btn-secondary" onclick="history.back()" value="ย้อนกลับ" />
+              </div>
+              -->
+            </div>
+
+          </div>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+
+  </div>
+  <!-- /.content-wrapper -->
+
+{% endblock %}
