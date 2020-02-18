@@ -22,3 +22,9 @@
     padding: .5rem;
     position: relative;
 }
+
+.main-header {
+    border-bottom: 1px solid #dee2e6;
+    z-index: 1034;
+    height: 100px;
+}
