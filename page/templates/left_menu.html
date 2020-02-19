@@ -112,7 +112,72 @@
               </ul>
             </li>
             {% endif %}
-          {% endif %}          
+          {% endif %}
+
+
+
+          {% if request.path|slice:":7" == '/leave/' %}
+          <li class="nav-item has-treeview active menu-open">
+            {% if request.path|slice:":6" == '/leave' %}
+            <a href="#" class="nav-link active">
+            {% else %}
+            <a href="#" class="nav-link">
+            {% endif %}
+
+              <i class="nav-icon fa fa-laptop-medical"></i>
+              <p>
+                E-Leave
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                {% if request.path == "/leave/leave-history/" %}
+                <a href="{% url 'leave_history' %}" class="nav-link active">
+                {% else %}
+                <a href="{% url 'leave_history' %}" class="nav-link">
+                {% endif %}
+                  &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
+                  <p>ประวัติการลา</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                {% if request.path == "/leave/employee/create/" %}
+                <a href="{% url 'employee_create' %}" class="nav-link active">
+                {% else %}
+                <a href="{% url 'employee_create' %}" class="nav-link">
+                {% endif %}
+                  &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
+                  <p>เขียนใบลา</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                {% if request.path == "/leave/leave-policy/" %}
+                <a href="{% url 'leave_policy' %}" class="nav-link active">
+                {%else %}
+                <a href="{% url 'leave_policy' %}" class="nav-link">
+                    {% endif %}
+                  &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
+                  <p>สิทธิการลา</p>
+                </a>
+              </li>
+              {% if perms.leave.approve_leaveplan %}
+              <li class="nav-item">
+                {% if request.path == "/leave/leave-approval/" %}
+                <a href="{% url 'leave_approval' %}" class="nav-link active">
+                {% else %}
+                <a href="{% url 'leave_approval' %}" class="nav-link">
+                {% endif %}
+                  &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
+                  <p>อนุมัติใบลา</p>
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+          </li>
+          {% endif %}
+
+
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
