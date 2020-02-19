@@ -115,6 +115,7 @@
             <table class="table table-sm table-hover">
                 <thead>
                   <tr>
+                    <th>#</th>
                     <th>รหัส</th>
                     <th>ชื่อ-สกุล</th>
                     <th>กะการทำงาน</th>
@@ -124,6 +125,7 @@
                 <tbody>
                 {% for staff in TclDailyWorking %}
                   <tr>
+                    <td>{{forloop.counter}}</td>
                     <td>{{staff.emp_id}}</td>
                     <td>{{staff.fname}}</td>
                     <td>{{staff.shf_desc}}</td>
