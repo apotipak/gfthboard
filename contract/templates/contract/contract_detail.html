@@ -110,7 +110,16 @@
             </button>
           </div>
           <div class="modal-body">
-            <h5>รายชื่อเจ้าหน้าที่เข้าปฏิบัติงาน</h5>
+
+            <div class="d-flex justify-content-between">
+              <div>
+                <h5>รายชื่อเจ้าหน้าที่เข้าปฏิบัติงาน</h5>
+              </div>
+              <div>
+                <i class="far fa-clock text-secondary"></i><small class="text-secondary">&nbsp;&nbsp;อัพเดทข้อมูลล่าสุด&nbsp;&nbsp;<b>{{tclcontractqty.upd_date}}</b></small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </div>
+            </div>
+
             <div style="height:250px;overflow-y:scroll;margin-right:15px;">
             <table class="table table-sm table-hover">
                 <thead>
@@ -146,9 +155,7 @@
           </div>
           
           <div class="modal-footer justify-content-between align-right">
-              <p class="pull-right"><i class="far fa-clock text-secondary"></i><small class="text-secondary">&nbsp;&nbsp;อัพเดทข้อมูลล่าสุด&nbsp;&nbsp;<b>{{tclcontractqty.upd_date}}</b></small></p>
-
-              <button type="button" class="btn btn-default invisible" data-dismiss="modal">..</button>
+              <button type="button" class="btn btn-default invisible" data-dismiss="modal">&nbsp;</button>
               <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">&nbsp;&nbsp;ปิด&nbsp;&nbsp;</button>
           </div>
         </div>
