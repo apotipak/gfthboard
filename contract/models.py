@@ -27,3 +27,18 @@ class TclContractQty(models.Model):
 
     def __str__(self):
         return self.cus_name_th
+
+
+class TclDailyWorking(models.Model):
+    cnt_id = models.DecimalField(primary_key=True, max_digits=13, decimal_places=0, blank=True, null=True)
+    cus_name_th = models.CharField(max_length=120, blank=True, null=True)
+    emp_id = models.DecimalField(max_digits=7, decimal_places=0, blank=True, null=True)
+    fname = models.CharField(db_column='Fname', max_length=71, blank=True, null=True)  # Field name made lowercase.
+    shf_type = models.CharField(max_length=1, blank=True, null=True)
+    shf_desc = models.CharField(max_length=30, blank=True, null=True)
+    dly_date = models.CharField(max_length=30, blank=True, null=True)
+    upd_date = models.CharField(db_column='UPD_Date', max_length=30, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'TCL_Daily_Working'

@@ -57,7 +57,7 @@
                       <tr>
                         <th class="text-center" scope="col">&nbsp;</th>
                         <th class="text-center" scope="col">สัญญา</th>
-                        <th class="text-center" scope="col"><a href="#" type="button" data-toggle="modal" data-target="#modal-lg">รับแจ้ง</a></th>
+                        <th class="text-center" scope="col"><a href="#" type="button" data-toggle="modal" data-target="#modal-xl">รับแจ้ง</a></th>
                         <th class="text-center" scope="col">ขาด</th>
                       </tr>
                     </thead>
@@ -75,7 +75,7 @@
                         <td class="text-center">{{tclcontractqty.dly_stn}}</td>
                       </tr>
                       <tr>
-                        <td class="text-right" colspan="4"><small><i class="far fa-clock"></i>&nbsp;&nbsp;อัพเดทข้อมูลล่าสุดวันที่&nbsp;&nbsp;{{tclcontractqty.upd_date}}</small></td>
+                        <td class="text-right" colspan="4"><i class="far fa-clock text-secondary"></i><small class="text-secondary">&nbsp;&nbsp;อัพเดทข้อมูลล่าสุด&nbsp;&nbsp;<b>{{tclcontractqty.upd_date}}</b></small></td>
                       </tr>
                     </tbody>
                   </table>                              
@@ -100,46 +100,49 @@
     </section>
     <!-- /.content -->
 
-    <div class="modal fade" id="modal-lg">
-      <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="modal-xl">
+      <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">รายชื่อเจ้าหน้าที่</h4>
+            <h4 class="modal-title"><b>{{tclcontractqty.cnt_id}}</b> - {{tclcontractqty.cus_name_th}}</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <table class="table table-hover">
+            <h5>รายชื่อเจ้าหน้าที่เข้าปฏิบัติงาน</h5>
+            <div style="height:200px;overflow-y:scroll;margin-right:15px;">
+            <table class="table table-sm table-hover">
                 <thead>
                   <tr>
-                    <th>ชื่อ</th>
-                    <th>นามสกุล</th>
-                    <th>อื่นๆ</th>
+                    <th>รหัส</th>
+                    <th>ชื่อ-สกุล</th>
+                    <th>ทำงานช่วง</th>
+                    <th>อัพเดทล่าสุด</th>
                   </tr>
                 </thead>
                 <tbody>
+                {% for staff in TclDailyWorking %}
                   <tr>
-                    <td>สมชาย</td>
-                    <td>ใจดี</td>
-                    <td>...</td>
-                  </tr>
-                  <tr>
-                    <td>สมหญิง</td>
-                    <td>จริงใจ</td>
-                    <td>...</td>
+                    <td>{{staff.emp_id}}</td>
+                    <td>{{staff.fname}}</td>
+                    <td>{{staff.shf_desc}}</td>
+                    <td>{{staff.upd_date}}</td>
                   </tr>
                 </tbody>
-              </table>
+                {% endfor %}
+            </table>
+            </div>
           </div>
           <div class="modal-footer justify-content-between align-right">
               <button type="button" class="btn btn-default invisible" data-dismiss="modal">..</button>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">&nbsp;&nbsp;ปิด&nbsp;&nbsp;</button>            
+              <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">&nbsp;&nbsp;ปิด&nbsp;&nbsp;</button>
           </div>
         </div>
         <!-- /.modal-content -->
       </div>
       <!-- /.modal-dialog -->
+
     </div>
     <!-- /.modal -->
 
