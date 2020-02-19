@@ -26,8 +26,7 @@ class ContractDetailView(PermissionRequiredMixin, generic.DetailView):
 		context = super().get_context_data(**kwargs)
 		context['cnt_id'] = self.kwargs['pk']
 		context['TclContractQty'] = TclContractQty.objects.all()
-		#context['TclDailyWorking'] = TclDailyWorking.objects.filter(cnt_id__exact='1118002001')
-		context['TclDailyWorking'] = TclDailyWorking.objects.filter(cnt_id__exact=context['cnt_id'])
+		context['TclDailyWorking'] = TclDailyWorking.objects.filter(cnt_id__exact=context['cnt_id']).order_by('shf_type')
 		return context
 
 	"""

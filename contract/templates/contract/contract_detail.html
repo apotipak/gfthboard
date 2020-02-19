@@ -118,7 +118,8 @@
                     <th>#</th>
                     <th>รหัส</th>
                     <th>ชื่อ-สกุล</th>
-                    <th>กะการทำงาน</th>
+                    <th>ประเภทกะ</th>
+                    <th>ช่วงเวลากะ</th>
                     <th>วันที่เข้างาน</th>
                   </tr>
                 </thead>
@@ -128,6 +129,13 @@
                     <td>{{forloop.counter}}</td>
                     <td>{{staff.emp_id}}</td>
                     <td>{{staff.fname}}</td>
+                    <td>
+                      {% if staff.shf_type == 'D' %}
+                      กลางวัน
+                      {% else %}
+                      กลางคืน
+                      {% endif %}                      
+                    </td>
                     <td>{{staff.shf_desc}}</td>
                     <td>{{staff.dly_date}}</td>
                   </tr>
