@@ -14,6 +14,15 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">  
 
+          {% if request.path|slice:":14" == '/staff-profile' %}
+          <li class="nav-item has-treeview active menu-open">
+            <a href="{% url 'staff-profile' %}" class="nav-link active">
+              &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
+              <p>โปรไฟล์</p>
+            </a>
+            </li>
+          {% endif %}
+
           {% if request.path|slice:":7" == '/leave/' %}
           <li class="nav-item has-treeview active menu-open">
             {% if request.path|slice:":6" == '/leave' %}

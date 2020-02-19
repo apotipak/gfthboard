@@ -38,12 +38,12 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a href="{% url 'staff-profile' %}" class="nav-link active">
             {% if user.is_authenticated %}
                 {% if user.is_superuser %}
-                    Hi, <b>Admin</b>
+                    ยินดีต้อนรับ <b>Admin</b>
                 {% else %}
-                    Hi, <b>{{ user.get_short_name }}</b>
+                    ยินดีต้อนรับ <b>{{ user.get_short_name }}</b>
                 {% endif %}
             {% endif %}
         </a>

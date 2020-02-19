@@ -1,0 +1,186 @@
+{% extends "page_base_generic.html" %}
+
+{% block title %}โปรไฟล์{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">โปรไฟล์</h1>
+          </div><!-- /.col -->
+
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">หน้าแรก</a></li>
+              <li class="breadcrumb-item active">โปรไฟล์</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+
+          <!--<div class="col-lg-12">-->
+          <div class="col-md-3">
+
+            <!-- Profile Image -->
+            {% if EmployeeInstance %}
+            {% for employee in EmployeeInstance %}                    
+                <div class="card card-primary card-outline">
+                  <div class="card-body box-profile">
+                    <div class="text-center">
+                      <img class="profile-user-img img-fluid img-circle" src="{% static 'img/profile-128x128.png' %}" alt="User profile picture">
+                    </div>
+                    <h3 class="profile-username text-center">{{ employee.emp_fname_th }} {{ employee.emp_lname_th }}</h3>
+                    <p class="text-muted text-center">{{ employee.pos_en }}</p>                    
+                    <ul class="list-group list-group-unbordered mb-3">
+                      <li class="list-group-item">
+                        <b>รหัส</b> <a class="float-right">{{ employee.emp_id }}</a>
+                      </li>                        
+                      <li class="list-group-item">
+                        <b>ประเภทพนักงาน</b> <a class="float-right">{{ employee.emp_type }}</a>
+                      </li>                      
+                      <li class="list-group-item">
+                        <b>ฝ่าย</b> <a class="float-right">{{ employee.div_th }}</a>
+                      </li>
+                      <li class="list-group-item">
+                        <b>วันเริ่มงาน</b> <a class="float-right">{{ employee.emp_join_date|date:'d F Y' }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning" role="alert">
+                    <i class="fa fa-info-circle"></i>  ไม่พบข้อมูลในระบบ กรุณาสอบถามข้อมูลจากเจ้าหน้าที่ฝ่ายบุคคล
+                </div>            
+            {% endif %}
+            <p>&nbsp;</p>            
+            <!-- /.card -->
+        </div>
+
+          <div class="col-md-9">
+            <div class="card">
+
+              <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">หัวหน้างาน</a></li>
+                  {% if perms.leave.approve_leaveplan %}
+                  <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">สมาชิกในทีม</a></li>
+                  {% endif %}
+                </ul>
+              </div><!-- /.card-header -->
+
+              
+              <div class="card-body">
+
+                <div class="tab-content">
+
+                  <!-- Supervisor Tab --> 
+                  <div class="active tab-pane" id="activity">
+                    <!-- Supervisor Information -->
+                    <div>
+                      <div>
+                        {% if SuperVisorInstance %}
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ชื่อ-สกุล</th>
+                                    <th scope="col">แผนก</th>
+                                    <th scope="col">ตำแหน่ง</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for member in SuperVisorInstance %}
+                                <tr>
+                                    <td>{{member.emp_fname_th}} {{member.emp_lname_th}}</td>
+                                    <td>{{member.div_th}}</td>
+                                    <td>{{member.pos_th}}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>                    
+                        {% else %}
+                            <div class="alert alert-warning" role="alert">
+                                <i class="fa fa-info-circle"></i>  ไม่พบข้อมูลในระบบ กรุณาสอบถามข้อมูลจากเจ้าหน้าที่ฝ่ายบุคคล
+                            </div>                     
+                        {% endif %}
+                      </div>
+                    </div>
+                    <!-- /.Supervisor Information -->
+                  </div>
+                  <!-- /.tab-pane -->
+
+                  {% if perms.leave.approve_leaveplan %}
+                  <div class="tab-pane" id="timeline">
+                    <!-- The timeline -->
+                    <div>
+                      <!-- timeline time label -->
+                      <div>
+
+                        <!-- Team Member List -->
+                        
+                            {% if TeamMemberList %}
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">รหัส</th>
+                                        <th scope="col">ชื่อ-สกุล</th>
+                                        <th scope="col">แผนก</th>
+                                        <th scope="col">ตำแหน่ง</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for member in TeamMemberList %}
+                                    <tr>
+                                        <th scope="row">{{member.emp_id}}</th>
+                                        <td>{{member.emp_fname_th}} {{member.emp_lname_th}}</td>
+                                        <td>{{member.div_th}}</td>
+                                        <td>{{member.pos_th}}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>                    
+                            {% else %}
+                                <div class="alert alert-warning" role="alert">
+                                    <i class="fa fa-info-circle"></i>  ไม่พบข้อมูลในระบบ กรุณาสอบถามข้อมูลจากเจ้าหน้าที่ฝ่ายบุคคล
+                                </div>                     
+                            {% endif %}
+                        
+
+                      </div>
+                      <!-- /.timeline-label -->
+                    </div>
+                  </div>
+                  {% endif %}
+                  <!-- /.tab-pane -->
+
+                </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+            </div>
+            <!-- /.nav-tabs-custom -->
+
+          </div>
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+{% endblock %}
