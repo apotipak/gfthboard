@@ -117,8 +117,8 @@
                   <tr>
                     <th>รหัส</th>
                     <th>ชื่อ-สกุล</th>
-                    <th>ทำงานช่วง</th>
-                    <th>อัพเดทล่าสุด</th>
+                    <th>กะการทำงาน</th>
+                    <th>วันที่เข้างาน</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -127,14 +127,17 @@
                     <td>{{staff.emp_id}}</td>
                     <td>{{staff.fname}}</td>
                     <td>{{staff.shf_desc}}</td>
-                    <td>{{staff.upd_date}}</td>
+                    <td>{{staff.dly_date}}</td>
                   </tr>
                 </tbody>
                 {% endfor %}
             </table>
             </div>
           </div>
+          
           <div class="modal-footer justify-content-between align-right">
+              <p class="pull-right"><i class="far fa-clock text-secondary"></i><small class="text-secondary">&nbsp;&nbsp;อัพเดทข้อมูลล่าสุด&nbsp;&nbsp;<b>{{tclcontractqty.upd_date}}</b></small></p>
+
               <button type="button" class="btn btn-default invisible" data-dismiss="modal">..</button>
               <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">&nbsp;&nbsp;ปิด&nbsp;&nbsp;</button>
           </div>
