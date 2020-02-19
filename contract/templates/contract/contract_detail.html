@@ -18,7 +18,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">ระบบหลัก</a></li>
-              <li class="breadcrumb-item active">ระบบลูกค้าและสัญญา</li>
+              <li class="breadcrumb-item active">Daily Guard Info</li>
               <li class="breadcrumb-item">รายละเอียดสัญญา</li>
             </ol>
           </div><!-- /.col -->
@@ -33,7 +33,7 @@
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h4 class="text-primary">{{tclcontractqty.cus_name_th}}</h4>
+          <h4><b>{{tclcontractqty.cus_name_th}}</b></h4>
           <h5>
           <small><b>ที่อยู่</b>&nbsp;&nbsp;&nbsp;{{tclcontractqty.cus_add1_th}}, {{tclcontractqty.city_th}}</small><br>
           <small><b>โซน</b>&nbsp;&nbsp;&nbsp;{{tclcontractqty.zone_en}}</small><br>
@@ -57,7 +57,7 @@
                       <tr>
                         <th class="text-center" scope="col">&nbsp;</th>
                         <th class="text-center" scope="col">สัญญา</th>
-                        <th class="text-center" scope="col">รับแจ้ง</th>
+                        <th class="text-center" scope="col"><a href="#" type="button" data-toggle="modal" data-target="#modal-lg">รับแจ้ง</a></th>
                         <th class="text-center" scope="col">ขาด</th>
                       </tr>
                     </thead>
@@ -99,6 +99,49 @@
 
     </section>
     <!-- /.content -->
+
+    <div class="modal fade" id="modal-lg">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">รายชื่อเจ้าหน้าที่</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>ชื่อ</th>
+                    <th>นามสกุล</th>
+                    <th>อื่นๆ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>สมชาย</td>
+                    <td>ใจดี</td>
+                    <td>...</td>
+                  </tr>
+                  <tr>
+                    <td>สมหญิง</td>
+                    <td>จริงใจ</td>
+                    <td>...</td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+          <div class="modal-footer justify-content-between align-right">
+              <button type="button" class="btn btn-default invisible" data-dismiss="modal">..</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">&nbsp;&nbsp;ปิด&nbsp;&nbsp;</button>            
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 
   </div>
   <!-- /.content-wrapper -->
