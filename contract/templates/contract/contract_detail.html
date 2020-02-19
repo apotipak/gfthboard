@@ -18,7 +18,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">ระบบหลัก</a></li>
-              <li class="breadcrumb-item active">ระบบลูกค้าและสัญญา</li>
+              <li class="breadcrumb-item active">Daily Guard Info</li>
               <li class="breadcrumb-item">รายละเอียดสัญญา</li>
             </ol>
           </div><!-- /.col -->
@@ -33,7 +33,7 @@
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h4 class="text-primary">{{tclcontractqty.cus_name_th}}</h4>
+          <h4><b>{{tclcontractqty.cus_name_th}}</b></h4>
           <h5>
           <small><b>ที่อยู่</b>&nbsp;&nbsp;&nbsp;{{tclcontractqty.cus_add1_th}}, {{tclcontractqty.city_th}}</small><br>
           <small><b>โซน</b>&nbsp;&nbsp;&nbsp;{{tclcontractqty.zone_en}}</small><br>
@@ -57,7 +57,7 @@
                       <tr>
                         <th class="text-center" scope="col">&nbsp;</th>
                         <th class="text-center" scope="col">สัญญา</th>
-                        <th class="text-center" scope="col">รับแจ้ง</th>
+                        <th class="text-center" scope="col"><a href="#" type="button" data-toggle="modal" data-target="#modal-xl">รับแจ้ง</a></th>
                         <th class="text-center" scope="col">ขาด</th>
                       </tr>
                     </thead>
@@ -75,7 +75,7 @@
                         <td class="text-center">{{tclcontractqty.dly_stn}}</td>
                       </tr>
                       <tr>
-                        <td class="text-right" colspan="4"><small><i class="far fa-clock"></i>&nbsp;&nbsp;อัพเดทข้อมูลล่าสุดวันที่&nbsp;&nbsp;{{tclcontractqty.upd_date}}</small></td>
+                        <td class="text-right" colspan="4"><i class="far fa-clock text-secondary"></i><small class="text-secondary">&nbsp;&nbsp;อัพเดทข้อมูลล่าสุด&nbsp;&nbsp;<b>{{tclcontractqty.upd_date}}</b></small></td>
                       </tr>
                     </tbody>
                   </table>                              
@@ -99,6 +99,55 @@
 
     </section>
     <!-- /.content -->
+
+    <div class="modal fade" id="modal-xl">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"><b>{{tclcontractqty.cnt_id}}</b> - {{tclcontractqty.cus_name_th}}</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h5>รายชื่อเจ้าหน้าที่เข้าปฏิบัติงาน</h5>
+            <div style="height:200px;overflow-y:scroll;margin-right:15px;">
+            <table class="table table-sm table-hover">
+                <thead>
+                  <tr>
+                    <th>รหัส</th>
+                    <th>ชื่อ-สกุล</th>
+                    <th>กะการทำงาน</th>
+                    <th>วันที่เข้างาน</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for staff in TclDailyWorking %}
+                  <tr>
+                    <td>{{staff.emp_id}}</td>
+                    <td>{{staff.fname}}</td>
+                    <td>{{staff.shf_desc}}</td>
+                    <td>{{staff.dly_date}}</td>
+                  </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+            </div>
+          </div>
+          
+          <div class="modal-footer justify-content-between align-right">
+              <p class="pull-right"><i class="far fa-clock text-secondary"></i><small class="text-secondary">&nbsp;&nbsp;อัพเดทข้อมูลล่าสุด&nbsp;&nbsp;<b>{{tclcontractqty.upd_date}}</b></small></p>
+
+              <button type="button" class="btn btn-default invisible" data-dismiss="modal">..</button>
+              <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">&nbsp;&nbsp;ปิด&nbsp;&nbsp;</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+
+    </div>
+    <!-- /.modal -->
 
   </div>
   <!-- /.content-wrapper -->

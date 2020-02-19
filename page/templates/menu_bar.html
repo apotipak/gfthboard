@@ -41,9 +41,9 @@
         <a href="{% url 'staff-profile' %}" class="nav-link active">
             {% if user.is_authenticated %}
                 {% if user.is_superuser %}
-                    ยินดีต้อนรับ <b>Admin</b>
+                    ยินดีต้อนรับ <span class="text-primary"><b>Admin</b></span>
                 {% else %}
-                    ยินดีต้อนรับ <b>{{ user.get_short_name }}</b>
+                    ยินดีต้อนรับ <span class="text-primary"><b>{{ user.get_short_name }}</b></span>
                 {% endif %}
             {% endif %}
         </a>
