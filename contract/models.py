@@ -30,7 +30,7 @@ class TclContractQty(models.Model):
 
 
 class TclDailyWorking(models.Model):
-    cnt_id = models.DecimalField(primary_key=True, max_digits=13, decimal_places=0, blank=True, null=True)
+    cnt_id = models.DecimalField(primary_key=True, max_digits=13, decimal_places=0)
     cus_name_th = models.CharField(max_length=120, blank=True, null=True)
     emp_id = models.DecimalField(max_digits=7, decimal_places=0, blank=True, null=True)
     fname = models.CharField(db_column='Fname', max_length=71, blank=True, null=True)  # Field name made lowercase.
