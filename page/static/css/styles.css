@@ -22,3 +22,8 @@
     padding: .5rem;
     position: relative;
 }
+
+.main-header .navbar-nav .nav-item .nav-link-menubar {
+    color: rgba(0,0,0,.5);
+    padding: .5rem 1rem;
+}
