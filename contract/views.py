@@ -17,10 +17,9 @@ class ContractListView(PermissionRequiredMixin, generic.ListView):
 	template_name = 'contract/contract_list.html'    
 	permission_required = ('contract.view_tclcontractqty')
 	model = TclContractQty
-    #paginate_by = 12
 	
 	def get_context_data(self, **kwargs):
-		context = super(ContractListView, self).get_context_data(**kwargs)
+		context = super(ContractListView, self).get_context_data(**kwargs)		
 		context.update({
 			'page_title': settings.PROJECT_NAME,
 			'today_date': settings.TODAY_DATE,
@@ -31,6 +30,7 @@ class ContractListView(PermissionRequiredMixin, generic.ListView):
 		return context
 
 	def get_queryset(self):
+		current_login_user = self.request.user.username
 		return TclContractQty.objects.all()
 
 
