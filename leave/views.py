@@ -54,13 +54,32 @@ class EmployeeInstanceDetailView(generic.DetailView):
 
 
 class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('leave.view_employeeinstance')
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE    
     model = EmployeeInstance
+    paginate_by = 10
     success_url = reverse_lazy('leave_history')
     permission_required = 'leave.view_employeeinstance'
+
+    def get_context_data(self, **kwargs):
+        context = super(EmployeeInstanceDelete, self).get_context_data(**kwargs)
+        context.update({
+            'page_title': settings.PROJECT_NAME,
+            'today_date': settings.TODAY_DATE,
+            'project_version': settings.PROJECT_VERSION,
+            'db_server': settings.DATABASES['default']['HOST'],
+            'project_name': settings.PROJECT_NAME,
+        })
+        return context
 
     def get_queryset(self):
         owner = self.request.user.username
         return self.model.objects.filter(emp_id=owner)
+
 
 @login_required(login_url='/accounts/login/')
 def LeavePolicy(request):
@@ -181,7 +200,7 @@ def EmployeeNew(request):
                     recipients,
                     fail_silently=False)                        
 
-            return HttpResponseRedirect('/?submitted=True')
+            return HttpResponseRedirect('/leave/leave-history/?submitted=True')
 
     else:
         form = EmployeeForm(user=request.user)
@@ -224,6 +243,11 @@ class LeaveApprovalListView(PermissionRequiredMixin, generic.ListView):
 
 @permission_required('leave.approve_leaveplan')
 def EmployeeInstanceApprove(request, pk):
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE    
     employee_leave_instance = get_object_or_404(EmployeeInstance, pk=pk)
 
     if request.method == 'POST':
@@ -257,13 +281,23 @@ def EmployeeInstanceApprove(request, pk):
 
     context = {
         'employee_leave_instance': employee_leave_instance,
+        'page_title': settings.PROJECT_NAME,
+        'db_server': settings.DATABASES['default']['HOST'],
+        'project_name': settings.PROJECT_NAME,
+        'project_version': settings.PROJECT_VERSION,
+        'today_date' : settings.TODAY_DATE
     }
 
     return render(request, 'leave/employeeinstance_approve.html', context)
 
 
 @permission_required('leave.approve_leaveplan')
-def EmployeeInstanceReject(request, pk):    
+def EmployeeInstanceReject(request, pk):
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE   
     employee_leave_instance = get_object_or_404(EmployeeInstance, pk=pk)
 
     if request.method == 'POST':
@@ -297,6 +331,11 @@ def EmployeeInstanceReject(request, pk):
 
     context = {
         'employee_leave_instance': employee_leave_instance,
+        'page_title': settings.PROJECT_NAME,
+        'db_server': settings.DATABASES['default']['HOST'],
+        'project_name': settings.PROJECT_NAME,
+        'project_version': settings.PROJECT_VERSION,
+        'today_date' : settings.TODAY_DATE        
     }
 
     return render(request, 'leave/employeeinstance_reject.html', context)
