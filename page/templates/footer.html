@@ -2,8 +2,8 @@
   <footer class="main-footer">
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
-      {% now "j F Y" %}
+    	{{ today_date|date:"D d M Y" }}
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2020</strong> All rights reserved.
+    <b>{{ project_name }} {{ project_version }}</b> | {{ db_server }}
   </footer>

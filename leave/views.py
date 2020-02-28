@@ -14,20 +14,36 @@ from django.template.loader import render_to_string
 from django.utils.timezone import localtime
 from datetime import datetime
 from django.conf import settings
-import sys
 from django.http import HttpResponse
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.models import User
 from datetime import timedelta
+import sys
 
 
 class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
-    #template_name = 'leave/employeeinstance_list.html'    
+    #template_name = 'leave/employeeinstance_list.html'
     permission_required = ('leave.view_employeeinstance')
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE    
     model = EmployeeInstance
     paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(EmployeeInstanceListView, self).get_context_data(**kwargs)
+        context.update({
+            'page_title': settings.PROJECT_NAME,
+            'today_date': settings.TODAY_DATE,
+            'project_version': settings.PROJECT_VERSION,
+            'db_server': settings.DATABASES['default']['HOST'],
+            'project_name': settings.PROJECT_NAME,
+        })
+        return context
 
     def get_queryset(self):
         return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='c').order_by('start_date')
@@ -48,14 +64,38 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
 
 @login_required(login_url='/accounts/login/')
 def LeavePolicy(request):
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE    
     leave_policy = LeavePlan.EmployeeLeavePolicy(request)
-    return render(request, 'leave/leave_policy.html', {'leave_policy': leave_policy})
+
+    return render(request, 'leave/leave_policy.html', {
+        'page_title': settings.PROJECT_NAME,
+        'today_date': settings.TODAY_DATE,
+        'project_version': settings.PROJECT_VERSION,
+        'db_server': settings.DATABASES['default']['HOST'],
+        'project_name': settings.PROJECT_NAME,        
+        'leave_policy': leave_policy
+    })
 
 
 @permission_required('leave.approve_leaveplan', login_url='/accounts/login/')
 def LeaveApproval(request):
-    #leave_policy = LeavePlan.EmployeeLeavePolicy(request)
-    return render(request, 'leave/leave_approval.html', {})
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE        
+    return render(request, 'leave/leave_policy.html', {
+        'page_title': settings.PROJECT_NAME,
+        'today_date': settings.TODAY_DATE,
+        'project_version': settings.PROJECT_VERSION,
+        'db_server': settings.DATABASES['default']['HOST'],
+        'project_name': settings.PROJECT_NAME,        
+        'leave_policy': leave_policy
+    })
 
 
 class EmployeeCreate(PermissionRequiredMixin, CreateView):
@@ -64,7 +104,13 @@ class EmployeeCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'leave.add_employeeinstance'
 
 
-def employee_new(request):  
+def EmployeeNew(request):
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE
+
     if request.method == "POST":
 
         form = EmployeeForm(request.POST, user=request.user)
@@ -140,14 +186,37 @@ def employee_new(request):
     else:
         form = EmployeeForm(user=request.user)
 
-    return render(request, 'leave/employeeinstance_form.html', {'form': form})
+    return render(request, 'leave/employeeinstance_form.html', {
+        'form': form,
+        'page_title': settings.PROJECT_NAME,
+        'today_date': settings.TODAY_DATE,
+        'project_version': settings.PROJECT_VERSION,
+        'db_server': settings.DATABASES['default']['HOST'],
+        'project_name': settings.PROJECT_NAME,        
+    })
 
 
 class LeaveApprovalListView(PermissionRequiredMixin, generic.ListView):
-    template_name = 'leave/leave_approval_list.html'    
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE
+    template_name = 'leave/leave_approval_list.html'
     permission_required = ('leave.approve_leaveplan')
     model = EmployeeInstance
     paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(LeaveApprovalListView, self).get_context_data(**kwargs)
+        context.update({
+            'page_title': settings.PROJECT_NAME,
+            'today_date': settings.TODAY_DATE,
+            'project_version': settings.PROJECT_VERSION,
+            'db_server': settings.DATABASES['default']['HOST'],
+            'project_name': settings.PROJECT_NAME,
+        })
+        return context
 
     def get_queryset(self):
         return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") order by start_date desc")
