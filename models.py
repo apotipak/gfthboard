@@ -8,6 +8,20 @@
 from django.db import models
 
 
+class ComZone(models.Model):
+    zone_id = models.DecimalField(primary_key=True, max_digits=4, decimal_places=0)
+    zone_th = models.CharField(max_length=30, blank=True, null=True)
+    zone_en = models.CharField(max_length=30, blank=True, null=True)
+    zone_emp_id = models.DecimalField(max_digits=6, decimal_places=0, blank=True, null=True)
+    upd_date = models.DateTimeField(blank=True, null=True)
+    upd_by = models.CharField(max_length=10, blank=True, null=True)
+    upd_flag = models.CharField(max_length=1, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'COM_ZONE'
+
+
 class Flooring(models.Model):
     name = models.CharField(db_column='Name', max_length=255, blank=True, null=True)  # Field name made lowercase.
     category = models.CharField(db_column='Category', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -108,7 +122,7 @@ class TclDailyWorking(models.Model):
 
 
 class TclContractQty(models.Model):
-    cnt_id = models.CharField(max_length=13, blank=True, null=True)
+    cnt_id = models.DecimalField(max_digits=13, decimal_places=0, blank=True, null=True)
     cus_name_th = models.CharField(max_length=120, blank=True, null=True)
     zone_en = models.CharField(max_length=30, blank=True, null=True)
     cnt_sign_frm = models.CharField(max_length=30, blank=True, null=True)
@@ -124,7 +138,7 @@ class TclContractQty(models.Model):
     dly_stn = models.IntegerField(db_column='DLY_STN')  # Field name made lowercase.
     dly_dof = models.IntegerField(db_column='DLY_DOF')  # Field name made lowercase.
     dly_date = models.CharField(db_column='Dly_Date', max_length=13)  # Field name made lowercase.
-    upd_date = models.CharField(db_column='UPD_Date', max_length=30)  # Field name made lowercase.
+    upd_date = models.DateTimeField(db_column='UPD_Date')  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -228,7 +242,6 @@ class AuthGroupPermissions(models.Model):
     class Meta:
         managed = False
         db_table = 'auth_group_permissions'
-        unique_together = (('group', 'permission'),)
 
 
 class AuthPermission(models.Model):
@@ -239,7 +252,6 @@ class AuthPermission(models.Model):
     class Meta:
         managed = False
         db_table = 'auth_permission'
-        unique_together = (('content_type', 'codename'),)
 
 
 class AuthUser(models.Model):
@@ -266,7 +278,6 @@ class AuthUserGroups(models.Model):
     class Meta:
         managed = False
         db_table = 'auth_user_groups'
-        unique_together = (('user', 'group'),)
 
 
 class AuthUserUserPermissions(models.Model):
@@ -276,7 +287,6 @@ class AuthUserUserPermissions(models.Model):
     class Meta:
         managed = False
         db_table = 'auth_user_user_permissions'
-        unique_together = (('user', 'permission'),)
 
 
 class DjangoAdminLog(models.Model):
@@ -300,7 +310,6 @@ class DjangoContentType(models.Model):
     class Meta:
         managed = False
         db_table = 'django_content_type'
-        unique_together = (('app_label', 'model'),)
 
 
 class DjangoMigrations(models.Model):
