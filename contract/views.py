@@ -36,10 +36,21 @@ class ContractListView(PermissionRequiredMixin, generic.ListView):
 		return zone_list
 
 	def get_queryset(self):
+<<<<<<< HEAD
 		username = self.request.user.username
 		contract_policy_list = ContractPolicy.objects.select_related('zone', 'user').filter(username__exact=username).values('zone__zone_en')
 		queryset = TclContractQty.objects.filter(zone_en__in=[contract_policy_list])
 		
+=======
+		username = self.request.user.username		
+		queryset = TclContractQty.objects.raw(
+			"select ct.* from auth_user u " +
+			"inner join contract_policy cp on u.username = cp.username " +
+			"inner join com_zone cz on cp.zone_id = cz.zone_id " + 
+			"inner join tcl_contract_qty ct on cz.zone_en = ct.zone_en " +
+			"where u.username='" + username + "' " +
+			"order by ct.cnt_id, ct.zone_en")
+>>>>>>> 0ccbeedc9cdfab2a38f30f553c5bc096f9bfbcf6
 		return queryset
 
 
