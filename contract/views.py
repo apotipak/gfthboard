@@ -28,22 +28,20 @@ class ContractListView(PermissionRequiredMixin, generic.ListView):
 			'db_server': settings.DATABASES['default']['HOST'],
 			'project_name': settings.PROJECT_NAME,
 		})
+
 		return context
 
 	def get_zone_list(self):
 		username = self.request.user.username
 		zone_list = ContractPolicy.objects.get(username__exact=username)
+
 		return zone_list
 
 	def get_queryset(self):
-		username = self.request.user.username		
-		queryset = TclContractQty.objects.raw(
-			"select ct.* from auth_user u " +
-			"inner join contract_policy cp on u.username = cp.username " +
-			"inner join com_zone cz on cp.zone_id = cz.zone_id " + 
-			"inner join tcl_contract_qty ct on cz.zone_en = ct.zone_en " +
-			"where u.username='" + username + "' " +
-			"order by ct.cnt_id, ct.zone_en")
+		username = self.request.user.username
+		contract_policy_list = ContractPolicy.objects.select_related('zone', 'user').filter(username__exact=username).values('zone__zone_en')
+		queryset = TclContractQty.objects.filter(zone_en__in=[contract_policy_list])
+
 		return queryset
 
 
@@ -69,6 +67,7 @@ class ContractDetailView(PermissionRequiredMixin, generic.DetailView):
 		context['today_date'] = settings.TODAY_DATE
 		context['template_name'] = 'contract/contract_detail.html'    
 		context['permission_required'] = ('contract.view_tclcontractqty')
+
 		return context
 
 	def get_queryset(self):
@@ -76,4 +75,5 @@ class ContractDetailView(PermissionRequiredMixin, generic.DetailView):
 		contract_id = self.kwargs['pk']
 		contract_policy_list = ContractPolicy.objects.select_related('zone', 'user').filter(username__exact=username).values('zone__zone_en')
 		queryset = TclContractQty.objects.filter(cnt_id__exact=contract_id).filter(zone_en__in=[contract_policy_list])
+
 		return queryset
