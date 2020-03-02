@@ -41,7 +41,7 @@ class ContractListView(PermissionRequiredMixin, generic.ListView):
 		username = self.request.user.username
 		contract_policy_list = ContractPolicy.objects.select_related('zone', 'user').filter(username__exact=username).values('zone__zone_en')
 		queryset = TclContractQty.objects.filter(zone_en__in=[contract_policy_list])
-		
+
 		return queryset
 
 
@@ -75,5 +75,5 @@ class ContractDetailView(PermissionRequiredMixin, generic.DetailView):
 		contract_id = self.kwargs['pk']
 		contract_policy_list = ContractPolicy.objects.select_related('zone', 'user').filter(username__exact=username).values('zone__zone_en')
 		queryset = TclContractQty.objects.filter(cnt_id__exact=contract_id).filter(zone_en__in=[contract_policy_list])
-		
+
 		return queryset
