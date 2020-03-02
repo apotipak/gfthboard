@@ -44,7 +44,6 @@ class ContractListView(PermissionRequiredMixin, generic.ListView):
 			"inner join tcl_contract_qty ct on cz.zone_en = ct.zone_en " +
 			"where u.username='" + username + "' " +
 			"order by ct.cnt_id, ct.zone_en")
-
 		return queryset
 
 
