@@ -19,7 +19,7 @@ from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.models import User
-from datetime import timedelta
+from datetime import timedelta, datetime
 import sys
 
 
@@ -252,6 +252,8 @@ def EmployeeInstanceApprove(request, pk):
 
     if request.method == 'POST':
         employee_leave_instance.status = 'a'
+        employee_leave_instance.updated_by = request.user.username
+        employee_leave_instance.updated_date = datetime.now()
         employee_leave_instance.save()
 
         # TODO: Send mail funciton
@@ -305,6 +307,8 @@ def EmployeeInstanceReject(request, pk):
 
     if request.method == 'POST':
         employee_leave_instance.status = 'r'
+        employee_leave_instance.updated_by = request.user.username
+        employee_leave_instance.updated_date = datetime.now()        
         employee_leave_instance.save()
 
         # TODO: Send mail funciton
