@@ -169,6 +169,11 @@ def EmployeeNew(request):
                     else:
                         total_leave_day = 0
                         total_leave_hour = number_of_leave_hour
+
+                        # Rule : Check lunch time
+                        if checkLunchTime(start_date.hour, end_date.hour):
+                            total_leave_hour = total_leave_hour - 1
+                        
                 else:
                     number_of_leave_hour = end_date.hour - start_date.hour
 
@@ -179,12 +184,9 @@ def EmployeeNew(request):
                         total_leave_day = number_of_leave_day
                         total_leave_hour = number_of_leave_hour
 
+
                 start_date += delta                
             
-            # Rule : Check lunch time
-            if checkLunchTime(start_date.hour, end_date.hour):
-                total_leave_hour = total_leave_hour - 1
-
             employee.lve_act = total_leave_day
             employee.lve_act_hr = total_leave_hour
             """ END """
