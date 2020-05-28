@@ -32,7 +32,7 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
     project_version = settings.PROJECT_VERSION
     today_date = settings.TODAY_DATE    
     model = EmployeeInstance
-    paginate_by = 10
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super(EmployeeInstanceListView, self).get_context_data(**kwargs)
@@ -188,7 +188,7 @@ def EmployeeNew(request):
                 supervisor = User.objects.get(username=supervisor_id)
                 supervisor_email = supervisor.email
 
-                subject = "JARVIS: Leave Request"
+                subject = "GFTH Board: Leave Request"
                 sender = "amnaj.potipak@guardforce.co.th"
                 recipients = [supervisor_email]
                 context = {'username': username, 'fullname': fullname, 'start_date': start_date.strftime('%A, %d-%B-%Y'), 'end_date': end_date.strftime('%A, %d-%B-%Y')}
@@ -258,7 +258,7 @@ def EmployeeInstanceApprove(request, pk):
         if settings.TURN_SEND_MAIL_ON:
             employee = User.objects.get(username=employee_leave_instance.employee_id)
 
-            subject = "JARVIS: Approved Leave Request"
+            subject = "GFTH Board: Approved Leave Request"
             sender = settings.EMAIL_SENDER
             recipients = [employee.email]
             employee_id = employee_leave_instance.employee_id
@@ -308,7 +308,7 @@ def EmployeeInstanceReject(request, pk):
         if settings.TURN_SEND_MAIL_ON:
             employee = User.objects.get(username=employee_leave_instance.employee_id)
 
-            subject = "JARVIS: Approved Leave Request"
+            subject = "GFTH Board: Approved Leave Request"
             sender = settings.EMAIL_SENDER
             recipients = [employee.email]
             employee_id = employee_leave_instance.employee_id
