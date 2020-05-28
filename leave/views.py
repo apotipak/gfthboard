@@ -256,12 +256,12 @@ def EmployeeInstanceApprove(request, pk):
 
         # TODO: Send mail funciton
         if settings.TURN_SEND_MAIL_ON:
-            employee = User.objects.get(username=employee_leave_instance.employee_id)
+            employee = User.objects.get(username=employee_leave_instance.emp_id)
 
             subject = "GFTH Board: Approved Leave Request"
             sender = settings.EMAIL_SENDER
             recipients = [employee.email]
-            employee_id = employee_leave_instance.employee_id
+            employee_id = employee_leave_instance.emp_id
             employee = User.objects.get(username=employee_id)
             employee_fullname = employee.first_name + " " + employee.last_name
             leave_type = employee_leave_instance.leave_type
@@ -279,7 +279,11 @@ def EmployeeInstanceApprove(request, pk):
 
         return HttpResponseRedirect(reverse('leave_approval'))
 
+    #employee = User.objects.get(username=employee_leave_instance.emp_id)
+    leaveEmployee = LeaveEmployee.objects.get(emp_id=employee_leave_instance.emp_id)
+
     context = {
+        'employee': leaveEmployee,
         'employee_leave_instance': employee_leave_instance,
         'page_title': settings.PROJECT_NAME,
         'db_server': settings.DATABASES['default']['HOST'],
