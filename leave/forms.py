@@ -12,7 +12,6 @@ import calendar
 from datetime import timedelta
 from django.db.models import Sum
 
-
 class EmployeeForm(forms.ModelForm):
     #leave_type = forms.ModelChoiceField(label='ประเภทการลา', queryset=None, required=True, initial=0)
     leave_type = forms.ModelChoiceField(label='ประเภทการลา', queryset=None, required=True)
@@ -42,15 +41,21 @@ class EmployeeForm(forms.ModelForm):
 
         if start_date != None:
 
-            """ RULE: Not allows to submit existing leave request """
-            queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "' between start_date and end_date and emp_id=" + username + " and status in ('a','p')")
+            """ RULE: Check duplicate leave """
+            #queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "' between start_date and end_date and emp_id=" + username + " and status in ('a','p','C','F')")
+            queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where not (start_date > '" + str(end_date.strftime("%Y-%m-%d %H:00") + "' or end_date < '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "')") + " and emp_id=" + username + " and status in ('a','p','C','F')")
+            
+            #raise forms.ValidationError({'start_date': start_date})
+            #raise forms.ValidationError({'start_date': end_date})
+            #raise forms.ValidationError({'start_date': queryset})
+
             if len(queryset) > 0:
-                raise forms.ValidationError({'start_date': "ทำรายการซ้ำ0"})
+                raise forms.ValidationError({'start_date': "เคยใช้วันลาไปแล้ว"})
                 return cleaned_data
 
             if len(queryset) == 0:
                 """ Validate End Date """
-                count = EmployeeInstance.objects.filter(end_date__exact=end_date).filter(emp_id__exact=username).filter(status__in=('p','a')).count()
+                count = EmployeeInstance.objects.filter(end_date__exact=end_date).filter(emp_id__exact=username).filter(status__in=('p','a','C','F')).count()
                 if count == 0:
 
                     """ Check total number of Pending and Approved status in hour """
@@ -92,12 +97,23 @@ class EmployeeForm(forms.ModelForm):
                     total_leave_remaining_in_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss_hr', flat=True).get()                        
                     total_number_of_leave_remaing_in_hour = total_leave_remaining_in_hour + (total_leave_remaining_in_day * 8)                    
 
+                    
+                    #raise forms.ValidationError({'start_date': str(end_date.hour)})
                     #raise forms.ValidationError({'start_date': str(total_number_of_current_leave_request_in_hour)})
                     #return cleaned_data
+
+
+
+                    #raise forms.ValidationError({'start_date': "test1"})
+
+
 
                     """ TODO: Employee Type Validation """   
                     employee_type = LeaveEmployee.objects.filter(emp_id__exact=username).values_list('emp_type', flat=True).get()
                     if employee_type == 'M1':
+                        
+                        #raise forms.ValidationError({'start_date': "M1"})
+
                         start_date_day, start_date_time = start_date.day, start_date.hour
                         end_date_day, end_date_time = end_date.day, end_date.hour
 
@@ -117,12 +133,17 @@ class EmployeeForm(forms.ModelForm):
                             raise forms.ValidationError({'start_date': "เลือกเวลานอกทำการ"})
                             return cleaned_data
 
-                        """ RULE: Not allows to sumbit over no. of remaining day """
+
+                        #raise forms.ValidationError({'start_date': "debug"})
+
+
+                        """ RULE: Not allows to sumbit period over no. of remaining day """
                         if (total_number_of_pending_approved_leave_request_in_hour + total_number_of_current_leave_request_in_hour) > total_number_of_leave_remaing_in_hour:                            
                             raise forms.ValidationError({'start_date': "วันหยุดคงเหลือไม่พอ"})
-                            return cleaned_data
-                        else:
-                            return cleaned_data                    
+                            #return cleaned_data
+                        #else:
+                        #    return cleaned_data                    
+                        
 
                         """ RULE: Not allows to submit for public holidays """
                         queryset = LeaveHoliday.objects.filter(hol_date__range=(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))).values_list('pub_th', flat=True)
@@ -133,9 +154,20 @@ class EmployeeForm(forms.ModelForm):
                         """ RULE: Not allows to submit for weekend """
                         week_day_number = start_date.weekday()
                         week_day_name = calendar.day_name[start_date.weekday()]
+
+                        
+
+
+
+                        #raise forms.ValidationError({'start_date': "test2"})
+
+
+
+
+
                         for x in range(total_leave_request_in_day):
                             if start_date.weekday() == 5 or start_date.weekday() == 6:
-                                raise forms.ValidationError({'start_date': "วันลาที่เลือกตรงกับวันหยุดเสาร์-อาทิตย์"})
+                                raise forms.ValidationError({'start_date': "วันลาที่เลือกตรงกับวันหยุด เสาร์-อาทิตย์"})
                             else:
                                 start_date = start_date + timedelta(days=1)
 
@@ -143,11 +175,11 @@ class EmployeeForm(forms.ModelForm):
                         return cleaned_data
                     else:
                         #raise forms.ValidationError({'start_date': "ระบบวันลาสำหรับพนักงานรายวันอยู่ระหว่างการพัฒนา"})          
-                        raise forms.ValidationError({'start_date': "ทำรายการซ้ำ1"})
+                        raise forms.ValidationError({'start_date': "ทำรายการซ้ำ 2"})
 
                     return cleaned_data
                 else:
-                    raise forms.ValidationError({'start_date': "ทำรายการซ้ำ2"})
+                    raise forms.ValidationError({'start_date': "ทำรายการซ้ำ 3"})
             else:
                 raise forms.ValidationError({'start_date': "วันที่ " + str(start_date.strftime("%d-%b %H:%M")) + " ถึง " + str(end_date.strftime("%d-%b %H:%M")) + " ถูกใช้ทำรายการไปแล้ว"})
             
