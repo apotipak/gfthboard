@@ -102,9 +102,18 @@ class EmployeeForm(forms.ModelForm):
                     #raise forms.ValidationError({'start_date': str(total_number_of_current_leave_request_in_hour)})
                     #return cleaned_data
 
+
+
+                    #raise forms.ValidationError({'start_date': "test1"})
+
+
+
                     """ TODO: Employee Type Validation """   
                     employee_type = LeaveEmployee.objects.filter(emp_id__exact=username).values_list('emp_type', flat=True).get()
                     if employee_type == 'M1':
+                        
+                        #raise forms.ValidationError({'start_date': "M1"})
+
                         start_date_day, start_date_time = start_date.day, start_date.hour
                         end_date_day, end_date_time = end_date.day, end_date.hour
 
@@ -124,12 +133,17 @@ class EmployeeForm(forms.ModelForm):
                             raise forms.ValidationError({'start_date': "เลือกเวลานอกทำการ"})
                             return cleaned_data
 
-                        """ RULE: Not allows to sumbit over no. of remaining day """
+
+                        #raise forms.ValidationError({'start_date': "debug"})
+
+
+                        """ RULE: Not allows to sumbit period over no. of remaining day """
                         if (total_number_of_pending_approved_leave_request_in_hour + total_number_of_current_leave_request_in_hour) > total_number_of_leave_remaing_in_hour:                            
                             raise forms.ValidationError({'start_date': "วันหยุดคงเหลือไม่พอ"})
-                            return cleaned_data
-                        else:
-                            return cleaned_data                    
+                            #return cleaned_data
+                        #else:
+                        #    return cleaned_data                    
+                        
 
                         """ RULE: Not allows to submit for public holidays """
                         queryset = LeaveHoliday.objects.filter(hol_date__range=(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))).values_list('pub_th', flat=True)
@@ -140,6 +154,17 @@ class EmployeeForm(forms.ModelForm):
                         """ RULE: Not allows to submit for weekend """
                         week_day_number = start_date.weekday()
                         week_day_name = calendar.day_name[start_date.weekday()]
+
+                        
+
+
+
+                        #raise forms.ValidationError({'start_date': "test2"})
+
+
+
+
+
                         for x in range(total_leave_request_in_day):
                             if start_date.weekday() == 5 or start_date.weekday() == 6:
                                 raise forms.ValidationError({'start_date': "วันลาที่เลือกตรงกับวันหยุด เสาร์-อาทิตย์"})
