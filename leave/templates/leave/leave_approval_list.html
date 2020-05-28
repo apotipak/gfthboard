@@ -50,15 +50,15 @@
                         <td>{{leave.start_date|date:'d F Y h:00'}} - {{leave.end_date|date:'d F Y h:00'}}</td>
                         <td>
                             {% if leave.status == 'a' %}
-                                <span class="badge badge-success">อนุมัติ</span> + <span class="badge badge-warning">Sync Pending</span>
+                                <span class="badge badge-success">อนุมัติ</span>&nbsp;<span class="badge badge-warning">Sync Pending</span>
                             {% elif leave.status == 'p' %}
                                 <span class="badge badge-warning">รออนุมัติ</span>
                             {% elif leave.status == 'r' %}
                                 <span class="badge badge-danger">ไม่อนุมัติ</span>
                             {% elif leave.status == 'C' %}
-                                <span class="badge badge-success">อนุมัติ</span> + <span class="badge badge-success">Sync Success</span>
+                                <span class="badge badge-success">อนุมัติ</span>&nbsp;<span class="badge badge-success">Sync Success</span>
                             {% elif leave.status == 'F' %}
-                                <span class="badge badge-success">อนุมัติ</span> + <span class="badge badge-danger">Sync Fail</span>
+                                <span class="badge badge-success">อนุมัติ</span>&nbsp;<span class="badge badge-danger">Sync Fail</span>
                             {% else %}
                                 ข้อมูลผิดพลาด
                             {% endif %}
