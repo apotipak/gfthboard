@@ -19,7 +19,7 @@ from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.models import User
-from datetime import timedelta
+from datetime import timedelta, datetime
 import sys
 
 
@@ -32,7 +32,7 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
     project_version = settings.PROJECT_VERSION
     today_date = settings.TODAY_DATE    
     model = EmployeeInstance
-    paginate_by = 10
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super(EmployeeInstanceListView, self).get_context_data(**kwargs)
@@ -188,7 +188,7 @@ def EmployeeNew(request):
                 supervisor = User.objects.get(username=supervisor_id)
                 supervisor_email = supervisor.email
 
-                subject = "JARVIS: Leave Request"
+                subject = "GFTH Board: Leave Request"
                 sender = "amnaj.potipak@guardforce.co.th"
                 recipients = [supervisor_email]
                 context = {'username': username, 'fullname': fullname, 'start_date': start_date.strftime('%A, %d-%B-%Y'), 'end_date': end_date.strftime('%A, %d-%B-%Y')}
@@ -252,16 +252,18 @@ def EmployeeInstanceApprove(request, pk):
 
     if request.method == 'POST':
         employee_leave_instance.status = 'a'
+        employee_leave_instance.updated_by = request.user.username
+        employee_leave_instance.updated_date = datetime.now()
         employee_leave_instance.save()
 
         # TODO: Send mail funciton
         if settings.TURN_SEND_MAIL_ON:
-            employee = User.objects.get(username=employee_leave_instance.employee_id)
+            employee = User.objects.get(username=employee_leave_instance.emp_id)
 
-            subject = "JARVIS: Approved Leave Request"
+            subject = "GFTH Board: Approved Leave Request"
             sender = settings.EMAIL_SENDER
             recipients = [employee.email]
-            employee_id = employee_leave_instance.employee_id
+            employee_id = employee_leave_instance.emp_id
             employee = User.objects.get(username=employee_id)
             employee_fullname = employee.first_name + " " + employee.last_name
             leave_type = employee_leave_instance.leave_type
@@ -278,8 +280,11 @@ def EmployeeInstanceApprove(request, pk):
                 fail_silently=False)
 
         return HttpResponseRedirect(reverse('leave_approval'))
+    
+    leaveEmployee = LeaveEmployee.objects.get(emp_id=employee_leave_instance.emp_id)
 
     context = {
+        'leave_employee': leaveEmployee,
         'employee_leave_instance': employee_leave_instance,
         'page_title': settings.PROJECT_NAME,
         'db_server': settings.DATABASES['default']['HOST'],
@@ -302,16 +307,18 @@ def EmployeeInstanceReject(request, pk):
 
     if request.method == 'POST':
         employee_leave_instance.status = 'r'
+        employee_leave_instance.updated_by = request.user.username
+        employee_leave_instance.updated_date = datetime.now()        
         employee_leave_instance.save()
 
         # TODO: Send mail funciton
         if settings.TURN_SEND_MAIL_ON:
-            employee = User.objects.get(username=employee_leave_instance.employee_id)
+            employee = User.objects.get(username=employee_leave_instance.emp_id)
 
-            subject = "JARVIS: Approved Leave Request"
+            subject = "GFTH Board: Approved Leave Request"
             sender = settings.EMAIL_SENDER
             recipients = [employee.email]
-            employee_id = employee_leave_instance.employee_id
+            employee_id = employee_leave_instance.emp_id
             employee = User.objects.get(username=employee_id)
             employee_fullname = employee.first_name + " " + employee.last_name
             leave_type = employee_leave_instance.leave_type
@@ -329,7 +336,10 @@ def EmployeeInstanceReject(request, pk):
 
         return HttpResponseRedirect(reverse('leave_approval'))
 
+    leaveEmployee = LeaveEmployee.objects.get(emp_id=employee_leave_instance.emp_id)
+
     context = {
+        'leave_employee': leaveEmployee,
         'employee_leave_instance': employee_leave_instance,
         'page_title': settings.PROJECT_NAME,
         'db_server': settings.DATABASES['default']['HOST'],

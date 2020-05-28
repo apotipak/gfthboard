@@ -69,9 +69,11 @@
                             {% elif leave.status == 'p' %}
                                 <span class="badge badge-warning">รออนุมัติ</span>
                             {% elif leave.status == 'r' %}
-                                <span class="badge badge-danger">ไม่อนุมัติ</span>
-                            {% elif leave.status == 'c' %}
-                                <span class="badge badge-primary">ยกเลิก</span>
+                                <span class="badge badge-secondary">ไม่อนุมัติ</span>
+                            {% elif leave.status == 'C' %}
+                                <span class="badge badge-primary">ซิงค์สำเร็จ</span>
+                            {% elif leave.status == 'F' %}
+                                <span class="badge badge-primary">ซิงค์สำเร็จ</span>
                             {% else %}
                                 ข้อมูลผิดพลาด
                             {% endif %}
@@ -79,7 +81,7 @@
                         <td class="text-right py-0 align-middle">
                           <div class="btn-group btn-group-sm">
                              {% if leave.status == 'p' %}
-                             <a href="/leave/leave-history/{{leave.id}}/delete" class="btn btn-danger"><i class="fas fa-trash"></i> ลบ</a>
+                             <a href="/leave/leave-history/{{leave.id}}/delete" class="btn btn-danger"><i class="fas fa-trash"></i> ยกเลิก</a>
                              {% else %}
                                 &nbsp;
                              {% endif %}
@@ -130,16 +132,16 @@
     <div class="modal-dialog">
       <div class="modal-content bg-danger">
         <div class="modal-header">
-          <h4 class="modal-title">ยกเลิกรายการ</h4>
+          <h4 class="modal-title">ต้องการยกเลิกรายการ</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <p>กดปุ่มยืนยันหากต้องการลบรายการนี้</p>
+          <p>กดปุ่มยืนยันหากต้องการยกเลิกรายการนี้</p>
         </div>
         <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-outline-light" data-dismiss="modal">ยกเลิก</button>
+          <button type="button" class="btn btn-outline-light" data-dismiss="modal">ย้อนกลับ</button>
           <button type="button" class="btn btn-outline-light">ยืนยัน</button>
         </div>
       </div>

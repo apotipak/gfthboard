@@ -159,7 +159,8 @@ class EmployeeInstance(models.Model):
         ('a', 'Approved'),
         ('p', 'Pending'),
         ('r', 'Rejected'),
-        ('c', 'Cancel'),
+        ('c', 'Sync complete'),
+        ('f', 'Sync fail'),
     )
     status = models.CharField(
         max_length=1,

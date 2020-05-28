@@ -33,14 +33,14 @@
 
             <form action="" method="POST">
               {% csrf_token %}
-
-              <p>กรุณาตรวจสอบข้อมูลอีกครั้งและกดปุ่มยืนยันการทำรายการ<br><br>
-              <b>พนักงาน:</b> {{ employee_leave_instance.employee.emp_fname_th }} {{ employee_leave_instance.employee.emp_lname_th }}<br>
+              
+              <b>รหัส:</b> {{ employee_leave_instance.emp_id }}<br>
+              <b>พนักงาน:</b> {{ leave_employee.emp_fname_th }} {{ leave_employee.emp_lname_th }}<br>
               <b>ประเภทการลา:</b> {{ employee_leave_instance.leave_type }}<br>
               <b>ลาวันที่:</b> {{ employee_leave_instance.start_date|date:'d F Y'}} - {{ employee_leave_instance.end_date|date:'d F Y'}}</p>
-
-              <input type="button" class="btn btn-secondary" onclick="history.back()" value="ยกเลิก" />
-              <input type="submit" class="btn btn-danger" action="" value="ยืนยัน" />
+              <div class="alert alert-info" role="alert">กรุณาตรวจสอบข้อมูลอีกครั้งก่อนกดปุ่มไม่อนุมัติ</div>              
+              <input type="button" class="btn btn-secondary" onclick="history.back()" value="ย้อนกลับ" />
+              <input type="submit" class="btn btn-danger" action="" value="ไม่อนุมัติ" />
             </form>
 
           </div>
