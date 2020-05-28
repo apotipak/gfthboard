@@ -46,7 +46,7 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='c').order_by('start_date')
+        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='b').order_by('start_date')
 
 
 class EmployeeInstanceDetailView(generic.DetailView):
@@ -173,7 +173,7 @@ def EmployeeNew(request):
                         # Rule : Check lunch time
                         if checkLunchTime(start_date.hour, end_date.hour):
                             total_leave_hour = total_leave_hour - 1
-                        
+
                 else:
                     number_of_leave_hour = end_date.hour - start_date.hour
 
