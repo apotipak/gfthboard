@@ -42,15 +42,21 @@ class EmployeeForm(forms.ModelForm):
 
         if start_date != None:
 
-            """ RULE: Not allows to submit existing leave request """
-            queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "' between start_date and end_date and emp_id=" + username + " and status in ('a','p')")
+            """ RULE: Not allows employee submits duplicated leave """
+            #queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "' between start_date and end_date and emp_id=" + username + " and status in ('a','p','C','F')")
+            queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where not (start_date > '" + str(end_date.strftime("%Y-%m-%d %H:00") + "' or end_date < '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "')") + " and emp_id=" + username + " and status in ('a','p','C','F')")
+            
+            #raise forms.ValidationError({'start_date': start_date})
+            #raise forms.ValidationError({'start_date': end_date})
+            #raise forms.ValidationError({'start_date': queryset})
+
             if len(queryset) > 0:
-                raise forms.ValidationError({'start_date': "ทำรายการซ้ำ0"})
+                raise forms.ValidationError({'start_date': "ทำรายการซ้ำ"})
                 return cleaned_data
 
             if len(queryset) == 0:
                 """ Validate End Date """
-                count = EmployeeInstance.objects.filter(end_date__exact=end_date).filter(emp_id__exact=username).filter(status__in=('p','a')).count()
+                count = EmployeeInstance.objects.filter(end_date__exact=end_date).filter(emp_id__exact=username).filter(status__in=('p','a','C','F')).count()
                 if count == 0:
 
                     """ Check total number of Pending and Approved status in hour """
