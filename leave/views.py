@@ -123,6 +123,12 @@ class EmployeeCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'leave.add_employeeinstance'
 
 
+def checkLunchTime(start_date_hour, end_date_hour):
+    if end_date_hour >= 12:
+        return True
+    else:
+        return False
+
 def EmployeeNew(request):
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
@@ -175,6 +181,10 @@ def EmployeeNew(request):
 
                 start_date += delta                
             
+            # Rule : Check lunch time
+            if checkLunchTime(start_date.hour, end_date.hour):
+                total_leave_hour = total_leave_hour - 1
+
             employee.lve_act = total_leave_day
             employee.lve_act_hr = total_leave_hour
             """ END """

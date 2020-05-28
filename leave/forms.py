@@ -12,7 +12,6 @@ import calendar
 from datetime import timedelta
 from django.db.models import Sum
 
-
 class EmployeeForm(forms.ModelForm):
     #leave_type = forms.ModelChoiceField(label='ประเภทการลา', queryset=None, required=True, initial=0)
     leave_type = forms.ModelChoiceField(label='ประเภทการลา', queryset=None, required=True)
@@ -30,9 +29,6 @@ class EmployeeForm(forms.ModelForm):
         super(EmployeeForm, self).__init__(*args, **kwargs)
         self.fields['leave_type'].widget.attrs={'class': 'form-control'}
         self.fields['leave_type'].queryset=LeaveType.objects.filter(leaveplan__emp_id=self.user.username)
-
-    def checkLunchTime(start_date, end_date):
-        return True
 
     def clean(self):
         cleaned_data = super(EmployeeForm, self).clean()
@@ -92,9 +88,6 @@ class EmployeeForm(forms.ModelForm):
                                 total_leave_day = number_of_leave_day
                                 total_leave_hour = number_of_leave_hour
 
-                            # Rule: Check lunch time
-
-
                         start_date += delta
 
                     total_number_of_current_leave_request_in_hour = (total_leave_day * 8) + (total_leave_hour)
@@ -104,6 +97,8 @@ class EmployeeForm(forms.ModelForm):
                     total_leave_remaining_in_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss_hr', flat=True).get()                        
                     total_number_of_leave_remaing_in_hour = total_leave_remaining_in_hour + (total_leave_remaining_in_day * 8)                    
 
+                    
+                    #raise forms.ValidationError({'start_date': str(end_date.hour)})
                     #raise forms.ValidationError({'start_date': str(total_number_of_current_leave_request_in_hour)})
                     #return cleaned_data
 
@@ -147,7 +142,7 @@ class EmployeeForm(forms.ModelForm):
                         week_day_name = calendar.day_name[start_date.weekday()]
                         for x in range(total_leave_request_in_day):
                             if start_date.weekday() == 5 or start_date.weekday() == 6:
-                                raise forms.ValidationError({'start_date': "วันลาที่เลือกตรงกับวันหยุดเสาร์-อาทิตย์"})
+                                raise forms.ValidationError({'start_date': "วันลาที่เลือกตรงกับวันหยุด เสาร์-อาทิตย์"})
                             else:
                                 start_date = start_date + timedelta(days=1)
 
@@ -155,11 +150,11 @@ class EmployeeForm(forms.ModelForm):
                         return cleaned_data
                     else:
                         #raise forms.ValidationError({'start_date': "ระบบวันลาสำหรับพนักงานรายวันอยู่ระหว่างการพัฒนา"})          
-                        raise forms.ValidationError({'start_date': "ทำรายการซ้ำ 1"})
+                        raise forms.ValidationError({'start_date': "ทำรายการซ้ำ 2"})
 
                     return cleaned_data
                 else:
-                    raise forms.ValidationError({'start_date': "ทำรายการซ้ำ 2"})
+                    raise forms.ValidationError({'start_date': "ทำรายการซ้ำ 3"})
             else:
                 raise forms.ValidationError({'start_date': "วันที่ " + str(start_date.strftime("%d-%b %H:%M")) + " ถึง " + str(end_date.strftime("%d-%b %H:%M")) + " ถูกใช้ทำรายการไปแล้ว"})
             
