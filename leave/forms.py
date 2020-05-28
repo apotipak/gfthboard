@@ -31,6 +31,9 @@ class EmployeeForm(forms.ModelForm):
         self.fields['leave_type'].widget.attrs={'class': 'form-control'}
         self.fields['leave_type'].queryset=LeaveType.objects.filter(leaveplan__emp_id=self.user.username)
 
+    def checkLunchTime(start_date, end_date):
+        return True
+
     def clean(self):
         cleaned_data = super(EmployeeForm, self).clean()
         start_date = self.cleaned_data.get('start_date')
@@ -42,7 +45,7 @@ class EmployeeForm(forms.ModelForm):
 
         if start_date != None:
 
-            """ RULE: Not allows employee submits duplicated leave """
+            """ RULE: Check duplicate leave """
             #queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "' between start_date and end_date and emp_id=" + username + " and status in ('a','p','C','F')")
             queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where not (start_date > '" + str(end_date.strftime("%Y-%m-%d %H:00") + "' or end_date < '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "')") + " and emp_id=" + username + " and status in ('a','p','C','F')")
             
@@ -51,7 +54,7 @@ class EmployeeForm(forms.ModelForm):
             #raise forms.ValidationError({'start_date': queryset})
 
             if len(queryset) > 0:
-                raise forms.ValidationError({'start_date': "ทำรายการซ้ำ"})
+                raise forms.ValidationError({'start_date': "เคยใช้วันลาไปแล้ว"})
                 return cleaned_data
 
             if len(queryset) == 0:
@@ -88,6 +91,9 @@ class EmployeeForm(forms.ModelForm):
                             else:
                                 total_leave_day = number_of_leave_day
                                 total_leave_hour = number_of_leave_hour
+
+                            # Rule: Check lunch time
+
 
                         start_date += delta
 
@@ -149,11 +155,11 @@ class EmployeeForm(forms.ModelForm):
                         return cleaned_data
                     else:
                         #raise forms.ValidationError({'start_date': "ระบบวันลาสำหรับพนักงานรายวันอยู่ระหว่างการพัฒนา"})          
-                        raise forms.ValidationError({'start_date': "ทำรายการซ้ำ1"})
+                        raise forms.ValidationError({'start_date': "ทำรายการซ้ำ 1"})
 
                     return cleaned_data
                 else:
-                    raise forms.ValidationError({'start_date': "ทำรายการซ้ำ2"})
+                    raise forms.ValidationError({'start_date': "ทำรายการซ้ำ 2"})
             else:
                 raise forms.ValidationError({'start_date': "วันที่ " + str(start_date.strftime("%d-%b %H:%M")) + " ถึง " + str(end_date.strftime("%d-%b %H:%M")) + " ถูกใช้ทำรายการไปแล้ว"})
             
