@@ -39,31 +39,72 @@ class EmployeeForm(forms.ModelForm):
         username = self.user.username
         employee_type = 'M1'
 
+        #raise forms.ValidationError({'start_date': start_date})
+        #raise forms.ValidationError({'start_date': end_date})
+        #raise forms.ValidationError({'start_date': queryset})
+
         if start_date != None:
 
-            """ RULE: Check duplicate leave """
-            #queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "' between start_date and end_date and emp_id=" + username + " and status in ('a','p','C','F')")
-            queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where not (start_date > '" + str(end_date.strftime("%Y-%m-%d %H:00") + "' or end_date < '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "')") + " and emp_id=" + username + " and status in ('a','p','C','F')")
-            
-            #raise forms.ValidationError({'start_date': start_date})
-            #raise forms.ValidationError({'start_date': end_date})
-            #raise forms.ValidationError({'start_date': queryset})
+            #Check master remaining hour (Leave_Plan table)
+            total_leave_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss', flat=True).get()
+            total_leave_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss_hr', flat=True).get()                        
+            grand_total_leave_remaining_hour = total_leave_remaining_hour + (total_leave_remaining_day * 8)                    
+            #raise forms.ValidationError({'start_date': str(leave_type) + " | D: " + str(total_leave_remaining_day) + " | " + "H: " + str(total_leave_remaining_hour) +  " | " + "Total H: " + str(grand_total_leave_remaining_hour)})
+            #raise forms.ValidationError({'start_date': str(grand_total_leave_remaining_hour)})
 
+            # Check transaction remaing hour (leave_employeeinstance table) (filter status = p, a, F)
+            total_pending_approve_syncfail_status_history_day = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+            total_pending_approve_syncfail_status_history_hour = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+            grand_total_pending_approve_syncfail_status_history_hour = total_pending_approve_syncfail_status_history_hour + (total_pending_approve_syncfail_status_history_day * 8)
+            #raise forms.ValidationError({'start_date': str(total_pending_approve_syncfail_status_history_hour)})
+
+            total_leave_remaining_hour = grand_total_leave_remaining_hour - grand_total_pending_approve_syncfail_status_history_hour
+            #raise forms.ValidationError({'start_date': str(total_leave_remaining_hour)})
+
+            # RULE 1: Check remaining quota
+            if (total_pending_approve_syncfail_status_history_hour > grand_total_leave_remaining_hour):
+                raise forms.ValidationError({'start_date': "เลือกวันลาเกินโควต้าที่กำหนด" })
+            else:
+                if total_leave_remaining_hour > 40:
+                    raise forms.ValidationError({'start_date': "ใช้วัน" + str(leave_type) + "หมดแล้ว (" + str(grand_total_leave_remaining_hour + total_pending_approve_syncfail_status_history_hour) + ")" })
+
+            # RULE 2: Check duplicate leave
+            #select id from leave_employeeinstance where not (start_date > @end_date OR end_date < @start_date)
+            queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where not (start_date > '" + str(end_date.strftime("%Y-%m-%d %H:00") + "' or end_date < '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "')") + " and emp_id=" + username + " and status in ('a','p','C','F')")            
             if len(queryset) > 0:
-                raise forms.ValidationError({'start_date': "เคยใช้วันลาไปแล้ว"})
-                return cleaned_data
+                raise forms.ValidationError({'start_date': "เลือกวันลาซ้ำ"})
+            else:
+                # RULE 3: Check weekend
+                delta_day = timedelta(days=1)                
+                sd = start_date
+                while sd <= end_date:
+                    if sd.weekday() == 5 or sd.weekday() == 6:
+                        raise forms.ValidationError({'start_date': "วันลาที่เลือกตรงกับวันหยุด เสาร์-อาทิตย์"})
+                    sd += delta_day
 
+                # RULE 4: Check public holidays
+                queryset = LeaveHoliday.objects.filter(hol_date__range=(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))).values_list('pub_th', flat=True)
+                holiday_list = str(list(queryset)).replace("'", '')
+                if len(queryset) > 0:
+                    raise forms.ValidationError({'start_date': "เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)})
+
+                # RULE 5: 
+                return cleaned_data
+                #raise forms.ValidationError({'start_date': "test"})
+
+
+            """
             if len(queryset) == 0:
-                """ Validate End Date """
+                #Validate End Date
                 count = EmployeeInstance.objects.filter(end_date__exact=end_date).filter(emp_id__exact=username).filter(status__in=('p','a','C','F')).count()
                 if count == 0:
 
-                    """ Check total number of Pending and Approved status in hour """
-                    total_leave_request_in_day = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a')).aggregate(sum=Sum('lve_act'))['sum'] or 0
-                    total_leave_request_in_hour = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
-                    total_number_of_pending_approved_leave_request_in_hour = total_leave_request_in_hour + (total_leave_request_in_day * 8)
+                    #Check total number of Pending and Approved status in hour
+                    total_pending_approve_syncfail_status_history_day = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+                    total_pending_approve_syncfail_status_history_hour = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+                    total_pending_approve_syncfail_status_history_hour = total_pending_approve_syncfail_status_history_hour + (total_pending_approve_syncfail_status_history_day * 8)
 
-                    """ Check total number of leave reqeust in hour """
+                    #Check total number of leave reqeust in hour
                     delta = timedelta(days=1)
                     number_of_leave_day, number_of_leave_hour = 0, 0       
                     number_of_leave_day = (end_date.day - start_date.day)            
@@ -92,10 +133,10 @@ class EmployeeForm(forms.ModelForm):
 
                     total_number_of_current_leave_request_in_hour = (total_leave_day * 8) + (total_leave_hour)
                                             
-                    """ Check total number of leave type remaining in hour """
-                    total_leave_remaining_in_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss', flat=True).get()
-                    total_leave_remaining_in_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss_hr', flat=True).get()                        
-                    total_number_of_leave_remaing_in_hour = total_leave_remaining_in_hour + (total_leave_remaining_in_day * 8)                    
+                    #Check total number of leave type remaining in hour
+                    total_leave_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss', flat=True).get()
+                    total_leave_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss_hr', flat=True).get()                        
+                    grand_total_leave_remaining_hour = total_leave_remaining_hour + (total_leave_remaining_day * 8)                    
 
                     
                     #raise forms.ValidationError({'start_date': str(end_date.hour)})
@@ -108,7 +149,7 @@ class EmployeeForm(forms.ModelForm):
 
 
 
-                    """ TODO: Employee Type Validation """   
+                    #TODO: Employee Type Validation
                     employee_type = LeaveEmployee.objects.filter(emp_id__exact=username).values_list('emp_type', flat=True).get()
                     if employee_type == 'M1':
                         
@@ -117,16 +158,16 @@ class EmployeeForm(forms.ModelForm):
                         start_date_day, start_date_time = start_date.day, start_date.hour
                         end_date_day, end_date_time = end_date.day, end_date.hour
 
-                        """ RULE: Not allows to submit 0 hour """
+                        # RULE: Not allows to submit 0 hour
                         if total_number_of_current_leave_request_in_hour == 0:
                             raise forms.ValidationError({'start_date': "เลือกจำนวนชั่วโมงไม่ถูกต้อง"})
                             return cleaned_data
 
-                        """ RULE: Not allows to submit lunch time """
+                        # RULE: Not allows to submit lunch time
                         if start_date_time == 12 and end_date_time == 13:
                             raise forms.ValidationError({'start_date': "เลือกเวลาพักกลางวัน"})
                         
-                        """ RULE: Not allows to submit less than 8:00 AM or greater than 17:00 PM """
+                        # RULE: Not allows to submit less than 8:00 AM or greater than 17:00 PM
                         if start_date_time < 8:
                             raise forms.ValidationError({'start_date': "เลือกเวลานอกทำการ"})
                         elif end_date_time > 17:
@@ -137,41 +178,36 @@ class EmployeeForm(forms.ModelForm):
                         #raise forms.ValidationError({'start_date': "debug"})
 
 
-                        """ RULE: Not allows to sumbit period over no. of remaining day """
-                        if (total_number_of_pending_approved_leave_request_in_hour + total_number_of_current_leave_request_in_hour) > total_number_of_leave_remaing_in_hour:                            
+                        # RULE: Not allows to sumbit period over no. of remaining day
+                        if (total_pending_approve_syncfail_status_history_hour + total_number_of_current_leave_request_in_hour) > grand_total_leave_remaining_hour:                            
                             raise forms.ValidationError({'start_date': "วันหยุดคงเหลือไม่พอ"})
                             #return cleaned_data
                         #else:
                         #    return cleaned_data                    
                         
 
-                        """ RULE: Not allows to submit for public holidays """
+                        # RULE: Not allows to submit for public holidays
                         queryset = LeaveHoliday.objects.filter(hol_date__range=(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))).values_list('pub_th', flat=True)
                         holiday_list = str(list(queryset)).replace("'", '')
                         if len(queryset) > 0:
                             raise forms.ValidationError({'start_date': "เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)})
 
-                        """ RULE: Not allows to submit for weekend """
+                        # RULE: Not allows to submit for weekend
                         week_day_number = start_date.weekday()
                         week_day_name = calendar.day_name[start_date.weekday()]
 
-                        
-
-
+                    
 
                         #raise forms.ValidationError({'start_date': "test2"})
+                        #raise forms.ValidationError({'start_date': str(total_pending_approve_syncfail_status_history_day)})
 
-
-
-
-
-                        for x in range(total_leave_request_in_day):
+                        for x in range(total_pending_approve_syncfail_status_history_day):
                             if start_date.weekday() == 5 or start_date.weekday() == 6:
                                 raise forms.ValidationError({'start_date': "วันลาที่เลือกตรงกับวันหยุด เสาร์-อาทิตย์"})
                             else:
                                 start_date = start_date + timedelta(days=1)
 
-                        #raise forms.ValidationError({'start_date': str(total_leave_request_in_day)})
+                        #raise forms.ValidationError({'start_date': str(total_pending_approve_syncfail_status_history_day)})
                         return cleaned_data
                     else:
                         #raise forms.ValidationError({'start_date': "ระบบวันลาสำหรับพนักงานรายวันอยู่ระหว่างการพัฒนา"})          
@@ -184,5 +220,6 @@ class EmployeeForm(forms.ModelForm):
                 raise forms.ValidationError({'start_date': "วันที่ " + str(start_date.strftime("%d-%b %H:%M")) + " ถึง " + str(end_date.strftime("%d-%b %H:%M")) + " ถูกใช้ทำรายการไปแล้ว"})
             
             return data
+            """
         else:
             return cleaned_data

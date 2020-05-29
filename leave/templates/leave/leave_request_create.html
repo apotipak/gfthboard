@@ -34,32 +34,32 @@
                 <i class="fa fa-wrench"></i>&nbsp;&nbsp;Under construction.
             </div> 
 
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="card-body">    
 
-<form action="" method="post">
-    {% csrf_token %}
+                {% for field in form %}
+                    <div class="row">
+                       <div class="col-md-4">    
+                        {{ field.label_tag }}
+                        {% if field.help_text %}
+                          <sup>{{ field.help_text }}</sup>
+                        {% endif %}
+                        {{ field.errors }}
+                       </div>
 
-<div class="card-body">    
+                       <div class="col-md-6 pull-left">
+                         {{ field }}
+                       </div>
+                    </div>
+                 {% endfor %}
 
-{% for field in form %}
-    <div class="row">
-       <div class="col-md-4">    
-        {{ field.label_tag }}
-        {% if field.help_text %}
-          <sup>{{ field.help_text }}</sup>
-        {% endif %}
-        {{ field.errors }}
-       </div><div class="col-md-6 pull-left">
-         {{ field }}
-       </div>
-    </div>
- {% endfor %}
+                    <div class="card-footer">
+                    <input type="submit" class="btn btn-primary" value="Submit" />
+                    </div>
+                </div>
 
-    <div class="card-footer">
-    <input type="submit" class="btn btn-primary" value="Submit" />
-    </div>
-</div>
-
-</form>
+            </form>
             
           </div>
 

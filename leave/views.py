@@ -236,7 +236,7 @@ class LeaveApprovalListView(PermissionRequiredMixin, generic.ListView):
     template_name = 'leave/leave_approval_list.html'
     permission_required = ('leave.approve_leaveplan')
     model = EmployeeInstance
-    paginate_by = 10
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super(LeaveApprovalListView, self).get_context_data(**kwargs)
@@ -250,7 +250,7 @@ class LeaveApprovalListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") order by start_date desc")
+        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by start_date desc")
 
 
 @permission_required('leave.approve_leaveplan')
