@@ -21,6 +21,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from datetime import timedelta, datetime
 import sys
+from .rules import *
 
 
 class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
@@ -121,13 +122,6 @@ class EmployeeCreate(PermissionRequiredMixin, CreateView):
     model = EmployeeInstance
     fields = '__all__'
     permission_required = 'leave.add_employeeinstance'
-
-
-def checkLunchTime(start_date_hour, end_date_hour):
-    if end_date_hour >= 12:
-        return True
-    else:
-        return False
 
 def EmployeeNew(request):
     page_title = settings.PROJECT_NAME
@@ -250,7 +244,7 @@ class LeaveApprovalListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by start_date desc")
+        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by emp_id, start_date asc")
 
 
 @permission_required('leave.approve_leaveplan')
