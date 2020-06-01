@@ -26,9 +26,14 @@ def checkLeaveRequestHour(employee_type, d1, d2):
 		if d1.weekday() not in excluded_day:
 			if (d1.day == d2.day):
 				if (d1.hour <= start_working_hour):
-					for i in range(start_working_hour, d2.hour):
-						if i not in excluded_hour:
-							total_hour += 1
+					if(d2.hour <= stop_working_hour):
+						for i in range(start_working_hour, d2.hour):
+							if i not in excluded_hour:
+								total_hour += 1
+					else:
+						for i in range(start_working_hour, stop_working_hour):
+							if i not in excluded_hour:
+								total_hour += 1
 				else:
 					for i in range(d1.hour, d2.hour):
 						if i not in excluded_hour:
