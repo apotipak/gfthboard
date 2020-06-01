@@ -165,8 +165,8 @@ def EmployeeNew(request):
                         total_leave_hour = number_of_leave_hour
 
                         # Rule : Check lunch time
-                        if checkLunchTime(start_date.hour, end_date.hour):
-                            total_leave_hour = total_leave_hour - 1
+                        #if checkLunchTime("M1", start_date.hour, end_date.hour):
+                        #    total_leave_hour = total_leave_hour - 1
 
                 else:
                     number_of_leave_hour = end_date.hour - start_date.hour

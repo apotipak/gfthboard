@@ -47,11 +47,9 @@ class EmployeeForm(forms.ModelForm):
             # ------------------------------------------------ 
             # Check master remaining hour (Leave_Plan table)
             # ------------------------------------------------ 
-            total_leave_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss', flat=True).get()
-            total_leave_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss_hr', flat=True).get()                        
-            grand_total_leave_remaining_hour = total_leave_remaining_hour + (total_leave_remaining_day * 8)                    
-            #raise forms.ValidationError({'start_date': str(leave_type) + " | D: " + str(total_leave_remaining_day) + " | " + "H: " + str(total_leave_remaining_hour) +  " | " + "Total H: " + str(grand_total_leave_remaining_hour)})
-            #raise forms.ValidationError({'start_date': str(grand_total_leave_remaining_hour)})
+            total_leave_quota_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss', flat=True).get()
+            total_leave_quota_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss_hr', flat=True).get()                        
+            grand_total_leave_quota_remaining_hour = total_leave_quota_remaining_hour + (total_leave_quota_remaining_day * 8)                    
 
             # ------------------------------------------------ 
             # Check transaction remaing hour (leave_employeeinstance table) (filter status = p, a, F)
@@ -59,26 +57,37 @@ class EmployeeForm(forms.ModelForm):
             total_pending_approve_syncfail_status_history_day = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
             total_pending_approve_syncfail_status_history_hour = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
             grand_total_pending_approve_syncfail_status_history_hour = total_pending_approve_syncfail_status_history_hour + (total_pending_approve_syncfail_status_history_day * 8)
-            #raise forms.ValidationError({'start_date': str(total_pending_approve_syncfail_status_history_hour)})
 
-            total_leave_remaining_hour = grand_total_leave_remaining_hour - grand_total_pending_approve_syncfail_status_history_hour
-            #raise forms.ValidationError({'start_date': str(total_leave_remaining_hour)})
-
+            grand_total_leave_quota_remaining_hour = grand_total_leave_quota_remaining_hour - grand_total_pending_approve_syncfail_status_history_hour
                     
             # ------------------------------------------------ 
             # Check request hour
             # ------------------------------------------------
-            total_request_hour = checkRequestHour('M1', start_date, end_date)                  
-            #raise forms.ValidationError({'start_date': str(total_request_hour)})
+            total_leave_request_hour = checkLeaveRequestHour('M1', start_date, end_date)                  
 
-            
-            
-            # RULE 1: Check remaining quota
-            if (total_pending_approve_syncfail_status_history_hour > grand_total_leave_remaining_hour):
-                raise forms.ValidationError({'start_date': "เลือกวันลาเกินโควต้าที่กำหนด" })
+
+
+            '''
+            raise forms.ValidationError({
+                'start_date': 
+                "leave remaining : " + str(grand_total_leave_quota_remaining_hour) + " | " +                
+                "leave trans: " + str(grand_total_pending_approve_syncfail_status_history_hour) + " | " +
+                "leave request: " + str(total_leave_request_hour)                
+            })
+            '''
+
+
+
+            # RULE 1: Check if leave_request_hour is not over leave quota
+            if (total_leave_request_hour > grand_total_leave_quota_remaining_hour):
+                raise forms.ValidationError({'start_date': "เลือกวันลาเกินโควต้าที่กำหนด"})
             else:
-                if total_leave_remaining_hour <= 0:
+                if grand_total_leave_quota_remaining_hour <= 0:
                     raise forms.ValidationError({'start_date': "ใช้วัน" + str(leave_type) + "หมดแล้ว" })
+
+
+
+
 
             # RULE 2: Check duplicate leave
             #select id from leave_employeeinstance where not (start_date > @end_date OR end_date < @start_date)
@@ -87,12 +96,14 @@ class EmployeeForm(forms.ModelForm):
                 raise forms.ValidationError({'start_date': "เลือกวันลาซ้ำ"})
             else:
                 # RULE 3: Check weekend
+                '''
                 delta_day = timedelta(days=1)                
                 sd = start_date
                 while sd <= end_date:
                     if sd.weekday() == 5 or sd.weekday() == 6:
                         raise forms.ValidationError({'start_date': "วันลาที่เลือกตรงกับวันหยุด เสาร์-อาทิตย์"})
                     sd += delta_day
+                '''
 
                 # RULE 4: Check public holidays
                 queryset = LeaveHoliday.objects.filter(hol_date__range=(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))).values_list('pub_th', flat=True)
@@ -100,9 +111,11 @@ class EmployeeForm(forms.ModelForm):
                 if len(queryset) > 0:
                     raise forms.ValidationError({'start_date': "เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)})
 
-                # RULE 5: 
-                return cleaned_data
-                #raise forms.ValidationError({'start_date': "test"})
+
+            # DEBUG
+            #raise forms.ValidationError({'start_date': "debug :"})
+            #raise forms.ValidationError({'start_date': "debug : total_leave_request_hour = " + str(total_leave_request_hour) })
+            return cleaned_data
 
 
             """
@@ -146,9 +159,9 @@ class EmployeeForm(forms.ModelForm):
                     total_number_of_current_leave_request_in_hour = (total_leave_day * 8) + (total_leave_hour)
                                             
                     #Check total number of leave type remaining in hour
-                    total_leave_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss', flat=True).get()
-                    total_leave_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss_hr', flat=True).get()                        
-                    grand_total_leave_remaining_hour = total_leave_remaining_hour + (total_leave_remaining_day * 8)                    
+                    total_leave_quota_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss', flat=True).get()
+                    total_leave_quota_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss_hr', flat=True).get()                        
+                    grand_total_leave_quota_remaining_hour = total_leave_quota_remaining_hour + (total_leave_quota_remaining_day * 8)                    
 
                     
                     #raise forms.ValidationError({'start_date': str(end_date.hour)})
@@ -191,7 +204,7 @@ class EmployeeForm(forms.ModelForm):
 
 
                         # RULE: Not allows to sumbit period over no. of remaining day
-                        if (total_pending_approve_syncfail_status_history_hour + total_number_of_current_leave_request_in_hour) > grand_total_leave_remaining_hour:                            
+                        if (total_pending_approve_syncfail_status_history_hour + total_number_of_current_leave_request_in_hour) > grand_total_leave_quota_remaining_hour:                            
                             raise forms.ValidationError({'start_date': "วันหยุดคงเหลือไม่พอ"})
                             #return cleaned_data
                         #else:
