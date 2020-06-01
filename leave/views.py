@@ -100,17 +100,29 @@ def LeavePolicy(request):
         total_leave_quota_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_miss_hr', flat=True).get()
         grand_total_leave_quota_remaining_hour = total_leave_quota_remaining_hour + (total_leave_quota_remaining_day * 8)
 
+        policy.lve_remaining_day = grand_total_leave_quota_remaining_hour // 8
+        policy.lve_remaining_hour = grand_total_leave_quota_remaining_hour % 8
+
+
         total_pending_approve_syncfail_status_history_day = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
         total_pending_approve_syncfail_status_history_hour = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
         grand_total_pending_approve_syncfail_status_history_hour = total_pending_approve_syncfail_status_history_hour + (total_pending_approve_syncfail_status_history_day * 8)
 
         grand_total_leave_quota_remaining_hour = grand_total_leave_quota_remaining_hour - grand_total_pending_approve_syncfail_status_history_hour
-        
-        policy.lve_remaining_day = grand_total_leave_quota_remaining_hour // 8
-        policy.lve_remaining_hour = grand_total_leave_quota_remaining_hour % 8
 
-        policy.lve_request_day = total_pending_approve_syncfail_status_history_day
-        policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour
+        print(total_pending_approve_syncfail_status_history_day)
+        print(total_pending_approve_syncfail_status_history_hour)
+
+        if (total_pending_approve_syncfail_status_history_day == 0):
+            if (total_pending_approve_syncfail_status_history_hour >= 8):
+                policy.lve_request_day = total_pending_approve_syncfail_status_history_hour // 8
+                policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour % 8
+            else:
+                policy.lve_request_day = total_pending_approve_syncfail_status_history_day
+                policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour                
+        else:
+            policy.lve_request_day = total_pending_approve_syncfail_status_history_day
+            policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour
 
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
