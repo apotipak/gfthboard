@@ -38,3 +38,8 @@ def checkM1LeaveRequestHour(employee_type, d1, d2):
 
 	return grand_total_hour
 
+def checkM1LeaveRequestOverMonth(employee_type, d1, d2):
+	if(d1.month != d2.month):
+		return True
+	else:
+		return False
