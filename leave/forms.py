@@ -65,7 +65,6 @@ class EmployeeForm(forms.ModelForm):
             # ------------------------------------------------
             total_leave_request_hour = checkM1LeaveRequestHour('M1', start_date, end_date)                  
             
-
             '''
             raise forms.ValidationError({
                 'start_date': 
@@ -82,14 +81,17 @@ class EmployeeForm(forms.ModelForm):
                 if grand_total_leave_quota_remaining_hour <= 0:
                     raise forms.ValidationError({'start_date': "ใช้วัน" + str(leave_type) + "หมดแล้ว" })
 
+            # RULE 2: Check if select weekend
+            if (total_leave_request_hour == 0):
+                raise forms.ValidationError({'start_date': "เลือกวันลาเริ่มต้นตรงกับเสาร์-อาทิตย์"})
 
-            # RULE 2: Check duplicate leave
+            # RULE 3: Check duplicate leave
             #select id from leave_employeeinstance where not (start_date > @end_date OR end_date < @start_date)
             queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where not (start_date > '" + str(end_date.strftime("%Y-%m-%d %H:00") + "' or end_date < '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "')") + " and emp_id=" + username + " and status in ('a','p','C','F')")            
             if len(queryset) > 0:
                 raise forms.ValidationError({'start_date': "เลือกวันลาซ้ำ"})
 
-            # RULE 3: Check public holidays
+            # RULE 4: Check public holidays
             queryset = LeaveHoliday.objects.filter(hol_date__range=(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))).values_list('pub_th', flat=True)
             holiday_list = str(list(queryset)).replace("'", '')
             if len(queryset) > 0:

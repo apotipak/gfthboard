@@ -48,7 +48,8 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='b').order_by('start_date')
+        #return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='r').order_by('start_date')
+        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).order_by('start_date')
 
 
 class EmployeeInstanceDetailView(generic.DetailView):
