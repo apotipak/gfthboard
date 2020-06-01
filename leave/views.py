@@ -155,6 +155,7 @@ def EmployeeNew(request):
             employee.created_by = request.user.username
 
             """ START """
+            '''
             delta = timedelta(days=1)
             number_of_leave_day, number_of_leave_hour = 0, 0       
             number_of_leave_day = (end_date.day - start_date.day)            
@@ -169,11 +170,6 @@ def EmployeeNew(request):
                     else:
                         total_leave_day = 0
                         total_leave_hour = number_of_leave_hour
-
-                        # Rule : Check lunch time
-                        #if checkLunchTime("M1", start_date.hour, end_date.hour):
-                        #    total_leave_hour = total_leave_hour - 1
-
                 else:
                     number_of_leave_hour = end_date.hour - start_date.hour
 
@@ -189,8 +185,12 @@ def EmployeeNew(request):
             
             employee.lve_act = total_leave_day
             employee.lve_act_hr = total_leave_hour
+            '''           
             """ END """
 
+            result = checkLeaveRequestHour("M1", start_date, end_date)
+            employee.lve_act = result//8
+            employee.lve_act_hr = result%8
             employee.save()
 
             """ TODO: Create send mail function"""
