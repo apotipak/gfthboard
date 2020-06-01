@@ -109,13 +109,17 @@ def LeavePolicy(request):
         grand_total_pending_approve_syncfail_status_history_hour = total_pending_approve_syncfail_status_history_hour + (total_pending_approve_syncfail_status_history_day * 8)
 
         grand_total_leave_quota_remaining_hour = grand_total_leave_quota_remaining_hour - grand_total_pending_approve_syncfail_status_history_hour
-        
 
+        print(total_pending_approve_syncfail_status_history_day)
+        print(total_pending_approve_syncfail_status_history_hour)
 
         if (total_pending_approve_syncfail_status_history_day == 0):
             if (total_pending_approve_syncfail_status_history_hour >= 8):
                 policy.lve_request_day = total_pending_approve_syncfail_status_history_hour // 8
                 policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour % 8
+            else:
+                policy.lve_request_day = total_pending_approve_syncfail_status_history_day
+                policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour                
         else:
             policy.lve_request_day = total_pending_approve_syncfail_status_history_day
             policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour
