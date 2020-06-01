@@ -21,6 +21,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from datetime import timedelta, datetime
 import sys
+from .rules import *
 
 
 class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
@@ -90,6 +91,12 @@ def LeavePolicy(request):
     today_date = settings.TODAY_DATE    
     leave_policy = LeavePlan.EmployeeLeavePolicy(request)
 
+    username = request.user.username    
+    #total_pending_approve_syncfail_status_history_day = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+    #total_pending_approve_syncfail_status_history_hour = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+    #grand_total_pending_approve_syncfail_status_history_hour = total_pending_approve_syncfail_status_history_hour + (total_pending_approve_syncfail_status_history_day * 8)
+    #grand_total_leave_quota_remaining_hour = grand_total_leave_quota_remaining_hour - grand_total_pending_approve_syncfail_status_history_hour
+
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
         'today_date': settings.TODAY_DATE,
@@ -121,13 +128,6 @@ class EmployeeCreate(PermissionRequiredMixin, CreateView):
     model = EmployeeInstance
     fields = '__all__'
     permission_required = 'leave.add_employeeinstance'
-
-
-def checkLunchTime(start_date_hour, end_date_hour):
-    if end_date_hour >= 12:
-        return True
-    else:
-        return False
 
 def EmployeeNew(request):
     page_title = settings.PROJECT_NAME
@@ -171,8 +171,8 @@ def EmployeeNew(request):
                         total_leave_hour = number_of_leave_hour
 
                         # Rule : Check lunch time
-                        if checkLunchTime(start_date.hour, end_date.hour):
-                            total_leave_hour = total_leave_hour - 1
+                        #if checkLunchTime("M1", start_date.hour, end_date.hour):
+                        #    total_leave_hour = total_leave_hour - 1
 
                 else:
                     number_of_leave_hour = end_date.hour - start_date.hour
@@ -236,7 +236,7 @@ class LeaveApprovalListView(PermissionRequiredMixin, generic.ListView):
     template_name = 'leave/leave_approval_list.html'
     permission_required = ('leave.approve_leaveplan')
     model = EmployeeInstance
-    paginate_by = 10
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super(LeaveApprovalListView, self).get_context_data(**kwargs)
@@ -250,7 +250,7 @@ class LeaveApprovalListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") order by start_date desc")
+        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by emp_id, start_date asc")
 
 
 @permission_required('leave.approve_leaveplan')
