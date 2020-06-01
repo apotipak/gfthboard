@@ -91,6 +91,12 @@ def LeavePolicy(request):
     today_date = settings.TODAY_DATE    
     leave_policy = LeavePlan.EmployeeLeavePolicy(request)
 
+    username = request.user.username    
+    #total_pending_approve_syncfail_status_history_day = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+    #total_pending_approve_syncfail_status_history_hour = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+    #grand_total_pending_approve_syncfail_status_history_hour = total_pending_approve_syncfail_status_history_hour + (total_pending_approve_syncfail_status_history_day * 8)
+    #grand_total_leave_quota_remaining_hour = grand_total_leave_quota_remaining_hour - grand_total_pending_approve_syncfail_status_history_hour
+
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
         'today_date': settings.TODAY_DATE,
