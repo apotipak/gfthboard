@@ -38,6 +38,7 @@
                         <th scope="col">พนักงาน</th>
                         <th scope="col">ประเภทการลา</th>
                         <th scope="col">ลาวันที่</th>
+                        <th scope="col">จำนวน</th>
                         <th scope="col">สถานะ</th>
                         <td scope="col">&nbsp;</td>
                     </tr>
@@ -47,7 +48,17 @@
                     <tr>
                         <td>{{leave.emp_fname_th}} {{leave.emp_lname_th}}</td>
                         <td>{{leave.leave_type}}</td>
-                        <td>{{leave.start_date|date:'d F Y h:00'}} - {{leave.end_date|date:'d F Y h:00'}}</td>
+                        <td>{{leave.start_date|date:"d F Y H:i A"}} - {{leave.end_date|date:"d F Y H:i A"}}</td>
+                        <td>
+                        {% if leave.lve_act != 0 %}
+                            {{leave.lve_act}} วัน
+                            {% if leave.lve_act_hr != 0 %}
+                              | {{leave.lve_act_hr}} ชั่วโมง
+                            {% endif %}
+                        {% else %}
+                            {{leave.lve_act_hr}} ชั่วโมง
+                        {% endif %}
+                        </td>                        
                         <td>
                             {% if leave.status == 'a' %}
                                 <span class="badge badge-success">อนุมัติ</span>&nbsp;<span class="badge badge-warning">Sync Pending</span>
