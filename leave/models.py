@@ -135,7 +135,7 @@ class LeavePlan(models.Model):
         if UserName == 'superadmin':
             EmployeeLeavePolicyInstance = ""
         else:
-            EmployeeLeavePolicyInstance = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_code, lp.lve_plan, lp.lve_miss, lt.lve_th from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + UserName + " and lp.lve_year=" + LeaveYear)
+            EmployeeLeavePolicyInstance = LeavePlan.objects.raw("select lp.emp_id as id, lt.lve_id as lve_type_id, lp.lve_code, lp.lve_plan, lp.lve_miss, lp.lve_miss_hr, lt.lve_th from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + UserName + " and lp.lve_year=" + LeaveYear)
         return EmployeeLeavePolicyInstance
 
 

@@ -45,12 +45,32 @@
                 <tr>
                   <td>{{ policy.lve_th }}</td>
                   <td>
+                    
                     <button type="button" class="btn btn-primary">
                       สิทธิ์ลา&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;วัน
                     </button>&nbsp;&nbsp;
+
                     <button type="button" class="btn btn-success">
-                      คงเหลือ&nbsp;&nbsp;{{policy.lve_miss}}&nbsp;&nbsp;วัน
-                    </button>                                          
+                      คงเหลือ&nbsp;&nbsp;{{policy.lve_remaining_day}}&nbsp;&nbsp;วัน
+                      {% if policy.lve_remaining_hour > 0 %}
+                        &nbsp;&nbsp;{{policy.lve_remaining_hour|stringformat:".0f"}}&nbsp;&nbsp;ชั่วโมง
+                      {% endif %}                                            
+                    </button>&nbsp;&nbsp;
+
+                    
+                    {% if policy.lve_request_day > 0 or policy.lve_request_hour > 0 %}
+                    <button type="button" class="btn btn-warning">
+                      รออนุมัติ
+                      {% if policy.lve_request_day > 0 %}
+                      &nbsp;&nbsp;{{policy.lve_request_day}}&nbsp;&nbsp;วัน
+                      {% endif %}
+
+                      {% if policy.lve_request_hour > 0 %}
+                      &nbsp;&nbsp;{{policy.lve_request_hour|stringformat:".0f"}}&nbsp;&nbsp;ชั่วโมง
+                      {% endif %}                      
+                    </button>&nbsp;&nbsp;
+                    {% endif %}
+
                   </td>
                 </tr>                  
                   {% endfor %}

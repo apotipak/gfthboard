@@ -22,6 +22,7 @@ from django.contrib.auth.models import User
 from datetime import timedelta, datetime
 import sys
 from .rules import *
+from django.db.models import Sum
 
 
 class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
@@ -91,11 +92,24 @@ def LeavePolicy(request):
     today_date = settings.TODAY_DATE    
     leave_policy = LeavePlan.EmployeeLeavePolicy(request)
 
-    username = request.user.username    
-    #total_pending_approve_syncfail_status_history_day = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
-    #total_pending_approve_syncfail_status_history_hour = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=leave_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
-    #grand_total_pending_approve_syncfail_status_history_hour = total_pending_approve_syncfail_status_history_hour + (total_pending_approve_syncfail_status_history_day * 8)
-    #grand_total_leave_quota_remaining_hour = grand_total_leave_quota_remaining_hour - grand_total_pending_approve_syncfail_status_history_hour
+    username = request.user.username
+
+    for policy in leave_policy:
+        total_leave_quota_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_miss', flat=True).get()
+        total_leave_quota_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_miss_hr', flat=True).get()
+        grand_total_leave_quota_remaining_hour = total_leave_quota_remaining_hour + (total_leave_quota_remaining_day * 8)
+
+        total_pending_approve_syncfail_status_history_day = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+        total_pending_approve_syncfail_status_history_hour = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+        grand_total_pending_approve_syncfail_status_history_hour = total_pending_approve_syncfail_status_history_hour + (total_pending_approve_syncfail_status_history_day * 8)
+
+        grand_total_leave_quota_remaining_hour = grand_total_leave_quota_remaining_hour - grand_total_pending_approve_syncfail_status_history_hour
+        
+        policy.lve_remaining_day = grand_total_leave_quota_remaining_hour // 8
+        policy.lve_remaining_hour = grand_total_leave_quota_remaining_hour % 8
+
+        policy.lve_request_day = total_pending_approve_syncfail_status_history_day
+        policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour
 
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
@@ -188,7 +202,7 @@ def EmployeeNew(request):
             '''           
             """ END """
 
-            result = checkLeaveRequestHour("M1", start_date, end_date)
+            result = checkM1LeaveRequestHour("M1", start_date, end_date)
             employee.lve_act = result//8
             employee.lve_act_hr = result%8
             employee.save()

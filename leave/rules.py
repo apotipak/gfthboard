@@ -2,18 +2,7 @@ from datetime import datetime, timedelta
 
 dayDelta = timedelta(days=1)
 
-def checkBusinessHour(employee_type, start_date, end_date):
-	status = True	
-	if employee_type == 'M1':
-		while (start_date <= end_date):
-		    if start_date.hour in (0,1,2,3,4,5,6,7,12,18,19,20,21,22,23):
-		    	status = False
-		    if end_date.hour in (0,1,2,3,4,5,6,7,12,18,19,20,21,22,23):
-		    	status = False
-		    start_date += dayDelta
-	return status
-
-def checkLeaveRequestHour(employee_type, d1, d2):
+def checkM1LeaveRequestHour(employee_type, d1, d2):
 	start_working_hour = 8
 	stop_working_hour = 17
 	excluded_day = {5, 6}
@@ -49,8 +38,3 @@ def checkLeaveRequestHour(employee_type, d1, d2):
 
 	return grand_total_hour
 
-def checkLunchTime(employee_type, start_date_hour, end_date_hour):
-    if start_date_hour == 12 or end_date_hour == 12:
-        return True
-    else:
-        return False
