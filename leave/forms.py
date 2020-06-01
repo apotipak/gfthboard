@@ -97,10 +97,10 @@ class EmployeeForm(forms.ModelForm):
             if len(queryset) > 0:
                 raise forms.ValidationError({'start_date': "เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)})
 
-            # DEBUG
-            #raise forms.ValidationError({'start_date': "debug :"})
-            #raise forms.ValidationError({'start_date': "debug : total_leave_request_hour = " + str(total_leave_request_hour) })
-            return cleaned_data
+            # RULE 5: Check not allow over month
+            if(checkM1LeaveRequestOverMonth("M1", start_date, end_date)):
+                raise forms.ValidationError({'start_date': "เลือกวันลาข้ามเดือน"})
 
+            return cleaned_data
         else:
             return cleaned_data
