@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 dayDelta = timedelta(days=1)
 
 def checkM1LeaveRequestHour(employee_type, d1, d2):
+
 	start_working_hour = 8
 	stop_working_hour = 17
 	excluded_day = {5, 6}

@@ -23,6 +23,7 @@ from datetime import timedelta, datetime
 import sys
 from .rules import *
 from django.db.models import Sum
+from django.utils.dateparse import parse_datetime
 
 
 class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
@@ -164,13 +165,22 @@ def EmployeeNew(request):
     project_version = settings.PROJECT_VERSION
     today_date = settings.TODAY_DATE
 
+    form = EmployeeForm(request.POST, user=request.user)
+
     if request.method == "POST":
 
-        form = EmployeeForm(request.POST, user=request.user)
+        #form = EmployeeForm(request.POST, user=request.user)
 
         if form.is_valid():
             start_date = form.cleaned_data['start_date']
+            start_time = form.cleaned_data['start_time']
             end_date = form.cleaned_data['end_date']
+            end_time = form.cleaned_data['end_time']
+
+            d1 = str(start_date) + ' ' + str(start_time) + ':00:00'
+            d2 = str(end_date) + ' ' + str(end_time) + ':00:00'
+            start_date = datetime.strptime(d1, "%Y-%m-%d %H:%M:%S")
+            end_date = datetime.strptime(d2, "%Y-%m-%d %H:%M:%S")
 
             leave_type_id = form.cleaned_data['leave_type']
             username = request.user.username
@@ -179,46 +189,16 @@ def EmployeeNew(request):
 
             employee = form.save(commit=False)
 
+            employee.start_date = start_date
+            employee.end_date = end_date
             employee.emp_id = request.user.username
             employee.created_by = request.user.username
-
-            """ START """
-            '''
-            delta = timedelta(days=1)
-            number_of_leave_day, number_of_leave_hour = 0, 0       
-            number_of_leave_day = (end_date.day - start_date.day)            
-            total_leave_day, total_leave_hour = 0, 0
-
-            while start_date <= end_date:                
-                if number_of_leave_day <= 0:
-                    number_of_leave_hour = end_date.hour - start_date.hour
-                    if number_of_leave_hour == 9:
-                        total_leave_day += 1
-                        total_leave_hour = 0
-                    else:
-                        total_leave_day = 0
-                        total_leave_hour = number_of_leave_hour
-                else:
-                    number_of_leave_hour = end_date.hour - start_date.hour
-
-                    if number_of_leave_hour == 9:
-                        total_leave_day += 1
-                        total_leave_hour = 0
-                    else:
-                        total_leave_day = number_of_leave_day
-                        total_leave_hour = number_of_leave_hour
-
-
-                start_date += delta                
-            
-            employee.lve_act = total_leave_day
-            employee.lve_act_hr = total_leave_hour
-            '''           
-            """ END """
 
             result = checkM1LeaveRequestHour("M1", start_date, end_date)
             employee.lve_act = result//8
             employee.lve_act_hr = result%8
+
+            print(str(start_date) + " | " + str(end_date))
             employee.save()
 
             """ TODO: Create send mail function"""
@@ -251,7 +231,7 @@ def EmployeeNew(request):
         'today_date': settings.TODAY_DATE,
         'project_version': settings.PROJECT_VERSION,
         'db_server': settings.DATABASES['default']['HOST'],
-        'project_name': settings.PROJECT_NAME,        
+        'project_name': settings.PROJECT_NAME
     })
 
 
