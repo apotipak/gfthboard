@@ -74,8 +74,9 @@
                         <span class="input-group-text"><i class="far fa-clock"></i>&nbsp;&nbsp;เวลา</span>
                       </div>
                       {{ form.start_time }}
-                    </div>
+                    </div>                    
                     <div class="text-danger">{{ form.start_date.errors }}</div>
+
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text"><i class="far fa-calendar"></i>&nbsp;&nbsp;ถึงวันที่</span>
@@ -88,6 +89,7 @@
                       {{ form.end_time }}
                     </div>
                     <div class="text-danger">{{ form.end_date.errors }}</div>
+
                   </div>                
 
                   <div class="container-fluid mb-12">
@@ -111,7 +113,7 @@
 
 
                 <div class="card-footer">                 
-                  <button type="submit" class="btn btn-primary">ตกลง</button>
+                  <button type="submit" class="btn btn-success">ตกลง</button>
                 </div>
 
               </form>
