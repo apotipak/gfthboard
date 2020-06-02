@@ -17,9 +17,7 @@
   <!-- daterange picker -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
+  
   <!-- iCheck for checkboxes and radio inputs -->
   <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
   <!-- Theme style -->
@@ -72,78 +70,42 @@
 <!-- Page script -->
 
 <script>
-  $(function() {
-    $('#id_start_date').datepicker({firstDay: 1,
-          dateFormat: "yy-mm-dd",
-          defaultDate: "2020-06-02",
-          minDate: "2020-01-01",
-          maxDate: "2020-12-31"});
-  });
-  $(function() {
-    $('#id_end_date').datepicker({firstDay: 1,
-          dateFormat: "yy-mm-dd",
-          defaultDate: "2020-06-02",
-          minDate: "2020-01-01",
-          maxDate: "2020-12-31"});
-  });  
-</script>
+$(document).ready(function () {
+    $("#id_start_date").datepicker({
+        dateFormat: "yy-mm-dd",
+        minDate: -15,
+        onSelect: function () {
+            var dt2 = $('#id_end_date');
+            var startDate = $(this).datepicker('getDate');
+            //add 30 days to selected date
+            startDate.setDate(startDate.getDate() + 30);            
+            var minDate = $(this).datepicker('getDate');
 
-<script type='text/javascript'>
-  $(function () {
+            var dt2Date = dt2.datepicker('getDate');
+            //difference in days. 86400 seconds in day, 1000 ms in second
+            var dateDiff = (dt2Date - minDate)/(86400 * 1000);
 
-    $(".delete_button1").click(function() {
-        var id = $(this).attr('id');
-        console.log("id: " + id);     
-    });
-
-  });
-
-</script>
-
-<script type='text/javascript'>
-  $(function () {
-
-    var dateToday = new Date();
-
-    $('#reservationtime').daterangepicker({
-      autoUpdateInput: false,
-      timePicker: true,
-      timePickerIncrement: 60,
-      timePicker24Hour: true,
-      
-      "dateLimit": {
-        "month": 1,
-      },
-      //minDate: moment({hour: 8, minute: 60}),
-      
-      //singleDatePicker: true,      
-      startDate: moment().month('month').date('date').hours(8).minutes(0).seconds(0).milliseconds(0),
-      endDate: moment().month('month').date('date').hours(17).minutes(0).seconds(0).milliseconds(0),
-      //minDate:new Date(), 
-      //dateLimit: { "days": 15},
-      //dateLimit: { "hours":7 },
-      //timePicker: true,
-      //monthNamesShort: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      locale: {
-        format: 'DD-MMM HH:mm A',
-        cancelLabel: 'Clear',        
-      }
-    }, function(start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD HH:mm') + ' to ' + end.format('YYYY-MM-DD HH:mm'));
-        $("#id_start_date").val(start.format('YYYY-MM-DD HH:mm'));
-        $("#id_end_date").val(end.format('YYYY-MM-DD HH:mm'));
-        $('#reservationtime').val(start.format('DD-MM-YYYY HH:mm A') + '    -    ' + end.format('DD-MM-YYYY HH:mm A'));
+            //dt2 not set or dt1 date is greater than dt2 date
+            if (dt2Date == null || dateDiff < 0) {
+                    dt2.datepicker('setDate', minDate);
+            }
+            //dt1 date is 30 days under dt2 date
+            else if (dateDiff > 30){
+                    dt2.datepicker('setDate', startDate);
+            }
+            //sets dt2 maxDate to the last day of 30 days window
+            dt2.datepicker('option', 'maxDate', startDate);
+            //first day which can be selected in dt2 is selected date in dt1
+            dt2.datepicker('option', 'minDate', minDate);
+        }
     }).attr('readonly', 'readonly');
-  });
-
-  $('#reservationtime').on('apply.daterangepicker', function(ev, picker) {
-      $(this).val(picker.startDate.format('DD-MMM-YYYY HH:mm A') + '  -  ' + picker.endDate.format('DD-MMM-YYYY HH:mm A'));
-  });
-  $('#reservationtime').on('cancel.daterangepicker', function(ev, picker) {
-      $(this).val('');
-  });
-
+    
+    $('#id_end_date').datepicker({
+        dateFormat: "yy-mm-dd",
+        minDate: 0
+    }).attr('readonly', 'readonly');
+});
 </script>
-
+ 
 </body>
 </html>
