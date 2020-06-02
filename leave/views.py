@@ -111,7 +111,6 @@ def LeavePolicy(request):
         policy.lve_remaining_day = grand_total_leave_quota_remaining_hour // 8
         policy.lve_remaining_hour = grand_total_leave_quota_remaining_hour % 8
 
-
         #print(total_pending_approve_syncfail_status_history_day)
         #print(total_pending_approve_syncfail_status_history_hour)
 
@@ -123,8 +122,12 @@ def LeavePolicy(request):
                 policy.lve_request_day = total_pending_approve_syncfail_status_history_day
                 policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour                
         else:
-            policy.lve_request_day = total_pending_approve_syncfail_status_history_day
-            policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour
+            if (total_pending_approve_syncfail_status_history_hour >= 8):
+                policy.lve_request_day = total_pending_approve_syncfail_status_history_day + (total_pending_approve_syncfail_status_history_hour // 8)                
+                policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour % 8
+            else:
+                policy.lve_request_day = total_pending_approve_syncfail_status_history_day
+                policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour                
 
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
