@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from django import forms
 
 class UserForm(ModelForm):
-	password = forms.CharField(max_length=128)
+	password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านเก่า'}, widget=forms.PasswordInput())
+	new_password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านใหม่'}, widget=forms.PasswordInput())
+	confirm_new_password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านใหม่อีกครั้ง'}, widget=forms.PasswordInput())
 
 	class Meta:
 		model = User
@@ -13,9 +15,40 @@ class UserForm(ModelForm):
 		self.user = kwargs.pop('user')
 		super(UserForm, self).__init__(*args, **kwargs)
 		self.fields['password'].widget.attrs = {'class': 'form-control'}
-		self.fields['password'].queryset = User.objects.filter(User__username=self.user.username)
+		self.fields['password'].widget.attrs['placeholder'] = "ป้อนรหัสผ่านเก่า"
+		self.fields['new_password'].widget.attrs = {'class': 'form-control'}
+		self.fields['new_password'].widget.attrs['placeholder'] = "ป้อนรหัสผ่านใหม่"
+		self.fields['confirm_new_password'].widget.attrs = {'class': 'form-control'}
+		self.fields['confirm_new_password'].widget.attrs['placeholder'] = "ป้อนรหัสผ่านใหม่อีกครั้ง"
 
-	def clean(self):
+	def clean_password(self):
 		cleaned_data = super(UserForm, self).clean()
-		old_password = self.cleaned_data.get('old_password')
-		return cleaned_data
+		
+		password = self.cleaned_data.get('password')
+		username = self.user.username
+		userobj = User.objects.get(username=username)
+		if userobj.check_password(password):
+			return password
+		else:
+			raise forms.ValidationError("ป้อนรหัสผ่านเก่าไม่ถูกต้อง")
+		
+	def clean_new_password(self):
+		data = super(UserForm, self).clean()
+		new_password = self.cleaned_data.get('new_password')
+		if new_password != "":
+			return new_password
+		else:
+			raise forms.ValidationError("กรุณาป้อนรหัสผ่านใหม่")
+
+	def clean_confirm_new_password(self):
+		data = super(UserForm, self).clean()
+		new_password = self.cleaned_data.get('new_password')
+		confirm_new_password = self.cleaned_data.get('confirm_new_password')
+
+		if confirm_new_password != "":
+			if new_password != confirm_new_password:
+				raise forms.ValidationError("ป้อนรหัสใหม่ไม่ตรงกัน")
+			else:
+				return confirm_new_password
+		else:
+			raise forms.ValidationError("กรุณาป้อนรหัสผ่านใหม่อีกครั้ง")

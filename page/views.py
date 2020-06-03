@@ -49,10 +49,16 @@ def StaffPassword(request):
     project_version = settings.PROJECT_VERSION
     today_date = settings.TODAY_DATE    
 
-
-    print("test")
+    form = UserForm(request.POST, user=request.user)
+ 
+    if request.method == "POST":
+        if form.is_valid():
+            password = form.cleaned_data['password']
+    else:
+        form = UserForm(user=request.user)    
     
     return render(request, 'page/staff_password_form.html', {
+        'form': form,
         'page_title': page_title, 
         'project_name': project_name, 
         'project_version': project_version, 
