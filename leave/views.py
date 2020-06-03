@@ -97,37 +97,83 @@ def LeavePolicy(request):
     username = request.user.username
 
     for policy in leave_policy:
-        total_leave_quota_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_miss', flat=True).get()
-        total_leave_quota_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_miss_hr', flat=True).get()
-        grand_total_leave_quota_remaining_hour = total_leave_quota_remaining_hour + (total_leave_quota_remaining_day * 8)
+
+        # จำนวนวันที่ใช้
+        total_lve_act = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_act', flat=True).get()        
+        # จำนวนชั่วโมงที่ใช้แล้ว
+        total_lve_act_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_act_hr', flat=True).get()
+        # จำนวนชั่วโมงที่ใช้แล้วทั้งหมด
+        grand_total_lve_act_hr = total_lve_act_hr + (total_lve_act * 8)
 
 
-        total_pending_approve_syncfail_status_history_day = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
-        total_pending_approve_syncfail_status_history_hour = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p','a','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
-        grand_total_pending_approve_syncfail_status_history_hour = total_pending_approve_syncfail_status_history_hour + (total_pending_approve_syncfail_status_history_day * 8)
+        # จำนวนวันคงเหลือ
+        total_lve_miss = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_miss', flat=True).get()        
+        # จำนวนชั่วโมงคงเหลือ
+        total_lve_miss_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_miss_hr', flat=True).get()
+        # จำนวนชั่วโมงคงเหลือทั้งหมด
+        grand_total_lve_miss_hr = total_lve_miss_hr + (total_lve_miss * 8)
 
-        grand_total_leave_quota_remaining_hour = grand_total_leave_quota_remaining_hour - grand_total_pending_approve_syncfail_status_history_hour
 
-        policy.lve_remaining_day = grand_total_leave_quota_remaining_hour // 8
-        policy.lve_remaining_hour = grand_total_leave_quota_remaining_hour % 8
+        # จำนวนวันที่รออนุมัติ
+        total_pending_lve_act = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+        # จำนวนชั่วโมงที่รออนุมัติ
+        total_pending_lve_act_hr = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+        # จำนวนชั่วโมงที่รออนุมัติทั้งหมด
+        grand_total_pending_lve_act_hr = total_pending_lve_act_hr + (total_pending_lve_act * 8)
+        print(grand_total_pending_lve_act_hr)
 
-        #print(total_pending_approve_syncfail_status_history_day)
-        #print(total_pending_approve_syncfail_status_history_hour)
+        # จำนวนวันที่อนุมัติ
+        total_approved_lve_act = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+        # จำนวนชั่วโมงที่อนุมัติ
+        total_approved_lve_act_hr = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+        # จำนวนชั่วโมงที่อนุมัติทั้งหมด
+        grand_total_approved_lve_act_hr = total_approved_lve_act_hr + (total_approved_lve_act * 8)
 
-        if (total_pending_approve_syncfail_status_history_day == 0):
-            if (total_pending_approve_syncfail_status_history_hour >= 8):
-                policy.lve_request_day = total_pending_approve_syncfail_status_history_hour // 8
-                policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour % 8
-            else:
-                policy.lve_request_day = total_pending_approve_syncfail_status_history_day
-                policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour                
+
+        # แสดงจำนวนวันคงเหลือ
+        grand_total_lve_miss_hr = grand_total_lve_miss_hr - grand_total_pending_lve_act_hr - grand_total_approved_lve_act_hr
+        grand_total_lve_miss_hr_display = ""
+        if grand_total_lve_miss_hr <= 0:
+            grand_total_lve_miss_hr_display += "0"
         else:
-            if (total_pending_approve_syncfail_status_history_hour >= 8):
-                policy.lve_request_day = total_pending_approve_syncfail_status_history_day + (total_pending_approve_syncfail_status_history_hour // 8)                
-                policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour % 8
-            else:
-                policy.lve_request_day = total_pending_approve_syncfail_status_history_day
-                policy.lve_request_hour = total_pending_approve_syncfail_status_history_hour                
+            if (grand_total_lve_miss_hr // 8) > 0:
+                grand_total_lve_miss_hr_display += "{:,.0f}".format(grand_total_lve_miss_hr // 8) + " วัน "
+
+            if (grand_total_lve_miss_hr % 8) > 0:
+                grand_total_lve_miss_hr_display += "{:,.0f}".format(grand_total_lve_miss_hr % 8) + " ชั่วโมง"
+
+        policy.grand_total_lve_miss_hr_display = grand_total_lve_miss_hr_display
+
+
+        # แสดงจำนวนวันที่ใช้
+        grand_total_lve_act_hr = grand_total_lve_act_hr + grand_total_approved_lve_act_hr
+        grand_total_lve_act_hr_display = ""
+        if grand_total_lve_act_hr <= 0:
+            grand_total_lve_act_hr_display += "0"
+        else:
+            if (grand_total_lve_act_hr // 8) != 0:
+                grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr // 8) + " วัน "
+            
+            if (grand_total_lve_act_hr % 8) != 0:
+                grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr % 8) + " ชั่วโมง"
+
+        policy.grand_total_lve_act_hr_display = grand_total_lve_act_hr_display        
+
+
+        # แสดงจำนวนวันที่รออนุมัติ
+        grand_total_pending_lve_act_hr_display = ""
+        if grand_total_pending_lve_act_hr <= 0:
+            grand_total_pending_lve_act_hr_display += "0"
+        else:
+            if (grand_total_pending_lve_act_hr // 8) > 0:
+                grand_total_pending_lve_act_hr_display += "{:,.0f}".format(grand_total_pending_lve_act_hr // 8) + " วัน "
+
+            if (grand_total_pending_lve_act_hr % 8) > 0:
+                grand_total_pending_lve_act_hr_display += "{:,.0f}".format(grand_total_pending_lve_act_hr % 8) + " ชั่วโมง"
+        
+        policy.grand_total_pending_lve_act_hr_display = grand_total_pending_lve_act_hr_display
+
+
 
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,

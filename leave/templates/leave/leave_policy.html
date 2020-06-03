@@ -36,42 +36,26 @@
                 <table class="table table-striped">
                   <thead>
                     <tr>                  
-                      <th scope="col">ประเภทการลา</th>
-                      <th scope="col">จำนวนวัน</th>
+                      <th scope="col"><h5>ประเภทการลา</h5></th>
+                      <th scope="col" style="text-align: left"><h5>วันคงเหลือ</h5></th>
+                      <th scope="col"><h5>วันที่ใช้</h5></th>
+                      <th scope="col"><h5>รออนุมัติ</h5></th>
                     </tr>
                   </thead>
                   <tbody>   
                   {% for policy in leave_policy %}
-                <tr>
-                  <td>{{ policy.lve_th }}</td>
-                  <td>
-                    
-                    <button type="button" class="btn btn-primary">
-                      สิทธิ์ลา&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;วัน
-                    </button>&nbsp;&nbsp;
+                <tr>                  
+                  <!-- ประเภทการลา -->
+                  <td><h5>{{ policy.lve_th }}&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;วัน</h5></td>
+                  
+                  <!-- วันคงเหลือ -->
+                  <td>{{ policy.grand_total_lve_miss_hr_display }}</td>
+                  
+                  <!-- วันที่ใช้ -->
+                  <td>{{ policy.grand_total_lve_act_hr_display }}</td>
 
-                    <button type="button" class="btn btn-info">
-                      คงเหลือ&nbsp;&nbsp;{{policy.lve_remaining_day}}&nbsp;&nbsp;วัน
-                      {% if policy.lve_remaining_hour > 0 %}
-                        &nbsp;&nbsp;{{policy.lve_remaining_hour|stringformat:".0f"}}&nbsp;&nbsp;ชั่วโมง
-                      {% endif %}                                            
-                    </button>&nbsp;&nbsp;
-
-                    
-                    {% if policy.lve_request_day > 0 or policy.lve_request_hour > 0 %}
-                    <button type="button" class="btn btn-warning">
-                      รออนุมัติ
-                      {% if policy.lve_request_day > 0 %}
-                      &nbsp;&nbsp;{{policy.lve_request_day}}&nbsp;&nbsp;วัน
-                      {% endif %}
-
-                      {% if policy.lve_request_hour > 0 %}
-                      &nbsp;&nbsp;{{policy.lve_request_hour|stringformat:".0f"}}&nbsp;&nbsp;ชั่วโมง
-                      {% endif %}                      
-                    </button>&nbsp;&nbsp;
-                    {% endif %}
-
-                  </td>
+                  <!-- รออนุมัติ -->
+                  <td>{{ policy.grand_total_pending_lve_act_hr_display }}</td>
                 </tr>                  
                   {% endfor %}
                   </tbody>
