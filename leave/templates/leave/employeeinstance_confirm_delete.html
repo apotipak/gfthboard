@@ -34,7 +34,7 @@
             <b>ประเภทการลา:</b> {{ object.leave_type }}<br>
             <b>ลาวันที่:</b> {{ object.start_date|date:'d F Y'}} - {{ object.end_date|date:'d F Y'}}</p>
 
-            <div class="alert alert-info" role="alert">กรุณาตรวจสอบข้อมูลอีกครั้งก่อนกดปุ่มยกเลิก</div>
+            <div class="alert alert-warning" role="alert"><i class="fas fa-exclamation"></i>&nbsp;&nbsp;กรุณาตรวจสอบข้อมูลอีกครั้งก่อนกดปุ่มยกเลิก</div>
             <form action="" method="POST">
               {% csrf_token %}
               <input type="button" class="btn btn-secondary" onclick="history.back()" value="ย้อนกลับ" />
