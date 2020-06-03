@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.http import HttpResponseRedirect
 from leave.models import LeaveEmployee
 from django.contrib.auth.models import User
 from .forms import UserForm
@@ -53,7 +54,11 @@ def StaffPassword(request):
  
     if request.method == "POST":
         if form.is_valid():
-            password = form.cleaned_data['password']
+            new_password = form.cleaned_data['new_password']
+            u = User.objects.get(username__exact=request.user)
+            u.set_password(new_password)
+            u.save()
+            return HttpResponseRedirect('/staff-profile')
     else:
         form = UserForm(user=request.user)    
     
