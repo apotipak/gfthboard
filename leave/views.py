@@ -120,7 +120,7 @@ def LeavePolicy(request):
         total_pending_lve_act_hr = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
         # จำนวนชั่วโมงที่รออนุมัติทั้งหมด
         grand_total_pending_lve_act_hr = total_pending_lve_act_hr + (total_pending_lve_act * 8)
-        print(grand_total_pending_lve_act_hr)
+
 
         # จำนวนวันที่อนุมัติ
         total_approved_lve_act = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
