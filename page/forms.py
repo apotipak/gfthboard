@@ -3,9 +3,10 @@ from django.contrib.auth.models import User
 from django import forms
 
 class UserForm(ModelForm):
-	password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านเก่า'}, widget=forms.PasswordInput())
-	new_password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านใหม่'}, widget=forms.PasswordInput())
-	confirm_new_password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านใหม่อีกครั้ง'}, widget=forms.PasswordInput())
+	password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านเก่า'}, widget=forms.PasswordInput(attrs={'autocomplete':'off'}))
+	new_password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านใหม่'}, widget=forms.TextInput(attrs={'autocomplete':'off'}))
+	confirm_new_password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านใหม่อีกครั้ง'}, widget=forms.TextInput(attrs={'autocomplete':'off'}))
+	#testfield = forms.CharField(max_length=128)
 
 	class Meta:
 		model = User
@@ -21,6 +22,9 @@ class UserForm(ModelForm):
 		self.fields['confirm_new_password'].widget.attrs = {'class': 'form-control'}
 		self.fields['confirm_new_password'].widget.attrs['placeholder'] = "ป้อนรหัสผ่านใหม่อีกครั้ง"
 
+		#self.fields['testfield'].widget.attrs = {'class': 'form-control'}
+		#self.fields['testfield'].widget.attrs['placeholder'] = "ทดสอบ"
+
 	def clean_password(self):
 		cleaned_data = super(UserForm, self).clean()
 		
@@ -30,7 +34,7 @@ class UserForm(ModelForm):
 		if userobj.check_password(password):
 			return password
 		else:
-			raise forms.ValidationError("ป้อนรหัสผ่านเก่าไม่ถูกต้อง")
+			raise forms.ValidationError("รหัสผ่านเก่าไม่ถูกต้อง")
 		
 	def clean_new_password(self):
 		data = super(UserForm, self).clean()
@@ -47,8 +51,18 @@ class UserForm(ModelForm):
 
 		if confirm_new_password != "":
 			if new_password != confirm_new_password:
-				raise forms.ValidationError("ป้อนรหัสใหม่ไม่ตรงกัน")
+				raise forms.ValidationError("รหัสผ่านใหม่ไม่ตรงกัน")
 			else:
 				return confirm_new_password
 		else:
 			raise forms.ValidationError("กรุณาป้อนรหัสผ่านใหม่อีกครั้ง")
+
+	'''
+	def clean_testfield(self):
+		data = super(UserForm, self).clean()
+		testfield = self.cleaned_data.get('testfield')
+		if testfield != "":
+			raise forms.ValidationError("Error!")
+		else:
+			return testfield
+	'''
