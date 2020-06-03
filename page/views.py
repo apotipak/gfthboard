@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from leave.models import LeaveEmployee
-
+from django.contrib.auth.models import User
+from .forms import UserForm
 
 @login_required(login_url='/accounts/login/')
 def index(request):
@@ -48,7 +49,10 @@ def StaffPassword(request):
     project_version = settings.PROJECT_VERSION
     today_date = settings.TODAY_DATE    
 
-    return render(request, 'page/staff_password.html', {
+
+    print("test")
+    
+    return render(request, 'page/staff_password_form.html', {
         'page_title': page_title, 
         'project_name': project_name, 
         'project_version': project_version, 
