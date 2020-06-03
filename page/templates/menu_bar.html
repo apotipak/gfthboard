@@ -65,9 +65,9 @@
         <a href="{% url 'staff-profile' %}" class="nav-link-menubar active">
             {% if user.is_authenticated %}
                 {% if user.is_superuser %}
-                    ยินดีต้อนรับ <span class="text-primary"><b>Admin</b></span>
+                    Hello, <span class="text-primary"><b>Admin</b></span>
                 {% else %}
-                    ยินดีต้อนรับ <span class="text-primary"><b>{{ user.get_short_name }}</b></span>
+                    Hello, <span class="text-primary"><b>{{ user.get_short_name }}</b></span>
                 {% endif %}
             {% endif %}
         </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -76,7 +76,7 @@
       <li class="nav-item">
         <!--<a class="nav-link-menubar" href="/">Home</a>
         <a class="nav-link-menubar" href="#">Contact</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-        <a class="nav-link-menubar" href="{% url 'logout'%}?next=/accounts/login"><i class="fas fa-sign-out-alt"></i>&nbsp;<b>ออกจากระบบ</b></a>
+        <a class="nav-link-menubar" href="{% url 'logout'%}?next=/accounts/login"><i class="fas fa-sign-out-alt"></i>&nbsp;Sign Out</a>
       </li>
 
 

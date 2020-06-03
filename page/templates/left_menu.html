@@ -18,14 +18,14 @@
             {% if request.path|slice:":14" == '/staff-profile' %}
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-profile' %}" class="nav-link active">
-                &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
+                &nbsp;&nbsp;<i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;
                 <p>โปรไฟล์</p>
               </a>
             </li>
             {% else%}
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-profile' %}" class="nav-link">
-                &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
+                &nbsp;&nbsp;<i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;
                 <p>โปรไฟล์</p>
               </a>
             </li>          
@@ -34,14 +34,14 @@
             {% if request.path|slice:":15" == '/staff-password' %}
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-password' %}" class="nav-link active">
-                &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
+                &nbsp;&nbsp;<i class="fas fa-key"></i>&nbsp;&nbsp;&nbsp;
                 <p>เปลี่ยนรหัสผ่าน</p>
               </a>
             </li>
             {% else %}
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-password' %}" class="nav-link">
-                &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
+                &nbsp;&nbsp;<i class="fas fa-key"></i>&nbsp;&nbsp;&nbsp;
                 <p>เปลี่ยนรหัสผ่าน</p>
               </a>
             </li>
