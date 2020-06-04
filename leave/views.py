@@ -99,17 +99,21 @@ def LeavePolicy(request):
     for policy in leave_policy:
 
         # จำนวนวันที่ใช้
-        total_lve_act = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_act', flat=True).get()        
+        print("debug")
+        total_lve_act = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=2020).values_list('lve_act', flat=True).get()        
+        print(total_lve_act)
+
+
         # จำนวนชั่วโมงที่ใช้แล้ว
-        total_lve_act_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_act_hr', flat=True).get()
+        total_lve_act_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=2020).values_list('lve_act_hr', flat=True).get()
         # จำนวนชั่วโมงที่ใช้แล้วทั้งหมด
         grand_total_lve_act_hr = total_lve_act_hr + (total_lve_act * 8)
 
 
         # จำนวนวันคงเหลือ
-        total_lve_miss = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_miss', flat=True).get()        
+        total_lve_miss = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=2020).values_list('lve_miss', flat=True).get()        
         # จำนวนชั่วโมงคงเหลือ
-        total_lve_miss_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).values_list('lve_miss_hr', flat=True).get()
+        total_lve_miss_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=2020).values_list('lve_miss_hr', flat=True).get()
         # จำนวนชั่วโมงคงเหลือทั้งหมด
         grand_total_lve_miss_hr = total_lve_miss_hr + (total_lve_miss * 8)
 
