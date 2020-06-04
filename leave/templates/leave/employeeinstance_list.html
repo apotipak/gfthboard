@@ -183,25 +183,23 @@
 
 {% block javascript %}
   <script>
-    $(function () {
-
-      var loadLeaveRejectComment = function () {
-          var obj = $(this);  
-          $.ajax({
-              url: obj.attr("data-url"),
-              type: 'get',          
-              dataType: 'json',
-              beforeSend: function () {
-                $("#leaveRejectCommentModal").modal("show");
-              },
-              success: function (data) {
-                  $("#leaveRejectCommentModal .modal-body").html(data.comment);
-              }
-          });
-      };
-      
-      $("a.get_leave_reject_comment").click(loadLeaveRejectComment);
+    $(document).ready(function(){    
+     $("body").on("click", "a.get_leave_reject_comment", function(event){       
+        var obj = $(this);  
+        $.ajax({
+            url: obj.attr("data-url"),
+            type: 'get',          
+            dataType: 'json',
+            beforeSend: function () {
+              $("#leaveRejectCommentModal").modal("show");
+            },
+            success: function (data) {
+                $("#leaveRejectCommentModal .modal-body").html(data.comment);
+            }
+        });
+     });
     });
+
   </script>
 {% endblock %}
 
