@@ -1,6 +1,8 @@
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django import forms
+import re
+
 
 class UserForm(ModelForm):
 	password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านเก่า'}, widget=forms.PasswordInput(attrs={'autocomplete':'off'}))
@@ -13,6 +15,7 @@ class UserForm(ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
+		self.confirm_new_password = kwargs.pop('confirm_new_password', None)
 		super(UserForm, self).__init__(*args, **kwargs)
 		self.fields['password'].widget.attrs = {'class': 'form-control'}
 		self.fields['password'].widget.attrs['placeholder'] = "ป้อนรหัสผ่านเก่า"
@@ -21,6 +24,34 @@ class UserForm(ModelForm):
 		self.fields['confirm_new_password'].widget.attrs = {'class': 'form-control'}
 		self.fields['confirm_new_password'].widget.attrs['placeholder'] = "ป้อนรหัสผ่านใหม่อีกครั้ง"
 
+	def clean(self):
+		cleaned_data = super(UserForm, self).clean()
+		username = self.user.username
+		password = self.cleaned_data.get('password')
+		new_password = self.cleaned_data.get('new_password')
+		confirm_new_password = self.cleaned_data.get('confirm_new_password')		
+		userobj = User.objects.get(username=username)
+
+		if userobj.check_password(password):
+			if re.match(r"^(?=.*[\d])(?=.*[a-z])(?=.*[@#$])[\w\d@#$]{6,12}$", new_password):							
+				if new_password != confirm_new_password:
+					raise forms.ValidationError("รหัสผ่านใหม่ไม่ตรงกัน")
+				else:
+					if new_password == password:
+						raise forms.ValidationError("รหัสผ่านใหม่ซ้ำกับรหัสผ่านเก่า")	
+					else:
+						return cleaned_data
+
+			else:
+				raise forms.ValidationError("รหัสใหม่ควรยาวอย่างน้อย 6 ตัวอักษร และประกอบด้วย ตัวเลข ตัวหนังสือ สัญลักษณ์")			
+
+		else:
+			raise forms.ValidationError("รหัสเก่าไม่ถูกต้อง")
+
+
+		return cleaned_data
+
+	'''
 	def clean_password(self):
 		cleaned_data = super(UserForm, self).clean()
 		
@@ -31,12 +62,17 @@ class UserForm(ModelForm):
 			return password
 		else:
 			raise forms.ValidationError("รหัสผ่านเก่าไม่ถูกต้อง")
-		
+
 	def clean_new_password(self):
 		data = super(UserForm, self).clean()
-		new_password = self.cleaned_data.get('new_password')
-		if new_password != "":
-			return new_password
+		new_password = self.cleaned_data['new_password']
+
+		if new_password != "":					
+			#if re.match(r"^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$])[\w\d@#$]{6,12}$", new_password):
+			if re.match(r"^(?=.*[\d])(?=.*[a-z])(?=.*[@#$])[\w\d@#$]{6,12}$", new_password):				
+				return new_password
+			else:
+				raise forms.ValidationError("รหัสผ่านใหม่ควรยาวอย่างน้อย 6 ตัวอักษร และประกอบด้วย ตัวเลข ตัวหนังสือ สัญลักษณ์")
 		else:
 			raise forms.ValidationError("กรุณาป้อนรหัสผ่านใหม่")
 
@@ -52,3 +88,4 @@ class UserForm(ModelForm):
 				return confirm_new_password
 		else:
 			raise forms.ValidationError("กรุณาป้อนรหัสผ่านใหม่อีกครั้ง")
+	'''
