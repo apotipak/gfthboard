@@ -207,6 +207,7 @@ class EmployeeCreate(PermissionRequiredMixin, CreateView):
     fields = '__all__'
     permission_required = 'leave.add_employeeinstance'
 
+@login_required(login_url='/accounts/login/')
 def EmployeeNew(request):
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']

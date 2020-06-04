@@ -13,7 +13,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">สิทธิการลาปี {% now 'Y' %}</h1>
+            <h1 class="m-0 text-dark">สิทธิ์การลาปี {% now 'Y' %}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -36,9 +36,9 @@
                 <table class="table table-striped">
                   <thead>
                     <tr>                  
-                      <th scope="col"><h5>ประเภทการลา</h5></th>
+                      <th scope="col"><h5>ประเภท</h5></th>
                       <th scope="col" style="text-align: left"><h5>วันคงเหลือ</h5></th>
-                      <th scope="col"><h5>วันที่ใช้</h5></th>
+                      <th scope="col"><h5>ใช้ไป</h5></th>
                       <th scope="col"><h5>รออนุมัติ</h5></th>
                     </tr>
                   </thead>
@@ -47,24 +47,7 @@
                 <tr>                  
                   <!-- ประเภทการลา -->
                   <td>
-                    <h6>
-                      <!--
-                      {% if policy.lve_type_id == 5 %}
-                        <i class="fas fa-biking"></i>
-                      {% elif policy.lve_type_id == 6 %}
-                        <i class="fas fa-briefcase-medical"></i>
-                      {% elif policy.lve_type_id == 8 %}
-                        <i class="fas fa-business-time"></i>
-                      {% elif policy.lve_type_id == 10 %}
-                        <i class="fas fa-baby"></i>
-                      {% elif policy.lve_type_id == 13 %}
-                        <i class="fas fa-users"></i>
-                      {% elif policy.lve_type_id == 15 %}
-                        <i class="fas fa-pray"></i>
-                      {% endif %}
-                      -->
-                      {{ policy.lve_th }}&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;วัน
-                    </h6>
+                    <h6>{{ policy.lve_th }}&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;วัน</h6>
                   </td>
                   
                   <!-- วันคงเหลือ -->
