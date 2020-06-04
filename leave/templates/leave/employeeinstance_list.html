@@ -183,6 +183,42 @@
 
 {% block javascript %}
   <script>
+
+    $(function () {
+      $('#leave_history_table').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": false,
+        "info": false,
+        "autoWidth": false,
+        "pageLength": 10,
+        "lengthMenu": [[10, 20, 25, 50, -1], [10, 20, 25, 50, "All"]],
+        "search": {
+            "caseInsensitive": true
+        },      
+        "oLanguage": {
+           "sSearch": "ค้นหา"
+         },
+        "language": {
+          "paginate": {
+            "previous": "ย้อนกลับ",
+            "next": "ถัดไป",
+          },
+          "lengthMenu": '_MENU_ &nbsp;&nbsp;&nbsp;&nbsp;เลือกจำนวนแสดงรายการ',
+              "search": '<i class="fa fa-search"></i>',
+              "searchPlaceholder": "ค้นหา",
+              "paginate": {
+              "previous": '<i class="fa fa-angle-left"></i>',
+                  "next": '<i class="fa fa-angle-right"></i>'
+          }
+        },
+        "columnDefs": [
+          //{ "orderable": false, "targets": 4 }
+        ]           
+      });
+    });
+
     $(document).ready(function(){    
      $("body").on("click", "a.get_leave_reject_comment", function(event){       
         var obj = $(this);  
