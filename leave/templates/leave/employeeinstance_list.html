@@ -69,7 +69,9 @@
                             {% elif leave.status == 'p' %}
                                 <span class="badge badge-warning"><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;รออนุมัติ</span>
                             {% elif leave.status == 'r' %}
-                                <span class="badge badge-secondary"><i class="fa fa-times" aria-hidden="true"></i>&nbsp;ไม่อนุมัติ</span>
+                                <span class="badge badge-secondary"><i class="fa fa-times" aria-hidden="true"></i>&nbsp;ไม่อนุมัติ</span>&nbsp;                                                            
+                                <a href="#" data-url="{% url 'get_leave_reject_comment' leave.id %}" class="get_leave_reject_comment"><i class="far fa-comment-alt text-secondary"></i></a>
+
                             {% elif leave.status == 'C' %}
                                 <span class="badge badge-success"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;อนุมัติ</span>&nbsp;<span class="badge badge-success"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;Sync Success</span>
                             {% elif leave.status == 'F' %}
@@ -132,6 +134,7 @@
   </div>
   <!-- /.content-wrapper -->
 
+  <!-- Modal -->
   <div class="modal fade" id="modal-danger">
     <div class="modal-dialog">
       <div class="modal-content bg-danger">
@@ -155,4 +158,50 @@
   </div>
   <!-- /.modal -->
 
+  <!-- Modal -->
+  <div class="modal fade" id="leaveRejectCommentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">เหตุผล</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">ปิด</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->
+
 {% endblock %}
+
+{% block javascript %}
+  <script>
+    $(function () {
+
+      var loadLeaveRejectComment = function () {
+          var obj = $(this);  
+          $.ajax({
+              url: obj.attr("data-url"),
+              type: 'get',          
+              dataType: 'json',
+              beforeSend: function () {
+                $("#leaveRejectCommentModal").modal("show");
+              },
+              success: function (data) {
+                  $("#leaveRejectCommentModal .modal-body").html(data.comment);
+              }
+          });
+      };
+      
+      $("a.get_leave_reject_comment").click(loadLeaveRejectComment);
+    });
+  </script>
+{% endblock %}
+

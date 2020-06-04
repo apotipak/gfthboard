@@ -24,6 +24,7 @@ import sys
 from .rules import *
 from django.db.models import Sum
 from django.utils.dateparse import parse_datetime
+from django.http import JsonResponse
 
 
 class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
@@ -382,7 +383,8 @@ def EmployeeInstanceReject(request, pk):
     if request.method == 'POST':
         employee_leave_instance.status = 'r'
         employee_leave_instance.updated_by = request.user.username
-        employee_leave_instance.updated_date = datetime.now()        
+        employee_leave_instance.updated_date = datetime.now()
+        employee_leave_instance.comment = request.POST.get('comment')
         employee_leave_instance.save()
 
         # TODO: Send mail funciton
@@ -424,3 +426,7 @@ def EmployeeInstanceReject(request, pk):
 
     return render(request, 'leave/employeeinstance_reject.html', context)
 
+@login_required(login_url='/accounts/login/')
+def get_leave_reject_comment(request, pk):    
+    comment = EmployeeInstance.objects.filter(id__exact=pk).values('comment')[0] or None
+    return JsonResponse(comment)
