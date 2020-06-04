@@ -74,7 +74,7 @@
                 <a href="{% url 'leave_policy' %}" class="nav-link">
                     {% endif %}
                   &nbsp;&nbsp;<i class="fas fa-tasks"></i>
-                  &nbsp;<p>สิทธิการลา</p>
+                  &nbsp;&nbsp;&nbsp;<p>สิทธิการลา</p>
                 </a>
               </li>
 
@@ -85,7 +85,7 @@
                 <a href="{% url 'leave_history' %}" class="nav-link">
                 {% endif %}
                   &nbsp;&nbsp;<i class="fas fa-history"></i>
-                  &nbsp;<p>ประวัติการลา</p>
+                  &nbsp;&nbsp;&nbsp;<p>ประวัติการลา</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -95,7 +95,7 @@
                 <a href="{% url 'employee_create' %}" class="nav-link">
                 {% endif %}
                   &nbsp;&nbsp;<i class="far fa-edit"></i>
-                  &nbsp;<p>เขียนใบลา</p>
+                  &nbsp;&nbsp;&nbsp;<p>เขียนใบลา</p>
                 </a>
               </li>
               {% if perms.leave.approve_leaveplan %}
@@ -105,7 +105,7 @@
                 {% else %}
                 <a href="{% url 'leave_approval' %}" class="nav-link">
                 {% endif %}
-                  &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
+                  &nbsp;<i class="fa fa-check nav-icon"></i>
                   <p>อนุมัติใบลา</p>
                 </a>
               </li>
