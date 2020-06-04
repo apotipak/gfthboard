@@ -38,6 +38,9 @@
               <b>พนักงาน:</b> {{ leave_employee.emp_fname_th }} {{ leave_employee.emp_lname_th }}<br>
               <b>ประเภทการลา:</b> {{ employee_leave_instance.leave_type }}<br>
               <b>ลาวันที่:</b> {{ employee_leave_instance.start_date|date:'d F Y'}} - {{ employee_leave_instance.end_date|date:'d F Y'}}</p>
+              <b>เหตุผล<b>
+              <textarea class="form-control" name="comment" id="comment" rows="3"></textarea>
+              <br>
               <div class="alert alert-warning" role="alert"><i class="fas fa-exclamation"></i>&nbsp;&nbsp;กรุณาตรวจสอบข้อมูลอีกครั้งก่อนกดปุ่มไม่อนุมัติ</div>              
               <input type="button" class="btn btn-secondary" onclick="history.back()" value="ย้อนกลับ" />
               <input type="submit" class="btn btn-danger" action="" value="ไม่อนุมัติ" />

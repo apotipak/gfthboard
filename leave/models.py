@@ -155,6 +155,8 @@ class EmployeeInstance(models.Model):
     updated_date = models.DateTimeField(null=True, blank=True)
     updated_by = models.DecimalField(max_digits=7, decimal_places=0, blank=True, null=True)
     
+    comment = models.TextField(blank=True, null=True)
+    
     LEAVE_STATUS = (
         ('a', 'Approved'),
         ('p', 'Pending'),
