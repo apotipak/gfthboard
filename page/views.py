@@ -53,11 +53,11 @@ def StaffPassword(request):
     form = UserForm(request.POST, user=request.user)
  
     if request.method == "POST":
-        if form.is_valid():
+        if form.is_valid():            
             new_password = form.cleaned_data['new_password']
             u = User.objects.get(username__exact=request.user)
             u.set_password(new_password)
-            u.save()
+            u.save()            
             return HttpResponseRedirect('/staff-profile')
     else:
         form = UserForm(user=request.user)    
