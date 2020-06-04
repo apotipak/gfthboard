@@ -35,7 +35,7 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
     project_version = settings.PROJECT_VERSION
     today_date = settings.TODAY_DATE    
     model = EmployeeInstance
-    paginate_by = 20
+    #paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super(EmployeeInstanceListView, self).get_context_data(**kwargs)
@@ -207,6 +207,7 @@ class EmployeeCreate(PermissionRequiredMixin, CreateView):
     fields = '__all__'
     permission_required = 'leave.add_employeeinstance'
 
+@login_required(login_url='/accounts/login/')
 def EmployeeNew(request):
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
