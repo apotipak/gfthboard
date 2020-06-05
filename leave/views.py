@@ -7,7 +7,7 @@ from leave.models import LeavePlan, LeaveHoliday, LeaveEmployee
 from .models import EmployeeInstance
 from .forms import EmployeeForm
 from django.urls import reverse_lazy
-from django.shortcuts import render_to_response
+#from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
