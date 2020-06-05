@@ -65,28 +65,36 @@
                         </td>
                         <td>
                             {% if leave.status == 'a' %}
-                                <span class="badge badge-success"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;อนุมัติ</span>&nbsp;<span class="badge badge-warning"><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;Sync Pending</span>
+                                <span class="badge badge-success"><i class="fa fa-check fa-sm" aria-hidden="true"></i>&nbsp;&nbsp;อนุมัติ</span>
                             {% elif leave.status == 'p' %}
-                                <span class="badge badge-warning"><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;รออนุมัติ</span>
+                                <span class="badge badge-warning"><i class="fa fa-clock fa-sm" aria-hidden="true"></i>&nbsp;&nbsp;รออนุมัติ</span>
                             {% elif leave.status == 'r' %}
-                                <span class="badge badge-secondary"><i class="fa fa-times" aria-hidden="true"></i>&nbsp;ไม่อนุมัติ</span>&nbsp;                                                            
-                                <a href="#" data-url="{% url 'get_leave_reject_comment' leave.id %}" class="get_leave_reject_comment"><i class="far fa-comment-alt text-secondary"></i></a>
-
+                                <span class="badge badge-secondary"><i class="fa fa-times fa-sm" aria-hidden="true"></i>&nbsp;&nbsp;ไม่อนุมัติ</span>&nbsp;                                                            
+                                <a href="#" data-url="{% url 'get_leave_reject_comment' leave.id %}" class="get_leave_reject_comment"><i class="far fa-comment-alt fa-sm text-secondary"></i></a>
                             {% elif leave.status == 'C' %}
-                                <span class="badge badge-success"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;อนุมัติ</span>&nbsp;<span class="badge badge-success"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;Sync Success</span>
+                                <span class="badge badge-success"><i class="fa fa-check fa-sm" aria-hidden="true"></i>&nbsp;&nbsp;อนุมัติ</span>
                             {% elif leave.status == 'F' %}
-                                <span class="badge badge-success"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;อนุมัติ</span>&nbsp;<span class="badge badge-danger"><i class="fa fa-exclamation" aria-hidden="true"></i>&nbsp;Sync Fail</span>
+                                <span class="badge badge-success"><i class="fa fa-check fa-sm" aria-hidden="true"></i>&nbsp;&nbsp;อนุมัติ</span>
                             {% else %}
                                 ข้อมูลผิดพลาด
                             {% endif %}
                         </td>
-                        <td class="text-right py-0 align-middle">
+                        
+                        <td class="text-center py-0 align-middle">
                           <div class="btn-group btn-group-sm">
-                             {% if leave.status == 'p' %}
-                             <a href="/leave/leave-history/{{leave.id}}/delete" class="btn btn-danger"><i class="fas fa-trash"></i> ยกเลิก</a>
-                             {% else %}
+                              {% if leave.status == 'p' %}
+                              <a href="/leave/leave-history/{{leave.id}}/delete" class="btn btn-danger fa-sm"><i class="fas fa-trash fa-sm"></i>&nbsp;&nbsp;ยกเลิก</a>
+                              {% endif %}
+
+                              {% if leave.status == 'a' %}
+                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-sm"></i>&nbsp;&nbsp;Pending</span>
+                              {% elif leave.status == 'C' %}
+                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-sm"></i>&nbsp;&nbsp;Success</span>
+                              {% elif leave.status == 'F' %}
+                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-sm"></i>&nbsp;&nbsp;Fail</span>
+                              {% else %}
                                 &nbsp;
-                             {% endif %}
+                              {% endif %}
                           </div>
                         </td>                        
                     </tr>
