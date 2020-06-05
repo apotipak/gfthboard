@@ -26,8 +26,9 @@ from django.db.models import Sum
 from django.utils.dateparse import parse_datetime
 from django.http import JsonResponse
 
+current_year = datetime.now().year
 
-class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
+class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):    
     #template_name = 'leave/employeeinstance_list.html'
     permission_required = ('leave.view_employeeinstance')
     page_title = settings.PROJECT_NAME
@@ -51,7 +52,7 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         #return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='r').order_by('start_date')
-        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).order_by('start_date')
+        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).order_by('-created_date')
 
 
 class EmployeeInstanceDetailView(generic.DetailView):
@@ -100,21 +101,19 @@ def LeavePolicy(request):
     for policy in leave_policy:
 
         # จำนวนวันที่ใช้
-        print("debug")
-        total_lve_act = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=2020).values_list('lve_act', flat=True).get()        
-        print(total_lve_act)
+        total_lve_act = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_act', flat=True).get()        
 
 
         # จำนวนชั่วโมงที่ใช้แล้ว
-        total_lve_act_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=2020).values_list('lve_act_hr', flat=True).get()
+        total_lve_act_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_act_hr', flat=True).get()
         # จำนวนชั่วโมงที่ใช้แล้วทั้งหมด
         grand_total_lve_act_hr = total_lve_act_hr + (total_lve_act * 8)
 
 
         # จำนวนวันคงเหลือ
-        total_lve_miss = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=2020).values_list('lve_miss', flat=True).get()        
+        total_lve_miss = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_miss', flat=True).get()        
         # จำนวนชั่วโมงคงเหลือ
-        total_lve_miss_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=2020).values_list('lve_miss_hr', flat=True).get()
+        total_lve_miss_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_miss_hr', flat=True).get()
         # จำนวนชั่วโมงคงเหลือทั้งหมด
         grand_total_lve_miss_hr = total_lve_miss_hr + (total_lve_miss * 8)
 
@@ -212,6 +211,7 @@ class EmployeeCreate(PermissionRequiredMixin, CreateView):
     fields = '__all__'
     permission_required = 'leave.add_employeeinstance'
 
+
 @login_required(login_url='/accounts/login/')
 def EmployeeNew(request):
     page_title = settings.PROJECT_NAME
@@ -226,7 +226,7 @@ def EmployeeNew(request):
 
         #form = EmployeeForm(request.POST, user=request.user)
 
-        if form.is_valid():
+        if form.is_valid():        
             start_date = form.cleaned_data['start_date']
             start_time = form.cleaned_data['start_time']
             end_date = form.cleaned_data['end_date']
@@ -250,8 +250,8 @@ def EmployeeNew(request):
             employee.created_by = request.user.username
 
             result = checkM1LeaveRequestHour("M1", start_date, end_date)
-            employee.lve_act = result//8
-            employee.lve_act_hr = result%8
+            employee.lve_act = result // 8
+            employee.lve_act_hr = result % 8
 
             print(str(start_date) + " | " + str(end_date))
             employee.save()

@@ -1,6 +1,6 @@
 {% extends "page_base_generic.html" %}
 
-{% block title %}สิทธิ์การลา{% endblock %}
+{% block title %}อนุมัติการลา{% endblock %}
 
 {% block content %}
 
@@ -11,7 +11,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">อนุมัติใบลา</h1>
+            <h1 class="m-0 text-dark">อนุมัติการลา</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -123,4 +123,43 @@
   </div>
   <!-- /.content-wrapper -->
 
+{% endblock %}
+
+{% block javascript %}
+<script>
+  $(function () {
+    $('#leave_approval_table').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": false,
+      "info": false,
+      "autoWidth": false,
+      "pageLength": 10,
+      "lengthMenu": [[10, 20, 25, 50, -1], [10, 20, 25, 50, "All"]],
+      "search": {
+          "caseInsensitive": true
+      },      
+      "oLanguage": {
+         "sSearch": "ค้นหา"
+       },
+      "language": {
+        "paginate": {
+          "previous": "ย้อนกลับ",
+          "next": "ถัดไป",
+        },
+        "lengthMenu": '_MENU_ &nbsp;&nbsp;&nbsp;&nbsp;เลือกจำนวนแสดงรายการ',
+            //"search": '<i class="fa fa-search"></i>',
+            "searchPlaceholder": "ชื่อพนักงาน",
+            "paginate": {
+            "previous": '<i class="fa fa-angle-left"></i>',
+                "next": '<i class="fa fa-angle-right"></i>'
+        }
+      },
+      "columnDefs": [
+        //{ "orderable": false, "targets": 4 }
+      ]           
+    });
+  });
+</script>
 {% endblock %}

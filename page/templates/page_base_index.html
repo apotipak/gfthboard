@@ -22,10 +22,10 @@
 <div class="wrapper">
 
   <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white container-fluid full" style="background-image: url({% static 'img/10.jpg' %});background-repeat: no-repeat;background-position:center;background-size:cover;min-height:20vh;">
+  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white container-fluid full" style="background-image: url({% static 'img/10.jpg' %});background-repeat: no-repeat;background-position:center;background-size:cover;min-height:15vh;">
     <div class="container">
       <a href="/" class="navbar-brand">
-        <img src="{% static 'dist/img/logo-big.png' %}" alt="Logo" width="250px;" class="img-responsive">
+        <img src="{% static 'dist/img/logo-big.png' %}" alt="Logo" width="230px;" class="img-responsive">
       </a>
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
@@ -42,6 +42,7 @@
         </li>
 
         <!-- Notifications Dropdown Menu -->
+        {% if perms.leave.approve_leaveplan %}
         <!--
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
@@ -64,15 +65,17 @@
             </a>            
             <div class="dropdown-divider"></div>
 
-            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+            <a href="{% url 'leave_approval' %}" class="dropdown-item dropdown-footer text-primary">ไปหน้าอนุมัติวันลา</a>
           </div>
         </li>
         -->
+        {% else %}
+
+        {% endif %}
+
 
         <li class="nav-item">
-          <a class="nav-link" href="#">
-              |
-          </a>
+          <a class="nav-link" href="#"></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'logout'%}?next=/accounts/login">
