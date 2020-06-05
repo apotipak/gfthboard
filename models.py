@@ -80,7 +80,7 @@ class LeavePlan(models.Model):
     class Meta:
         managed = False
         db_table = 'Leave_Plan'
-
+        unique_together = (("lve_year", "emp_id"),)
 
 class LeaveEmployee(models.Model):
     emp_id = models.DecimalField(max_digits=7, decimal_places=0)

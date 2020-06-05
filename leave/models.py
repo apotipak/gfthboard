@@ -172,7 +172,8 @@ class EmployeeInstance(models.Model):
         help_text='Leave Request Status')
 
     class Meta:
-        ordering = ['-created_date', '-start_date']
+        #ordering = ['-created_date', '-start_date']
+        ordering = ['-created_date']
 
     def get_absolute_url(self):
         return reverse('leave_history_detail', args=[str(self.id)])

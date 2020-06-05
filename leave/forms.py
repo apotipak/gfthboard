@@ -14,14 +14,18 @@ from django.db.models import Sum
 from .rules import *
 from django.utils.dateparse import parse_datetime
 
+# Define constant variable
+current_year = datetime.now().year
+start_working_hour = 8
+stop_working_hour = 17
+
 class EmployeeForm(forms.ModelForm):
     #leave_type = forms.ModelChoiceField(label='ประเภทการลา', queryset=None, required=True, initial=0)
-    leave_type = forms.ModelChoiceField(label='เลือกประเภทการลา', queryset=None, required=True)
-    
+    leave_type = forms.ModelChoiceField(label='เลือกประเภทการลา', queryset=None, required=True)    
     start_date = forms.DateField(label='วันเริ่ม', required=True, error_messages={'required': 'กรุณาป้อนข้อมูลวันที่ลา'})
     end_date = forms.DateField(label='วันสิ้นสุด', required=True, error_messages={'required': 'กรุณาป้อนข้อมูลลาถึงวันที่'})
-    start_time = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(8, 18)]))
-    end_time = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(8,18)]))
+    start_time = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(start_working_hour, stop_working_hour + 1)]))
+    end_time = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(start_working_hour, stop_working_hour + 1)]))
 
     class Meta:
         model = EmployeeInstance
@@ -31,20 +35,20 @@ class EmployeeForm(forms.ModelForm):
         self.user = kwargs.pop('user')
         super(EmployeeForm, self).__init__(*args, **kwargs)
         self.fields['leave_type'].widget.attrs={'class': 'form-control'}
-        self.fields['leave_type'].queryset=LeaveType.objects.filter(leaveplan__emp_id=self.user.username)        
+        self.fields['leave_type'].queryset=LeaveType.objects.filter(leaveplan__emp_id=self.user.username, leaveplan__lve_year=current_year)        
 
         self.fields['start_date'].widget.attrs={'class': 'form-control datepicker'}
         self.initial['start_date'] = datetime.now().strftime("%Y-%m-%d")
 
         self.fields['start_time'].widget.attrs={'class': 'form-control'}
         self.fields['start_date'].widget.attrs['placeholder'] = "YYYY-MM-DD"
-        self.initial['start_time'] = 8
+        self.initial['start_time'] = start_working_hour
 
         self.fields['end_date'].widget.attrs={'class': 'form-control datepicker'}
         self.initial['end_date'] = datetime.now().strftime("%Y-%m-%d")
         self.fields['end_time'].widget.attrs={'class': 'form-control'}
         self.fields['end_date'].widget.attrs['placeholder'] = "YYYY-MM-DD"
-        self.initial['end_time'] = 17
+        self.initial['end_time'] = stop_working_hour
 
     def clean(self):
         cleaned_data = super(EmployeeForm, self).clean()
@@ -57,7 +61,6 @@ class EmployeeForm(forms.ModelForm):
         username = self.user.username
         employee_type = 'M1'
 
-
         #raise forms.ValidationError({'leave_type': "start: " + str(start_date) + " | end: " + str(end_date)})
 
         d1 = str(start_date) + ' ' + str(start_time) + ':00:00'
@@ -66,20 +69,21 @@ class EmployeeForm(forms.ModelForm):
         end_date = datetime.strptime(d2, "%Y-%m-%d %H:%M:%S")
 
         #raise forms.ValidationError({'leave_type': "start: " + str(start_date) + " | end: " + str(end_date)})
-        if(start_time < 8 or start_time > 17):
+        if(start_time < start_working_hour or start_time > stop_working_hour):
             raise forms.ValidationError(_("เลือกเวลาไม่ถูกต้อง"))
 
-        if(end_time  < 8 or end_time > 17):
+        if(end_time  < start_working_hour or end_time > stop_working_hour):
             raise forms.ValidationError(_("เลือกเวลาไม่ถูกต้อง"))
 
         if start_date != None:
             # ------------------------------------------------ 
             # Check master remaining hour (Leave_Plan table)
-            # ------------------------------------------------ 
-            total_leave_quota_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss', flat=True).get()
-            total_leave_quota_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).values_list('lve_miss_hr', flat=True).get()                        
+            # ------------------------------------------------             
+            total_leave_quota_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).filter(lve_year=current_year).values_list('lve_miss', flat=True).get()
+            total_leave_quota_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).filter(lve_year=current_year).values_list('lve_miss_hr', flat=True).get()                        
             grand_total_leave_quota_remaining_hour = total_leave_quota_remaining_hour + (total_leave_quota_remaining_day * 8)                    
 
+            
             # ------------------------------------------------ 
             # Check transaction remaing hour (leave_employeeinstance table) (filter status = p, a, F)
             # ------------------------------------------------ 
