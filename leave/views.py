@@ -104,33 +104,33 @@ def LeavePolicy(request):
         total_lve_act = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_act', flat=True).get()        
 
 
-        # จำนวนชั่วโมงที่ใช้แล้ว
+        # จำนวนช.ม.ที่ใช้แล้ว
         total_lve_act_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_act_hr', flat=True).get()
-        # จำนวนชั่วโมงที่ใช้แล้วทั้งหมด
+        # จำนวนช.ม.ที่ใช้แล้วทั้งหมด
         grand_total_lve_act_hr = total_lve_act_hr + (total_lve_act * 8)
 
 
         # จำนวนวันคงเหลือ
         total_lve_miss = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_miss', flat=True).get()        
-        # จำนวนชั่วโมงคงเหลือ
+        # จำนวนช.ม.คงเหลือ
         total_lve_miss_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_miss_hr', flat=True).get()
-        # จำนวนชั่วโมงคงเหลือทั้งหมด
+        # จำนวนช.ม.คงเหลือทั้งหมด
         grand_total_lve_miss_hr = total_lve_miss_hr + (total_lve_miss * 8)
 
 
         # จำนวนวันที่รออนุมัติ
         total_pending_lve_act = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
-        # จำนวนชั่วโมงที่รออนุมัติ
+        # จำนวนช.ม.ที่รออนุมัติ
         total_pending_lve_act_hr = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
-        # จำนวนชั่วโมงที่รออนุมัติทั้งหมด
+        # จำนวนช.ม.ที่รออนุมัติทั้งหมด
         grand_total_pending_lve_act_hr = total_pending_lve_act_hr + (total_pending_lve_act * 8)
 
 
         # จำนวนวันที่อนุมัติ
         total_approved_lve_act = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
-        # จำนวนชั่วโมงที่อนุมัติ
+        # จำนวนช.ม.ที่อนุมัติ
         total_approved_lve_act_hr = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
-        # จำนวนชั่วโมงที่อนุมัติทั้งหมด
+        # จำนวนช.ม.ที่อนุมัติทั้งหมด
         grand_total_approved_lve_act_hr = total_approved_lve_act_hr + (total_approved_lve_act * 8)
 
 
@@ -144,7 +144,7 @@ def LeavePolicy(request):
                 grand_total_lve_miss_hr_display += "{:,.0f}".format(grand_total_lve_miss_hr // 8) + " วัน "
 
             if (grand_total_lve_miss_hr % 8) > 0:
-                grand_total_lve_miss_hr_display += "{:,.0f}".format(grand_total_lve_miss_hr % 8) + " ชั่วโมง"
+                grand_total_lve_miss_hr_display += "{:,.0f}".format(grand_total_lve_miss_hr % 8) + " ช.ม."
 
         policy.grand_total_lve_miss_hr_display = grand_total_lve_miss_hr_display
 
@@ -159,7 +159,7 @@ def LeavePolicy(request):
                 grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr // 8) + " วัน "
             
             if (grand_total_lve_act_hr % 8) != 0:
-                grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr % 8) + " ชั่วโมง"
+                grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr % 8) + " ช.ม."
 
         policy.grand_total_lve_act_hr_display = grand_total_lve_act_hr_display        
 
@@ -173,7 +173,7 @@ def LeavePolicy(request):
                 grand_total_pending_lve_act_hr_display += "{:,.0f}".format(grand_total_pending_lve_act_hr // 8) + " วัน "
 
             if (grand_total_pending_lve_act_hr % 8) > 0:
-                grand_total_pending_lve_act_hr_display += "{:,.0f}".format(grand_total_pending_lve_act_hr % 8) + " ชั่วโมง"
+                grand_total_pending_lve_act_hr_display += "{:,.0f}".format(grand_total_pending_lve_act_hr % 8) + " ช.ม."
         
         policy.grand_total_pending_lve_act_hr_display = grand_total_pending_lve_act_hr_display
 
