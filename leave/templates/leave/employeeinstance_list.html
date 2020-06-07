@@ -51,16 +51,16 @@
                     <tr>
                         <!--<td>{{leave.created_date|date:'d F Y'}}</td>-->
                         <td>{{leave.leave_type}}</td>
-                        <td>{{leave.start_date|date:"d F Y H:i A"}}</td>
-                        <td>{{leave.end_date|date:"d F Y H:i A"}}</td>
+                        <td>{{leave.start_date|date:"d N y H:i a"}}</td>
+                        <td>{{leave.end_date|date:"d N y H:i a"}}</td>
                         <td>
                         {% if leave.lve_act != 0 %}
                             {{leave.lve_act}} วัน
                             {% if leave.lve_act_hr != 0 %}
-                              | {{leave.lve_act_hr}} ชั่วโมง
+                              | {{leave.lve_act_hr}} ช.ม.
                             {% endif %}
                         {% else %}
-                            {{leave.lve_act_hr}} ชั่วโมง
+                            {{leave.lve_act_hr}} ช.ม.
                         {% endif %}
                         </td>
                         <td>
