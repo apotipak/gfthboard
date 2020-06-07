@@ -7,7 +7,6 @@ from leave.models import LeavePlan, LeaveHoliday, LeaveEmployee
 from .models import EmployeeInstance
 from .forms import EmployeeForm
 from django.urls import reverse_lazy
-#from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -25,6 +24,8 @@ from .rules import *
 from django.db.models import Sum
 from django.utils.dateparse import parse_datetime
 from django.http import JsonResponse
+from post_office import mail
+
 
 current_year = datetime.now().year
 
@@ -253,10 +254,10 @@ def EmployeeNew(request):
             employee.lve_act = result // 8
             employee.lve_act_hr = result % 8
 
-            print(str(start_date) + " | " + str(end_date))
+            #print(str(start_date) + " | " + str(end_date))
             employee.save()
 
-            """ TODO: Create send mail function"""
+            # EMPLOYEE SENDS LEAVE REQUEST EMAIL
             if settings.TURN_SEND_MAIL_ON:
                 query = LeaveEmployee.objects.get(emp_id=request.user.username)
                 supervisor_id = query.emp_spid
@@ -267,13 +268,31 @@ def EmployeeNew(request):
                 sender = "amnaj.potipak@guardforce.co.th"
                 recipients = [supervisor_email]
                 context = {'username': username, 'fullname': fullname, 'start_date': start_date.strftime('%A, %d-%B-%Y'), 'end_date': end_date.strftime('%A, %d-%B-%Y')}
+                
+                employee_first_name = request.user.first_name
+                employee_last_name = request.user.last_name
+                employee_full_name = employee_first_name + ' ' + employee_last_name
 
-                send_mail(
-                    subject,
-                    render_to_string('email/leave_request.html', context),
-                    sender,
-                    recipients,
-                    fail_silently=False)                        
+                print("Send email : Leave request")
+                print(recipients)
+                print(start_date)
+                print(end_date)
+                print(leave_type_id)
+                print(employee_full_name)
+                
+                mail.send(
+                    'amnaj.potipak@guardforce.co.th', # To
+                    'E-Leave <support.gfth@guardforce.co.th>', # From
+                    subject = 'ขออนุมัติวันลา',
+                    message = 'ขออนุมัติวันลา',
+                    html_message = 'เรียน <strong>ผู้จัดการแผนก</strong><br><br>'
+                        'พนักงานแจ้งใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
+                        'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
+                        'ประเภทการลา: <strong>' + str(leave_type_id) + '</strong><br>'
+                        'วันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:00")) + '</strong> ถึง <strong>' + str(end_date.strftime("%d-%b-%Y %H:00")) + '</strong><br><br>'
+                        'สามารถ <a href="http://localhost:8000">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br><br>'
+                        'This email is sent by E-Leave system'
+                )
 
             return HttpResponseRedirect('/leave/leave-history/?submitted=True')
 
@@ -334,25 +353,27 @@ def EmployeeInstanceApprove(request, pk):
         # TODO: Send mail funciton
         if settings.TURN_SEND_MAIL_ON:
             employee = User.objects.get(username=employee_leave_instance.emp_id)
-
-            subject = "GFTH Board: Approved Leave Request"
-            sender = settings.EMAIL_SENDER
+            employee_first_name = employee.first_name
+            employee_last_name = employee.last_name            
+            employee_full_name = employee_first_name + ' ' + employee_last_name
             recipients = [employee.email]
-            employee_id = employee_leave_instance.emp_id
-            employee = User.objects.get(username=employee_id)
-            employee_fullname = employee.first_name + " " + employee.last_name
-            leave_type = employee_leave_instance.leave_type
-            start_date = employee_leave_instance.start_date.strftime('%A, %d-%B-%Y')
-            end_date = employee_leave_instance.end_date.strftime('%A, %d-%B-%Y')
-
-            context = {'fullname': employee_fullname, 'start_date': start_date, 'end_date': end_date, 'leave_type': leave_type}
-
-            send_mail(
-                subject,
-                render_to_string('email/leave_request_approved.html', context),
-                sender,
-                recipients,
-                fail_silently=False)
+            start_date = employee_leave_instance.start_date.strftime("%d-%b-%Y %H:00")
+            end_date = employee_leave_instance.end_date.strftime("%d-%b-%Y %H:00")
+            leave_type = employee_leave_instance.leave_type            
+                        
+            mail.send(
+                'amnaj.potipak@guardforce.co.th', # To
+                'E-Leave <support.gfth@guardforce.co.th>', # From
+                subject = 'อนุมัติวันลา',
+                message = 'อนุมัติวันลา',
+                html_message = 'เรียน คุณ <strong>' + employee_first_name + '</strong><br><br>'
+                    'ผู้จัดการของท่านแจ้ง <strong>อนุมัติ</strong> การใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
+                    'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
+                    'วันที่: <strong>' + start_date + '</strong> ถึง <strong>' + end_date + '</strong><br>'
+                    'สถานะ: <strong>อนุมัติ</strong><br><br>'
+                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://localhost:8000">ที่นี่</a><br><br>'
+                    'This email is sent by E-Leave system'
+            )
 
         return HttpResponseRedirect(reverse('leave_approval'))
     
@@ -384,31 +405,35 @@ def EmployeeInstanceReject(request, pk):
         employee_leave_instance.status = 'r'
         employee_leave_instance.updated_by = request.user.username
         employee_leave_instance.updated_date = datetime.now()
-        employee_leave_instance.comment = request.POST.get('comment')
+        comment = request.POST.get('comment')
+        employee_leave_instance.comment = comment
         employee_leave_instance.save()
 
         # TODO: Send mail funciton
         if settings.TURN_SEND_MAIL_ON:
             employee = User.objects.get(username=employee_leave_instance.emp_id)
-
-            subject = "GFTH Board: Approved Leave Request"
-            sender = settings.EMAIL_SENDER
             recipients = [employee.email]
-            employee_id = employee_leave_instance.emp_id
-            employee = User.objects.get(username=employee_id)
-            employee_fullname = employee.first_name + " " + employee.last_name
-            leave_type = employee_leave_instance.leave_type
-            start_date = employee_leave_instance.start_date.strftime('%A, %d-%B-%Y')
-            end_date = employee_leave_instance.end_date.strftime('%A, %d-%B-%Y')
-
-            context = {'fullname': employee_fullname, 'start_date': start_date, 'end_date': end_date, 'leave_type': leave_type}
-
-            send_mail(
-                subject,
-                render_to_string('email/leave_request_rejected.html', context),
-                sender,
-                recipients,
-                fail_silently=False)
+            employee_first_name = employee.first_name
+            employee_last_name = employee.last_name            
+            employee_full_name = employee_first_name + ' ' + employee_last_name
+            start_date = employee_leave_instance.start_date.strftime("%d-%b-%Y %H:00")
+            end_date = employee_leave_instance.end_date.strftime("%d-%b-%Y %H:00")
+            leave_type = employee_leave_instance.leave_type            
+            
+            mail.send(
+                'amnaj.potipak@guardforce.co.th', # To
+                'E-Leave <support.gfth@guardforce.co.th>', # From
+                subject = 'ไม่อนุมัติการลา',
+                message = 'ไม่อนุมัติการลา',
+                html_message = 'เรียน คุณ <strong>' + employee_first_name + '</strong><br><br>'
+                    'ผู้จัดการของท่านแจ้ง <strong>ไม่อนุมัติ</strong> การใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
+                    'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
+                    'วันที่: <strong>' + start_date + '</strong> ถึง <strong>' + end_date + '</strong><br>'
+                    'สถานะ: <strong>ไม่อนุมัติ</strong><br>'
+                    'เหตุผล: <strong>' + comment +'</strong><br><br>'
+                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://localhost:8000">ที่นี่</a><br><br>'
+                    'This email is sent by E-Leave system'
+            )
 
         return HttpResponseRedirect(reverse('leave_approval'))
 
