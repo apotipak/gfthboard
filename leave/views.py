@@ -281,7 +281,8 @@ def EmployeeNew(request):
                 print(employee_full_name)
                 
                 mail.send(
-                    'amnaj.potipak@guardforce.co.th', # To
+                    #'amnaj.potipak@guardforce.co.th', # To
+                    recipients,
                     'E-Leave <support.gfth@guardforce.co.th>', # From
                     subject = 'ขออนุมัติวันลา',
                     message = 'ขออนุมัติวันลา',
@@ -362,7 +363,8 @@ def EmployeeInstanceApprove(request, pk):
             leave_type = employee_leave_instance.leave_type            
                         
             mail.send(
-                'amnaj.potipak@guardforce.co.th', # To
+                #'amnaj.potipak@guardforce.co.th', # To
+                recipients,
                 'E-Leave <support.gfth@guardforce.co.th>', # From
                 subject = 'อนุมัติวันลา',
                 message = 'อนุมัติวันลา',
@@ -421,7 +423,8 @@ def EmployeeInstanceReject(request, pk):
             leave_type = employee_leave_instance.leave_type            
             
             mail.send(
-                'amnaj.potipak@guardforce.co.th', # To
+                #'amnaj.potipak@guardforce.co.th', # To
+                recipients,
                 'E-Leave <support.gfth@guardforce.co.th>', # From
                 subject = 'ไม่อนุมัติการลา',
                 message = 'ไม่อนุมัติการลา',
