@@ -65,9 +65,9 @@
         <a href="{% url 'staff-profile' %}" class="nav-link-menubar active">
             {% if user.is_authenticated %}
                 {% if user.is_superuser %}
-                    Hello, <span class="text-primary"><b>Admin</b></span>
+                    Welcome <span class="text-primary"><b>Admin</b></span>
                 {% else %}
-                    Hello, <span class="text-primary"><b>{{ user.get_short_name }}</b></span>
+                    Welcome <span class="text-primary"><b>{{ user.get_short_name }}</b></span>
                 {% endif %}
             {% endif %}
         </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
