@@ -14,8 +14,8 @@
                 <div class="col-12">
                   <h4><span class="info-box-text">E-Leave</span></h4>
                   <div>
-                    <span class="info-box-number"><small>ระบบลางานออนไลน์</small>
-                      <a href="leave/leave-history" type="button" class="btn btn-outline-primary float-right">ใช้งาน</a>
+                    <span class="info-box-number"><small>ระบบลางานออนไลน์ [<a href="/help-eleave">คู่มือ</a>]</small>
+                      <a href="{% url 'leave_policy' %}" type="button" class="btn btn-outline-primary float-right">ใช้งาน</a>
                     </span>
                   </div>
                 </div>
@@ -25,7 +25,6 @@
           {% endif %}
 
           {% if perms.contract.view_tclcontractqty %}
-          <!--
           <div class="col-12 col-sm-6 col-md-6">
             <div class="info-box mb-4">
               <span class="info-box-icon" style="background-color:#ff0099 !important"><i class="fas fa-user-clock text-white"></i></span>
@@ -40,12 +39,12 @@
                 </div>
               </div>
             </div>
-          </div>
-          -->        
+          </div>   
           {% endif %}
 
 
           {% if perms.employee.view_tclcontractqty %}
+          <!--
           <div class="col-12 col-sm-6 col-md-6">
             <div class="info-box mb-4">
               <span class="info-box-icon" style="background-color:#ff3300 !important"><i class="fas fa-user-alt text-white"></i></span>
@@ -61,6 +60,7 @@
               </div>
             </div>
           </div>
+        -->
           {% endif %}
 
           <!-- fix for small devices only -->

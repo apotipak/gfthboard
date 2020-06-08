@@ -17,8 +17,8 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item active">E-Leave</li>
-              <li class="breadcrumb-item">ประวัติการลา</li>
+              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
+              <li class="breadcrumb-item active">ประวัติการลา</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -33,17 +33,17 @@
         <div class="row">
           <div class="col-lg-12">
 
-            {% if object_list %}
-            <table class="table table-hover">
+            {% if object_list %}            
+            <table id="leave_history_table" class="table table-hover table-bordered">
                 <thead>
                     <tr>
                         <!--<th scope="col">วันที่สร้าง</th>-->
-                        <th scope="col">ประเภทการลา</th>
+                        <th scope="col">ประเภท</th>
                         <th scope="col">ลาวันที่</th>
                         <th scope="col">ถึงวันที่</th>
-                        <th scope="col">จำนวน</th>                        
+                        <th scope="col">จำนวน</th>                       
                         <th scope="col">สถานะ</th>
-                        <td scope="col">&nbsp;</td>
+                        <th scope="col"></th>                        
                     </tr>
                 </thead>
                 <tbody>
@@ -51,38 +51,54 @@
                     <tr>
                         <!--<td>{{leave.created_date|date:'d F Y'}}</td>-->
                         <td>{{leave.leave_type}}</td>
-                        <td>{{leave.start_date|date:"d F Y h:i A"}}</td>
-                        <td>{{leave.end_date|date:"d F Y H:i A"}}</td>
+                        <td>{{leave.start_date|date:"d N y H:i a"}}</td>
+                        <td>{{leave.end_date|date:"d N y H:i a"}}</td>
                         <td>
                         {% if leave.lve_act != 0 %}
                             {{leave.lve_act}} วัน
                             {% if leave.lve_act_hr != 0 %}
-                              | {{leave.lve_act_hr}} ชั่วโมง
+                              | {{leave.lve_act_hr}} ช.ม.
                             {% endif %}
                         {% else %}
-                            {{leave.lve_act_hr}} ชั่วโมง
+                            {{leave.lve_act_hr}} ช.ม.
                         {% endif %}
                         </td>
                         <td>
                             {% if leave.status == 'a' %}
-                                <span class="badge badge-success">อนุมัติ</span>
+                                <span class="badge badge-success"><i class="fa fa-check fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;อนุมัติ</span>
                             {% elif leave.status == 'p' %}
-                                <span class="badge badge-warning">รออนุมัติ</span>
+                                <span class="badge badge-warning"><i class="fa fa-clock fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;รออนุมัติ</span>
                             {% elif leave.status == 'r' %}
-                                <span class="badge badge-danger">ไม่อนุมัติ</span>
-                            {% elif leave.status == 'c' %}
-                                <span class="badge badge-primary">ยกเลิก</span>
+                                <span class="badge badge-secondary"><i class="fa fa-times fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;ไม่อนุมัติ</span>                                
+                            {% elif leave.status == 'C' %}
+                                <span class="badge badge-success"><i class="fa fa-check fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;อนุมัติ</span>
+                            {% elif leave.status == 'F' %}
+                                <span class="badge badge-success"><i class="fa fa-check fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;อนุมัติ</span>
                             {% else %}
                                 ข้อมูลผิดพลาด
                             {% endif %}
                         </td>
-                        <td class="text-right py-0 align-middle">
-                          <div class="btn-group btn-group-sm">
-                             {% if leave.status == 'p' %}
-                             <a href="/leave/leave-history/{{leave.id}}/delete" class="btn btn-danger"><i class="fas fa-trash"></i> ลบ</a>
-                             {% else %}
+                        
+                        <td class="text-center py-0 align-middle">
+
+                          <div class="btn-group btn-group-xs">
+                              {% if leave.status == 'p' %}
+                              <a href="/leave/leave-history/{{leave.id}}/delete" class="btn btn-danger btn-sm"><i class="fas fa-trash fa-xs"></i>&nbsp;&nbsp;ยกเลิก</a>
+                              {% endif %}
+
+                              {% if leave.status == 'a' %}
+                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;Pending</span>
+                              {% elif leave.status == 'r' %}                              
+                              <a href="#" data-url="{% url 'get_leave_reject_comment' leave.id %}" class="get_leave_reject_comment">
+                                <span class="badge badge-pill badge-light"><i class="far fa-comment-alt fa-sm text-secondary"></i>&nbsp;&nbsp;Note</span>
+                              </a>
+                              {% elif leave.status == 'C' %}                              
+                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;Success</span>
+                              {% elif leave.status == 'F' %}
+                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;Fail</span>
+                              {% else %}
                                 &nbsp;
-                             {% endif %}
+                              {% endif %}
                           </div>
                         </td>                        
                     </tr>
@@ -90,6 +106,9 @@
                 </tbody>
             </table>
 
+            <div>&nbsp;</div>
+            
+            <!--
             <div class="pagination">
                 <span class="step-links">
                     {% if page_obj.has_previous %}
@@ -107,6 +126,7 @@
                     {% endif %}
                 </span>
             </div>
+            -->
 
             {% else %}
               <div class="col-lg-12">
@@ -126,20 +146,21 @@
   </div>
   <!-- /.content-wrapper -->
 
+  <!-- Modal -->
   <div class="modal fade" id="modal-danger">
     <div class="modal-dialog">
       <div class="modal-content bg-danger">
         <div class="modal-header">
-          <h4 class="modal-title">ยกเลิกรายการ</h4>
+          <h4 class="modal-title">ต้องการยกเลิกรายการ</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <p>กดปุ่มยืนยันหากต้องการลบรายการนี้</p>
+          <p>กดปุ่มยืนยันหากต้องการยกเลิกรายการนี้</p>
         </div>
         <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-outline-light" data-dismiss="modal">ยกเลิก</button>
+          <button type="button" class="btn btn-outline-light" data-dismiss="modal">ย้อนกลับ</button>
           <button type="button" class="btn btn-outline-light">ยืนยัน</button>
         </div>
       </div>
@@ -149,4 +170,84 @@
   </div>
   <!-- /.modal -->
 
+  <!-- Modal -->
+  <div class="modal fade" id="leaveRejectCommentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">เหตุผล</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">ปิด</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->
+
 {% endblock %}
+
+{% block javascript %}
+  <script>
+
+    $(function () {
+      $('#leave_history_table').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": false,
+        "info": false,
+        "autoWidth": false,
+        "pageLength": 5,
+        "lengthMenu": [[10, 20, 25, 50, -1], [10, 20, 25, 50, "All"]],
+        "search": {
+            "caseInsensitive": true
+        },      
+        "oLanguage": {
+           "sSearch": "ค้นหา"
+         },
+        "language": {
+          "paginate": {
+            "previous": "ย้อนกลับ",
+            "next": "ถัดไป",
+          },
+          "lengthMenu": '_MENU_ &nbsp;&nbsp;&nbsp;&nbsp;เลือกจำนวนแสดงรายการ',
+              //"search": '<i class="fa fa-search"></i>',
+              "searchPlaceholder": "ประเภทการลา",
+              "paginate": {
+              "previous": '<i class="fa fa-angle-left"></i>',
+                  "next": '<i class="fa fa-angle-right"></i>'
+          }
+        },
+        "columnDefs": [
+          //{ "orderable": false, "targets": 4 }
+        ]           
+      });
+    });
+
+    $(document).ready(function(){    
+     $("body").on("click", "a.get_leave_reject_comment", function(event){       
+        var obj = $(this);  
+        $.ajax({
+            url: obj.attr("data-url"),
+            type: 'get',          
+            dataType: 'json',
+            beforeSend: function () {
+              $("#leaveRejectCommentModal").modal("show");
+            },
+            success: function (data) {
+                $("#leaveRejectCommentModal .modal-body").html(data.comment);
+            }
+        });
+     });
+    });
+
+  </script>
+{% endblock %}
+

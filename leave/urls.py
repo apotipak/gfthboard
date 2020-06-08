@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.conf.urls import url
 
 
 urlpatterns = [
@@ -19,3 +20,6 @@ urlpatterns += [
     path('employee/create/', views.EmployeeNew, name='employee_create'),
 ]
 
+urlpatterns += [
+	url(r'^ajax/get_leave_reject_comment/(?P<pk>[^/]+)/$', views.get_leave_reject_comment, name='get_leave_reject_comment'),	
+]

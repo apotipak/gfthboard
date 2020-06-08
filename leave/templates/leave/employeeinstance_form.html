@@ -1,6 +1,6 @@
 {% extends "page_daterange.html" %}
 
-{% block title %}เขียนใบลา{% endblock %}
+{% block title %}ใช้วันลา{% endblock %}
 
 {% load static %}
 
@@ -13,12 +13,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">เขียนใบลา</h1>
+            <h1 class="m-0 text-dark">ใช้วันลา</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item active">E-Leave</li>
-              <li class="breadcrumb-item">เขียนใบลา</li>
+              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
+              <li class="breadcrumb-item active">ใช้วันลา</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -40,20 +40,20 @@
             <!-- jquery validation -->
             <div class="card card-primary">
 
+              <form action="" method="post" autocomplete="off">
+                {% csrf_token %}
 
-              <form action="" method="post">
-                <div class="card-body">    
-                  {% csrf_token %}
 
+                <div class="card-body">                  
                   <div class="form-group">                    
                     <label for="{{ form.leave_type.id_for_label }}">{{ form.leave_type.label }}</label>
                     {{ form.leave_type.errors }}
                     {{form.leave_type}} 
-                  </div>  
-                  
-                  <div class="form-group">                   
-                    <label>ลาวันที่</label>
-                     {{ form.start_date.errors }}
+                  </div>
+
+                  <div class="form-group">                                        
+                    <!--
+                    <label>ลาวันที่</label>                     
                     <div class="input-group">
                         <div class="input-group-prepend">
                           <span class="input-group-text"><i class="far fa-clock"></i></span>
@@ -62,15 +62,62 @@
                         {{form.start_date}} 
                         {{form.end_date}} 
                     </div>
+                    -->
+
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-calendar"></i>&nbsp;&nbsp;ลาวันที่</span>
+                      </div>
+                      <!--<input type="text" name="start_date" class="form-control" placeholder="ลาวันที่">-->
+                      {{ form.start_date }}
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-clock"></i>&nbsp;&nbsp;เวลา</span>
+                      </div>
+                      {{ form.start_time }}
+                    </div>                    
+                    <div class="text-danger">{{ form.start_date.errors }}</div>
+
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-calendar"></i>&nbsp;&nbsp;ถึงวันที่</span>
+                      </div>
+                      <!--<input type="text" name="end_date" class="form-control" placeholder="ถึงวันที่">-->
+                      {{ form.end_date }}
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-clock"></i>&nbsp;&nbsp;เวลา</span>
+                      </div>
+                      {{ form.end_time }}
+                    </div>
+                    <div class="text-danger">{{ form.end_date.errors }}</div>
+
                   </div>                
+
+                  <div class="container-fluid mb-12">
+                  {% if form.errors %}
+                      {% for field in form %}
+                          {% for error in field.errors %}
+                              <div class="alert alert-danger">
+                                  <strong><i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}</strong>
+                              </div>
+                          {% endfor %}
+                      {% endfor %}
+                      {% for error in form.non_field_errors %}
+                          <div class="alert alert-danger">
+                              <strong><i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}</strong>
+                          </div>
+                      {% endfor %}
+                  {% endif %}
+                  </div> 
 
                 </div>
 
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">ตกลง</button>
+
+                <div class="card-footer text-right">                 
+                  <button type="submit" class="btn btn-success">ตกลง</button>
                 </div>
 
               </form>
+
 
             </div>
           </div>
@@ -84,3 +131,44 @@
   </div>
   <!-- /.content-wrapper -->
 {% endblock %}
+
+{% block javascript %}
+  <script>
+  $(document).ready(function () {
+      $("#id_start_date").datepicker({
+          dateFormat: "yy-mm-dd",
+          minDate: -15,
+          onSelect: function () {
+              var dt2 = $('#id_end_date');
+              var startDate = $(this).datepicker('getDate');
+              //add 30 days to selected date
+              startDate.setDate(startDate.getDate() + 30);            
+              var minDate = $(this).datepicker('getDate');
+
+              var dt2Date = dt2.datepicker('getDate');
+              //difference in days. 86400 seconds in day, 1000 ms in second
+              var dateDiff = (dt2Date - minDate)/(86400 * 1000);
+
+              //dt2 not set or dt1 date is greater than dt2 date
+              if (dt2Date == null || dateDiff < 0) {
+                      dt2.datepicker('setDate', minDate);
+              }
+              //dt1 date is 30 days under dt2 date
+              else if (dateDiff > 30){
+                      dt2.datepicker('setDate', startDate);
+              }
+              //sets dt2 maxDate to the last day of 30 days window
+              dt2.datepicker('option', 'maxDate', startDate);
+              //first day which can be selected in dt2 is selected date in dt1
+              dt2.datepicker('option', 'minDate', minDate);
+          }
+      }).attr('readonly', 'readonly');
+      
+      $('#id_end_date').datepicker({
+          dateFormat: "yy-mm-dd",
+          minDate: 0
+      }).attr('readonly', 'readonly');
+  });
+  </script>
+{% endblock %}
+

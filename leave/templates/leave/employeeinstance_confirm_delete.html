@@ -11,12 +11,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">ลบรายการวันลา</h1>
+            <h1 class="m-0 text-dark">ต้องการยกเลิกรายการวันลา</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item active">E-Leave</li>
-              <li class="breadcrumb-item">ประวัติการลา</li>
+              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
+              <li class="breadcrumb-item active">ประวัติการลา</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -27,25 +27,26 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
         <div class="row">
           <div class="col-lg-12">
 
-            <p>กรุณาตรวจสอบข้อมูลอีกครั้งและกดปุ่มยืนยันการทำรายการ<br><br>
             <b>ประเภทการลา:</b> {{ object.leave_type }}<br>
             <b>ลาวันที่:</b> {{ object.start_date|date:'d F Y'}} - {{ object.end_date|date:'d F Y'}}</p>
 
+            <div class="alert alert-warning" role="alert"><i class="fas fa-exclamation"></i>&nbsp;&nbsp;กรุณาตรวจสอบข้อมูลอีกครั้งก่อนกดปุ่มยกเลิก</div>
+
             <form action="" method="POST">
               {% csrf_token %}
-              <input type="button" class="btn btn-secondary" onclick="history.back()" value="ยกเลิก" />
-              <input type="submit" class="btn btn-danger" action="" value="ยืนยัน" />
+              <input type="button" class="btn btn-secondary" onclick="history.back()" value="ย้อนกลับ" />
+              <input type="submit" class="btn btn-danger" action="" value="ยกเลิก" />
             </form>
 
           </div>
+          <div>&nbsp;</div>
         </div>
       </div><!-- /.container-fluid -->
     </section>
-    <!-- /.content -->
+    <!-- /.content -->    
   </div>
   <!-- /.content-wrapper -->
 

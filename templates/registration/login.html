@@ -33,16 +33,13 @@
 
   <div>
 {% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
+<!--<p>Your username and password didn't match. Please try again.</p>-->
+<div class="alert alert-danger" role="alert">
+  <i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;แอคเคาท์ที่ใช้ไม่สามารถใช้งานได้ กรุณาลองใหม่
+</div>
 {% endif %}
 
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-    {% endif %}
-{% endif %}
-  </div>
+</div>
 
   <!-- /.login-logo -->
   <div class="card">
@@ -54,8 +51,7 @@
       {% csrf_token %}
   
         <div class="input-group mb-3">
-          <input type="text" name="username" id="username" class="form-control" placeholder="Username">
-
+          <input type="text" name="username" id="username" class="form-control" placeholder="รหัสพนักงาน">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fa fa-user"></span>
@@ -63,8 +59,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" name="password" id="password" class="form-control" placeholder="Password">
-
+          <input type="password" name="password" id="password" class="form-control" placeholder="รหัสผ่าน">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -74,15 +69,17 @@
         <div class="row">
           <div class="col-8">
             <div class="icheck-primary">
+              <!--
               <a href="{% url 'password_reset' %}">ลืมรหัสผ่าน</a>
               <label for="remember">
                 &nbsp;                
               </label>
+              -->
             </div>
           </div>
           <!-- /.col -->
           <div class="col-4">
-            <input type="submit" class="btn btn-primary btn-block" value="ตกลง" />
+            <input type="submit" class="btn btn-success btn-block" value="ตกลง" />
             <input type="hidden" name="next" value="{{ next }}" />
           </div>
           <!-- /.col -->

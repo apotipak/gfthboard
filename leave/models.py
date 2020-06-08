@@ -135,7 +135,7 @@ class LeavePlan(models.Model):
         if UserName == 'superadmin':
             EmployeeLeavePolicyInstance = ""
         else:
-            EmployeeLeavePolicyInstance = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_code, lp.lve_plan, lp.lve_miss, lt.lve_th from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + UserName + " and lp.lve_year=" + LeaveYear)
+            EmployeeLeavePolicyInstance = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_year, lp.lve_act, lp.lve_act_hr, lp.lve_miss, lp.lve_miss_hr, lt.lve_id as lve_type_id, lp.lve_code, lp.lve_plan, lp.lve_miss, lp.lve_miss_hr, lt.lve_th from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + UserName + " and lp.lve_year=" + LeaveYear)
         return EmployeeLeavePolicyInstance
 
 
@@ -155,11 +155,14 @@ class EmployeeInstance(models.Model):
     updated_date = models.DateTimeField(null=True, blank=True)
     updated_by = models.DecimalField(max_digits=7, decimal_places=0, blank=True, null=True)
     
+    comment = models.TextField(blank=True, null=True)
+    
     LEAVE_STATUS = (
         ('a', 'Approved'),
         ('p', 'Pending'),
         ('r', 'Rejected'),
-        ('c', 'Cancel'),
+        ('c', 'Sync complete'),
+        ('f', 'Sync fail'),
     )
     status = models.CharField(
         max_length=1,
@@ -169,7 +172,8 @@ class EmployeeInstance(models.Model):
         help_text='Leave Request Status')
 
     class Meta:
-        ordering = ['-created_date', '-start_date']
+        #ordering = ['-created_date', '-start_date']
+        ordering = ['-created_date']
 
     def get_absolute_url(self):
         return reverse('leave_history_detail', args=[str(self.id)])

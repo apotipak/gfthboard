@@ -11,7 +11,7 @@
         {% if request.path|slice:":6" == '/leave' %}        
         <div>
         <div class="float-left">
-          <h3><i class="fas fa-laptop-medical" style="color:gray"></i>&nbsp;&nbsp;</h3>
+          &nbsp;
         </div>
         <div class="float-right">
           <h3>E-Leave</h3>
@@ -23,7 +23,7 @@
         {% if request.path|slice:":9" == '/contract' %}        
         <div>
         <div class="float-left">
-          <h3><i class="fas fa-user-clock" style="color:gray"></i>&nbsp;&nbsp;</h3>
+          &nbsp;
         </div>
         <div class="float-right">
           <h3>Daily Guard Info</h3>
@@ -35,10 +35,22 @@
         {% if request.path|slice:":14" == '/staff-profile' %}
         <div>
         <div class="float-left">
-          <h3><i class="fas fa-user-clock" style="color:gray"></i>&nbsp;&nbsp;</h3>
+          &nbsp;
         </div>
         <div class="float-right">
           <h3>โปรไฟล์</h3>
+        </div>                  
+        <div class="clearfix"></div>
+        </div>        
+        {% endif %}
+
+        {% if request.path|slice:":15" == '/staff-password' %}
+        <div>
+        <div class="float-left">
+          &nbsp;
+        </div>
+        <div class="float-right">
+          <h3>เปลี่ยนรหัสผ่าน</h3>
         </div>                  
         <div class="clearfix"></div>
         </div>        
@@ -53,9 +65,9 @@
         <a href="{% url 'staff-profile' %}" class="nav-link-menubar active">
             {% if user.is_authenticated %}
                 {% if user.is_superuser %}
-                    ยินดีต้อนรับ <span class="text-primary"><b>Admin</b></span>
+                    Welcome <span class="text-primary"><b>Admin</b></span>
                 {% else %}
-                    ยินดีต้อนรับ <span class="text-primary"><b>{{ user.get_short_name }}</b></span>
+                    Welcome <span class="text-primary"><b>{{ user.get_short_name }}</b></span>
                 {% endif %}
             {% endif %}
         </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -64,7 +76,7 @@
       <li class="nav-item">
         <!--<a class="nav-link-menubar" href="/">Home</a>
         <a class="nav-link-menubar" href="#">Contact</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-        <a class="nav-link-menubar" href="{% url 'logout'%}?next=/accounts/login"><i class="fas fa-sign-out-alt"></i>&nbsp;<b>ออกจากระบบ</b></a>
+        <a class="nav-link-menubar" href="{% url 'logout'%}?next=/accounts/login"><i class="fas fa-sign-out-alt"></i>&nbsp;Sign Out</a>
       </li>
 
 

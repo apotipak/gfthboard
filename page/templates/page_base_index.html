@@ -22,10 +22,10 @@
 <div class="wrapper">
 
   <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white container-fluid full" style="background-image: url({% static 'img/10.jpg' %});background-repeat: no-repeat;background-position:center;background-size:cover;min-height:20vh;">
+  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white container-fluid full" style="background-image: url({% static 'img/10.jpg' %});background-repeat: no-repeat;background-position:center;background-size:cover;min-height:15vh;">
     <div class="container">
       <a href="/" class="navbar-brand">
-        <img src="{% static 'dist/img/logo-big.png' %}" alt="Logo" width="250px;" class="img-responsive">
+        <img src="{% static 'dist/img/logo-big.png' %}" alt="Logo" width="230px;" class="img-responsive">
       </a>
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
@@ -33,21 +33,53 @@
           <a class="nav-link" href="{% url 'staff-profile' %}">
               {% if user.is_authenticated %}
                   {% if user.is_superuser %}
-                      ยินดีต้อนรับ <b>Admin</b>
+                      Welcome <b>Admin</b>
                   {% else %}
-                      ยินดีต้อนรับ <b>{{ user.get_short_name }}</b>
+                      Welcome <b class="text-primary">{{ user.get_short_name }}</b>
                   {% endif %}
               {% endif %}
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-              |
+
+        <!-- Notifications Dropdown Menu -->
+        {% if perms.leave.approve_leaveplan %}
+        <!--
+        <li class="nav-item dropdown">
+          <a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="far fa-bell"></i>
+            <span class="badge badge-danger navbar-badge">2</span>
           </a>
+
+          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <span class="dropdown-item dropdown-header"><b>2</b>&nbsp;&nbsp;รายการแจ้งเตือน</span>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-envelope mr-2"></i> <b>อำนาจ</b>&nbsp;&nbsp;|&nbsp;&nbsp;ขอใช้วันลา
+              <span class="float-right text-muted text-sm">3 นาทีก่อน</span>
+            </a>            
+            <div class="dropdown-divider"></div>
+
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-envelope mr-2"></i> <b>อานนท์</b>&nbsp;&nbsp;|&nbsp;&nbsp;ขอใช้วันลา
+              <span class="float-right text-muted text-sm">2 วันก่อน</span>
+            </a>            
+            <div class="dropdown-divider"></div>
+
+            <a href="{% url 'leave_approval' %}" class="dropdown-item dropdown-footer text-primary">ไปหน้าอนุมัติวันลา</a>
+          </div>
+        </li>
+        -->
+        {% else %}
+
+        {% endif %}
+
+
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'logout'%}?next=/accounts/login">
-            <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+            <i class="fas fa-sign-out-alt"></i> Sign Out
           </a>
         </li>        
       </ul>

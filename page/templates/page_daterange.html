@@ -17,17 +17,24 @@
   <!-- daterange picker -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
+  
   <!-- iCheck for checkboxes and radio inputs -->
   <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">  
+
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <!-- Custom style -->
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">  
+
+  <!-- Datepicker -->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 
@@ -52,75 +59,31 @@
 
 <!-- jQuery -->
 <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+
 <!-- Bootstrap 4 -->
 <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+<!-- DataTables -->
+<script src="{% static '/plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">  
+
 <!-- InputMask -->
 <script src="{% static 'plugins/moment/moment.min.js' %}"></script>
 <script src="{% static 'plugins/inputmask/min/jquery.inputmask.bundle.min.js' %}"></script>
-<!-- date-range-picker -->
-<script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+
+<!-- date picker -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
 <!-- AdminLTE App -->
 <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{% static 'dist/js/demo.js' %}"></script>
 <!-- Page script -->
-
-<script type='text/javascript'>
-  $(function () {
-
-    $(".delete_button1").click(function() {
-        var id = $(this).attr('id');
-        console.log("id: " + id);     
-    });
-
-  });
-
-</script>
-
-<script type='text/javascript'>
-  $(function () {
-
-    var dateToday = new Date();
-
-    $('#reservationtime').daterangepicker({
-      autoUpdateInput: false,
-      timePicker: true,
-      timePickerIncrement: 60,
-      timePicker24Hour: true,
-      
-      "dateLimit": {
-        "month": 1,
-      },
-      //minDate: moment({hour: 8, minute: 60}),
-      
-      //singleDatePicker: true,      
-      startDate: moment().month('month').date('date').hours(8).minutes(0).seconds(0).milliseconds(0),
-      endDate: moment().month('month').date('date').hours(17).minutes(0).seconds(0).milliseconds(0),
-      //minDate:new Date(), 
-      //dateLimit: { "days": 15},
-      //dateLimit: { "hours":7 },
-      //timePicker: true,
-      //monthNamesShort: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      locale: {
-        format: 'DD-MMM HH:mm A',
-        cancelLabel: 'Clear',        
-      }
-    }, function(start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD HH:mm') + ' to ' + end.format('YYYY-MM-DD HH:mm'));
-        $("#id_start_date").val(start.format('YYYY-MM-DD HH:mm'));
-        $("#id_end_date").val(end.format('YYYY-MM-DD HH:mm'));
-        $('#reservationtime').val(start.format('DD-MM-YYYY HH:mm A') + '    -    ' + end.format('DD-MM-YYYY HH:mm A'));
-    }).attr('readonly', 'readonly');
-  });
-
-  $('#reservationtime').on('apply.daterangepicker', function(ev, picker) {
-      $(this).val(picker.startDate.format('DD-MMM-YYYY HH:mm A') + '  -  ' + picker.endDate.format('DD-MMM-YYYY HH:mm A'));
-  });
-  $('#reservationtime').on('cancel.daterangepicker', function(ev, picker) {
-      $(this).val('');
-  });
-
-</script>
+ 
+{% block javascript %}{% endblock %}
 
 </body>
 </html>

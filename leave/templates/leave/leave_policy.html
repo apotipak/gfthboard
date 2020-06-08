@@ -2,7 +2,7 @@
 
 {% load humanize %}
 
-{% block title %}สิทธิการลา{% endblock %}
+{% block title %}สิทธิ์การลา{% endblock %}
 
 {% block content %}
 
@@ -13,12 +13,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">สิทธิการลา {% now 'Y' %}</h1>
+            <h1 class="m-0 text-dark">สิทธิ์การลาปี {% now 'Y' %}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item active">E-Leave</li>
-              <li class="breadcrumb-item">สิทธิการลา</li>
+              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
+              <li class="breadcrumb-item active">สิทธิ์การลา</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -36,22 +36,28 @@
                 <table class="table table-striped">
                   <thead>
                     <tr>                  
-                      <th scope="col">ประเภทการลา</th>
-                      <th scope="col">จำนวนวัน</th>
+                      <th scope="col"><h5>ประเภท</h5></th>
+                      <th scope="col" style="text-align: left"><h5>คงเหลือ</h5></th>
+                      <th scope="col"><h5>ใช้ไป</h5></th>
+                      <th scope="col"><h5>รออนุมัติ</h5></th>
                     </tr>
                   </thead>
                   <tbody>   
                   {% for policy in leave_policy %}
-                <tr>
-                  <td>{{ policy.lve_th }}</td>
+                <tr>                  
+                  <!-- ประเภทการลา -->
                   <td>
-                    <button type="button" class="btn btn-primary">
-                      สิทธิ์ลา&nbsp;&nbsp;{{policy.lve_plan}}
-                    </button>&nbsp;&nbsp;
-                    <button type="button" class="btn btn-success">
-                      คงเหลือ&nbsp;&nbsp;{{policy.lve_miss}}
-                    </button>                                          
+                    <h6><b>{{ policy.lve_th }}</b>&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;วัน</h6>
                   </td>
+                  
+                  <!-- วันคงเหลือ -->
+                  <td>{{ policy.grand_total_lve_miss_hr_display }}</td>
+                  
+                  <!-- วันที่ใช้ -->
+                  <td>{{ policy.grand_total_lve_act_hr_display }}</td>
+
+                  <!-- รออนุมัติ -->
+                  <td>{{ policy.grand_total_pending_lve_act_hr_display }}</td>
                 </tr>                  
                   {% endfor %}
                   </tbody>
