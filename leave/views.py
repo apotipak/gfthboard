@@ -281,7 +281,8 @@ def EmployeeNew(request):
                 print(employee_full_name)
                 
                 mail.send(
-                    'amnaj.potipak@guardforce.co.th', # To
+                    #'amnaj.potipak@guardforce.co.th', # To
+                    recipients,
                     'E-Leave <support.gfth@guardforce.co.th>', # From
                     subject = 'ขออนุมัติวันลา',
                     message = 'ขออนุมัติวันลา',
@@ -290,7 +291,7 @@ def EmployeeNew(request):
                         'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
                         'ประเภทการลา: <strong>' + str(leave_type_id) + '</strong><br>'
                         'วันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:00")) + '</strong> ถึง <strong>' + str(end_date.strftime("%d-%b-%Y %H:00")) + '</strong><br><br>'
-                        'สามารถ <a href="http://localhost:8000">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br><br>'
+                        'สามารถ <a href="http://http://27.254.207.51:8080">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br><br>'
                         'This email is sent by E-Leave system'
                 )
 
@@ -362,7 +363,8 @@ def EmployeeInstanceApprove(request, pk):
             leave_type = employee_leave_instance.leave_type            
                         
             mail.send(
-                'amnaj.potipak@guardforce.co.th', # To
+                #'amnaj.potipak@guardforce.co.th', # To
+                recipients,
                 'E-Leave <support.gfth@guardforce.co.th>', # From
                 subject = 'อนุมัติวันลา',
                 message = 'อนุมัติวันลา',
@@ -371,7 +373,7 @@ def EmployeeInstanceApprove(request, pk):
                     'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
                     'วันที่: <strong>' + start_date + '</strong> ถึง <strong>' + end_date + '</strong><br>'
                     'สถานะ: <strong>อนุมัติ</strong><br><br>'
-                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://localhost:8000">ที่นี่</a><br><br>'
+                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://http://27.254.207.51:8080">ที่นี่</a><br><br>'
                     'This email is sent by E-Leave system'
             )
 
@@ -421,7 +423,8 @@ def EmployeeInstanceReject(request, pk):
             leave_type = employee_leave_instance.leave_type            
             
             mail.send(
-                'amnaj.potipak@guardforce.co.th', # To
+                #'amnaj.potipak@guardforce.co.th', # To
+                recipients,
                 'E-Leave <support.gfth@guardforce.co.th>', # From
                 subject = 'ไม่อนุมัติการลา',
                 message = 'ไม่อนุมัติการลา',
@@ -431,7 +434,7 @@ def EmployeeInstanceReject(request, pk):
                     'วันที่: <strong>' + start_date + '</strong> ถึง <strong>' + end_date + '</strong><br>'
                     'สถานะ: <strong>ไม่อนุมัติ</strong><br>'
                     'เหตุผล: <strong>' + comment +'</strong><br><br>'
-                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://localhost:8000">ที่นี่</a><br><br>'
+                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://http://27.254.207.51:8080">ที่นี่</a><br><br>'
                     'This email is sent by E-Leave system'
             )
 
