@@ -33,9 +33,9 @@
           <a class="nav-link" href="{% url 'staff-profile' %}">
               {% if user.is_authenticated %}
                   {% if user.is_superuser %}
-                      Hello, <b>Admin</b>
+                      Welcome <b>Admin</b>
                   {% else %}
-                      Hello, <b class="text-primary">{{ user.get_short_name }}</b>
+                      Welcome <b class="text-primary">{{ user.get_short_name }}</b>
                   {% endif %}
               {% endif %}
           </a>
