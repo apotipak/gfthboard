@@ -38,8 +38,11 @@
             <h3><a href="#" id="send_leave_request"><strong>วิธีการใช้วันลา</strong></a></h3>
             
             <p><strong>1. คลิกปุ่มใช้งาน</strong></p> 
-            <p>คลิกปุ่ม <strong>ใช้งาน</strong> ที่ระบบ E-Leave (ผู้ใช้จะมองเห็นชื่อระบบที่ตัวเองมีสิทธิ์ใช้งานเท่านั้น)</p>
+            <p>หลังจากผู้ใช้ได้ล็อคอินเข้าสู่ระบบแล้วให้คลิกปุ่ม <strong>ใช้งาน</strong> ที่ระบบ E-Leave<br></p>
             <p><img class="img-fluid img-thumbnail" src="{% static 'img/help/gfboard-home-page.png' %}" width="550px;"></p>
+            <div class="alert alert-info" role="alert">
+              <i class="fas fa-info-circle"></i>&nbsp;&nbsp;ผู้ใช้จะมองเห็นชื่อระบบที่ตัวเองมีสิทธิ์ใช้งานเท่านั้น
+            </div>
 
             <p><strong>2. คลิกเมนูใช้วันลา</strong><p>
             <p>ให้ผู้ใช้ทำการคลิกที่เมนู <strong>ใช้วันลา</strong> ด้านซ้ายมือจากนั้นระบบจะแสดงหน้าจอให้ผู้ใช้ทำการป้อนข้อมูลต่างๆดังนี้</p>
@@ -127,7 +130,32 @@
                 <li>รอการอนุมัติ</li>
               </ul>
             </p>
-            <p>&nbsp;</p>
+            <hr />
+            <br>
+
+
+            <h3><a href="#" id="approved_leave_request"><strong>การอนุมัติวันลา</strong></a></h3>
+            <p>ผู้ใช้สามารถทำการอนุมัติวันลาของพนักงานในทีมของตัวเองได้ที่เมนู <strong>อนุมัติใบลา</strong></p>
+            <p><img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-approved-leave-request-menu.png' %}" width="250px;"></p>
+            <br>
+            
+            <p>ระบบจะแสดงรายการขอวันลาทั้งหมดที่พนักงานในทีมของท่านส่งคำร้องขอมา</p>
+            <p><img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-approved-leave-request.png' %}" width="650px;"></p>
+            <br>
+
+            <p>กรณีต้องการอนุมัติ ให้ทำการคลิกปุ่มอนุมัติจากนั้นระบบจะแสดงรายการให้ผู้ใช้ตรวจสอบความถูกต้องอีกครั้ง</p>
+            <p><img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-confirm-approved-leave-request.png' %}" width="650px;"></p>
+            <br>            
+
+            <p>คลิกปุ่มอนุมัติ ระบบจะส่งอีเมล์กลับไปยังพนักงานให้โดยอัตโนมัติ และเมื่อกลับมาที่หน้าจออนุมัติใบลาอีกครั้ง รายการที่ได้อนุมัติไปแล้วจะไม่แสดงอีก</p>
+            <p><img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-confirm-approved-leave-request.png' %}" width="650px;"></p>
+            <br>
+
+            <p>กรณีไม่ต้องการอนุมัติ ให้ทำการคลิกปุ่มไม่อนุมัติจากนั้นระบบจะแสดงรายการให้ผู้ใช้ตรวจสอบความถูกต้องอีกครั้ง</p>
+            <p><img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-rejected-leave-request.png' %}" width="650px;"></p>
+            <p>ผู้ใช้สามารถกรอกรายละเอียดสาเหตุการไม่อนุมัติวันลาให้กับพนักงานทราบได้</p>
+            <br>            
+
 
           </div>
         </div>
