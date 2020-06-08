@@ -207,6 +207,23 @@
           </li>
           {% endif %}
 
+          {% if request.path|slice:":12" == '/help-eleave' %}
+          <li class="nav-item has-treeview">
+            <h4 class="text-secondary">คู่มือการใช้งาน</h4>
+          </li>
+          <li class="nav-item has-treeview">
+            <i class="fas fa-book text-secondary"></i>&nbsp;&nbsp;<a href="#send_leave_request">วิธีการใช้วันลา</a>            
+          </li>
+          <li class="nav-item has-treeview">
+            <i class="fas fa-book text-secondary"></i>&nbsp;&nbsp;<a href="#cancel_leave_request">การยกเลิกวันลา</a>            
+          </li>          
+          <li class="nav-item has-treeview">
+            <i class="fas fa-book text-secondary"></i>&nbsp;&nbsp;<a href="#view_leave_policy">การดูข้อมูลสิทธิ์วันลา</a>
+          </li>
+          <li class="nav-item has-treeview">
+            <i class="fas fa-book text-secondary"></i>&nbsp;&nbsp;<a href="#view_leave_history">การดูข้อมูลประวัติการลา</a>         
+          </li>                    
+          {% endif %}
 
         </ul>
       </nav>
