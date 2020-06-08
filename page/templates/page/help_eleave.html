@@ -32,102 +32,24 @@
       <div class="container-fluid">
         <div class="row">
           <div class="container">
-            <h2>ระบบวันลาออนไลน์ (E-Leave)</h2>
-            <p>ระบบวันลาออนไลน์ถูกออกแบบมาสำหรับใช้กับพนักงานที่มีความประสงค์ในการส่งคำร้องขอใช้วันหยุดผ่านช่องทางออนไลน์ไปยังผู้จัดการแผนกเพื่อพิจารณาอนุมัติ ซึ่งพนักงานจะสามารถทราบผลการอนุมัติผ่านช่องทางออนไลน์เช่นเดียวกันหลังจากคำร้องขอได้ผ่านการอนุมัติแล้ว</p>
-            
-            <p><a href="#send_leave_request"><strong>การใช้วันลา</strong></a></p>
-            
-            <p><strong>1. คลิกปุ่มใช้งาน</strong></p> 
-            <p>คลิกปุ่ม <strong>ใช้งาน</strong> ที่ระบบ E-Leave (ผู้ใช้จะมองเห็นชื่อระบบที่ตัวเองมีสิทธิ์ใช้งานเท่านั้น)</p>
-            <p><img class="img-fluid img-thumbnail" src="{% static 'img/help/gfboard-home-page.png' %}" width="550px;"></p>
-
-            <p><strong>2. คลิกเมนูใช้วันลา</strong><p>
-            <p>ให้ผู้ใช้ทำการคลิกที่เมนู <strong>ใช้วันลา</strong> ด้านซ้ายมือจากนั้นระบบจะแสดงหน้าจอให้ผู้ใช้ทำการป้อนข้อมูลต่างๆดังนี้</p>
-            <p>
-              <ul>
-                <li>
-                  <strong>เลือกประเภทการลา</strong>
-                  <p>
-                    <img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-select-leave-type.png' %}"><br>
-                    ผู้ใช้สามารถสิทธิ์การลาตามรายการทั้งหมดที่แสดงอยู่ในตัวเลือก ซึ่งโดยปกติแล้วจะรายชื่อประเภทการลาดังนี้<br>
-                    <ul>
-                      <li>ลาพักร้อน</li>
-                      <li>ลาป่วยได้รับค่าจ้าง</li>
-                      <li>ลากิจโดยได้รับค่าจ้าง</li>
-                      <li>ลาคลอดโดยได้รับค่าจ้าง</li>
-                      <li>ลาเรียกระดมพล</li>
-                      <li>ลาบวชได้รับค่าจ้าง</li>
-                    </ul>
-                </p>
-                </li>
-                <li>
-                  <strong>เลือกวันที่และเวลาที่ต้องการลาวันแรก</strong>
-                  <p>ระบบจะแสดงปฏิธินของเดือนปัจจุบันและเลือกวันที่ + เวลาปัจจุบันเป็นค่าเริ่มต้นให้ก่อน ผู้ใช้สามารถเลือกวันที่และเวลาเริ่มลาเป็นวันและเวลาอื่นที่ต้องการได้</p>
-                  <img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-select-start-date.png' %}" width="200px;"><br>
-                </li>
-                <li>
-                  <strong>เลือกวันที่และเวลาที่ต้องการลาวันสุดท้าย</strong>                  
-                  <p>ระบบจะแสดงปฏิธินของเดือนปัจจุบันและเลือกวันที่ + เวลาปัจจุบันเป็นค่าเริ่มต้นให้ก่อน ผู้ใช้สามารถเลือกวันที่และเวลาเริ่มลาเป็นวันและเวลาอื่นที่ต้องการได้</p>
-                  <img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-select-start-date.png' %}" width="200px;"><br>
-                </li>
-                <li>
-                  เมือเลือกช่วงเวลาที่ต้องการลาครบแล้วให้คลิกปุ่มตกลง ขั้นตอนนี้ระบบจะทำการตรวจสอบวันและเวลาในระบบอีกครั้ง หากระบบพบว่ามีการใช้วันลาดังกล่าวไปแล้ว ระบบจะทำการแจ้งเตือนให้ผู้ใช้ทราบ<br>
-                  <img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-select-duplicate-date.png' %}"><br>
-                </li>
-                <li>
-                  หากช่วงเวลาที่เลือกไม่เคยถูกใช้มาก่อนระบบจะแสดงวันลาให้ผู้ใช้ทราบพร้อมแสดงสถานะรออนุมัติ จากนั้นระบบจะทำการส่งอีเมล์ไปยังผู้จัดการของท่านให้โดยอัตโนมัติ<br>
-                  <img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-select-success-date.png' %}"><br>
-                </li>
-                <li>
-                  หลังจากรายการของท่านได้รับการอนุมัติแล้ว ระบบจะเปลี่ยนสถานะใหม่เป็นอนุมัติและทำการแจ้งเตือนให้ผู้ใช้รับทราบทางอีเมล์อีกครั้งโดยอัตโนมัติ<br>
-                  <img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-approved-pending-status.png' %}"><br><br>
-                  <p><strong>สถานะ Pending | Success | Fail คืออะไร</strong></p>
-                  หากผู้ใช้พบสถานะ Pending ที่คอลัมภ์สุดท้าย กรณีนี้หมายถึงระบบกำลังเตรียมการอัพเดทข้อมูลการลาของท่านไปที่ระบบ HRMS หลัก หากระบบทำการอัพเดทข้อมูลที่ HRMS เสร็จแล้ว สถานะ Pending นั้นจะถูกเปลี่ยนเป็น Success<br>
-                  <img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-sync-success-status.png' %}"><br>
-                  หากระบบแสดงสถานะ Fail ที่คอลัมภ์สุดท้าย กรณีนี้หมายถึงระบบทำรายการอัพเดทข้อมูลที่ HRMS ไม่สำเร็จ และจะทำการอัพเดทใหม่อีกครั้งโดยอัตโนมัติ<br>
-                  <img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-sync-fail-status.png' %}"><br>
-                </li>                
-              </ul>
-            </p>
-
+            <h4>หน้าเมนู E-Leave</h4>
+            <p align="center"><img src="{% static 'img/help/e_leave_home_page.png' %}" width="550px;"></p>
+            <p>Description...</p>
             <hr />
 
-            <br>
-            <p><a href="#cancel_leave_request"><strong>การยกเลิกวันลา</strong></a><p>
-            <p>หากผู้ใช้ต้องการยกเลิกวันลาที่ได้เคยส่งคำขอไปแล้ว ผู้ใช้สามารถทำการยกเลิกได้ด้วยตัวเองได้ทันที (แต่รายการดังกล่าวจะต้องยังไม่ได้รับการอนุมัติ)</p>
-            <strong>ขั้นตอนการยกเลิก</strong><br>            
-            <ul>
-              <li>คลิกเมนูประวัติการลา</li>
-              <li>คลิกปุ่มยกเลิกที่รายการที่ต้องการยกเลิก<br>
-                <img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-select-success-date.png' %}">
-              </li>
-              <li>ตรวจสอบรายการอีกครั้งและกดปุ่มยกเลิก<br>
-                <img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-cancel-leave-request.png' %}"><br>
-                จากนั้นระบบจะทำการยกเลิกรายการดังกล่าวพร้อมส่งอีเมล์แจ้งไปยังผู้จัดการของท่านโดยอัตโนมัติ
-              </li>
-
-            </ul>
+            <h4>หน้าสิทธิ์การลา</h4>
+            <p align="center"><img src="{% static 'img/help/e_leave_policy_page.png' %}" width="650px;"></p>
+            <p>Description</p>
             <hr />
-            <br>
 
-            <p><a href="#view_leave_policy"><strong>การดูข้อมูลสิทธิ์การลา</strong></a><p>
-            <p>ให้ผู้ใช้ทำการคลิกที่เมนู <strong>สิทธิ์การลา</strong> จากนั้นระบบจะแสดงสิทธิ์วันลาต่างๆและจำนวนวันคงเหลือทั้งหมดของปีปัจจุบัน</p>
-            <p><img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-home-page.png' %}" width="550px;"></p>
+            <h4>หน้าประวัติการลา</h4>
+            <p align="center"><img src="{% static 'img/help/e_leave_history_page.png' %}" width="650px;"></p>
+            <p>Description</p>
             <hr />
-            <br>
 
-            <p><a href="#view_leave_history"><strong>การดูข้อมูลประวัติการลา</strong></a></p>
-            <p>เป็นหน้าแสดงรายละเอียดรายการลาต่างๆที่ผู้ใช้ได้เคยใช้ไปแล้ว รวมถึงดูสถานะการขอใช้วันลาที่รอการอนุมัติและผู้ใช้ยังสามารถทำการยกเลิกวันลาได้ด้วยตัวเองอีกด้วย (เราสามารถยกเลิกวันลาด้วยตัวเองได้เลยหากผู้จัดการยังไม่ได้ทำการอนุมัติ)</p>
-            <p><img class="img-fluid img-thumbnail" src="{% static 'img/help/eleave-history-page.png' %}" width="550px;"></p>
-            <p>
-              <strong>สถานะการลามี 3 แบบคือ</strong>
-              <ul>
-                <li>อนุมัติ</li>
-                <li>ไม่อนุมัติ</li>
-                <li>รอการอนุมัติ</li>
-              </ul>
-            </p>            
-            <p>&nbsp;</p>
+            <h4>หน้าเขียนใบลา</h4>
+            <p align="center"><img src="{% static 'img/help/e_leave_create_page.png' %}" width="650px;"></p>
+            <p>Description</p>
 
           </div>
         </div>
