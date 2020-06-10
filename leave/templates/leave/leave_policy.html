@@ -30,7 +30,71 @@
     <section class="content">
       <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-12">
+                {% if leave_policy %}
+                <table class="table table-striped">
+                  <thead>
+                    <tr>                  
+                      <th scope="col"><h5>ประเภท</h5></th>
+                      <th scope="col" style="text-align: left"><h5>คงเหลือ</h5></th>
+                      <th scope="col" style="text-align: left"><h5>ใช้ไป&nbsp;<small><small>| HRMS</small></small></h5></th>
+                      <th scope="col" style="text-align: left"><h5>ใช้ไป&nbsp;<small><small>| E-Leave</small></small></h5></th>
+                      <th scope="col"><h5>รออนุมัติ</h5></th>
+                    </tr>
+                  </thead>
+                  <tbody>   
+                  {% for policy in leave_policy %}
+                <tr>                  
+                  <!-- ประเภทการลา -->
+                  <td>
+                    <h6><b>{{ policy.lve_th }}</b>&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;วัน</h6>
+                  </td>
+                  
+                  <!-- วันคงเหลือ -->
+                  <td>{{ policy.grand_total_lve_miss_hr_display }}</td>
+                  
+                  <!-- HRMS ใช้ไป -->
+                  <td style="text-align: left" class="text-secondary">
+                    {% if policy.lve_HRMS > 0 %}
+                      {{policy.lve_HRMS}} วัน
+                    {% endif %}
 
+                    {% if policy.lve_HRMS_HR > 0 %}
+                      &nbsp;{{ policy.lve_HRMS_HR|stringformat:"1.0f" }} ช.ม.
+                    {% endif %}
+                  </td>
+
+                  <!-- E-Leave ใช้ไป -->
+                  <td style="text-align: left">                    
+                    {% if policy.grand_total_lve_act_hr_display|length > 1 %}
+                        {{ policy.grand_total_lve_act_hr_display }}
+                    {% else %}
+                      {{ policy.grand_total_lve_act_hr_display }}
+                    {% endif %}
+                    
+                  </td>
+
+                  <!-- รออนุมัติ -->
+                  <td>
+                    {% if policy.grand_total_pending_lve_act_hr_display|length > 1 %}
+                        {{ policy.grand_total_pending_lve_act_hr_display }}
+                    {% else %}
+                        {{ policy.grand_total_pending_lve_act_hr_display }}
+                    {% endif %}
+                  </td>
+
+                </tr>                  
+                  {% endfor %}
+                  </tbody>
+                </table>
+
+                {% else %}
+                <div class="alert alert-success" role="alert">
+                    <i class="fa fa-info-circle"></i>&nbsp;&nbsp;สิทธิ์วันลาของคุณยังไม่ได้สร้างไว้ในระบบ กรุณาสอบถามข้อมูลจากฝ่ายบุคคล
+                </div>                                     
+                {% endif %}           
+          </div>
 
       </div><!-- /.container-fluid -->
     </section>
