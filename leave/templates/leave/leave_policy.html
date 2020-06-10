@@ -1,4 +1,4 @@
-{% extends "page_base_generic.html" %}
+{% extends "page_daterange.html" %}
 
 {% load humanize %}
 
@@ -59,7 +59,7 @@
                     {% if policy.lve_HRMS > 0 %}
                       {{policy.lve_HRMS}} วัน
                     {% endif %}
-                    
+
                     {% if policy.lve_HRMS_HR > 0 %}
                       &nbsp;{{ policy.lve_HRMS_HR|stringformat:"1.0f" }} ช.ม.
                     {% endif %}
