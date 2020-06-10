@@ -1,11 +1,11 @@
+import sys
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from leave.models import LeavePlan, LeaveHoliday, LeaveEmployee
+from leave.models import LeavePlan, LeaveHoliday, LeaveEmployee, LeaveType
 from .models import EmployeeInstance
-from .forms import EmployeeForm
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
@@ -17,17 +17,147 @@ from django.http import HttpResponse
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from datetime import timedelta, datetime
-import sys
-from .rules import *
 from django.db.models import Sum
 from django.utils.dateparse import parse_datetime
 from django.http import JsonResponse
 from post_office import mail
+from .rules import *
+from .forms import EmployeeForm
+from .form_m1817 import EmployeeM1817Form
+from .form_m1247 import EmployeeM1247Form
 
 
 current_year = datetime.now().year
+
+@login_required(login_url='/accounts/login/')
+def EmployeeNew(request):
+    dattime_format = "%Y-%m-%d %H:%M:%S"
+
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE
+    
+    render_template_name = 'leave/employeeinstance_form.html'
+    
+    if request.method == "POST":
+        if request.user.groups.filter(name__in=['E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
+            form = EmployeeM1817Form(request.POST, user=request.user)
+            render_template_name = 'leave/m1817_form.html'
+        elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():        
+            form = EmployeeM1247Form(request.POST, user=request.user)
+            render_template_name = 'leave/m1247_form.html'
+        else:
+            form = EmployeeForm(request.POST, user=request.user)
+
+        if form.is_valid():      
+            start_date = form.cleaned_data['start_date']
+            start_hour = form.cleaned_data['start_hour']
+            start_minute = form.cleaned_data['end_minute']
+
+            end_date = form.cleaned_data['end_date']
+            end_hour = form.cleaned_data['end_hour']            
+            end_minute = form.cleaned_data['end_minute']
+
+            d1 = str(start_date) + ' ' + str(start_hour) + ':' + str(start_minute) + ':00'
+            d2 = str(end_date) + ' ' + str(end_hour) + ':' + str(end_minute) + ':00'
+            start_date = datetime.strptime(d1, dattime_format)
+            end_date = datetime.strptime(d2, dattime_format)
+
+            leave_type_id = form.cleaned_data['leave_type']
+            username = request.user.username
+            fullname = request.user.first_name + " " + request.user.last_name
+            created_by = request.user.username                        
+
+            employee = form.save(commit=False)
+
+            employee.start_date = start_date
+            employee.end_date = end_date
+            employee.emp_id = request.user.username
+            employee.created_by = request.user.username
+
+
+            if request.user.groups.filter(name__in=['E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
+                grand_total_hours = checkM1817BusinessRules('M1247', start_date, end_date)
+            elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():        
+                grand_total_hours = checkM1247BusinessRules('M1247', start_date, end_date)
+
+            #grand_total_hours = checkM1247BusinessRules('M1247', start_date, end_date)
+            #print(grand_total_hours)
+
+            employee.lve_act = grand_total_hours // 23
+            employee.lve_act_hr = grand_total_hours % 23
+
+            #print(str(start_date) + " | " + str(end_date))
+            employee.save()
+
+            # EMPLOYEE SENDS LEAVE REQUEST EMAIL
+            if settings.TURN_SEND_MAIL_ON:
+                query = LeaveEmployee.objects.get(emp_id=request.user.username)
+                supervisor_id = query.emp_spid
+                supervisor = User.objects.get(username=supervisor_id)
+                supervisor_email = supervisor.email
+
+                subject = "GFTH Board: Leave Request"
+                sender = "amnaj.potipak@guardforce.co.th"
+                recipients = [supervisor_email]
+                context = {'username': username, 'fullname': fullname, 'start_date': start_date.strftime('%A, %d-%B-%Y'), 'end_date': end_date.strftime('%A, %d-%B-%Y')}
+                
+                employee_first_name = request.user.first_name
+                employee_last_name = request.user.last_name
+                employee_full_name = employee_first_name + ' ' + employee_last_name
+
+                print("Send email : Leave request")
+                print(recipients)
+                print(start_date)
+                print(end_date)
+                print(leave_type_id)
+                print(employee_full_name)
+                
+                mail.send(
+                    'amnaj.potipak@guardforce.co.th', # To
+                    #recipients,
+                    'support.gfth@guardforce.co.th', # From
+                    subject = 'ขออนุมัติวันลา',
+                    message = 'ขออนุมัติวันลา',
+                    html_message = 'เรียน <strong>ผู้จัดการแผนก</strong><br><br>'
+                        'พนักงานแจ้งใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
+                        'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
+                        'ประเภทการลา: <strong>' + str(leave_type_id) + '</strong><br>'
+                        'วันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึง <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br><br>'
+                        'สามารถ <a href="http://27.254.207.51:8080">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br><br><br>'
+                        '--This email was sent by E-Leave Admin'
+                )
+
+            return HttpResponseRedirect('/leave/leave-history/?submitted=True')
+              
+    else:
+        #form = EmployeeForm(user=request.user)
+
+        if request.user.groups.filter(name__in=['E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
+            form = EmployeeM1817Form(user=request.user)            
+            render_template_name = 'leave/m1817_form.html'
+        elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():
+            form = EmployeeM1247Form(user=request.user)
+            render_template_name = 'leave/m1247_form.html'
+        else:
+            form = EmployeeForm(user=request.user)
+
+
+    #return render(request, 'leave/employeeinstance_form.html', {
+    
+    return render(request, render_template_name, {
+        'form': form,
+        'page_title': settings.PROJECT_NAME,
+        'today_date': settings.TODAY_DATE,
+        'project_version': settings.PROJECT_VERSION,
+        'db_server': settings.DATABASES['default']['HOST'],
+        'project_name': settings.PROJECT_NAME
+    })
+
 
 class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):    
     #template_name = 'leave/employeeinstance_list.html'
@@ -102,7 +232,7 @@ def LeavePolicy(request):
     for policy in leave_policy:
 
         # จำนวนวันที่ใช้
-        total_lve_act = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_act', flat=True).get()        
+        total_lve_act = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_act', flat=True).get()
 
 
         # จำนวนช.ม.ที่ใช้แล้ว
@@ -150,7 +280,8 @@ def LeavePolicy(request):
         policy.grand_total_lve_miss_hr_display = grand_total_lve_miss_hr_display
 
 
-        # แสดงจำนวนวันที่ใช้
+        # แสดงจำนวนวันที่ใช้ไป - Backup
+        '''
         grand_total_lve_act_hr = grand_total_lve_act_hr + grand_total_approved_lve_act_hr
         grand_total_lve_act_hr_display = ""
         if grand_total_lve_act_hr <= 0:
@@ -163,6 +294,50 @@ def LeavePolicy(request):
                 grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr % 8) + " ช.ม."
 
         policy.grand_total_lve_act_hr_display = grand_total_lve_act_hr_display        
+        '''
+        # แสดงจำนวนวันที่ใช้ไป - New
+        grand_total_lve_act_hr = grand_total_approved_lve_act_hr
+        grand_total_lve_act_hr_display = ""
+        if grand_total_lve_act_hr <= 0:
+            grand_total_lve_act_hr_display += "0"
+        else:
+            if (grand_total_lve_act_hr // 8) != 0:
+                grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr // 8) + " วัน "
+            
+            if (grand_total_lve_act_hr % 8) != 0:
+                grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr % 8) + " ช.ม."
+
+        policy.grand_total_lve_act_hr_display = grand_total_lve_act_hr_display        
+
+
+        # แสดงจำนวนวันที่ใช้ไปบน HRMS
+        #print(grand_total_approved_lve_act_hr + grand_total_pending_lve_act_hr)
+
+        leave_plan_quota = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_plan', flat=True).get()
+        leave_used_in_e_leave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p','a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
+        leave_hrms = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_HRMS', flat=True).get()
+        leave_hrms_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_HRMS_HR', flat=True).get()
+
+        temp_hrms_used_display = ""
+        
+        #if grand_total_approved_lve_act_hr + grand_total_pending_lve_act_hr == 0:
+        if leave_used_in_e_leave == 0:
+            temp = (leave_plan_quota * 8) - grand_total_lve_miss_hr
+
+            if (temp // 8) != 0:
+                temp_hrms_used_display += "{:,.0f}".format(temp // 8) + " วัน "
+            
+            if (temp % 8) != 0:
+                temp_hrms_used_display += "{:,.0f}".format(temp % 8) + " ช.ม."
+        else:
+            temp_hrms_used_display += "{:,.0f}".format(leave_plan_quota) + " ช.ม."
+
+        if temp_hrms_used_display == "":
+            temp_hrms_used_display += "-"
+
+        policy.used_leave_in_hrms = temp_hrms_used_display
+
+
 
 
         # แสดงจำนวนวันที่รออนุมัติ
@@ -213,103 +388,6 @@ class EmployeeCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'leave.add_employeeinstance'
 
 
-@login_required(login_url='/accounts/login/')
-def EmployeeNew(request):
-    page_title = settings.PROJECT_NAME
-    db_server = settings.DATABASES['default']['HOST']
-    project_name = settings.PROJECT_NAME
-    project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE
-
-    form = EmployeeForm(request.POST, user=request.user)
-
-    if request.method == "POST":
-
-        #form = EmployeeForm(request.POST, user=request.user)
-
-        if form.is_valid():        
-            start_date = form.cleaned_data['start_date']
-            start_time = form.cleaned_data['start_time']
-            end_date = form.cleaned_data['end_date']
-            end_time = form.cleaned_data['end_time']
-
-            d1 = str(start_date) + ' ' + str(start_time) + ':00:00'
-            d2 = str(end_date) + ' ' + str(end_time) + ':00:00'
-            start_date = datetime.strptime(d1, "%Y-%m-%d %H:%M:%S")
-            end_date = datetime.strptime(d2, "%Y-%m-%d %H:%M:%S")
-
-            leave_type_id = form.cleaned_data['leave_type']
-            username = request.user.username
-            fullname = request.user.first_name + " " + request.user.last_name
-            created_by = request.user.username                        
-
-            employee = form.save(commit=False)
-
-            employee.start_date = start_date
-            employee.end_date = end_date
-            employee.emp_id = request.user.username
-            employee.created_by = request.user.username
-
-            result = checkM1LeaveRequestHour("M1", start_date, end_date)
-            employee.lve_act = result // 8
-            employee.lve_act_hr = result % 8
-
-            #print(str(start_date) + " | " + str(end_date))
-            employee.save()
-
-            # EMPLOYEE SENDS LEAVE REQUEST EMAIL
-            if settings.TURN_SEND_MAIL_ON:
-                query = LeaveEmployee.objects.get(emp_id=request.user.username)
-                supervisor_id = query.emp_spid
-                supervisor = User.objects.get(username=supervisor_id)
-                supervisor_email = supervisor.email
-
-                subject = "GFTH Board: Leave Request"
-                sender = "amnaj.potipak@guardforce.co.th"
-                recipients = [supervisor_email]
-                context = {'username': username, 'fullname': fullname, 'start_date': start_date.strftime('%A, %d-%B-%Y'), 'end_date': end_date.strftime('%A, %d-%B-%Y')}
-                
-                employee_first_name = request.user.first_name
-                employee_last_name = request.user.last_name
-                employee_full_name = employee_first_name + ' ' + employee_last_name
-
-                print("Send email : Leave request")
-                print(recipients)
-                print(start_date)
-                print(end_date)
-                print(leave_type_id)
-                print(employee_full_name)
-                
-                mail.send(
-                    #'amnaj.potipak@guardforce.co.th', # To
-                    recipients,
-                    'E-Leave <support.gfth@guardforce.co.th>', # From
-                    subject = 'ขออนุมัติวันลา',
-                    message = 'ขออนุมัติวันลา',
-                    html_message = 'เรียน <strong>ผู้จัดการแผนก</strong><br><br>'
-                        'พนักงานแจ้งใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
-                        'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
-                        'ประเภทการลา: <strong>' + str(leave_type_id) + '</strong><br>'
-                        'วันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:00")) + '</strong> ถึง <strong>' + str(end_date.strftime("%d-%b-%Y %H:00")) + '</strong><br><br>'
-                        'สามารถ <a href="http://27.254.207.51:8080">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br><br>'
-                        'This email is sent by E-Leave system'
-                )
-
-            return HttpResponseRedirect('/leave/leave-history/?submitted=True')
-
-    else:
-        form = EmployeeForm(user=request.user)
-
-    return render(request, 'leave/employeeinstance_form.html', {
-        'form': form,
-        'page_title': settings.PROJECT_NAME,
-        'today_date': settings.TODAY_DATE,
-        'project_version': settings.PROJECT_VERSION,
-        'db_server': settings.DATABASES['default']['HOST'],
-        'project_name': settings.PROJECT_NAME
-    })
-
-
 class LeaveApprovalListView(PermissionRequiredMixin, generic.ListView):
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
@@ -358,13 +436,13 @@ def EmployeeInstanceApprove(request, pk):
             employee_last_name = employee.last_name            
             employee_full_name = employee_first_name + ' ' + employee_last_name
             recipients = [employee.email]
-            start_date = employee_leave_instance.start_date.strftime("%d-%b-%Y %H:00")
-            end_date = employee_leave_instance.end_date.strftime("%d-%b-%Y %H:00")
+            start_date = employee_leave_instance.start_date.strftime("%d-%b-%Y %H:%M")
+            end_date = employee_leave_instance.end_date.strftime("%d-%b-%Y %H:%M")
             leave_type = employee_leave_instance.leave_type            
                         
             mail.send(
-                #'amnaj.potipak@guardforce.co.th', # To
-                recipients,
+                'amnaj.potipak@guardforce.co.th', # To
+                #recipients,
                 'E-Leave <support.gfth@guardforce.co.th>', # From
                 subject = 'อนุมัติวันลา',
                 message = 'อนุมัติวันลา',
@@ -373,8 +451,8 @@ def EmployeeInstanceApprove(request, pk):
                     'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
                     'วันที่: <strong>' + start_date + '</strong> ถึง <strong>' + end_date + '</strong><br>'
                     'สถานะ: <strong>อนุมัติ</strong><br><br>'
-                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://27.254.207.51:8080">ที่นี่</a><br><br>'
-                    'This email is sent by E-Leave system'
+                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://27.254.207.51:8080">ที่นี่</a><br><br><br>'
+                    '--This email was sent by E-Leave Admin'
             )
 
         return HttpResponseRedirect(reverse('leave_approval'))
@@ -418,24 +496,24 @@ def EmployeeInstanceReject(request, pk):
             employee_first_name = employee.first_name
             employee_last_name = employee.last_name            
             employee_full_name = employee_first_name + ' ' + employee_last_name
-            start_date = employee_leave_instance.start_date.strftime("%d-%b-%Y %H:00")
-            end_date = employee_leave_instance.end_date.strftime("%d-%b-%Y %H:00")
+            start_date = employee_leave_instance.start_date.strftime("%d-%b-%Y %H:%M")
+            end_date = employee_leave_instance.end_date.strftime("%d-%b-%Y %H:%M")
             leave_type = employee_leave_instance.leave_type            
             
             mail.send(
-                #'amnaj.potipak@guardforce.co.th', # To
-                recipients,
+                'amnaj.potipak@guardforce.co.th', # To
+                #recipients,
                 'E-Leave <support.gfth@guardforce.co.th>', # From
-                subject = 'ไม่อนุมัติการลา',
-                message = 'ไม่อนุมัติการลา',
+                subject = 'ไม่อนุมัติวันลา',
+                message = 'ไม่อนุมัติวันลา',
                 html_message = 'เรียน คุณ <strong>' + employee_first_name + '</strong><br><br>'
                     'ผู้จัดการของท่านแจ้ง <strong>ไม่อนุมัติ</strong> การใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
                     'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
                     'วันที่: <strong>' + start_date + '</strong> ถึง <strong>' + end_date + '</strong><br>'
                     'สถานะ: <strong>ไม่อนุมัติ</strong><br>'
                     'เหตุผล: <strong>' + comment +'</strong><br><br>'
-                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://27.254.207.51:8080">ที่นี่</a><br><br>'
-                    'This email is sent by E-Leave system'
+                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://27.254.207.51:8080">ที่นี่</a><br><br><br>'
+                    '--This email was sent by E-Leave Admin'
             )
 
         return HttpResponseRedirect(reverse('leave_approval'))

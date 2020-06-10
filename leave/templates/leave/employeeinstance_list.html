@@ -57,7 +57,7 @@
                         {% if leave.lve_act != 0 %}
                             {{leave.lve_act}} วัน
                             {% if leave.lve_act_hr != 0 %}
-                              | {{leave.lve_act_hr}} ช.ม.
+                              &nbsp;{{leave.lve_act_hr}} ช.ม.
                             {% endif %}
                         {% else %}
                             {{leave.lve_act_hr}} ช.ม.
@@ -204,7 +204,7 @@
         "ordering": false,
         "info": false,
         "autoWidth": false,
-        "pageLength": 5,
+        "pageLength": 10,
         "lengthMenu": [[10, 20, 25, 50, -1], [10, 20, 25, 50, "All"]],
         "search": {
             "caseInsensitive": true

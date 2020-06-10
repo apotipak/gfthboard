@@ -122,6 +122,8 @@ class LeavePlan(models.Model):
     upd_date = models.DateTimeField()
     upd_by = models.CharField(max_length=6)
     lve_id = models.ForeignKey(LeaveType, db_column="lve_id", on_delete=models.SET_NULL, null=True)
+    lve_HRMS = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
+    lve_HRMS_HR = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -135,7 +137,7 @@ class LeavePlan(models.Model):
         if UserName == 'superadmin':
             EmployeeLeavePolicyInstance = ""
         else:
-            EmployeeLeavePolicyInstance = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_year, lp.lve_act, lp.lve_act_hr, lp.lve_miss, lp.lve_miss_hr, lt.lve_id as lve_type_id, lp.lve_code, lp.lve_plan, lp.lve_miss, lp.lve_miss_hr, lt.lve_th from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + UserName + " and lp.lve_year=" + LeaveYear)
+            EmployeeLeavePolicyInstance = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_year, lp.lve_act, lp.lve_act_hr, lp.lve_HRMS, lp.lve_HRMS_HR, lp.lve_miss, lp.lve_miss_hr, lt.lve_id as lve_type_id, lp.lve_code, lp.lve_plan, lp.lve_miss, lp.lve_miss_hr, lt.lve_th from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + UserName + " and lp.lve_year=" + LeaveYear)
         return EmployeeLeavePolicyInstance
 
 
