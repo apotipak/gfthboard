@@ -66,11 +66,23 @@
 
                   <!-- E-Leave ใช้ไป -->
                   <td style="text-align: left">
-                    {{ policy.grand_total_lve_act_hr_display }}
+                    {% if policy.grand_total_lve_act_hr_display|length > 1 %}
+                        <a href="{% url 'leave_history' %}">{{ policy.grand_total_lve_act_hr_display }}</a>
+                    {% else %}
+                      {{ policy.grand_total_lve_act_hr_display }}
+                    {% endif %}
+                    
                   </td>
 
                   <!-- รออนุมัติ -->
-                  <td>{{ policy.grand_total_pending_lve_act_hr_display }}</td>
+                  <td>
+                    {% if policy.grand_total_pending_lve_act_hr_display|length > 1 %}
+                        <a href="{% url 'leave_history' %}">{{ policy.grand_total_pending_lve_act_hr_display }}</a>
+                    {% else %}
+                        {{ policy.grand_total_pending_lve_act_hr_display }}
+                    {% endif %}
+                  </td>
+
                 </tr>                  
                   {% endfor %}
                   </tbody>
@@ -78,7 +90,7 @@
 
                 {% else %}
                 <div class="alert alert-success" role="alert">
-                    <i class="fa fa-info-circle"></i>&nbsp;&nbsp;สิทธิวันลาของคุณยังไม่ได้สร้างไว้ในระบบ กรุณาสอบถามข้อมูลจากฝ่ายบุคคล
+                    <i class="fa fa-info-circle"></i>&nbsp;&nbsp;สิทธิ์วันลาของคุณยังไม่ได้สร้างไว้ในระบบ กรุณาสอบถามข้อมูลจากฝ่ายบุคคล
                 </div>                                     
                 {% endif %}           
           </div>
