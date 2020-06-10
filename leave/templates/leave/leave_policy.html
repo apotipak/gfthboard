@@ -77,7 +77,7 @@
                   <!-- รออนุมัติ -->
                   <td>
                     {% if policy.grand_total_pending_lve_act_hr_display|length > 1 %}
-                        <a href="{% url 'leave_history' %}">{{ policy.grand_total_pending_lve_act_hr_display }}</a>
+                        {{ policy.grand_total_pending_lve_act_hr_display }}
                     {% else %}
                         {{ policy.grand_total_pending_lve_act_hr_display }}
                     {% endif %}
