@@ -52,41 +52,63 @@
                   </td>
                   
                   <!-- วันคงเหลือ -->
-                  <td>{{ policy.grand_total_lve_miss_hr_display }}</td>
+                  <td>
+                    {% if policy.total_day_remaining > 0 %}
+                      {{policy.total_day_remaining}} วัน
+                    {% endif %}
+
+                    {% if policy.total_hour_remaining > 0 %}
+                      &nbsp;{{ policy.total_hour_remaining|stringformat:"1.0f" }} ช.ม.
+                    {% endif %}
+
+                    {% if policy.total_day_remaining == 0 and policy.total_hour_remaining == 0 %}
+                      0
+                    {% endif %}                    
+                  </td>
                   
                   <!-- HRMS ใช้ไป -->
                   <td style="text-align: left" class="text-secondary">
-                    {% if policy.lve_HRMS > 0 %}
-                      {{policy.lve_HRMS}} วัน
+                    {% if policy.lve_act > 0 %}
+                      {{policy.lve_act}} วัน
                     {% endif %}
 
-                    {% if policy.lve_HRMS_HR > 0 %}
-                      &nbsp;{{ policy.lve_HRMS_HR|stringformat:"1.0f" }} ช.ม.
+                    {% if policy.lve_act_hr > 0 %}
+                      &nbsp;{{ policy.lve_act_hr|stringformat:"1.0f" }} ช.ม.
                     {% endif %}
 
-                    {% if policy.lve_HRMS == 0 and policy.lve_HRMS_HR == 0 %}
+                    {% if policy.lve_act == 0 and policy.lve_act_hr == 0 %}
                       0
                     {% endif %}
-
                   </td>
 
                   <!-- E-Leave ใช้ไป -->
                   <td style="text-align: left">                    
-                    {% if policy.grand_total_lve_act_hr_display|length > 1 %}
-                        <a href="{% url 'leave_history' %}">{{ policy.grand_total_lve_act_hr_display }}</a>
-                    {% else %}
-                      {{ policy.grand_total_lve_act_hr_display }}
+                    {% if policy.total_approved_lve_act_eleave > 0 %}
+                        <a href="{% url 'leave_history' %}">{{ policy.total_approved_lve_act_eleave }} วัน</a>
                     {% endif %}
-                    
+
+                    {% if policy.total_approved_lve_act_hr_eleave > 0 %}
+                        <a href="{% url 'leave_history' %}">{{ policy.total_approved_lve_act_hr_eleave }} ช.ม.</a>
+                    {% endif %}
+
+                    {% if policy.total_approved_lve_act_eleave == 0 and policy.total_approved_lve_act_hr_eleave == 0 %}
+                        0
+                    {% endif%}                  
                   </td>
 
                   <!-- รออนุมัติ -->
                   <td>
-                    {% if policy.grand_total_pending_lve_act_hr_display|length > 1 %}
-                        <a href="{% url 'leave_history' %}">{{ policy.grand_total_pending_lve_act_hr_display }}</a>
-                    {% else %}
-                        {{ policy.grand_total_pending_lve_act_hr_display }}
+                    {% if policy.total_pending_lve_act_eleave > 0 %}
+                        <a href="{% url 'leave_history' %}">{{ policy.total_pending_lve_act_eleave }} วัน</a>
                     {% endif %}
+
+                    {% if policy.total_pending_lve_act_hr_eleave > 0 %}
+                        <a href="{% url 'leave_history' %}">{{ policy.total_pending_lve_act_hr_eleave }} ช.ม.</a>
+                    {% endif %}
+
+                    {% if policy.total_pending_lve_act_eleave == 0 and policy.total_pending_lve_act_hr_eleave == 0 %}
+                        0
+                    {% endif%}
                   </td>
 
                 </tr>                  

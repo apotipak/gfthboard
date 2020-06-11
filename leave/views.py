@@ -290,114 +290,40 @@ def LeavePolicy(request):
 
     for policy in leave_policy:
 
-        # จำนวนวันที่ใช้
-        total_lve_act = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_act', flat=True).get()
+        leave_plan_day = policy.lve_plan
+        leave_plan_hour = policy.lve_plan * 8
 
-
-        # จำนวนช.ม.ที่ใช้แล้ว
-        total_lve_act_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_act_hr', flat=True).get()
-        # จำนวนช.ม.ที่ใช้แล้วทั้งหมด
+        # จำนวน วัน/ช.ม. ที่ใช้ใน HRMS
+        total_lve_act = policy.lve_act
+        total_lve_act_hr = policy.lve_act_hr
         grand_total_lve_act_hr = total_lve_act_hr + (total_lve_act * 8)
 
-
-        # จำนวนวันคงเหลือ
-        total_lve_miss = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_miss', flat=True).get()        
-        # จำนวนช.ม.คงเหลือ
-        total_lve_miss_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_miss_hr', flat=True).get()
-        # จำนวนช.ม.คงเหลือทั้งหมด
+        # จำนวน วัน/ช.ม. คงเหลือใน HRMS
+        total_lve_miss = policy.lve_miss
+        total_lve_miss_hr = policy.lve_miss_hr
         grand_total_lve_miss_hr = total_lve_miss_hr + (total_lve_miss * 8)
 
+        # จำนวน วัน/ช.ม. ที่รออนุมัติใน E-Leave
+        total_pending_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+        total_pending_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
+        grand_total_pending_eleave = total_pending_lve_act_hr_eleave + (total_pending_lve_act_eleave * 8)
+        policy.total_pending_lve_act_eleave = grand_total_pending_eleave // 8
+        policy.total_pending_lve_act_hr_eleave = grand_total_pending_eleave % 8  
 
-        # จำนวนวันที่รออนุมัติ
-        total_pending_lve_act = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
-        # จำนวนช.ม.ที่รออนุมัติ
-        total_pending_lve_act_hr = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
-        # จำนวนช.ม.ที่รออนุมัติทั้งหมด
-        grand_total_pending_lve_act_hr = total_pending_lve_act_hr + (total_pending_lve_act * 8)
-
-
-        # จำนวนวันที่อนุมัติ
-        total_approved_lve_act = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
-        # จำนวนช.ม.ที่อนุมัติ
-        total_approved_lve_act_hr = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
-        # จำนวนช.ม.ที่อนุมัติทั้งหมด
-        grand_total_approved_lve_act_hr = total_approved_lve_act_hr + (total_approved_lve_act * 8)
+        # จำนวน วัน/ช.ม. ที่อนุมัติแล้ว E-Leave
+        total_approved_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
+        total_approved_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+        grand_total_approved_eleave = total_approved_lve_act_hr_eleave + (total_approved_lve_act_eleave * 8)
+        policy.total_approved_lve_act_eleave = grand_total_approved_eleave // 8
+        policy.total_approved_lve_act_hr_eleave = grand_total_approved_eleave % 8
 
 
-        # แสดงจำนวนวันคงเหลือ
-        grand_total_lve_miss_hr = grand_total_lve_miss_hr - grand_total_pending_lve_act_hr - grand_total_approved_lve_act_hr
-        grand_total_lve_miss_hr_display = ""
-        if grand_total_lve_miss_hr <= 0:
-            grand_total_lve_miss_hr_display += "0"
-        else:
-            if (grand_total_lve_miss_hr // 8) > 0:
-                grand_total_lve_miss_hr_display += "{:,.0f}".format(grand_total_lve_miss_hr // 8) + " วัน "
-
-            if (grand_total_lve_miss_hr % 8) > 0:
-                grand_total_lve_miss_hr_display += "{:,.0f}".format(grand_total_lve_miss_hr % 8) + " ช.ม."
-
-        policy.grand_total_lve_miss_hr_display = grand_total_lve_miss_hr_display
-
-
-        # แสดงจำนวนวันที่ใช้ไป
-        grand_total_lve_act_hr = grand_total_approved_lve_act_hr
-        grand_total_lve_act_hr_display = ""
-        if grand_total_lve_act_hr <= 0:
-            grand_total_lve_act_hr_display += "0"
-        else:
-            if (grand_total_lve_act_hr // 8) != 0:
-                grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr // 8) + " วัน "
-            
-            if (grand_total_lve_act_hr % 8) != 0:
-                grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr % 8) + " ช.ม."
-
-        policy.grand_total_lve_act_hr_display = grand_total_lve_act_hr_display        
-
-
-        # แสดงจำนวนวันที่ใช้ไปบน HRMS
-        #print(grand_total_approved_lve_act_hr + grand_total_pending_lve_act_hr)
-
-        leave_plan_quota = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_plan', flat=True).get()
-        leave_used_in_e_leave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p','a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
-        leave_hrms = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_HRMS', flat=True).get()
-        leave_hrms_hr = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=policy.lve_type_id).filter(lve_year=current_year).values_list('lve_HRMS_HR', flat=True).get()
-
-        temp_hrms_used_display = ""
-        
-        #if grand_total_approved_lve_act_hr + grand_total_pending_lve_act_hr == 0:
-        if leave_used_in_e_leave == 0:
-            temp = (leave_plan_quota * 8) - grand_total_lve_miss_hr
-
-            if (temp // 8) != 0:
-                temp_hrms_used_display += "{:,.0f}".format(temp // 8) + " วัน "
-            
-            if (temp % 8) != 0:
-                temp_hrms_used_display += "{:,.0f}".format(temp % 8) + " ช.ม."
-        else:
-            temp_hrms_used_display += "{:,.0f}".format(leave_plan_quota) + " ช.ม."
-
-        if temp_hrms_used_display == "":
-            temp_hrms_used_display += "-"
-
-        policy.used_leave_in_hrms = temp_hrms_used_display
-
-
-
-
-        # แสดงจำนวนวันที่รออนุมัติ
-        grand_total_pending_lve_act_hr_display = ""
-        if grand_total_pending_lve_act_hr <= 0:
-            grand_total_pending_lve_act_hr_display += "0"
-        else:
-            if (grand_total_pending_lve_act_hr // 8) > 0:
-                grand_total_pending_lve_act_hr_display += "{:,.0f}".format(grand_total_pending_lve_act_hr // 8) + " วัน "
-
-            if (grand_total_pending_lve_act_hr % 8) > 0:
-                grand_total_pending_lve_act_hr_display += "{:,.0f}".format(grand_total_pending_lve_act_hr % 8) + " ช.ม."
-        
-        policy.grand_total_pending_lve_act_hr_display = grand_total_pending_lve_act_hr_display
-
-
+        # จำนวนวันคงเหลือสุทธิ
+        result = leave_plan_hour - (grand_total_lve_act_hr + grand_total_approved_eleave + grand_total_pending_eleave)
+        total_day_remaining = result // 8
+        total_hour_remaining = result % 8
+        policy.total_day_remaining = total_day_remaining
+        policy.total_hour_remaining = total_hour_remaining
 
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
