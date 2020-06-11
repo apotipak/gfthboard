@@ -48,10 +48,14 @@ def checkM1247BusinessRules(employee_type, d1, d2):
 				total_hour = total_hour
 				day = total_hour // 8
 				hour = total_hour % 8				
+			elif total_hour == 9:
+				total_hour = total_hour
+				day = 1
+				hour = 0
 			else:
-				total_hour = total_hour - 1
+				total_hour = total_hour
 				day = total_hour // 8
-				hour = total_hour % 8
+				hour = total_hour % 8				
 		else:
 			day = 1
 			hour = 0	
