@@ -9,7 +9,7 @@ dayDelta = timedelta(days=1)
 
 def checkStandardBusinessRules(start_date, end_date):
 	if (start_date > end_date):
-		return True, _("ลาวันที่ > ถึงวันที่")
+		return True, _("วันที่เริ่มต้นต้องน้อยกว่าวันที่สุดท้าย")
 	elif (start_date == end_date):
 	    return True, _("เลือกช่วงเวลาไม่ถูกต้อง")
 	else:
