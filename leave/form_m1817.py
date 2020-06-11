@@ -21,17 +21,20 @@ standard_stop_working_hour = 17
 class EmployeeM1817Form(forms.ModelForm):
     start_working_hour = 8
     stop_working_hour = 17
-    hour_range = ((0,'00'),(30,'30'))
+    hour_range = ((8,'08'),(9,'09'),(10,'10'),(11,'11'),(12,'12'),(13,'13'),(14,'14'),(15,'15'),(16,'16'),(17,'17'))
+    minute_range = ((0,'00'),(30,'30'))
 
     leave_type = forms.ModelChoiceField(label='เลือกประเภทการลา', queryset=None, required=True)
 
     start_date = forms.DateField(label='วันเริ่ม', required=True, error_messages={'required': 'กรุณาป้อนข้อมูลวันที่ลา'})
-    start_hour = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(start_working_hour, stop_working_hour + 1)]))
-    start_minute = forms.IntegerField(widget=forms.Select(choices=hour_range), initial="00")
+    #start_hour = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(start_working_hour, stop_working_hour + 1)]))
+    start_hour = forms.IntegerField(widget=forms.Select(choices=hour_range), initial=8)
+    start_minute = forms.IntegerField(widget=forms.Select(choices=minute_range), initial=0)
 
     end_date = forms.DateField(label='วันสิ้นสุด', required=True, error_messages={'required': 'กรุณาป้อนข้อมูลลาถึงวันที่'})    
-    end_hour = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(start_working_hour, stop_working_hour + 1)]))    
-    end_minute = forms.IntegerField(widget=forms.Select(choices=hour_range), initial="00")
+    #end_hour = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(start_working_hour, stop_working_hour + 1)]))    
+    end_hour = forms.IntegerField(widget=forms.Select(choices=hour_range), initial=17)
+    end_minute = forms.IntegerField(widget=forms.Select(choices=minute_range), initial="00")
 
     employee_type = forms.CharField(required=False, widget=forms.HiddenInput(), initial="M1817")
 
