@@ -96,21 +96,20 @@ def EmployeeNew(request):
 
             employee.save()
 
+            day_hour_display = ""
+            if grand_total_hours // 8 > 0:
+                day_hour_display += str(grand_total_hours // 8) + ' วัน '
+            if grand_total_hours % 8 > 0:
+                day_hour_display += str(grand_total_hours % 8) + ' ช.ม.'
+
             # EMPLOYEE SENDS LEAVE REQUEST EMAIL
             if settings.TURN_SEND_MAIL_ON:
-                query = LeaveEmployee.objects.get(emp_id=request.user.username)
-                supervisor_id = query.emp_spid
+                employee = LeaveEmployee.objects.get(emp_id=request.user.username)
+                supervisor_id = employee.emp_spid
                 supervisor = User.objects.get(username=supervisor_id)
                 supervisor_email = supervisor.email
-
-                subject = "GFTH Board: Leave Request"
-                sender = "amnaj.potipak@guardforce.co.th"
-                recipients = [supervisor_email]
-                context = {'username': username, 'fullname': fullname, 'start_date': start_date.strftime('%A, %d-%B-%Y'), 'end_date': end_date.strftime('%A, %d-%B-%Y')}
-                
-                employee_first_name = request.user.first_name
-                employee_last_name = request.user.last_name
-                employee_full_name = employee_first_name + ' ' + employee_last_name
+                recipients = [supervisor_email]                
+                employee_full_name = employee.emp_fname_th + ' ' + employee.emp_lname_th
 
                 print("Send email : Leave request")
                 print(recipients)
@@ -129,9 +128,10 @@ def EmployeeNew(request):
                         'พนักงานแจ้งใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
                         'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
                         'ประเภทการลา: <strong>' + str(leave_type_id) + '</strong><br>'
-                        'วันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึง <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br><br>'
-                        'สามารถ <a href="http://27.254.207.51:8080">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br><br><br>'
-                        '--This email was sent by E-Leave Admin'
+                        'ลาวันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึงวันที่ <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br>'
+                        'จำนวน: <strong>' + day_hour_display + '</strong><br><br>'
+                        'กรุณา <a href="http://27.254.207.51:8080">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br>'
+                        '<br><br>--This email was sent from E-Leave System'
                 )
 
             return HttpResponseRedirect('/leave/leave-history/?submitted=True')
@@ -235,11 +235,11 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
             start_date = self.object.start_date
             end_date = self.object.end_date
             leave_type_id = self.object.leave_type_id
+            leave_type_name = LeaveType.objects.filter(lve_id__exact=leave_type_id).values_list('lve_th', flat=True).get()
             day = self.object.lve_act
             hour = self.object.lve_act_hr
 
             day_hour_display = ""
-
             if day > 0:
                 day_hour_display += str(day) + ' วัน '
 
@@ -253,6 +253,7 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
             print(day)
             print(hour)
             print(leave_type_id)
+            print(leave_type_name)
 
             mail.send(
                 'amnaj.potipak@guardforce.co.th', # To
@@ -263,10 +264,10 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
                 html_message = 'เรียน <strong>ผู้จัดการแผนก</strong><br><br>'
                     'มีการขอแจ้งยกเลิกวันลาตามรายละเอียดด้านล่าง<br><br>'
                     'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
-                    'ประเภทการลา: <strong>' + str(leave_type_id) + '</strong><br>'
-                    'วันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึง <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br>'
-                    'จำนวน: <strong>' + day_hour_display + '</strong><br><br><br>'
-                    '--This email was sent from E-Leave System'
+                    'ประเภทการลา: <strong>' + str(leave_type_name) + '</strong><br>'
+                    'ลาวันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึงวันที่ <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br>'
+                    'จำนวน: <strong>' + day_hour_display + '</strong><br>'
+                    '<br><br>--This email was sent from E-Leave System'
             )            
 
         return reverse_lazy('leave_history')
@@ -481,21 +482,31 @@ def EmployeeInstanceApprove(request, pk):
             recipients = [employee.email]
             start_date = employee_leave_instance.start_date.strftime("%d-%b-%Y %H:%M")
             end_date = employee_leave_instance.end_date.strftime("%d-%b-%Y %H:%M")
-            leave_type = employee_leave_instance.leave_type            
+            leave_type = employee_leave_instance.leave_type
+            day = employee_leave_instance.lve_act
+            hour = employee_leave_instance.lve_act_hr
+
+            day_hour_display = ""
+            if day > 0:
+                day_hour_display += str(day) + ' วัน '
+
+            if hour > 0:
+                day_hour_display += str(hour) + ' ช.ม.'
                         
             mail.send(
                 'amnaj.potipak@guardforce.co.th', # To
                 #recipients,
-                'E-Leave <support.gfth@guardforce.co.th>', # From
-                subject = 'อนุมัติวันลา',
-                message = 'อนุมัติวันลา',
+                '<support.gfth@guardforce.co.th', # From
+                subject = 'E-Leave: แจ้งอนุมัติวันลา',
+                message = 'E-Leave: แจ้งอนุมัติวันลา',
                 html_message = 'เรียน คุณ <strong>' + employee_first_name + '</strong><br><br>'
                     'ผู้จัดการของท่านแจ้ง <strong>อนุมัติ</strong> การใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
                     'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
                     'วันที่: <strong>' + start_date + '</strong> ถึง <strong>' + end_date + '</strong><br>'
+                    'จำนวน: <strong>' + day_hour_display + '</strong><br>'
                     'สถานะ: <strong>อนุมัติ</strong><br><br>'
-                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://27.254.207.51:8080">ที่นี่</a><br><br><br>'
-                    '--This email was sent by E-Leave Admin'
+                    'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://27.254.207.51:8080">ที่นี่</a><br>'
+                    '<br><br>--This email was sent from E-Leave System'
             )
 
         return HttpResponseRedirect(reverse('leave_approval'))
@@ -532,6 +543,9 @@ def EmployeeInstanceReject(request, pk):
         employee_leave_instance.comment = comment
         employee_leave_instance.save()
 
+        if len(comment) <= 0:
+            comment = "ไม่ได้ระบุเหตุผล"
+
         # TODO: Send mail funciton
         if settings.TURN_SEND_MAIL_ON:
             employee = User.objects.get(username=employee_leave_instance.emp_id)
@@ -542,21 +556,30 @@ def EmployeeInstanceReject(request, pk):
             start_date = employee_leave_instance.start_date.strftime("%d-%b-%Y %H:%M")
             end_date = employee_leave_instance.end_date.strftime("%d-%b-%Y %H:%M")
             leave_type = employee_leave_instance.leave_type            
-            
+            day = employee_leave_instance.lve_act
+            hour = employee_leave_instance.lve_act_hr
+
+            day_hour_display = ""
+            if day > 0:
+                day_hour_display += str(day) + ' วัน '
+            if hour > 0:
+                day_hour_display += str(hour) + ' ช.ม.'
+                                    
             mail.send(
                 'amnaj.potipak@guardforce.co.th', # To
                 #recipients,
-                'E-Leave <support.gfth@guardforce.co.th>', # From
-                subject = 'ไม่อนุมัติวันลา',
-                message = 'ไม่อนุมัติวันลา',
+                'support.gfth@guardforce.co.th', # From
+                subject = 'E-Leave: แจ้งไม่อนุมัติวันลา',
+                message = 'E-Leave: แจ้งไม่อนุมัติวันลา',
                 html_message = 'เรียน คุณ <strong>' + employee_first_name + '</strong><br><br>'
                     'ผู้จัดการของท่านแจ้ง <strong>ไม่อนุมัติ</strong> การใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
                     'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
                     'วันที่: <strong>' + start_date + '</strong> ถึง <strong>' + end_date + '</strong><br>'
+                    'จำนวน: <strong>' + day_hour_display + '</strong><br>'
                     'สถานะ: <strong>ไม่อนุมัติ</strong><br>'
                     'เหตุผล: <strong>' + comment +'</strong><br><br>'
                     'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://27.254.207.51:8080">ที่นี่</a><br><br><br>'
-                    '--This email was sent by E-Leave Admin'
+                    '--This email was sent from E-Leave System'
             )
 
         return HttpResponseRedirect(reverse('leave_approval'))
