@@ -165,7 +165,7 @@ class EmployeeM1247Form(forms.ModelForm):
                 raise forms.ValidationError(_("เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)))
 
             # RULE 4: Check not allow over month
-            if(checkM1LeaveRequestOverMonth("M1", start_date, end_date)):
+            if(checkLeaveRequestOverMonth("M1", start_date, end_date)):
                 #raise forms.ValidationError({'start_date': "เลือกวันลาข้ามเดือน"})
                 raise forms.ValidationError(_("เลือกวันลาข้ามเดือน"))
         

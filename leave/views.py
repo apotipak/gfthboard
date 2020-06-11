@@ -44,15 +44,12 @@ def EmployeeNew(request):
     render_template_name = 'leave/employeeinstance_form.html'
     
     if request.method == "POST":
-        if request.user.groups.filter(name__in=['E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
+        if request.user.groups.filter(name__in=['E-Leave Staff', 'E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
             form = EmployeeM1817Form(request.POST, user=request.user)
             render_template_name = 'leave/m1817_form.html'
         elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():
             form = EmployeeM1247Form(request.POST, user=request.user)
             render_template_name = 'leave/m1247_form.html'
-        elif request.user.groups.filter(name__in=['E-Leave Staff', 'E-Leave Manager']).exists():
-            form = EmployeeM1817Form(request.POST, user=request.user)
-            render_template_name = 'leave/m1817_form.html'            
         else:
             form = EmployeeForm(request.POST, user=request.user)
 
@@ -83,42 +80,19 @@ def EmployeeNew(request):
             employee.created_by = request.user.username
 
 
-            if request.user.groups.filter(name__in=['E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
+            if request.user.groups.filter(name__in=['E-Leave Staff','E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
                 grand_total_hours = checkM1817BusinessRules('M1247', start_date, end_date)
                 employee.lve_act = grand_total_hours // 8
                 employee.lve_act_hr = grand_total_hours % 8
-            elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():                        
+            elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():
                 found_m1247_error = checkM1247BusinessRules('M1247', start_date, end_date)
                 if found_m1247_error[0]:
                     raise forms.ValidationError(found_m1247_error[1])
                 else:
                     grand_total_hours = found_m1247_error[1]
 
-                print(grand_total_hours)
-
                 employee.lve_act = grand_total_hours // 8
                 employee.lve_act_hr = grand_total_hours % 8
-
-                '''
-                if grand_total_hours > 23:                    
-                    employee.lve_act = grand_total_hours // 24                    
-                    if grand_total_hours % 24 >= 9:
-                        if (grand_total_hours % 24) -1 == 8:
-                            employee.lve_act_hr = 0
-                            employee.lve_act += 1
-                        else:
-                            employee.lve_act_hr = (grand_total_hours % 24)
-                    else:
-                        employee.lve_act_hr = grand_total_hours % 24
-                else:             
-                    if grand_total_hours <= 9:
-                        grand_total_hours = grand_total_hours - 1
-                        employee.lve_act = grand_total_hours // 8
-                        employee.lve_act_hr = grand_total_hours % 8
-                    else:
-                        employee.lve_act = 1
-                        employee.lve_act_hr = 0
-                '''
 
             employee.save()
 
@@ -164,20 +138,14 @@ def EmployeeNew(request):
               
     else:
 
-        if request.user.groups.filter(name__in=['E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
+        if request.user.groups.filter(name__in=['E-Leave Staff', 'E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
             form = EmployeeM1817Form(user=request.user)            
             render_template_name = 'leave/m1817_form.html'
         elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():
             form = EmployeeM1247Form(user=request.user)
             render_template_name = 'leave/m1247_form.html'
-        elif request.user.groups.filter(name__in=['E-Leave Staff', 'E-Leave Manager']).exists():
-            form = EmployeeM1817Form(user=request.user)
-            render_template_name = 'leave/m1817_form.html'            
         else:
             form = EmployeeForm(user=request.user)
-
-
-    #return render(request, 'leave/employeeinstance_form.html', {
     
     return render(request, render_template_name, {
         'form': form,
@@ -310,22 +278,7 @@ def LeavePolicy(request):
         policy.grand_total_lve_miss_hr_display = grand_total_lve_miss_hr_display
 
 
-        # แสดงจำนวนวันที่ใช้ไป - Backup
-        '''
-        grand_total_lve_act_hr = grand_total_lve_act_hr + grand_total_approved_lve_act_hr
-        grand_total_lve_act_hr_display = ""
-        if grand_total_lve_act_hr <= 0:
-            grand_total_lve_act_hr_display += "0"
-        else:
-            if (grand_total_lve_act_hr // 8) != 0:
-                grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr // 8) + " วัน "
-            
-            if (grand_total_lve_act_hr % 8) != 0:
-                grand_total_lve_act_hr_display += "{:,.0f}".format(grand_total_lve_act_hr % 8) + " ช.ม."
-
-        policy.grand_total_lve_act_hr_display = grand_total_lve_act_hr_display        
-        '''
-        # แสดงจำนวนวันที่ใช้ไป - New
+        # แสดงจำนวนวันที่ใช้ไป
         grand_total_lve_act_hr = grand_total_approved_lve_act_hr
         grand_total_lve_act_hr_display = ""
         if grand_total_lve_act_hr <= 0:
