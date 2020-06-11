@@ -123,8 +123,8 @@ def EmployeeNew(request):
                     'amnaj.potipak@guardforce.co.th', # To
                     #recipients,
                     'support.gfth@guardforce.co.th', # From
-                    subject = 'ขออนุมัติวันลา',
-                    message = 'ขออนุมัติวันลา',
+                    subject = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
+                    message = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
                     html_message = 'เรียน <strong>ผู้จัดการแผนก</strong><br><br>'
                         'พนักงานแจ้งใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
                         'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
@@ -197,8 +197,10 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
     today_date = settings.TODAY_DATE    
     model = EmployeeInstance
     paginate_by = 10
-    success_url = reverse_lazy('leave_history')
     permission_required = 'leave.view_employeeinstance'
+    template_name = "leave/employeeinstance_confirm_delete.html"
+    success_url = reverse_lazy('leave_history')
+    success_message = "Deleted Successfully"
 
     def get_context_data(self, **kwargs):
         context = super(EmployeeInstanceDelete, self).get_context_data(**kwargs)
@@ -209,7 +211,65 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
             'db_server': settings.DATABASES['default']['HOST'],
             'project_name': settings.PROJECT_NAME,
         })
+
         return context
+
+    def get_success_url(self, **kwargs):
+
+        if settings.TURN_SEND_MAIL_ON:
+            self.object = self.get_object()
+
+            username = self.request.user.username
+            fullname = self.request.user.first_name + " " + self.request.user.last_name
+            created_by = self.request.user.username                        
+
+            emp_id = self.request.user.username
+            employee = LeaveEmployee.objects.get(emp_id=emp_id)
+            supervisor_id = employee.emp_spid
+            supervisor = User.objects.get(username=supervisor_id)
+            supervisor_email = supervisor.email
+            employee_full_name = employee.emp_fname_th + ' ' + employee.emp_lname_th
+
+            recipients = [supervisor_email]
+            
+            start_date = self.object.start_date
+            end_date = self.object.end_date
+            leave_type_id = self.object.leave_type_id
+            day = self.object.lve_act
+            hour = self.object.lve_act_hr
+
+            day_hour_display = ""
+
+            if day > 0:
+                day_hour_display += str(day) + ' วัน '
+
+            if hour > 0:
+                day_hour_display += str(hour) + ' ช.ม.'
+
+            print("Send email : Leave request")
+            print(recipients)
+            print(start_date)
+            print(end_date)
+            print(day)
+            print(hour)
+            print(leave_type_id)
+
+            mail.send(
+                'amnaj.potipak@guardforce.co.th', # To
+                #recipients,
+                'support.gfth@guardforce.co.th', # From
+                subject = 'E-Leave: ' + employee_full_name + ' - ขอยกเลิกวันลา',
+                message = 'E-Leave: ' + employee_full_name + ' - ขอยกเลิกวันลา',
+                html_message = 'เรียน <strong>ผู้จัดการแผนก</strong><br><br>'
+                    'มีการขอแจ้งยกเลิกวันลาตามรายละเอียดด้านล่าง<br><br>'
+                    'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
+                    'ประเภทการลา: <strong>' + str(leave_type_id) + '</strong><br>'
+                    'วันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึง <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br>'
+                    'จำนวน: <strong>' + day_hour_display + '</strong><br><br><br>'
+                    '--This email was sent from E-Leave System'
+            )            
+
+        return reverse_lazy('leave_history')
 
     def get_queryset(self):
         owner = self.request.user.username
