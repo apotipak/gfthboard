@@ -63,12 +63,17 @@
                     {% if policy.lve_HRMS_HR > 0 %}
                       &nbsp;{{ policy.lve_HRMS_HR|stringformat:"1.0f" }} ช.ม.
                     {% endif %}
+
+                    {% if policy.lve_HRMS == 0 and policy.lve_HRMS_HR == 0 %}
+                      0
+                    {% endif %}
+
                   </td>
 
                   <!-- E-Leave ใช้ไป -->
                   <td style="text-align: left">                    
                     {% if policy.grand_total_lve_act_hr_display|length > 1 %}
-                        {{ policy.grand_total_lve_act_hr_display }}
+                        <a href="{% url 'leave_history' %}">{{ policy.grand_total_lve_act_hr_display }}</a>
                     {% else %}
                       {{ policy.grand_total_lve_act_hr_display }}
                     {% endif %}
@@ -78,7 +83,7 @@
                   <!-- รออนุมัติ -->
                   <td>
                     {% if policy.grand_total_pending_lve_act_hr_display|length > 1 %}
-                        {{ policy.grand_total_pending_lve_act_hr_display }}
+                        <a href="{% url 'leave_history' %}">{{ policy.grand_total_pending_lve_act_hr_display }}</a>
                     {% else %}
                         {{ policy.grand_total_pending_lve_act_hr_display }}
                     {% endif %}
