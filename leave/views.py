@@ -84,16 +84,39 @@ def EmployeeNew(request):
                 grand_total_hours = checkM1817BusinessRules('M1247', start_date, end_date)
                 employee.lve_act = grand_total_hours // 8
                 employee.lve_act_hr = grand_total_hours % 8
-            elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():        
-                grand_total_hours = checkM1247BusinessRules('M1247', start_date, end_date)
+            elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():                        
+                found_m1247_error = checkM1247BusinessRules('M1247', start_date, end_date)
+                if found_m1247_error[0]:
+                    raise forms.ValidationError(found_m1247_error[1])
+                else:
+                    grand_total_hours = found_m1247_error[1]
+
+                print(grand_total_hours)
+
                 employee.lve_act = grand_total_hours // 8
-                employee.lve_act_hr = grand_total_hours % 8                
+                employee.lve_act_hr = grand_total_hours % 8
 
-            #grand_total_hours = checkM1247BusinessRules('M1247', start_date, end_date)
-            #employee.lve_act = grand_total_hours // 23
-            #employee.lve_act_hr = grand_total_hours % 23
+                '''
+                if grand_total_hours > 23:                    
+                    employee.lve_act = grand_total_hours // 24                    
+                    if grand_total_hours % 24 >= 9:
+                        if (grand_total_hours % 24) -1 == 8:
+                            employee.lve_act_hr = 0
+                            employee.lve_act += 1
+                        else:
+                            employee.lve_act_hr = (grand_total_hours % 24)
+                    else:
+                        employee.lve_act_hr = grand_total_hours % 24
+                else:             
+                    if grand_total_hours <= 9:
+                        grand_total_hours = grand_total_hours - 1
+                        employee.lve_act = grand_total_hours // 8
+                        employee.lve_act_hr = grand_total_hours % 8
+                    else:
+                        employee.lve_act = 1
+                        employee.lve_act_hr = 0
+                '''
 
-            #print(str(start_date) + " | " + str(end_date))
             employee.save()
 
             # EMPLOYEE SENDS LEAVE REQUEST EMAIL

@@ -21,17 +21,20 @@ standard_stop_working_hour = 24
 class EmployeeM1247Form(forms.ModelForm):
     start_working_hour = 0
     stop_working_hour = 23
-    hour_range = ((0,'00'),(30,'30'))
+    hour_range = ((0,'00'),(1,'01'),(2,'02'),(3,'03'),(4,'04'),(5,'05'),(6,'06'),(7,'07'),(8,'08'),(9,'09'),(10,'10'),(11,'11'),(12,'12'),(13,'13'),(14,'14'),(15,'15'),(16,'16'),(17,'17'),(18,'18'),(19,'19'),(20,'20'),(21,'21'),(22,'22'),(23,'23'))
+    minute_range = ((0,'00'),(30,'30'))
 
     leave_type = forms.ModelChoiceField(label='เลือกประเภทการลา', queryset=None, required=True)
 
     start_date = forms.DateField(label='วันเริ่ม', required=True, error_messages={'required': 'กรุณาป้อนข้อมูลวันที่ลา'})
-    start_hour = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(start_working_hour, stop_working_hour + 1)]))
-    start_minute = forms.IntegerField(widget=forms.Select(choices=hour_range), initial="00")
+    #start_hour = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(start_working_hour, stop_working_hour + 1)]))
+    start_hour = forms.IntegerField(widget=forms.Select(choices=hour_range), initial=8)
+    start_minute = forms.IntegerField(widget=forms.Select(choices=minute_range), initial=0)
 
     end_date = forms.DateField(label='วันสิ้นสุด', required=True, error_messages={'required': 'กรุณาป้อนข้อมูลลาถึงวันที่'})    
-    end_hour = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(start_working_hour, stop_working_hour + 1)]))    
-    end_minute = forms.IntegerField(widget=forms.Select(choices=hour_range), initial="00")
+    #end_hour = forms.IntegerField(widget = forms.Select(choices=[(v, v) for v in range(start_working_hour, stop_working_hour + 1)]))    
+    end_hour = forms.IntegerField(widget=forms.Select(choices=hour_range), initial=17)
+    end_minute = forms.IntegerField(widget=forms.Select(choices=minute_range), initial=0)
 
     employee_type = forms.CharField(required=False, widget=forms.HiddenInput(), initial="M1817")
 
@@ -50,14 +53,14 @@ class EmployeeM1247Form(forms.ModelForm):
         self.initial['start_date'] = datetime.now().strftime("%Y-%m-%d")
         self.fields['start_date'].widget.attrs['placeholder'] = "YYYY-MM-DD"        
         self.fields['start_hour'].widget.attrs={'class': 'form-control'}
-        self.initial['start_hour'] = 8
+        #self.initial['start_hour'] = 8
         self.fields['start_minute'].widget.attrs={'class': 'form-control'}
 
         self.fields['end_date'].widget.attrs={'class': 'form-control datepicker'}
         self.initial['end_date'] = datetime.now().strftime("%Y-%m-%d")
         self.fields['end_date'].widget.attrs['placeholder'] = "YYYY-MM-DD"        
         self.fields['end_hour'].widget.attrs={'class': 'form-control'}
-        self.initial['end_hour'] = 17
+        #self.initial['end_hour'] = 17
         self.fields['end_minute'].widget.attrs={'class': 'form-control'}
 
     def clean(self):
@@ -95,10 +98,10 @@ class EmployeeM1247Form(forms.ModelForm):
         #raise forms.ValidationError(_("Select : " + str(start_date) + " | " + str(end_date)))
 
         if(start_hour < self.start_working_hour or start_hour > self.stop_working_hour):
-            raise forms.ValidationError(_("ข้อมูล ลาวันที่ ไม่ถูกต้อง"))
+            raise forms.ValidationError(_("ข้อมูลลาวันที่ไม่ถูกต้อง"))
 
         if(end_hour  < self.start_working_hour or end_hour > self.stop_working_hour):
-            raise forms.ValidationError(_("ข้อมูล ถึงวันที่ ไม่ถูกต้อง"))        
+            raise forms.ValidationError(_("ข้อมูลถึงวันที่ไม่ถูกต้อง"))        
 
         if start_date != None:
             # ------------------------------------------------ 
@@ -123,19 +126,22 @@ class EmployeeM1247Form(forms.ModelForm):
             found_standard_error = checkStandardBusinessRules(start_date, end_date)
             if found_standard_error[0]:
                 raise forms.ValidationError(_(found_standard_error[1]))
-
-
+            
             # ------------------------------------------------ 
-            # Check leave request hour
+            # Check M1247 Business Rules
             # ------------------------------------------------            
-            total_leave_request_hour = checkM1247BusinessRules('M1247', start_date, end_date)
+            found_m1247_error = checkM1247BusinessRules('M1247', start_date, end_date)
+            if found_m1247_error[0]:
+                raise forms.ValidationError(found_m1247_error[1])
+            else:
+                total_leave_request_hour = found_m1247_error[1]
+
+            
+
             #raise forms.ValidationError(total_leave_request_hour)
-            #raise forms.ValidationError(_("Select : " + str(start_date) + " | " + str(end_date)))
 
-            if total_leave_request_hour > 8:
-                raise forms.ValidationError(_("สามารถเลือกได้ไม่เกิน 4 ช.ม.ต่อหนึ่งใบลา และไม่รวมเวลาพักเบรค"))
 
-            # RULE 1: Check if leave_request_hour is not over leave quota
+            # RULE 1: Check not over leave quota
             if (total_leave_request_hour > grand_total_leave_quota_remaining_hour):
                 #raise forms.ValidationError({'start_date': "เลือกวันลาเกินโควต้าที่กำหนด"})
                 raise forms.ValidationError(_("เลือกวันลาเกินโควต้าที่กำหนด"))
@@ -144,23 +150,23 @@ class EmployeeM1247Form(forms.ModelForm):
                     #raise forms.ValidationError({'start_date': "ใช้วัน" + str(leave_type) + "หมดแล้ว" })
                     raise forms.ValidationError(_("ใช้วัน" + str(leave_type) + "หมดแล้ว"))
 
-            # RULE 2: Check if select weekend
-            if (total_leave_request_hour == 0):
-                #raise forms.ValidationError({'start_date': "เลือกวันลาเริ่มต้นตรงกับเสาร์-อาทิตย์"})
-                raise forms.ValidationError(_("เลือกวันลาตรงวันหยุดเสาร์-อาทิตย์"))
-
-            # RULE 3: Check duplicate leave
+            # RULE 2: Check duplicate leave
             #select id from leave_employeeinstance where not (start_date > @end_date OR end_date < @start_date)
             queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where not (start_date > '" + str(end_date.strftime("%Y-%m-%d %H:00") + "' or end_date < '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "')") + " and emp_id=" + username + " and status in ('a','p','C','F')")            
             if len(queryset) > 0:
                 #raise forms.ValidationError({'start_date': "เลือกวันลาซ้ำ"})
                 raise forms.ValidationError(_("เลือกวันลาซ้ำ"))
 
+            # RULE 3: Check public holidays
+            queryset = LeaveHoliday.objects.filter(hol_date__range=(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))).values_list('pub_th', flat=True)
+            holiday_list = str(list(queryset)).replace("'", '')
+            if len(queryset) > 0:
+                #raise forms.ValidationError({'start_date': "เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)})
+                raise forms.ValidationError(_("เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)))
+
             # RULE 4: Check not allow over month
             if(checkM1LeaveRequestOverMonth("M1", start_date, end_date)):
                 #raise forms.ValidationError({'start_date': "เลือกวันลาข้ามเดือน"})
                 raise forms.ValidationError(_("เลือกวันลาข้ามเดือน"))
-
-            return cleaned_data
-        else:
-            return cleaned_data
+        
+        return cleaned_data    
