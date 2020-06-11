@@ -171,8 +171,8 @@ def EmployeeNew(request):
             form = EmployeeM1247Form(user=request.user)
             render_template_name = 'leave/m1247_form.html'
         elif request.user.groups.filter(name__in=['E-Leave Staff', 'E-Leave Manager']).exists():
-            form = EmployeeM1247Form(user=request.user)
-            render_template_name = 'leave/m1247_form.html'            
+            form = EmployeeM1817Form(user=request.user)
+            render_template_name = 'leave/m1817_form.html'            
         else:
             form = EmployeeForm(user=request.user)
 
