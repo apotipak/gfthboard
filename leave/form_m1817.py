@@ -145,7 +145,7 @@ class EmployeeM1817Form(forms.ModelForm):
             # RULE 2: Check if select weekend
             if (total_leave_request_hour == 0):
                 #raise forms.ValidationError({'start_date': "เลือกวันลาเริ่มต้นตรงกับเสาร์-อาทิตย์"})
-                raise forms.ValidationError(_("เลือกวันลาตรงวันหยุดเสาร์-อาทิตย์"))
+                raise forms.ValidationError(_("เลือกวันลาตรงวันหยุดเสาร์-อาทิตย์หรือเป็นช่วงพักกลางวัน"))
 
             # RULE 3: Check duplicate leave
             #select id from leave_employeeinstance where not (start_date > @end_date OR end_date < @start_date)
