@@ -47,9 +47,12 @@ def EmployeeNew(request):
         if request.user.groups.filter(name__in=['E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
             form = EmployeeM1817Form(request.POST, user=request.user)
             render_template_name = 'leave/m1817_form.html'
-        elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():        
+        elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():
             form = EmployeeM1247Form(request.POST, user=request.user)
             render_template_name = 'leave/m1247_form.html'
+        elif request.user.groups.filter(name__in=['E-Leave Staff', 'E-Leave Manager']).exists():
+            form = EmployeeM1817Form(request.POST, user=request.user)
+            render_template_name = 'leave/m1817_form.html'            
         else:
             form = EmployeeForm(request.POST, user=request.user)
 
@@ -160,7 +163,6 @@ def EmployeeNew(request):
             return HttpResponseRedirect('/leave/leave-history/?submitted=True')
               
     else:
-        #form = EmployeeForm(user=request.user)
 
         if request.user.groups.filter(name__in=['E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
             form = EmployeeM1817Form(user=request.user)            
@@ -168,6 +170,9 @@ def EmployeeNew(request):
         elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():
             form = EmployeeM1247Form(user=request.user)
             render_template_name = 'leave/m1247_form.html'
+        elif request.user.groups.filter(name__in=['E-Leave Staff', 'E-Leave Manager']).exists():
+            form = EmployeeM1247Form(user=request.user)
+            render_template_name = 'leave/m1247_form.html'            
         else:
             form = EmployeeForm(user=request.user)
 
