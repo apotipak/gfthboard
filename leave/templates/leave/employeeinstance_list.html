@@ -40,7 +40,7 @@
                         <!--<th scope="col">วันที่สร้าง</th>-->
                         <th scope="col">ประเภท</th>
                         <th scope="col">ลาวันที่</th>
-                        <th scope="col">ถึงวันที่</th>
+                        <!--<th scope="col">ถึงวันที่</th>-->
                         <th scope="col">จำนวน</th>                       
                         <th scope="col">สถานะ</th>
                         <th scope="col"></th>                        
@@ -52,9 +52,9 @@
                         <!--<td>{{leave.created_date|date:'d F Y'}}</td>-->
                         <td>{{leave.leave_type}}</td>
                         <td>
-                          {{leave.start_date|date:"d N y H:i a"}}
+                          {{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}}
                         </td>
-                        <td>{{leave.end_date|date:"d N y H:i a"}}</td>
+                        <!--<td>{{leave.end_date|date:"d N y H:i a"}}</td>-->
                         <td>
                         {% if leave.lve_act != 0 %}
                             {{leave.lve_act}} วัน
