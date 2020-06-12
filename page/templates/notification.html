@@ -1,8 +1,9 @@
+<!--
 {% if perms.leave.approve_leaveplan %}
 <li class="nav-item dropdown">
-  <a class="nav-link" data-toggle="dropdown" href="#">
-    <i class="far fa-bell"></i>
-    <span class="badge badge-danger navbar-badge">2</span>
+  <a class="nav-link p-0 m-0" data-toggle="dropdown" href="#">
+    <i class="far fa-bell mr-3"></i>
+    <span class="badge badge-danger navbar-badge">0</span>
   </a>
 
   <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
@@ -13,39 +14,38 @@
       <span class="float-right text-muted text-sm">3 นาทีก่อน</span>
     </a>            
     <div class="dropdown-divider"></div>
-
     <a href="#" class="dropdown-item">
       <i class="fas fa-envelope mr-2"></i> <b>อานนท์</b>&nbsp;&nbsp;|&nbsp;&nbsp;ขอใช้วันลา
       <span class="float-right text-muted text-sm">2 วันก่อน</span>
     </a>            
     <div class="dropdown-divider"></div>
-
     <a href="{% url 'leave_approval' %}" class="dropdown-item dropdown-footer text-primary">ไปหน้าอนุมัติวันลา</a>
   </div>
 </li>
 {% else %}
-<li class="nav-item dropdown">
-  <a class="nav-link" data-toggle="dropdown" href="#">
-    <i class="far fa-bell"></i>
-    <span class="badge badge-danger navbar-badge">2</span>
-  </a>
+  <li class="nav-item dropdown">
+    <a class="nav-link p-0 m-0" data-toggle="dropdown" href="#">
+      <i class="far fa-bell mr-3"></i>
+      <span class="badge badge-danger navbar-badge">2</span>
+    </a>
 
-  <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-    <span class="dropdown-item dropdown-header"><b>2</b>&nbsp;&nbsp;รายการแจ้งเตือน</span>
-    <div class="dropdown-divider"></div>
-    <a href="#" class="dropdown-item">
-      <i class="fas fa-envelope mr-2"></i> <b>อำนาจ</b>&nbsp;&nbsp;|&nbsp;&nbsp;ขอใช้วันลา
-      <span class="float-right text-muted text-sm">3 นาทีก่อน</span>
-    </a>            
-    <div class="dropdown-divider"></div>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+      <span class="dropdown-item dropdown-header"><b>2</b>&nbsp;&nbsp;รายการแจ้งเตือน</span>
+      <div class="dropdown-divider"></div>
+      <a href="#" class="dropdown-item">
+        <b>อนุมัติ</b><small>&nbsp;&nbsp;|&nbsp;&nbsp;ลาพักร้อน</small>
+        <small><span class="float-right text-muted mt-1">3 นาทีก่อน</span></small>
+      </a>            
+      <div class="dropdown-divider"></div>
 
-    <a href="#" class="dropdown-item">
-      <i class="fas fa-envelope mr-2"></i> <b>อานนท์</b>&nbsp;&nbsp;|&nbsp;&nbsp;ขอใช้วันลา
-      <span class="float-right text-muted text-sm">2 วันก่อน</span>
-    </a>            
-    <div class="dropdown-divider"></div>
+      <a href="#" class="dropdown-item">
+        <b>ไม่อนุมัติ</b><small>&nbsp;&nbsp;|&nbsp;&nbsp;ลาพักร้อน</small>
+        <small><span class="float-right text-muted mt-1">2 วันก่อน</span></small>
+      </a>
 
-    <a href="{% url 'leave_approval' %}" class="dropdown-item dropdown-footer text-primary">ไปหน้าอนุมัติวันลา</a>
-  </div>
-</li>
+      <div class="dropdown-divider"></div>
+      <a href="{% url 'leave_approval' %}" class="dropdown-item dropdown-footer text-primary">ไปหน้าประวัติการลา</a>
+    </div>    
+  </li>
 {% endif %}
+-->

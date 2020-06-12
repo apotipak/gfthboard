@@ -70,17 +70,20 @@
                     Welcome <span class="text-primary"><b>{{ user.get_short_name }}</b></span>
                 {% endif %}
             {% endif %}
-        </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </a>
       </li>
+
+      <!-- Notifications Dropdown Menu -->
+      {% include "notification.html" %}
+
 
       <li class="nav-item">
         <!--<a class="nav-link-menubar" href="/">Home</a>
         <a class="nav-link-menubar" href="#">Contact</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a class="nav-link-menubar" href="{% url 'logout'%}?next=/accounts/login"><i class="fas fa-sign-out-alt"></i>&nbsp;Sign Out</a>
+
       </li>
-
-
-
 
     </ul>
   </nav>
