@@ -86,7 +86,7 @@
                     {% endif %}
 
                     {% if policy.lve_HRMS_HR > 0 %}
-                      &nbsp;{{ policy.lve_HRMS_HR|stringformat:"1.0f" }} ช.ม.
+                      {{ policy.lve_HRMS_HR|stringformat:"1.0f" }} ช.ม.
                     {% endif %}
 
                     {% if policy.lve_HRMS == 0 and policy.lve_HRMS_HR == 0 %}
