@@ -320,7 +320,7 @@ def LeavePolicy(request):
 
         # จำนวนวันคงเหลือสุทธิ
         #result = leave_plan_hour - (grand_total_lve_act_hr + grand_total_approved_eleave + grand_total_pending_eleave)
-        result = leave_plan_hour - (grand_total_lve_act_hr + grand_total_approved_eleave)
+        result = leave_plan_hour - (grand_total_lve_act_hr + grand_total_approved_eleave + grand_total_pending_eleave)
         total_day_remaining = result // 8
         total_hour_remaining = result % 8
         policy.total_day_remaining = total_day_remaining
