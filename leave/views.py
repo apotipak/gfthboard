@@ -259,8 +259,8 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
                 'amnaj.potipak@guardforce.co.th', # To
                 #recipients,
                 'support.gfth@guardforce.co.th', # From
-                subject = 'E-Leave: ' + employee_full_name + ' - ขอยกเลิกวันลา',
-                message = 'E-Leave: ' + employee_full_name + ' - ขอยกเลิกวันลา',
+                subject = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา',
+                message = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา',
                 html_message = 'เรียน <strong>ผู้จัดการแผนก</strong><br><br>'
                     'มีการขอแจ้งยกเลิกวันลาตามรายละเอียดด้านล่าง<br><br>'
                     'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
@@ -422,7 +422,7 @@ def EmployeeInstanceApprove(request, pk):
             mail.send(
                 'amnaj.potipak@guardforce.co.th', # To
                 #recipients,
-                '<support.gfth@guardforce.co.th', # From
+                'support.gfth@guardforce.co.th', # From
                 subject = 'E-Leave: แจ้งอนุมัติวันลา',
                 message = 'E-Leave: แจ้งอนุมัติวันลา',
                 html_message = 'เรียน คุณ <strong>' + employee_first_name + '</strong><br><br>'
