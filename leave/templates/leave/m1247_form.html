@@ -52,46 +52,35 @@
 
                   <div class="form-group">                                        
 
-                    <div class="input-group mb-3">
-                      
+                    <div class="input-group col-xs-12">                      
                       <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-calendar"></i>&nbsp;&nbsp;ลาวันที่</span>
+                        <span class="input-group-text border-bottom-0 rounded-0"><i class="far fa-calendar"></i>&nbsp;&nbsp;ลาวันที่</span>
                       </div>
-                      {{ form.start_date }}
-                      
+                      {{ form.start_date }}                      
+                    </div>     
+                    <div class="input-group mb-3 col-xs-12">
                       <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-clock"></i>&nbsp;&nbsp;เวลา</span>
+                        <span class="input-group-text border-top-0 rounded-0"><i class="far fa-clock"></i>&nbsp;&nbsp;เวลา&nbsp;&nbsp;&nbsp;&nbsp;</span>
                       </div>
                       {{ form.start_hour }}
                       {{ form.start_minute }}
-                      <!--
-                      <select name="start_minute" class="form-control" id="id_start_minute">
-                        <option value="0" selected>00</option>
-                        <option value="30">30</option>
-                      </select>
-                      -->
-                    </div>     
-                    <div class="text-danger">{{ form.start_date.errors }}</div>
+                    </div>
+                    
 
-                    <div class="input-group mb-3">
+                    <div class="input-group col-xs-12">
                       <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-calendar"></i>&nbsp;&nbsp;ถึงวันที่</span>
+                        <span class="input-group-text border-bottom-0 rounded-0"><i class="far fa-calendar"></i>&nbsp;&nbsp;ถึงวันที่</span>
                       </div>
                       {{ form.end_date }}
+                    </div>
+                    <div class="input-group mb-3 col-xs-12">
                       <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-clock"></i>&nbsp;&nbsp;เวลา</span>
+                        <span class="input-group-text border-top-0 rounded-0"><i class="far fa-clock"></i>&nbsp;&nbsp;เวลา&nbsp;&nbsp;&nbsp;&nbsp;</span>
                       </div>
                       {{ form.end_hour }}
-                      {{ form.end_minute }}
-                      
-                      <!--
-                      <select name="end_minute" class="form-control" id="id_end_minute">
-                        <option value="0" selected>00</option>
-                        <option value="30">30</option>
-                      </select>
-                      -->
-
+                      {{ form.end_minute }}                      
                     </div>
+                    
                     <div class="text-danger">{{ form.end_date.errors }}</div>
 
                   </div>                
