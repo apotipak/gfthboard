@@ -2,6 +2,8 @@
 
 {% block title %}อนุมัติการลา{% endblock %}
 
+{% load humanize %}
+
 {% block content %}
 
   <!-- Content Wrapper. Contains page content -->
@@ -11,7 +13,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">อนุมัติการลา</h1>
+            <h1 class="m-0 text-dark">อนุมัติใบลา</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -39,7 +41,7 @@
                         <th scope="col">ประเภท</th>
                         <th scope="col">ลาวันที่</th>
                         <th scope="col">จำนวน</th>
-                        <!--<th scope="col">สถานะ</th>-->
+                        <th scope="col">วันที่ขอ</th>
                         <td scope="col">&nbsp;</td>
                     </tr>
                 </thead>
@@ -48,7 +50,7 @@
                     <tr>
                         <td>{{leave.emp_fname_th}} {{leave.emp_lname_th}}</td>
                         <td>{{leave.leave_type}}</td>
-                        <td>{{leave.start_date|date:"d N y H:i a"}} - {{leave.end_date|date:"d N y H:i a"}}</td>
+                        <td>{{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}}</td>
                         <td>
                         {% if leave.lve_act != 0 %}
                             {{leave.lve_act}} วัน
@@ -59,23 +61,7 @@
                             {{leave.lve_act_hr}} ช.ม.
                         {% endif %}
                         </td>                        
-                        <!--
-                        <td>
-                            {% if leave.status == 'a' %}
-                                <span class="badge badge-success">อนุมัติ</span>&nbsp;<span class="badge badge-warning">Sync Pending</span>
-                            {% elif leave.status == 'p' %}
-                                <span class="badge badge-warning">รออนุมัติ</span>
-                            {% elif leave.status == 'r' %}
-                                <span class="badge badge-secondary">ไม่อนุมัติ</span>
-                            {% elif leave.status == 'C' %}
-                                <span class="badge badge-success">อนุมัติ</span>&nbsp;<span class="badge badge-success">Sync Success</span>
-                            {% elif leave.status == 'F' %}
-                                <span class="badge badge-success">อนุมัติ</span>&nbsp;<span class="badge badge-danger">Sync Fail</span>
-                            {% else %}
-                                ข้อมูลผิดพลาด
-                            {% endif %}
-                        </td>
-                        -->
+                        <td><small>&nbsp;&nbsp;&nbsp;{{ leave.created_date|naturaltime }}</small></td>
                         <td class="text-right py-0 align-middle">
                           <div class="btn-group btn-group-sm">
                              {% if leave.status == 'p' %}

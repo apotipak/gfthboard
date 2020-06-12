@@ -1,0 +1,199 @@
+{% extends "page_daterange.html" %}
+
+{% block title %}ใช้วันลา{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">ใช้วันลา</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
+              <li class="breadcrumb-item active">ใช้วันลา</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+
+
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card card-primary">
+
+              <form action="" method="post" autocomplete="off">
+                {% csrf_token %}
+
+                <div class="card-body">                  
+                  <div class="form-group">                    
+                    <label for="{{ form.leave_type.id_for_label }}">{{ form.leave_type.label }}</label>
+                    {{ form.leave_type.errors }}
+                    {{form.leave_type}} 
+                  </div>
+
+                  <div class="form-group">                                        
+
+                    <div class="input-group col-xs-12">                      
+                      <div class="input-group-prepend">
+                        <span class="input-group-text border-bottom-0 rounded-0"><i class="far fa-calendar"></i>&nbsp;&nbsp;ลาวันที่</span>
+                      </div>
+                      {{ form.start_date }}                      
+                    </div>     
+                    <div class="input-group mb-3 col-xs-12">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text border-top-0 rounded-0"><i class="far fa-clock"></i>&nbsp;&nbsp;เวลา&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      </div>
+                      {{ form.start_hour }}
+                      {{ form.start_minute }}
+                    </div>
+                    
+
+                    <div class="input-group col-xs-12">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text border-bottom-0 rounded-0"><i class="far fa-calendar"></i>&nbsp;&nbsp;ถึงวันที่</span>
+                      </div>
+                      {{ form.end_date }}
+                    </div>
+                    <div class="input-group mb-3 col-xs-12">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text border-top-0 rounded-0"><i class="far fa-clock"></i>&nbsp;&nbsp;เวลา&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      </div>
+                      {{ form.end_hour }}
+                      {{ form.end_minute }}                      
+                    </div>
+                    
+                    <div class="text-danger">{{ form.end_date.errors }}</div>
+
+                  </div>                
+
+                  <div class="container-fluid mb-12">
+                  {% if form.errors %}
+                      {% for field in form %}
+                          {% for error in field.errors %}
+                              <div class="alert alert-danger">
+                                  <strong><i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}</strong>
+                              </div>
+                          {% endfor %}
+                      {% endfor %}
+                      {% for error in form.non_field_errors %}
+                          <div class="alert alert-danger">
+                              <i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}
+                          </div>
+                      {% endfor %}
+                  {% endif %}
+                  </div> 
+
+                </div>
+
+
+                <div class="card-footer text-right">                 
+                  <button type="submit" class="btn btn-success">ตกลง</button>
+                </div>
+
+                <input type="hidden" id="id_employee_type" name="id_employee_type" value="{{ employee_type }}">
+
+              </form>
+
+
+            </div>
+          </div>
+          
+        </div>
+        <!-- /.row -->
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock %}
+
+{% block javascript %}
+  <script>
+
+  $(document).ready(function () {
+      var datepicker_date_format = "yy-mm-dd";
+
+      /*
+      $("select#id_end_minute").html("<option value=0>00</option>");
+      
+      $("#id_start_hour").on("change", function(){
+        var selected_hour = $(this).val();
+
+        if(selected_hour == 23) {
+          $("select#id_start_minute").html("<option value=0>00</option>");
+        }
+        else {
+          $("select#id_start_minute").html("<option value=0>00</option><option value=30>30</option>");
+        }
+      });
+
+      $("#id_end_hour").on("change", function(){
+        var selected_hour = $(this).val();
+
+        if(selected_hour == 23) {
+          $("select#id_end_minute").html("<option value=0>00</option>");
+        }
+        else {
+          $("select#id_end_minute").html("<option value=0>00</option><option value=30>30</option>");
+        }
+      }); 
+      */
+      
+      $("#id_start_date").datepicker({
+          dateFormat: datepicker_date_format,
+          minDate: -15,
+          onSelect: function () {
+              var dt2 = $('#id_end_date');
+              var startDate = $(this).datepicker('getDate');
+              //add 30 days to selected date
+              startDate.setDate(startDate.getDate() + 30);            
+              var minDate = $(this).datepicker('getDate');
+
+              var dt2Date = dt2.datepicker('getDate');
+              //difference in days. 86400 seconds in day, 1000 ms in second
+              var dateDiff = (dt2Date - minDate)/(86400 * 1000);
+
+              //dt2 not set or dt1 date is greater than dt2 date
+              if (dt2Date == null || dateDiff < 0) {
+                      dt2.datepicker('setDate', minDate);
+              }
+              //dt1 date is 30 days under dt2 date
+              else if (dateDiff > 30){
+                      dt2.datepicker('setDate', startDate);
+              }
+              //sets dt2 maxDate to the last day of 30 days window
+              dt2.datepicker('option', 'maxDate', startDate);
+              //first day which can be selected in dt2 is selected date in dt1
+              dt2.datepicker('option', 'minDate', minDate);
+          }
+      }).attr('readonly', 'readonly');
+      
+      $('#id_end_date').datepicker({
+        dateFormat: datepicker_date_format,
+        minDate: 0
+      }).attr('readonly', 'readonly');
+     
+  });
+  </script>
+{% endblock %}
+
