@@ -49,19 +49,19 @@ class EmployeeM1817Form(forms.ModelForm):
         self.fields['leave_type'].widget.attrs={'class': 'form-control'}
         self.fields['leave_type'].queryset=LeaveType.objects.filter(leaveplan__emp_id=self.user.username, leaveplan__lve_year=current_year)        
 
-        self.fields['start_date'].widget.attrs={'class': 'form-control datepicker'}
+        self.fields['start_date'].widget.attrs={'class': 'form-control datepicker border-bottom-0 border-left-0 rounded-0'}
         self.initial['start_date'] = datetime.now().strftime("%Y-%m-%d")
         self.fields['start_date'].widget.attrs['placeholder'] = "YYYY-MM-DD"        
-        self.fields['start_hour'].widget.attrs={'class': 'form-control'}
+        self.fields['start_hour'].widget.attrs={'class': 'form-control border-top-0 border-left-0 rounded-0'}
         self.initial['start_hour'] = self.start_working_hour
-        self.fields['start_minute'].widget.attrs={'class': 'form-control'}
+        self.fields['start_minute'].widget.attrs={'class': 'form-control border-top-0 rounded-0'}
 
-        self.fields['end_date'].widget.attrs={'class': 'form-control datepicker'}
+        self.fields['end_date'].widget.attrs={'class': 'form-control datepicker border-bottom-0 border-left-0 rounded-0'}
         self.initial['end_date'] = datetime.now().strftime("%Y-%m-%d")
         self.fields['end_date'].widget.attrs['placeholder'] = "YYYY-MM-DD"        
-        self.fields['end_hour'].widget.attrs={'class': 'form-control'}
+        self.fields['end_hour'].widget.attrs={'class': 'form-control border-top-0 border-left-0 rounded-0'}
         self.initial['end_hour'] = self.stop_working_hour        
-        self.fields['end_minute'].widget.attrs={'class': 'form-control'}
+        self.fields['end_minute'].widget.attrs={'class': 'form-control border-top-0 rounded-0'}
 
     def clean(self):
         datetime_format = "%Y-%m-%d %H:%M:%S"
