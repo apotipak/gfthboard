@@ -303,6 +303,12 @@ def LeavePolicy(request):
         total_lve_miss_hr = policy.lve_miss_hr
         grand_total_lve_miss_hr = total_lve_miss_hr + (total_lve_miss * 8)
 
+        # จำนวน วัน/ช.ม. ที่ใช้ใน HRMS 2
+        total_lve_hrms = policy.lve_HRMS
+        total_lve_hrms_hr = policy.lve_HRMS_HR
+        grand_total_lve_hrms = total_lve_hrms_hr + (total_lve_hrms * 8)
+
+
         # จำนวน วัน/ช.ม. ที่รออนุมัติใน E-Leave
         total_pending_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
         total_pending_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
@@ -317,10 +323,13 @@ def LeavePolicy(request):
         policy.total_approved_lve_act_eleave = grand_total_approved_eleave // 8
         policy.total_approved_lve_act_hr_eleave = grand_total_approved_eleave % 8
 
+        if policy.lve_type_id==5:
+            #print(grand_total_lve_miss_hr)
+            #print(grand_total_pending_eleave)
+            print(grand_total_approved_eleave)
 
         # จำนวนวันคงเหลือสุทธิ
-        #result = leave_plan_hour - (grand_total_lve_act_hr + grand_total_approved_eleave + grand_total_pending_eleave)
-        result = leave_plan_hour - (grand_total_lve_act_hr + grand_total_approved_eleave + grand_total_pending_eleave)
+        result = leave_plan_hour - (grand_total_lve_hrms + grand_total_approved_eleave + grand_total_pending_eleave)        
         total_day_remaining = result // 8
         total_hour_remaining = result % 8
         policy.total_day_remaining = total_day_remaining
