@@ -8,9 +8,11 @@
     {{ project_name }} <b>{{ project_version }}</b> | 
 
     {% if db_server == 'GFDEMOSQL01' %}
-    	27.254.207.51
+    	Production Server
     {% elif db_server == '27.254.207.51' %}
-    	{{ db_server }}
+    	Production Server
+    {% elif db_server == '10.176.68.27' %}
+        Staging Server
     {% else %}
     	{{ db_server }}
     {% endif %}
