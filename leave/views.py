@@ -119,8 +119,8 @@ def EmployeeNew(request):
                 print(employee_full_name)
                 
                 mail.send(
-                    'amnaj.potipak@guardforce.co.th', # To
-                    #recipients,
+                    #'amnaj.potipak@guardforce.co.th', # To
+                    recipients,
                     'support.gfth@guardforce.co.th', # From
                     subject = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
                     message = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
@@ -256,8 +256,8 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
             print(leave_type_name)
 
             mail.send(
-                'amnaj.potipak@guardforce.co.th', # To
-                #recipients,
+                #'amnaj.potipak@guardforce.co.th', # To
+                recipients,
                 'support.gfth@guardforce.co.th', # From
                 subject = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา',
                 message = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา',
@@ -421,8 +421,8 @@ def EmployeeInstanceApprove(request, pk):
                 day_hour_display += str(hour) + ' ช.ม.'
                         
             mail.send(
-                'amnaj.potipak@guardforce.co.th', # To
-                #recipients,
+                #'amnaj.potipak@guardforce.co.th', # To
+                recipients,
                 'support.gfth@guardforce.co.th', # From
                 subject = 'E-Leave: แจ้งอนุมัติวันลา',
                 message = 'E-Leave: แจ้งอนุมัติวันลา',
@@ -493,8 +493,8 @@ def EmployeeInstanceReject(request, pk):
                 day_hour_display += str(hour) + ' ช.ม.'
                                     
             mail.send(
-                'amnaj.potipak@guardforce.co.th', # To
-                #recipients,
+                #'amnaj.potipak@guardforce.co.th', # To
+                recipients,
                 'support.gfth@guardforce.co.th', # From
                 subject = 'E-Leave: แจ้งไม่อนุมัติวันลา',
                 message = 'E-Leave: แจ้งไม่อนุมัติวันลา',
