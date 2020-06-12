@@ -37,8 +37,19 @@
               <b>รหัส:</b> {{ employee_leave_instance.emp_id }}<br>
               <b>พนักงาน:</b> {{ leave_employee.emp_fname_th }} {{ leave_employee.emp_lname_th }}<br>
               <b>ประเภทการลา:</b> {{ employee_leave_instance.leave_type }}<br>
-              <b>ลาวันที่:</b> {{ employee_leave_instance.start_date|date:'d F Y'}} - {{ employee_leave_instance.end_date|date:'d F Y'}}</p>
-              <b>เหตุผล<b>
+              <b>ลาวันที่:</b> {{ employee_leave_instance.start_date|date:'d N y H:i'}} - {{ employee_leave_instance.end_date|date:'d N y H:i'}}<br>
+              <b>จำนวน:</b>
+              {% if employee_leave_instance.lve_act != 0 %}
+                  {{employee_leave_instance.lve_act}} วัน
+                  {% if employee_leave_instance.lve_act_hr != 0 %}
+                    &nbsp;{{employee_leave_instance.lve_act_hr}} ช.ม.
+                  {% endif %}
+              {% else %}
+                  {{employee_leave_instance.lve_act_hr}} ช.ม.
+              {% endif %}
+              <br><br>
+
+              <b>ระบุเหตุผล<b>
               <textarea class="form-control" name="comment" id="comment" rows="3"></textarea>
               <br>
               <div class="alert alert-warning" role="alert"><i class="fas fa-exclamation"></i>&nbsp;&nbsp;กรุณาตรวจสอบข้อมูลอีกครั้งก่อนกดปุ่มไม่อนุมัติ</div>              
