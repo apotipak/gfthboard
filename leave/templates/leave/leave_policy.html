@@ -48,33 +48,38 @@
                 <tr>                  
                   <!-- ประเภทการลา -->
                   <td>
-                    <h6><b>{{ policy.lve_th }}</b>&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;วัน</h6>
+                    <h6><b>{{ policy.lve_th }}</b>&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;<small>วัน</small></h6>
                   </td>
                   
                   <!-- วันคงเหลือ -->
                   <td>
                     {% if policy.total_day_remaining > 0 %}
-                      {{policy.total_day_remaining}} วัน
+                      {{policy.total_day_remaining}} <small>วัน</small>
                     {% endif %}
 
                     {% if policy.total_hour_remaining > 0 %}
-                      &nbsp;{{ policy.total_hour_remaining|stringformat:"1.0f" }} ช.ม.
+                      {{ policy.total_hour_remaining|stringformat:"1.0f" }} <small>ช.ม.</small>
                     {% endif %}
 
                     {% if policy.total_day_remaining == 0 and policy.total_hour_remaining == 0 %}
                       0
-                    {% endif %}                    
+                    {% endif %}             
+
+                    {% if policy.total_day_remaining < 0 or policy.total_hour_remaining < 0 %}
+                      <span class="text-danger"><small>รอตรวจสอบ</small></span>
+                    {% endif %}
+
                   </td>
                   
                   <!-- HRMS ใช้ไป -->
                   <td style="text-align: left" class="text-secondary">
                     <!--
                     {% if policy.lve_act > 0 %}
-                      {{policy.lve_act}} วัน
+                      {{policy.lve_act}} <small>วัน</small>
                     {% endif %}
 
                     {% if policy.lve_act_hr > 0 %}
-                      &nbsp;{{ policy.lve_act_hr|stringformat:"1.0f" }} ช.ม.
+                      &nbsp;{{ policy.lve_act_hr|stringformat:"1.0f" }} <small>ช.ม.</small>
                     {% endif %}
 
                     {% if policy.lve_act == 0 and policy.lve_act_hr == 0 %}
@@ -82,11 +87,11 @@
                     {% endif %}
                     -->
                     {% if policy.lve_HRMS > 0 %}
-                      {{policy.lve_HRMS}} วัน
+                      {{policy.lve_HRMS}} <small>วัน</small>
                     {% endif %}
 
                     {% if policy.lve_HRMS_HR > 0 %}
-                      {{ policy.lve_HRMS_HR|stringformat:"1.0f" }} ช.ม.
+                      {{ policy.lve_HRMS_HR|stringformat:"1.0f" }} <small>ช.ม.</small>
                     {% endif %}
 
                     {% if policy.lve_HRMS == 0 and policy.lve_HRMS_HR == 0 %}
@@ -97,11 +102,11 @@
                   <!-- E-Leave ใช้ไป -->
                   <td style="text-align: left">                    
                     {% if policy.total_approved_lve_act_eleave > 0 %}
-                        <a href="{% url 'leave_history' %}">{{ policy.total_approved_lve_act_eleave }} วัน</a>
+                        <a href="{% url 'leave_history' %}">{{ policy.total_approved_lve_act_eleave }} <small>วัน</small></a>
                     {% endif %}
 
                     {% if policy.total_approved_lve_act_hr_eleave > 0 %}
-                        <a href="{% url 'leave_history' %}">{{ policy.total_approved_lve_act_hr_eleave }} ช.ม.</a>
+                        <a href="{% url 'leave_history' %}">{{ policy.total_approved_lve_act_hr_eleave }} <small>ช.ม.</small></a>
                     {% endif %}
 
                     {% if policy.total_approved_lve_act_eleave == 0 and policy.total_approved_lve_act_hr_eleave == 0 %}
@@ -112,11 +117,11 @@
                   <!-- รออนุมัติ -->
                   <td>
                     {% if policy.total_pending_lve_act_eleave > 0 %}
-                        <a href="{% url 'leave_history' %}">{{ policy.total_pending_lve_act_eleave }} วัน</a>
+                        <a href="{% url 'leave_history' %}">{{ policy.total_pending_lve_act_eleave }} <small>วัน</small></a>
                     {% endif %}
 
                     {% if policy.total_pending_lve_act_hr_eleave > 0 %}
-                        <a href="{% url 'leave_history' %}">{{ policy.total_pending_lve_act_hr_eleave }} ช.ม.</a>
+                        <a href="{% url 'leave_history' %}">{{ policy.total_pending_lve_act_hr_eleave }} <small>ช.ม.</small></a>
                     {% endif %}
 
                     {% if policy.total_pending_lve_act_eleave == 0 and policy.total_pending_lve_act_hr_eleave == 0 %}
