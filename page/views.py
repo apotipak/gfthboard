@@ -5,6 +5,8 @@ from django.http import HttpResponseRedirect
 from leave.models import LeaveEmployee
 from django.contrib.auth.models import User
 from .forms import UserForm
+from django.http import HttpResponse
+
 
 @login_required(login_url='/accounts/login/')
 def index(request):
@@ -84,3 +86,4 @@ def HelpEleave(request):
         'project_version': project_version, 
         'db_server': db_server, 'today_date': today_date,
     })
+
