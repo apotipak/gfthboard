@@ -1,5 +1,6 @@
 {% extends "page_base_index.html" %}
 {% block title %}หน้าแรก{% endblock %}
+{% load static %}
 
 {% block content %}
       <div class="container">
@@ -15,7 +16,7 @@
                   <h4><span class="info-box-text">E-Leave</span></h4>
                   <div>
                     <span class="info-box-number"><small>ระบบลางานออนไลน์ <br>
-                      <i class="fas fa-book-open text-secondary"></i>&nbsp;<a href="/help-eleave">คู่มือการใช้</a> | <i class="fas fa-download text-secondary"></i>&nbsp;<a href="#">ดาวน์โหลด</a></small>
+                      <i class="fas fa-book-open text-secondary"></i>&nbsp;<a href="/help-eleave">คู่มือการใช้</a> | <i class="fas fa-download text-secondary"></i>&nbsp;<a href="{% static 'download/eleave_v_001_help.pdf' %}">ดาวน์โหลด</a></small>
                       <a href="{% url 'leave_policy' %}" type="button" class="btn btn-outline-primary float-right">ใช้งาน</a>
                     </span>
                   </div>
