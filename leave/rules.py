@@ -2,6 +2,7 @@ from datetime import datetime
 from datetime import timedelta
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
+from leave.models import LeaveEmployee
 
 
 dayDelta = timedelta(days=1)
@@ -115,3 +116,10 @@ def checkM1817BusinessRules(employee_type, d1, d2):
 
 	return grand_total_hour
 
+
+def checkLeaveRequestApproval(username):
+	count = LeaveEmployee.objects.filter(emp_spid__exact=username).count()
+	if count > 0:
+		return True
+	else:
+		return False

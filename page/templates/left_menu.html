@@ -98,7 +98,12 @@
                   &nbsp;&nbsp;&nbsp;<p>ใช้วันลา</p>
                 </a>
               </li>
+
               {% if perms.leave.approve_leaveplan %}
+
+              {% endif %}
+
+              {% if able_to_approve_leave_request %}
               <li class="nav-item">
                 {% if request.path == "/leave/leave-approval/" %}
                 <a href="{% url 'leave_approval' %}" class="nav-link active">
@@ -114,6 +119,10 @@
                 </a>
               </li>
               {% endif %}
+
+
+
+
             </ul>
           </li>
           {% endif %}

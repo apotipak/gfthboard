@@ -6,6 +6,7 @@ from leave.models import LeaveEmployee
 from django.contrib.auth.models import User
 from .forms import UserForm
 from django.http import HttpResponse
+from leave.rules import *
 
 
 @login_required(login_url='/accounts/login/')
@@ -34,6 +35,12 @@ def StaffProfile(request):
     SuperVisorInstance = LeaveEmployee.SuperVisorInstance(request)
     TeamMemberList = LeaveEmployee.TeamMemberList(request)
 
+    # Check leave approval right
+    if checkLeaveRequestApproval(request.user.username):
+        able_to_approve_leave_request = True
+    else:
+        able_to_approve_leave_request = False
+
     return render(request, 'page/staff_profile.html', {
         'page_title': page_title, 
         'project_name': project_name, 
@@ -42,6 +49,7 @@ def StaffProfile(request):
         'EmployeeInstance': EmployeeInstance,
         'SuperVisorInstance': SuperVisorInstance,
         'TeamMemberList': TeamMemberList,
+        'able_to_approve_leave_request': able_to_approve_leave_request,
     })
 
 @login_required(login_url='/accounts/login/')
