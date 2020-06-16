@@ -61,7 +61,7 @@
                             {{leave.lve_act_hr}} ช.ม.
                         {% endif %}
                         </td>                        
-                        <td><small>&nbsp;&nbsp;&nbsp;{{ leave.created_date|naturaltime }}</small></td>
+                        <td><small>{{ leave.created_date|naturaltime }}</small></td>
                         <td class="text-right py-0 align-middle">
                           <div class="btn-group btn-group-sm">
                              {% if leave.status == 'p' %}
