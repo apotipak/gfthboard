@@ -71,9 +71,9 @@
                                 <span class="badge badge-warning"><i class="fa fa-clock fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;รออนุมัติ</span>
                                 <small>&nbsp;&nbsp;&nbsp;{{ leave.created_date|naturaltime }}</small>
                             {% elif leave.status == 'r' %}
-                                <span class="badge badge-secondary"><i class="fa fa-times fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;ไม่อนุมัติ</span>
+                                <span class="badge badge-secondary"><i class="fas fa-ban fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;ไม่อนุมัติ</span>
                             {% elif leave.status == 'd' %}
-                                <span class="badge badge-secondary"><i class="fa fa-times fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;ยกเลิก</span>
+                                <span class="badge badge-grey-outline"><i class="fa fa-times fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;ยกเลิก</span>
                             {% elif leave.status == 'C' %}
                                 <span class="badge badge-success"><i class="fa fa-check fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;อนุมัติ</span>
                             {% elif leave.status == 'F' %}
