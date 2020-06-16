@@ -1,4 +1,5 @@
 import sys
+from django.utils import timezone
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -182,8 +183,8 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        #return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='r').order_by('start_date')
-        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).order_by('-created_date')
+        #return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='d').order_by('-created_date')
+        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='b').order_by('-created_date')
 
 
 class EmployeeInstanceDetailView(generic.DetailView):
@@ -203,6 +204,16 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
     template_name = "leave/employeeinstance_confirm_delete.html"
     success_url = reverse_lazy('leave_history')
     success_message = "Deleted Successfully"
+
+    def delete(self, *args, **kwargs):
+        success_url = self.get_success_url()
+        self.object = self.get_object()          
+        self.object.status = 'd'
+        self.object.updated_by = self.request.user.username
+        self.object.updated_date  = timezone.now()                
+        self.object.save()
+        
+        return HttpResponseRedirect(success_url)
 
     def get_context_data(self, **kwargs):
         context = super(EmployeeInstanceDelete, self).get_context_data(**kwargs)

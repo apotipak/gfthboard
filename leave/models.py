@@ -163,6 +163,7 @@ class EmployeeInstance(models.Model):
         ('a', 'Approved'),
         ('p', 'Pending'),
         ('r', 'Rejected'),
+        ('d', 'Deleted'),
         ('c', 'Sync complete'),
         ('f', 'Sync fail'),
     )
