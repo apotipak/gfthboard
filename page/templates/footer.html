@@ -3,6 +3,21 @@
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
     	{{ today_date|date:"D d M Y" }}
+
+        <!--
+        {% load i18n %}
+        {% language 'th' %}
+          {{ today_date|date:'D, d N Y' }}
+        {% endlanguage %}
+        -->
+
+        <!--
+        {% load l10n %}
+        {% localize on %}
+            {{ today_date|localize }}
+        {% endlocalize %}
+        -->
+
     </div>
 <!-- Default to the left -->
     Version <b>{{ project_version }}</b> | 
