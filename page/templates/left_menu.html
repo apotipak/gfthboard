@@ -106,7 +106,11 @@
                 <a href="{% url 'leave_approval' %}" class="nav-link">
                 {% endif %}
                   &nbsp;<i class="fa fa-check nav-icon"></i>
-                  <p>อนุมัติใบลา</p>
+                  <p>อนุมัติใบลา 
+                    {% if waiting_for_approval_item  > 0 %}
+                    <span class="badge badge-success right">{{ waiting_for_approval_item }}</span>
+                    {% endif %}                  
+                  </p>
                 </a>
               </li>
               {% endif %}

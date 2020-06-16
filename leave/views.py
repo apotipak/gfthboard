@@ -150,13 +150,15 @@ def EmployeeNew(request):
         else:
             form = EmployeeForm(user=request.user)
     
+    waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))    
     return render(request, render_template_name, {
         'form': form,
         'page_title': settings.PROJECT_NAME,
         'today_date': settings.TODAY_DATE,
         'project_version': settings.PROJECT_VERSION,
         'db_server': settings.DATABASES['default']['HOST'],
-        'project_name': settings.PROJECT_NAME
+        'project_name': settings.PROJECT_NAME,
+        'waiting_for_approval_item': waiting_for_approval_item,
     })
 
 
@@ -169,16 +171,18 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
     project_version = settings.PROJECT_VERSION
     today_date = settings.TODAY_DATE    
     model = EmployeeInstance
-    #paginate_by = 20
+    #paginate_by = 20    
 
     def get_context_data(self, **kwargs):
         context = super(EmployeeInstanceListView, self).get_context_data(**kwargs)
+        waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p')"))    
         context.update({
             'page_title': settings.PROJECT_NAME,
             'today_date': settings.TODAY_DATE,
             'project_version': settings.PROJECT_VERSION,
             'db_server': settings.DATABASES['default']['HOST'],
             'project_name': settings.PROJECT_NAME,
+            'waiting_for_approval_item': waiting_for_approval_item,
         })
         return context
 
@@ -339,6 +343,8 @@ def LeavePolicy(request):
         total_hour_remaining = result % 8
         policy.total_day_remaining = total_day_remaining
         policy.total_hour_remaining = total_hour_remaining
+    
+    waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))    
 
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
@@ -346,7 +352,8 @@ def LeavePolicy(request):
         'project_version': settings.PROJECT_VERSION,
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,        
-        'leave_policy': leave_policy
+        'leave_policy': leave_policy,
+        'waiting_for_approval_item': waiting_for_approval_item,
     })
 
 
@@ -356,14 +363,15 @@ def LeaveApproval(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE        
+    today_date = settings.TODAY_DATE
+
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
         'today_date': settings.TODAY_DATE,
         'project_version': settings.PROJECT_VERSION,
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,        
-        'leave_policy': leave_policy
+        'leave_policy': leave_policy,
     })
 
 
@@ -386,12 +394,14 @@ class LeaveApprovalListView(PermissionRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(LeaveApprovalListView, self).get_context_data(**kwargs)
+        waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p')"))    
         context.update({
             'page_title': settings.PROJECT_NAME,
             'today_date': settings.TODAY_DATE,
             'project_version': settings.PROJECT_VERSION,
             'db_server': settings.DATABASES['default']['HOST'],
             'project_name': settings.PROJECT_NAME,
+            'waiting_for_approval_item': waiting_for_approval_item,
         })
         return context
 
@@ -460,7 +470,7 @@ def EmployeeInstanceApprove(request, pk):
         return HttpResponseRedirect(reverse('leave_approval'))
     
     leaveEmployee = LeaveEmployee.objects.get(emp_id=employee_leave_instance.emp_id)
-
+    waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))    
     context = {
         'leave_employee': leaveEmployee,
         'employee_leave_instance': employee_leave_instance,
@@ -468,7 +478,8 @@ def EmployeeInstanceApprove(request, pk):
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,
         'project_version': settings.PROJECT_VERSION,
-        'today_date' : settings.TODAY_DATE
+        'today_date' : settings.TODAY_DATE,
+        'waiting_for_approval_item': waiting_for_approval_item,
     }
 
     return render(request, 'leave/employeeinstance_approve.html', context)
@@ -542,7 +553,7 @@ def EmployeeInstanceReject(request, pk):
         return HttpResponseRedirect(reverse('leave_approval'))
 
     leaveEmployee = LeaveEmployee.objects.get(emp_id=employee_leave_instance.emp_id)
-
+    waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))
     context = {
         'leave_employee': leaveEmployee,
         'employee_leave_instance': employee_leave_instance,
@@ -550,7 +561,8 @@ def EmployeeInstanceReject(request, pk):
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,
         'project_version': settings.PROJECT_VERSION,
-        'today_date' : settings.TODAY_DATE        
+        'today_date' : settings.TODAY_DATE,
+        'waiting_for_approval_item': waiting_for_approval_item
     }
 
     return render(request, 'leave/employeeinstance_reject.html', context)
