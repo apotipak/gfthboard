@@ -104,9 +104,9 @@
 
                 </div>
 
-
-                <div class="card-footer text-right">                 
-                  <button type="submit" class="btn btn-success">ตกลง</button>
+                <div class="card-footer text-right">
+                  <button type="button" id="check-request-date" name="check-request-date" class="btn btn-info">ตรวจสอบ</button>
+                  <button type="submit" class="btn btn-success">ส่งใบลา</button>
                 </div>
 
                 <input type="hidden" id="id_employee_type" name="id_employee_type" value="{{ employee_type }}">
@@ -129,47 +129,19 @@
 
 {% block javascript %}
   <script>
-
   $(document).ready(function () {
-      var datepicker_date_format = "yy-mm-dd";
-
-      /*
-      $("select#id_end_minute").html("<option value=0>00</option>");
-      
-      $("#id_start_hour").on("change", function(){
-        var selected_hour = $(this).val();
-
-        if(selected_hour == 23) {
-          $("select#id_start_minute").html("<option value=0>00</option>");
-        }
-        else {
-          $("select#id_start_minute").html("<option value=0>00</option><option value=30>30</option>");
-        }
-      });
-
-      $("#id_end_hour").on("change", function(){
-        var selected_hour = $(this).val();
-
-        if(selected_hour == 23) {
-          $("select#id_end_minute").html("<option value=0>00</option>");
-        }
-        else {
-          $("select#id_end_minute").html("<option value=0>00</option><option value=30>30</option>");
-        }
-      }); 
-      */
-      
       $("#id_start_date").datepicker({
-          dateFormat: datepicker_date_format,
-          minDate: -15,
+          dateFormat: "yy-mm-dd",
+          minDate: -30,
           onSelect: function () {
               var dt2 = $('#id_end_date');
               var startDate = $(this).datepicker('getDate');
               //add 30 days to selected date
-              startDate.setDate(startDate.getDate() + 30);            
+              startDate.setDate(startDate.getDate() + 120);            
               var minDate = $(this).datepicker('getDate');
 
               var dt2Date = dt2.datepicker('getDate');
+
               //difference in days. 86400 seconds in day, 1000 ms in second
               var dateDiff = (dt2Date - minDate)/(86400 * 1000);
 
@@ -185,14 +157,18 @@
               dt2.datepicker('option', 'maxDate', startDate);
               //first day which can be selected in dt2 is selected date in dt1
               dt2.datepicker('option', 'minDate', minDate);
+
+            //var date = $(this).datepicker('getDate');
+            //date.setDate(date.getDate() + 1, 0);
+            //$('#id_end_date').val($.datepicker.formatDate('yy-mm-dd', date));
+
           }
       }).attr('readonly', 'readonly');
       
       $('#id_end_date').datepicker({
-        dateFormat: datepicker_date_format,
-        minDate: 0
+          dateFormat: "yy-mm-dd",
+          minDate: 0
       }).attr('readonly', 'readonly');
-     
   });
   </script>
 {% endblock %}

@@ -56,10 +56,10 @@ def EmployeeNew(request):
         else:
             form = EmployeeForm(request.POST, user=request.user)
 
-        if form.is_valid():      
+        if form.is_valid():           
             start_date = form.cleaned_data['start_date']
             start_hour = form.cleaned_data['start_hour']
-            start_minute = form.cleaned_data['end_minute']
+            start_minute = form.cleaned_data['start_minute']
 
             end_date = form.cleaned_data['end_date']
             end_hour = form.cleaned_data['end_hour']            
@@ -70,7 +70,10 @@ def EmployeeNew(request):
             start_date = datetime.strptime(d1, dattime_format)
             end_date = datetime.strptime(d2, dattime_format)
 
-            leave_type_id = form.cleaned_data['leave_type']
+            #leave_type_id = form.cleaned_data['leave_type']
+            leave_type_id = form.data['leave_type']
+            leave_type = form.cleaned_data['leave_type']
+
             username = request.user.username
             fullname = request.user.first_name + " " + request.user.last_name
             created_by = request.user.username                        
@@ -84,11 +87,11 @@ def EmployeeNew(request):
 
 
             if request.user.groups.filter(name__in=['E-Leave Staff','E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
-                grand_total_hours = checkM1817BusinessRules('M1247', start_date, end_date)
+                grand_total_hours = checkM1817BusinessRules('M1817', start_date, end_date, leave_type_id)
                 employee.lve_act = grand_total_hours // 8
                 employee.lve_act_hr = grand_total_hours % 8
             elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():
-                found_m1247_error = checkM1247BusinessRules('M1247', start_date, end_date)
+                found_m1247_error = checkM1247BusinessRules('M1247', start_date, end_date, leave_type_id)
                 if found_m1247_error[0]:
                     raise forms.ValidationError(found_m1247_error[1])
                 else:
@@ -129,7 +132,7 @@ def EmployeeNew(request):
                         html_message = 'เรียน <strong>ผู้จัดการแผนก</strong><br><br>'
                             'พนักงานแจ้งใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'                            
                             'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
-                            'ประเภทการลา: <strong>' + str(leave_type_id) + '</strong><br>'
+                            'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
                             'ลาวันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึงวันที่ <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br>'
                             'จำนวน: <strong>' + day_hour_display + '</strong><br><br>'
                             'กรุณา <a href="http://27.254.207.51:8080">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br>'
@@ -207,8 +210,8 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        #return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='d').order_by('-created_date')
-        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).order_by('-created_date')
+        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='d').order_by('-created_date')
+        #return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).order_by('-created_date')
 
 
 class EmployeeInstanceDetailView(generic.DetailView):

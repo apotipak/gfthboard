@@ -167,12 +167,12 @@
 
       $("#id_start_date").datepicker({
           dateFormat: datepicker_date_format,
-          minDate: -15,
+          minDate: -30,
           onSelect: function () {
               var dt2 = $('#id_end_date');
               var startDate = $(this).datepicker('getDate');
               //add 30 days to selected date
-              startDate.setDate(startDate.getDate() + 30);            
+              startDate.setDate(startDate.getDate() + 120);            
               var minDate = $(this).datepicker('getDate');
 
               var dt2Date = dt2.datepicker('getDate');
