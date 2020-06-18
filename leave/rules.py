@@ -59,6 +59,10 @@ def checkM1817TotalHours(employee_type, d1, d2, leave_type_id):
 		start_date += dayDelta
 
 	count = checkM1247TotalHours('M1247', d1_temp, d2_temp, leave_type_id)	
+
+	if count <= 0:
+		return True, _("เลือกวันตรงกับเสาร์-อาทิตย์")
+
 	if not count.is_integer():
 		return True, _("ช่วงวันลามีเศษครึ่งชั่วโมง")
 
