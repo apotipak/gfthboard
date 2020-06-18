@@ -35,6 +35,28 @@ current_year = datetime.now().year
 
 
 @login_required(login_url='/accounts/login/')
+def check_leave_request_day(request):
+    result = {}
+    total_day = 0
+    total_hour = 0
+    leave_type_id = request.GET['leave_type_id']
+    start_date = request.GET['start_date']
+    end_date = request.GET['end_date']
+
+    start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:00")
+    end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:00")
+
+    count = checkM1247TotalHours("m1247", start_date, end_date, leave_type_id)
+    
+    result = {
+        'total_day' : count // 8,
+        'total_hour' : count % 8,
+    }
+
+    return JsonResponse(result)
+
+
+@login_required(login_url='/accounts/login/')
 def EmployeeNew(request):
     dattime_format = "%Y-%m-%d %H:%M:%S"
 
@@ -609,7 +631,10 @@ def EmployeeInstanceReject(request, pk):
 
     return render(request, 'leave/employeeinstance_reject.html', context)
 
+
 @login_required(login_url='/accounts/login/')
 def get_leave_reject_comment(request, pk):
     comment = EmployeeInstance.objects.filter(id__exact=pk).values('comment')[0] or None
     return JsonResponse(comment)
+
+

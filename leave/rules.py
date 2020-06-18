@@ -14,6 +14,12 @@ def checkM1247TotalHours(employee_type, start_date, end_date, leave_type_id):
 	day = 0
 	hour = 0
 
+	# start_date = datetime.strptime(start_date, '%Y-%m-%d %H:%M:00')
+	# end_date = datetime.strptime(end_date, '%Y-%m-%d %H:%M:00')
+	
+	print("1 : " + str(start_date))
+	print("2 : " + str(end_date))
+
 	leave_type_include_weekend_list = {'6', '7', '10', '11', '13', '15'}
 	if leave_type_id not in leave_type_include_weekend_list:
 		excluded_day = {5, 6}
@@ -40,11 +46,15 @@ def checkM1247TotalHours(employee_type, start_date, end_date, leave_type_id):
 		hour = 0
 		start_date += dayDelta
 
+	print("3 : " + str(total_day))
+	print("4 : " + str(total_hour))
+
 	if total_hour == 24:
 		grand_total_hour = (total_day * 8) + (total_hour / 24) * 8
 	else:
 		grand_total_hour = (total_day * 8) + total_hour	
-	
+		
+
 	return grand_total_hour
 
 
@@ -55,7 +65,8 @@ def checkM1247StandardBusinessRules(start_date, end_date, leave_type_id):
 	    return True, _("เลือกช่วงเวลาไม่ถูกต้อง")
 	else:
 		total_hour = checkM1247TotalHours('M1247', start_date, end_date, leave_type_id)
-		
+		print("debug 1 : " + str(total_hour))
+
 		if total_hour <= 0:
 			return True, _("วันลาตรงกับเสาร์-อาทิตย์")
 

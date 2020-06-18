@@ -82,29 +82,10 @@ class EmployeeM1247Form(forms.ModelForm):
         username = self.user.username
         employee_type = 'M1'
 
-        '''
-        d1 = str(start_date) + ' ' + str(start_hour) + ':00:00'
-        d2 = str(end_date) + ' ' + str(end_hour) + ':00:00'
-        start_date = datetime.strptime(d1, "%Y-%m-%d %H:%M:%S")
-        end_date = datetime.strptime(d2, "%Y-%m-%d %H:%M:%S")
-        '''
         d1 = str(start_date) + ' ' + str(start_hour) + ':' + str(start_minute) + ':00'
         d2 = str(end_date) + ' ' + str(end_hour) + ':' + str(end_minute) + ':00'
         start_date = datetime.strptime(d1, datetime_format)
         end_date = datetime.strptime(d2, datetime_format)
-        
-        #raise forms.ValidationError(_("Debug : " + str(start_minute)))
-        #raise forms.ValidationError(_("Debug : " + str(start_date) + " " + str(start_hour) + " " + str(start_minute) + " | " + str(end_date) + " " + str(end_hour) + " " + str(end_minute)))
-        
-        #raise forms.ValidationError(_("Select : " + str(start_date) + " | " + str(end_date)))
-
-        '''
-        if(start_hour < self.start_working_hour or start_hour > self.stop_working_hour):
-            raise forms.ValidationError(_("ข้อมูลลาวันที่ไม่ถูกต้อง"))
-
-        if(end_hour  < self.start_working_hour or end_hour > self.stop_working_hour):
-            raise forms.ValidationError(_("ข้อมูลถึงวันที่ไม่ถูกต้อง"))        
-        '''
 
         if start_date != None:
             # ------------------------------------------------ 
@@ -113,10 +94,6 @@ class EmployeeM1247Form(forms.ModelForm):
             total_leave_quota_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).filter(lve_year=current_year).values_list('lve_miss', flat=True).get()
             total_leave_quota_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).filter(lve_year=current_year).values_list('lve_miss_hr', flat=True).get()                        
             grand_total_leave_quota_remaining_hour = total_leave_quota_remaining_hour + (total_leave_quota_remaining_day * 8)                    
-
-            #print("pos 1 : " + str(grand_total_leave_quota_remaining_hour))
-            #print("pos 2 : " + str(total_leave_quota_remaining_hour))
-            #print("pos 3 : " + str(total_leave_quota_remaining_day * 8))
 
             # ------------------------------------------------ 
             # Check transaction remaing hour (leave_employeeinstance table) (filter status = p, a, F)
@@ -144,7 +121,6 @@ class EmployeeM1247Form(forms.ModelForm):
                 total_leave_request_hour = found_m1247_error[1]
 
             
-
             #raise forms.ValidationError(total_leave_request_hour)
             print(str(total_leave_request_hour) + " : total_leave_request_hour")
             print(str(grand_total_leave_quota_remaining_hour) + " : grand_total_leave_quota_remaining_hour")
@@ -152,7 +128,7 @@ class EmployeeM1247Form(forms.ModelForm):
             # RULE 1: Check not over leave quota
             if (total_leave_request_hour) > grand_total_leave_quota_remaining_hour:
                 #raise forms.ValidationError({'start_date': "เลือกวันลาเกินโควต้าที่กำหนด"})
-                raise forms.ValidationError(_("เลือกวันลาเกินจำนวนที่กำหนด"))
+                raise forms.ValidationError(_("มีการเลือกวันลาเกินจำนวนที่กำหนด"))
             else:
                 if grand_total_leave_quota_remaining_hour <= 0:
                     #raise forms.ValidationError({'start_date': "ใช้วัน" + str(leave_type) + "หมดแล้ว" })
@@ -163,7 +139,7 @@ class EmployeeM1247Form(forms.ModelForm):
             queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where not (start_date > '" + str(end_date.strftime("%Y-%m-%d %H:00") + "' or end_date < '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "')") + " and emp_id=" + username + " and status in ('a','p','C','F')")            
             if len(queryset) > 0:
                 #raise forms.ValidationError({'start_date': "เลือกวันลาซ้ำ"})
-                raise forms.ValidationError(_("เลือกวันลาซ้ำ"))
+                raise forms.ValidationError(_("มีการเลือกวันลาซ้ำ"))
 
             # RULE 3: Check public holidays
             if checkLeaveTypeIncludePublicHoliday(leave_type_id):
@@ -171,11 +147,11 @@ class EmployeeM1247Form(forms.ModelForm):
                 holiday_list = str(list(queryset)).replace("'", '')
                 if len(queryset) > 0:
                     #raise forms.ValidationError({'start_date': "เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)})
-                    raise forms.ValidationError(_("เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)))
+                    raise forms.ValidationError(_("เลือกวันลาตรงกับวันหยุดนักขัตฤกษ์ - " + str(holiday_list)))
 
             # RULE 4: Check not allow over month
             if(checkLeaveRequestOverMonth("M1", start_date, end_date)):
                 #raise forms.ValidationError({'start_date': "เลือกวันลาข้ามเดือน"})
-                raise forms.ValidationError(_("เลือกวันลาข้ามเดือน"))
+                raise forms.ValidationError(_("ไม่สามารถเลือกวันลาข้ามเดือน กรุณาแบ่งทำ 2 รายการแยกเดือนกัน"))
         
         return cleaned_data    
