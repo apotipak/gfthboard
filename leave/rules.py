@@ -7,18 +7,14 @@ from leave.models import LeaveEmployee
 
 dayDelta = timedelta(days=1)
 
-def checkM1247TotalHours(employee_type, start_date, end_date, leave_type_id):
+def checkM1817TotalHours(employee_type, start_date, end_date, leave_type_id):
+	return 200
+
 	total_day = 0
 	total_hour = 0
 	result = 0
 	day = 0
 	hour = 0
-
-	# start_date = datetime.strptime(start_date, '%Y-%m-%d %H:%M:00')
-	# end_date = datetime.strptime(end_date, '%Y-%m-%d %H:%M:00')
-	
-	print("1 : " + str(start_date))
-	print("2 : " + str(end_date))
 
 	leave_type_include_weekend_list = {'6', '7', '10', '11', '13', '15'}
 	if leave_type_id not in leave_type_include_weekend_list:
@@ -46,15 +42,52 @@ def checkM1247TotalHours(employee_type, start_date, end_date, leave_type_id):
 		hour = 0
 		start_date += dayDelta
 
-	print("3 : " + str(total_day))
-	print("4 : " + str(total_hour))
+	if total_hour == 24:
+		grand_total_hour = (total_day * 8) + (total_hour / 24) * 8
+	else:
+		grand_total_hour = (total_day * 8) + total_hour	
+		
+	return grand_total_hour
+
+
+def checkM1247TotalHours(employee_type, start_date, end_date, leave_type_id):
+	total_day = 0
+	total_hour = 0
+	result = 0
+	day = 0
+	hour = 0
+
+	leave_type_include_weekend_list = {'6', '7', '10', '11', '13', '15'}
+	if leave_type_id not in leave_type_include_weekend_list:
+		excluded_day = {5, 6}
+	else:
+		excluded_day = {}
+
+	while end_date >= start_date:
+		next_date = start_date + dayDelta
+
+		if next_date < end_date:
+			if start_date.weekday() not in excluded_day:
+				result = ((next_date - start_date).total_seconds() / 60.0) / 60
+				day = result // 24
+				hour = round(result % 24,1)
+		else:
+			if start_date.weekday() not in excluded_day:
+				result = ((end_date - start_date).total_seconds() / 60.0) / 60
+				day = result // 24
+				hour = round(result % 24,1)
+
+		total_day = total_day + day
+		total_hour = total_hour + hour
+		day = 0
+		hour = 0
+		start_date += dayDelta
 
 	if total_hour == 24:
 		grand_total_hour = (total_day * 8) + (total_hour / 24) * 8
 	else:
 		grand_total_hour = (total_day * 8) + total_hour	
 		
-
 	return grand_total_hour
 
 

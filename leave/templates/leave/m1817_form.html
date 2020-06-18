@@ -86,7 +86,7 @@
 
                   </div>                
 
-                  <div class="container-fluid mb-12">
+                  <div class="container-fluid mb-12" id="show-error">
                   {% if form.errors %}
                       <!--
                       {% for field in form %}
@@ -109,15 +109,14 @@
 
                 </div>
 
-
-                <div class="card-footer text-right">                 
-                  <button type="submit" class="btn btn-success">ตกลง</button>
+                <div class="card-footer clearfix bg-light">
+                  <div class="float-right text-right col-md-12">
+                    <button type="button" id="check-request-date" name="check-request-date" data-url="{% url 'm1817_check_leave_request_day' %}" class="btn btn-info">คำนวณวัน</button>
+                    <button type="submit" class="btn btn-success">ส่งใบลา</button>
+                  </div>
                 </div>
 
-                <input type="hidden" id="id_employee_type" name="id_employee_type" value="{{ employee_type }}">
-
               </form>
-
 
             </div>
           </div>
@@ -200,6 +199,63 @@
       }).attr('readonly', 'readonly');
      
   });
+
+  $('#check-request-date').click(function(){
+    var obj = $(this);
+    var leave_type_id = $('#id_leave_type').children("option:selected").val();
+    var leave_type_value = $('#id_leave_type').children("option:selected").text();
+    
+    var start_date = $('#id_start_date').datepicker('getDate');
+    var start_hour = $('#id_start_hour').val();
+    var start_minute = $('#id_start_minute').val();
+
+    var end_date = $('#id_end_date').datepicker('getDate');    
+    var end_hour = $('#id_end_hour').val();
+    var end_minute = $('#id_end_minute').val();
+
+    console.log(start_date);
+    console.log(start_hour)
+    console.log(start_minute)
+    console.log(end_date);
+    console.log(end_hour)
+    console.log(end_minute)
+    
+    if(leave_type_id == "") {
+      $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>ยังไม่ได้เลือกประเภทการลา</strong></div>");
+
+    } else {
+      $.ajax({
+        type:"GET",
+        dataType: 'json',
+        url: obj.attr("data-url"),
+        data:{
+          leave_type_id: leave_type_id,
+          start_date: moment(start_date).format("YYYY-MM-DD " + start_hour + ":" + start_minute + ":00"),
+          end_date: moment(end_date).format("YYYY-MM-DD " + end_hour + ":" + end_minute + ":00"),
+        },
+        beforeSend: function () {
+          $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>Loading..</strong></div>");
+        },        
+        success: function( data ) 
+        {
+          result = "";
+          total_day = data.total_day;
+          total_hour = data.total_hour;
+
+          if (total_day > 0) {
+            result += total_day + " วัน ";
+          }
+
+          if (total_hour > 0) {
+            result += total_hour + " ช.ม.";
+          }
+          
+          $('#show-error').html("<div class='alert alert-warning' role='alert'><small>ตรวจสอบ <u>ประเภทการลา</u> และ <u>จำนวนวันที่จะใช้</u> ก่อนส่งใบลา</small><br><strong>" + leave_type_value + " " + result + "</strong></div>");
+        }
+      });      
+    }
+    
+  });  
   </script>
 {% endblock %}
 
