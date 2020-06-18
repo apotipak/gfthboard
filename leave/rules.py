@@ -43,7 +43,11 @@ def checkM1817TotalHours(employee_type, d1, d2, leave_type_id):
 					if i not in excluded_hour:
 						hour += 1
 		else:
-			print("error!")
+			print("todo3 : " + str(d1) + " | " + str(d2))
+			if d1.weekday() not in excluded_day:
+				for i in range(d1.hour, d2.hour):
+					if i not in excluded_hour:
+						hour += 1			
 
 		grand_total_hour += hour
 		d1 += dayDelta
@@ -221,7 +225,11 @@ def checkM1817BusinessRules(employee_type, start_date, end_date, leave_type_id):
 					if i not in excluded_hour:
 						hour += 1
 		else:
-			print("error!")
+			print("todo3 : " + str(d1) + " | " + str(d2))
+			if d1.weekday() not in excluded_day:
+				for i in range(d1.hour, d2.hour):
+					if i not in excluded_hour:
+						hour += 1
 
 		total_hour += hour
 		d1 += dayDelta
