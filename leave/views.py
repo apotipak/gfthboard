@@ -65,7 +65,7 @@ def m1817_check_leave_request_day(request):
             'error': "",
         }        
 
-    print("debug 3 : " + str(found_m1817_error[1]))
+    #print("debug 3 : " + str(found_m1817_error[1]))
     return JsonResponse(result)
 
 
