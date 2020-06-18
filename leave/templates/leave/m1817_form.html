@@ -86,7 +86,8 @@
 
                   </div>                
 
-                  <div class="container-fluid mb-12" id="show-error">
+                  <!--<div class="container-fluid mb-12" id="show-error">-->
+                  <div class="mb-12" id="show-error">
                   {% if form.errors %}
                       <!--
                       {% for field in form %}
@@ -206,8 +207,8 @@
     var leave_type_value = $('#id_leave_type').children("option:selected").text();
     
     var start_date = $('#id_start_date').datepicker('getDate');
-    var start_hour = $('#id_start_hour').val();
-    var start_minute = $('#id_start_minute').val();
+    var start_hour = $('#id_start_hour').val();    
+    var start_minute = $('#id_start_minute').val();    
 
     var end_date = $('#id_end_date').datepicker('getDate');    
     var end_hour = $('#id_end_hour').val();
@@ -252,7 +253,19 @@
               result += total_hour + " ช.ม.";
             }
             
-            $('#show-error').html("<div class='alert alert-warning' role='alert'><small>หากข้อมูลถูกต้องแล้วให้ทำการคลิกปุ่มส่งใบลาเพื่อขออนุมัติ</small><br><strong>" + leave_type_value + " " + result + "</strong></div>");                        
+            //$('#show-error').html("<div class='alert alert-warning' role='alert'><small>หากข้อมูลถูกต้องแล้วให้ทำการคลิกปุ่มส่งใบลาเพื่อขออนุมัติ</small><br><strong>" + leave_type_value + " " + result + "</strong></div>");
+
+            if (start_minute == 0)
+              start_minute = '00';
+            
+            if (end_minute == 0)
+              end_minute = '00';
+
+            d1 = moment(start_date).format("MMMM D,  " + start_hour + ":" + start_minute);
+            d2 = moment(end_date).format("MMMM D,  " + end_hour + ":" + end_minute);
+
+            $('#show-error').html("<div class='alert alert-warning' role='alert'><small>เลือก</small> <strong>" + leave_type_value + " " + result + "</strong>  |  <small>เริ่มวันที่</small> <strong>" + d1 + "</strong> ถึง <strong>" + d2 + "</strong><br><small>หากข้อมูลถูกต้องแล้วให้ทำการคลิกปุ่มส่งใบลาเพื่อขออนุมัติ</small></div>");
+
           } else {
             $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + data.error + "</strong></div>");
           }
