@@ -110,7 +110,9 @@ class EmployeeM1817Form(forms.ModelForm):
             total_leave_quota_remaining_day = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).filter(lve_year=current_year).values_list('lve_miss', flat=True).get()
             total_leave_quota_remaining_hour = LeavePlan.objects.filter(emp_id__exact=username).filter(lve_id__exact=leave_type_id).filter(lve_year=current_year).values_list('lve_miss_hr', flat=True).get()                        
             grand_total_leave_quota_remaining_hour = total_leave_quota_remaining_hour + (total_leave_quota_remaining_day * 8)                    
-            
+            print(str(grand_total_leave_quota_remaining_hour) + " : grand total leave remaining hour")
+            #print("pos 2 : " + str(total_leave_quota_remaining_hour))
+            print(str(total_leave_quota_remaining_day * 8) + " : remaining day * 8")
             # ------------------------------------------------ 
             # Check transaction remaing hour (leave_employeeinstance table) (filter status = p, a, F)
             # ------------------------------------------------ 
@@ -132,18 +134,21 @@ class EmployeeM1817Form(forms.ModelForm):
             # Check request hour
             # ------------------------------------------------
             #total_leave_request_hour = checkM1LeaveRequestHour('M1', start_date, end_date)
-            total_leave_request_hour = checkM1817BusinessRules('M1817', start_date, end_date)
+            total_leave_request_hour = checkM1817BusinessRules('M1817', start_date, end_date, leave_type_id)
             #print(total_leave_request_hour)
             #aise forms.ValidationError(_("Select : " + str(start_date) + " | " + str(end_date)))
 
             # RULE 1: Check if leave_request_hour is not over leave quota
             if (total_leave_request_hour > grand_total_leave_quota_remaining_hour):
                 #raise forms.ValidationError({'start_date': "เลือกวันลาเกินโควต้าที่กำหนด"})
+                print(str(leave_type_id) + " : " + str(total_leave_request_hour) + " : " + str(grand_total_leave_quota_remaining_hour))
                 raise forms.ValidationError(_("เลือกวันลาเกินโควต้าที่กำหนด"))
             else:
                 if grand_total_leave_quota_remaining_hour <= 0:
                     #raise forms.ValidationError({'start_date': "ใช้วัน" + str(leave_type) + "หมดแล้ว" })
                     raise forms.ValidationError(_("ใช้วัน" + str(leave_type) + "หมดแล้ว"))
+
+            print(str(leave_type_id) + " : " + str(total_leave_request_hour) + " : " + str(grand_total_leave_quota_remaining_hour))
 
             # RULE 2: Check if select weekend
             if (total_leave_request_hour == 0):
@@ -158,11 +163,12 @@ class EmployeeM1817Form(forms.ModelForm):
                 raise forms.ValidationError(_("เลือกวันลาซ้ำ"))
 
             # RULE 4: Check public holidays
-            queryset = LeaveHoliday.objects.filter(hol_date__range=(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))).values_list('pub_th', flat=True)
-            holiday_list = str(list(queryset)).replace("'", '')
-            if len(queryset) > 0:
-                #raise forms.ValidationError({'start_date': "เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)})
-                raise forms.ValidationError(_("เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)))
+            if checkLeaveTypeIncludePublicHoliday(leave_type_id):
+                queryset = LeaveHoliday.objects.filter(hol_date__range=(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))).values_list('pub_th', flat=True)
+                holiday_list = str(list(queryset)).replace("'", '')
+                if len(queryset) > 0:
+                    #raise forms.ValidationError({'start_date': "เลือกวันลาตรงกับวันหยุดนักขัตฤกษ์ - " + str(holiday_list)})
+                    raise forms.ValidationError(_("เลือกวันลาตรงกับวันหยุดนักขัตฤกษ์ - " + str(holiday_list)))
 
             # RULE 5: Check not allow over month
             if(checkLeaveRequestOverMonth("M1", start_date, end_date)):

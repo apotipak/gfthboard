@@ -85,8 +85,9 @@
 
                   </div>                
 
-                  <div class="container-fluid mb-12">
+                  <div class="container-fluid mb-12" id="show-error">
                   {% if form.errors %}
+                      <!--
                       {% for field in form %}
                           {% for error in field.errors %}
                               <div class="alert alert-danger">
@@ -94,19 +95,24 @@
                               </div>
                           {% endfor %}
                       {% endfor %}
+                      -->
+
                       {% for error in form.non_field_errors %}
                           <div class="alert alert-danger">
                               <i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}
                           </div>
                       {% endfor %}
+                      
                   {% endif %}
                   </div> 
 
                 </div>
 
-
-                <div class="card-footer text-right">                 
-                  <button type="submit" class="btn btn-success">ตกลง</button>
+                <div class="card-footer clearfix bg-light">
+                  <div class="float-right text-right col-md-12">
+                    <button type="button" id="check-request-date" name="check-request-date" data-url="{% url 'm1247_check_leave_request_day' %}" class="btn btn-info">คำนวณวัน</button>
+                    <button type="submit" class="btn btn-success">ส่งใบลา</button>
+                  </div>
                 </div>
 
                 <input type="hidden" id="id_employee_type" name="id_employee_type" value="{{ employee_type }}">
@@ -129,47 +135,19 @@
 
 {% block javascript %}
   <script>
-
   $(document).ready(function () {
-      var datepicker_date_format = "yy-mm-dd";
-
-      /*
-      $("select#id_end_minute").html("<option value=0>00</option>");
-      
-      $("#id_start_hour").on("change", function(){
-        var selected_hour = $(this).val();
-
-        if(selected_hour == 23) {
-          $("select#id_start_minute").html("<option value=0>00</option>");
-        }
-        else {
-          $("select#id_start_minute").html("<option value=0>00</option><option value=30>30</option>");
-        }
-      });
-
-      $("#id_end_hour").on("change", function(){
-        var selected_hour = $(this).val();
-
-        if(selected_hour == 23) {
-          $("select#id_end_minute").html("<option value=0>00</option>");
-        }
-        else {
-          $("select#id_end_minute").html("<option value=0>00</option><option value=30>30</option>");
-        }
-      }); 
-      */
-      
       $("#id_start_date").datepicker({
-          dateFormat: datepicker_date_format,
-          minDate: -15,
+          dateFormat: "yy-mm-dd",
+          minDate: -30,
           onSelect: function () {
               var dt2 = $('#id_end_date');
               var startDate = $(this).datepicker('getDate');
               //add 30 days to selected date
-              startDate.setDate(startDate.getDate() + 30);            
+              startDate.setDate(startDate.getDate() + 120);            
               var minDate = $(this).datepicker('getDate');
 
               var dt2Date = dt2.datepicker('getDate');
+
               //difference in days. 86400 seconds in day, 1000 ms in second
               var dateDiff = (dt2Date - minDate)/(86400 * 1000);
 
@@ -185,15 +163,74 @@
               dt2.datepicker('option', 'maxDate', startDate);
               //first day which can be selected in dt2 is selected date in dt1
               dt2.datepicker('option', 'minDate', minDate);
+
+            //var date = $(this).datepicker('getDate');
+            //date.setDate(date.getDate() + 1, 0);
+            //$('#id_end_date').val($.datepicker.formatDate('yy-mm-dd', date));
+
           }
       }).attr('readonly', 'readonly');
       
       $('#id_end_date').datepicker({
-        dateFormat: datepicker_date_format,
-        minDate: 0
+          dateFormat: "yy-mm-dd",
+          minDate: 0
       }).attr('readonly', 'readonly');
-     
   });
+
+  $('#check-request-date').click(function(){
+    var obj = $(this);
+    var leave_type_id = $('#id_leave_type').children("option:selected").val();
+    var leave_type_value = $('#id_leave_type').children("option:selected").text();  
+    var start_date = $('#id_start_date').datepicker('getDate');
+    var start_hour = $('#id_start_hour').val();
+    var start_minute = $('#id_start_minute').val();
+    var end_date = $('#id_end_date').datepicker('getDate');    
+    var end_hour = $('#id_end_hour').val();
+    var end_minute = $('#id_end_minute').val();
+
+    if(leave_type_id == "") {
+      $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>ยังไม่ได้เลือกประเภทการลา</strong></div>");
+
+    } else {
+      $.ajax({
+        type:"GET",
+        dataType: 'json',
+        url: obj.attr("data-url"),
+        data:{
+          leave_type_id: leave_type_id,
+          start_date: moment(start_date).format("YYYY-MM-DD " + start_hour + ":" + start_minute + ":00"),
+          end_date: moment(end_date).format("YYYY-MM-DD " + end_hour + ":" + end_minute + ":00"),
+        },
+        beforeSend: function () {
+          $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>Loading..</strong></div>");
+        },        
+        success: function( data ) 
+        {
+          result = "";
+
+          if (data.error.length == 0) {  
+            total_day = data.total_day;
+            total_hour = data.total_hour;
+
+            if (total_day > 0) {
+              result += total_day + " วัน ";
+            }
+
+            if (total_hour > 0) {
+              result += total_hour + " ช.ม.";
+            }
+            
+            $('#show-error').html("<div class='alert alert-warning' role='alert'><small>หากข้อมูลถูกต้องแล้วให้ทำการคลิกปุ่มส่งใบลาเพื่อขออนุมัติ</small><br><strong>" + leave_type_value + " " + result + "</strong></div>");
+          } else {
+            $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + data.error + "</strong></div>");
+          }
+
+        }
+      });      
+    }
+    
+  });
+
   </script>
 {% endblock %}
 
