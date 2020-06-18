@@ -238,19 +238,25 @@
         },        
         success: function( data ) 
         {
-          result = "";
-          total_day = data.total_day;
-          total_hour = data.total_hour;
+          result = "";          
 
-          if (total_day > 0) {
-            result += total_day + " วัน ";
+          if (data.error.length == 0) {            
+            total_day = data.total_day;
+            total_hour = data.total_hour;
+
+            if (total_day > 0) {
+              result += total_day + " วัน ";
+            }
+
+            if (total_hour > 0) {
+              result += total_hour + " ช.ม.";
+            }
+            
+            $('#show-error').html("<div class='alert alert-warning' role='alert'><small>ตรวจสอบ <u>ประเภทการลา</u> และ <u>จำนวนวันที่ต้องการใช้</u> ก่อนส่งใบลา</small><br><strong>" + leave_type_value + " " + result + "</strong></div>");                        
+          } else {
+            $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + data.error + "</strong></div>");
           }
 
-          if (total_hour > 0) {
-            result += total_hour + " ช.ม.";
-          }
-          
-          $('#show-error').html("<div class='alert alert-warning' role='alert'><small>ตรวจสอบ <u>ประเภทการลา</u> และ <u>จำนวนวันที่จะใช้</u> ก่อนส่งใบลา</small><br><strong>" + leave_type_value + " " + result + "</strong></div>");
         }
       });      
     }

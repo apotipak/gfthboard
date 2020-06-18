@@ -39,6 +39,7 @@ def m1817_check_leave_request_day(request):
     result = {}
     total_day = 0
     total_hour = 0
+    error = ""
     leave_type_id = request.GET['leave_type_id']
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
@@ -46,13 +47,25 @@ def m1817_check_leave_request_day(request):
     start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:00")
     end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:00")
 
-    count = checkM1817TotalHours("m1817", start_date, end_date, leave_type_id)
-    
-    result = {
-        'total_day' : count // 8,
-        'total_hour' : count % 8,
-    }
+    print("debug 1 : " + str(start_date))
+    print("debug 2 : " + str(end_date))
 
+    found_m1817_error = checkM1817TotalHours('M1817', start_date, end_date, leave_type_id)
+    if found_m1817_error[0]:
+        result = {
+            'total_day' : 0,
+            'total_hour' : 0,
+            'error': found_m1817_error[1],
+        }
+    else:
+        count = found_m1817_error[1]
+        result = {
+            'total_day' : count // 8,
+            'total_hour' : count % 8,
+            'error': "",
+        }        
+
+    print("debug 3 : " + str(found_m1817_error[1]))
     return JsonResponse(result)
 
 
