@@ -61,7 +61,7 @@ def checkM1817TotalHours(employee_type, d1, d2, leave_type_id):
 	count = checkM1247TotalHours('M1247', d1_temp, d2_temp, leave_type_id)	
 
 	if count <= 0:
-		return True, _("เลือกวันตรงกับเสาร์-อาทิตย์")
+		return True, _("เลือกวันลาไม่ถูกต้อง")
 
 	if not count.is_integer():
 		return True, _("ช่วงวันลามีเศษครึ่งชั่วโมง")
@@ -120,7 +120,7 @@ def checkM1247StandardBusinessRules(start_date, end_date, leave_type_id):
 		print("debug 1 : " + str(total_hour))
 
 		if total_hour <= 0:
-			return True, _("วันลาตรงกับเสาร์-อาทิตย์")
+			return True, _("เลือกวันลาไม่ถูกต้อง")
 
 		if total_hour.is_integer():
 			return False, total_hour
