@@ -34,8 +34,9 @@
           <div class="col-lg-12">
             <!--<div class="pb-2"><small>แสดงวันลาที่อนุมัติในระบบ E-Leave</small></div>-->
             <!-- The time line -->
+            {% if leave_approved_items %}              
             <div class="timeline">
-              {% if leave_approved_items %}              
+              
                 {% firstof 1 as month_number %}
 
                 {% for item in leave_approved_items %}                  
@@ -106,39 +107,17 @@
                     </div>
                   </div>
                 </div>
-                {% endfor %}
-              {% else %}
-
-              {% endif %}
-
-              <!--
-              <div class="time-label">
-                <span class="bg-green">10 Feb. 20</span>
-              </div>
-              <div>
-                <i class="nav-icon fa fa-laptop-medical bg-green"></i>
-                <div class="timeline-item">
-                  <h3 class="timeline-header"><strong>ลาป่วยได้รับค่าจ้าง</strong> 12 วัน</h3>
-
-                  <div class="timeline-body">
-                    21 July 20 08:00 - 31 July 20 17:00
-                  </div>
-                </div>
-              </div>
-              <div class="time-label">
-                <span class="bg-green">3 Jan. 2020</span>
-              </div>
-              <div>
-                <i class="nav-icon fa fa-laptop-medical bg-green"></i>
-                <div class="timeline-item">                  
-                  <h3 class="timeline-header"><strong>ลาพักร้อน</strong> 5 วัน</h3>
-                  <div class="timeline-body">
-                    21 July 20 08:00 - 31 July 20 17:00
-                  </div>
-                </div>
-              </div>
-              -->
+                {% endfor %}              
           </div>
+          {% else %}
+          <div class="col-lg-12">
+            <div class="alert alert-success" role="alert">
+                <i class="fa fa-info-circle"></i>&nbsp;&nbsp;ยังไม่เคยมีการทำรายการลาผ่านระบบ E-Leave | หากต้องการใช้วันลางาน &nbsp;
+                <a href="{% url 'employee_create' %}">คลิกที่นี่</a>
+                &nbsp;<a href="{% url 'employee_create' %}"><i class="nav-icon fas fa-plus"></i></a>
+            </div>           
+          </div> 
+        {% endif %}        
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
