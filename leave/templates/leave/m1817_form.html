@@ -264,7 +264,7 @@
             d1 = moment(start_date).format("MMMM D,  " + start_hour + ":" + start_minute);
             d2 = moment(end_date).format("MMMM D,  " + end_hour + ":" + end_minute);
 
-            $('#show-error').html("<div class='alert alert-warning' role='alert'><small>เลือก</small> <strong>" + leave_type_value + " " + result + "</strong>  |  <small>เริ่มวันที่</small> <strong>" + d1 + "</strong> ถึง <strong>" + d2 + "</strong><br><small>หากข้อมูลถูกต้องแล้วให้ทำการคลิกปุ่มส่งใบลาเพื่อขออนุมัติ</small></div>");
+            $('#show-error').html("<div class='alert alert-warning' role='alert'><small>เลือก</small> <strong>" + leave_type_value + " " + result + "</strong><br><small>เริ่ม&nbsp;&nbsp;&nbsp;</small> <strong>" + d1 + "</strong> ถึง <strong>" + d2 + "</strong></div><div>หากข้อมูลถูกต้องแล้วให้ทำการคลิกปุ่มส่งใบลาเพื่อขออนุมัติ</div>");
 
           } else {
             $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + data.error + "</strong></div>");
