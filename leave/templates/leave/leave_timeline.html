@@ -1,0 +1,126 @@
+{% extends "page_base_generic.html" %}
+
+{% load humanize %}
+
+{% block title %}Timeline วันลา{% endblock %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Timeline {% now 'Y' %}</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
+              <li class="breadcrumb-item active">Timeline</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="pb-2"><small>แสดงวันลาที่อนุมัติในระบบ E-Leave</small></div>
+            <!-- The time line -->
+            <div class="timeline">
+              {% if leave_approved_items %}              
+                {% for item in leave_approved_items %}                  
+                  {% if item.start_date|date:"n" == '1' %}
+                    {% firstof "#F5B041" as color %}
+                    {% elif item.start_date|date:"n" == '2' %}
+                    {% firstof "#B22222" as color %}
+                    {% elif item.start_date|date:"n" == '3' %}
+                    {% firstof "#008B8B" as color %}
+                    {% elif item.start_date|date:"n" == '4' %}
+                    {% firstof "#6A5ACD" as color %}
+                    {% elif item.start_date|date:"n" == '5' %}
+                    {% firstof "#BA55D3" as color %}
+                    {% elif item.start_date|date:"n" == '6' %}
+                    {% firstof "#D4AC0D" as color %}
+                    {% elif item.start_date|date:"n" == '7' %}
+                    {% firstof "#2E8B57" as color %}
+                    {% elif item.start_date|date:"n" == '8' %}
+                    {% firstof "#BA55D3" as color %}
+                    {% elif item.start_date|date:"n" == '9' %}
+                    {% firstof "#17A589" as color %}
+                    {% elif item.start_date|date:"n" == '10' %}
+                    {% firstof "#BA55D3" as color %}
+                    {% elif item.start_date|date:"n" == '11' %}
+                    {% firstof "#1F618D" as color %}
+                    {% elif item.start_date|date:"n" == '12' %}
+                    {% firstof "##76448A" as color %}
+                    {% else %}
+                    {% firstof "#A93226" as color %}
+                  {% endif %}
+                <div class="time-label">
+                  <span style="background-color:{{color}};" class="text-white">{{ item.start_date|date:"N d" }}</span>
+                </div>
+                <div>
+                  <i class="nav-icon fa fa-laptop-medical text-white" style="background-color: {{color}};"></i>
+                  <div class="timeline-item">
+                    <h3 class="timeline-header"><strong>{{ item.leave_type.lve_th }}</strong>&nbsp;|&nbsp;                 
+                     {% if item.lve_act != 0 %}
+                     {{ item.lve_act }} วัน
+                     {% endif %}
+                     &nbsp;
+                     {% if item.lve_act_hr != 0 %}
+                     {{ item.lve_act_hr }} ช.ม.
+                     {% endif %}                     
+                    </h3>
+                    <div class="timeline-body">
+                      <span class="oi oi-briefcase"></span>{{ item.start_date|date:"d N H:i" }} - {{ item.end_date|date:"d N H:i" }}
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              {% else %}
+
+              {% endif %}
+
+              <!--
+              <div class="time-label">
+                <span class="bg-green">10 Feb. 20</span>
+              </div>
+              <div>
+                <i class="nav-icon fa fa-laptop-medical bg-green"></i>
+                <div class="timeline-item">
+                  <h3 class="timeline-header"><strong>ลาป่วยได้รับค่าจ้าง</strong> 12 วัน</h3>
+
+                  <div class="timeline-body">
+                    21 July 20 08:00 - 31 July 20 17:00
+                  </div>
+                </div>
+              </div>
+              <div class="time-label">
+                <span class="bg-green">3 Jan. 2020</span>
+              </div>
+              <div>
+                <i class="nav-icon fa fa-laptop-medical bg-green"></i>
+                <div class="timeline-item">                  
+                  <h3 class="timeline-header"><strong>ลาพักร้อน</strong> 5 วัน</h3>
+                  <div class="timeline-body">
+                    21 July 20 08:00 - 31 July 20 17:00
+                  </div>
+                </div>
+              </div>
+              -->
+          </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+{% endblock %}

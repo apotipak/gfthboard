@@ -684,3 +684,33 @@ def get_leave_reject_comment(request, pk):
     return JsonResponse(comment)
 
 
+@login_required(login_url='/accounts/login/')
+def LeaveTimeline(request):
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE    
+    leave_policy = LeavePlan.EmployeeLeavePolicy(request)
+
+    username = request.user.username
+
+    leave_approved_items = EmployeeInstance.objects.filter(emp_id__exact=username).filter(status__in=('a','C','F')).order_by('-start_date') or None
+
+    # Check leave approval right    
+    if checkLeaveRequestApproval(request.user.username):
+        able_to_approve_leave_request = True
+    else:
+        able_to_approve_leave_request = False
+
+    context = {
+        'page_title': settings.PROJECT_NAME,
+        'db_server': settings.DATABASES['default']['HOST'],
+        'project_name': settings.PROJECT_NAME,
+        'project_version': settings.PROJECT_VERSION,
+        'today_date' : settings.TODAY_DATE,
+        'leave_approved_items': leave_approved_items,
+        'able_to_approve_leave_request': able_to_approve_leave_request,
+    }
+
+    return render(request, 'leave/leave_timeline.html', context)

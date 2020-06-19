@@ -8,6 +8,7 @@ urlpatterns = [
     path('leave-history/', views.EmployeeInstanceListView.as_view(), name='leave_history'),
     path('leave-history/<int:pk>', views.EmployeeInstanceDetailView.as_view(), name='leave_history_detail'),
     path('leave-history/<uuid:pk>/delete/', views.EmployeeInstanceDelete.as_view(), name='leave_history_delete'),
+    path('leave-timeline/', views.LeaveTimeline, name='leave_timeline'),
 ]
 
 urlpatterns += [
@@ -25,3 +26,4 @@ urlpatterns += [
     url(r'^ajax/m1817_check_leave_request_day/$', views.m1817_check_leave_request_day, name='m1817_check_leave_request_day'),
     url(r'^ajax/m1247_check_leave_request_day/$', views.m1247_check_leave_request_day, name='m1247_check_leave_request_day'),    
 ]
+
