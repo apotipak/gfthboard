@@ -48,9 +48,6 @@
             {% endif %}
           {% endif %}
 
-
-
-
           {% if request.path|slice:":7" == '/leave/' %}
           <li class="nav-item has-treeview active menu-open">
             {% if request.path|slice:":6" == '/leave' %}
@@ -88,6 +85,16 @@
                   &nbsp;&nbsp;&nbsp;<p>ประวัติการลา</p>
                 </a>
               </li>
+              <li class="nav-item">
+                {% if request.path == "/leave/leave-timeline/" %}
+                <a href="{% url 'leave_timeline' %}" class="nav-link active">
+                {% else %}
+                <a href="{% url 'leave_timeline' %}" class="nav-link">
+                {% endif %}
+                  &nbsp;&nbsp;<i class="fas fa-history"></i>
+                  &nbsp;&nbsp;&nbsp;<p>Timeline วันลา</p>
+                </a>
+              </li>                            
               <li class="nav-item">
                 {% if request.path == "/leave/employee/create/" %}
                 <a href="{% url 'employee_create' %}" class="nav-link active">
