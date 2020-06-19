@@ -45,7 +45,7 @@ def checkM1817TotalHours(employee_type, d1, d2, leave_type_id):
 		else:
 			print("todo3 : " + str(d1) + " | " + str(d2))
 			if d1.weekday() not in excluded_day:
-				for i in range(d1.hour, d2.hour):
+				for i in range(start_working_hour, stop_working_hour):
 					if i not in excluded_hour:
 						hour += 1			
 
