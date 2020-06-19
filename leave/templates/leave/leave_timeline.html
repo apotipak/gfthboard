@@ -36,6 +36,8 @@
             <!-- The time line -->
             <div class="timeline">
               {% if leave_approved_items %}              
+                {% firstof 1 as month_number %}
+
                 {% for item in leave_approved_items %}                  
                   {% if item.start_date|date:"n" == '1' %}
                     {% firstof "#F5B041" as color %}
@@ -64,11 +66,31 @@
                     {% else %}
                     {% firstof "#A93226" as color %}
                   {% endif %}
-                <div class="time-label">
-                  <span style="background-color:{{color}};" class="text-white">{{ item.start_date|date:"N d" }}</span>
-                </div>
+                
+                {% if item.start_date|date:"n" != month_number %}
+                  {% firstof item.start_date|date:"n" as month_number %}
+                  <div class="time-label">
+                    <span style="background-color:{{color}};" class="text-white text-center">&nbsp;&nbsp;&nbsp;{{ item.start_date|date:"N" }}&nbsp;&nbsp;&nbsp;</span>
+                  </div>                  
+                {% endif %}
+
                 <div>
-                  <i class="nav-icon fa fa-laptop-medical text-white" style="background-color: {{color}};"></i>
+                  
+                  {% if item.leave_type_id == 10 or item.leave_type_id == 11 %}
+                    <i class="nav-icon fa fa-child text-white" aria-hidden="true" style="background-color: {{color}};"></i>
+                  {% elif item.leave_type_id == 5 %}
+                    <i class="nav-icon fa fa-plane text-white" aria-hidden="true" style="background-color: {{color}};"></i>                    
+                  {% elif item.leave_type_id == 6 or item.leave_type_id == 7 %}
+                    <i class="nav-icon fa fa-stethoscope text-white" aria-hidden="true" style="background-color: {{color}};"></i>
+                  {% elif item.leave_type_id == 8 or item.leave_type_id == 9 %}
+                    <i class="nav-icon fa fa-suitcase text-white" aria-hidden="true" style="background-color: {{color}};"></i>
+                  {% elif item.leave_type_id == 15 %}
+                    <i class="nav-icon fa fa-university text-white" aria-hidden="true" style="background-color: {{color}};"></i>                    
+                  {% else %}
+                    <i class="nav-icon fa fa-laptop-medical text-white" aria-hidden="true"style="background-color: {{color}};"></i>
+                  {% endif %}
+                  
+                  
                   <div class="timeline-item">
                     <h3 class="timeline-header"><strong>{{ item.leave_type.lve_th }}</strong>&nbsp;|&nbsp;                 
                      {% if item.lve_act != 0 %}
