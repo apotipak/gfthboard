@@ -79,7 +79,8 @@ def checkM1247TotalHours(employee_type, start_date, end_date, leave_type_id):
 
 	leave_type_include_weekend_list = {'6', '7', '10', '11', '13', '15'}
 	if leave_type_id not in leave_type_include_weekend_list:
-		excluded_day = {5, 6}
+		# excluded_day = {5, 6}
+		excluded_day = {}
 	else:
 		excluded_day = {}
 
@@ -107,7 +108,8 @@ def checkM1247TotalHours(employee_type, start_date, end_date, leave_type_id):
 		grand_total_hour = (total_day * 8) + (total_hour / 24) * 8
 	else:
 		grand_total_hour = (total_day * 8) + total_hour	
-		
+	
+	print("debug: " + str(grand_total_hour))
 	return grand_total_hour
 
 

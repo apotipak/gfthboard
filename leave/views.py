@@ -85,19 +85,20 @@ def m1247_check_leave_request_day(request):
     
     print("count : " + str(count))
 
-    if count.is_integer():
-        result = {
-            'total_day' : count // 8,
-            'total_hour' : count % 8,
-            'error' : "",
-        }
-        #return True, _("ช่วงวันลามีเศษครึ่งชั่วโมง")
-    else:                
-        result = {
-            'total_day' : count // 8,
-            'total_hour' : count % 8,
-            'error' : "ช่วงวันลามีเศษครึ่งชั่วโมง",
-        }
+    if count != 0:
+        if count.is_integer():
+            result = {
+                'total_day' : count // 8,
+                'total_hour' : count % 8,
+                'error' : "",
+            }
+            #return True, _("ช่วงวันลามีเศษครึ่งชั่วโมง")
+        else:                
+            result = {
+                'total_day' : count // 8,
+                'total_hour' : count % 8,
+                'error' : "ช่วงวันลามีเศษครึ่งชั่วโมง",
+            }
 
     return JsonResponse(result)
 
