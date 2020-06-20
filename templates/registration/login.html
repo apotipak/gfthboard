@@ -67,19 +67,22 @@
           </div>
         </div>
         <div class="row">
+          <!--
           <div class="col-8">
             <div class="icheck-primary">
-              <!--
               <a href="{% url 'password_reset' %}">ลืมรหัสผ่าน</a>
               <label for="remember">
                 &nbsp;                
               </label>
-              -->
             </div>
           </div>
+          -->
           <!-- /.col -->
-          <div class="col-4">
-            <input type="submit" class="btn btn-success btn-block" value="ตกลง" />
+          <div class="col-12">
+            <!--<input type="submit" class="btn btn-success btn-block" value="ตกลง" />-->
+            <button type="submit" class="btn btn-success btn-block">
+              เข้าสู่ระบบ&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i>
+            </button>            
             <input type="hidden" name="next" value="{{ next }}" />
           </div>
           <!-- /.col -->
