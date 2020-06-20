@@ -2,7 +2,7 @@
 
 {% load humanize %}
 
-{% block title %}Timeline วันลา{% endblock %}
+{% block title %}Timeline{% endblock %}
 
 {% block content %}
 
@@ -76,17 +76,16 @@
                 {% endif %}
 
                 <div>
-                  
                   {% if item.leave_type_id == 10 or item.leave_type_id == 11 %}
-                    <i class="nav-icon fa fa-child text-white" aria-hidden="true" style="background-color: {{color}};"></i>
+                    <i class="nav-icon fas fa-baby text-white" aria-hidden="true" style="background-color: {{color}};"></i>
                   {% elif item.leave_type_id == 5 %}
                     <i class="nav-icon fa fa-plane text-white" aria-hidden="true" style="background-color: {{color}};"></i>                    
                   {% elif item.leave_type_id == 6 or item.leave_type_id == 7 %}
                     <i class="nav-icon fa fa-stethoscope text-white" aria-hidden="true" style="background-color: {{color}};"></i>
                   {% elif item.leave_type_id == 8 or item.leave_type_id == 9 %}
                     <i class="nav-icon fa fa-suitcase text-white" aria-hidden="true" style="background-color: {{color}};"></i>
-                  {% elif item.leave_type_id == 15 %}
-                    <i class="nav-icon fa fa-university text-white" aria-hidden="true" style="background-color: {{color}};"></i>                    
+                  {% elif item.leave_type_id == 15 %}                  
+                    <i class="nav-icon fas fa-pray text-white" aria-hidden="true" style="background-color: {{color}};"></i>                    
                   {% else %}
                     <i class="nav-icon fa fa-laptop-medical text-white" aria-hidden="true"style="background-color: {{color}};"></i>
                   {% endif %}
