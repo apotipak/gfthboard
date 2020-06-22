@@ -84,22 +84,11 @@ class EmployeeM1817Form(forms.ModelForm):
         username = self.user.username
         employee_type = 'M1'
 
-        '''
-        d1 = str(start_date) + ' ' + str(start_hour) + ':00:00'
-        d2 = str(end_date) + ' ' + str(end_hour) + ':00:00'
-        start_date = datetime.strptime(d1, "%Y-%m-%d %H:%M:%S")
-        end_date = datetime.strptime(d2, "%Y-%m-%d %H:%M:%S")
-        '''
         d1 = str(start_date) + ' ' + str(start_hour) + ':' + str(start_minute) + ':00'
         d2 = str(end_date) + ' ' + str(end_hour) + ':' + str(end_minute) + ':00'
         start_date = datetime.strptime(d1, datetime_format)
         end_date = datetime.strptime(d2, datetime_format)
         
-        #raise forms.ValidationError(_("Debug : " + str(start_minute)))
-        #raise forms.ValidationError(_("Debug : " + str(start_date) + " " + str(start_hour) + " " + str(start_minute) + " | " + str(end_date) + " " + str(end_hour) + " " + str(end_minute)))
-        
-        #raise forms.ValidationError(_("Select : " + str(start_date) + " | " + str(end_date)))
-
         if(start_hour < self.start_working_hour or start_hour > self.stop_working_hour):
             raise forms.ValidationError(_("ข้อมูล ลาวันที่ ไม่ถูกต้อง"))
 
@@ -136,10 +125,7 @@ class EmployeeM1817Form(forms.ModelForm):
             # ------------------------------------------------ 
             # Check request hour
             # ------------------------------------------------
-            #total_leave_request_hour = checkM1LeaveRequestHour('M1', start_date, end_date)
             total_leave_request_hour = checkM1817BusinessRules('M1817', start_date, end_date, leave_type_id)
-            #print(total_leave_request_hour)
-            #aise forms.ValidationError(_("Select : " + str(start_date) + " | " + str(end_date)))
 
             # RULE 1: Check if leave_request_hour is not over leave quota
             if (total_leave_request_hour > grand_total_leave_quota_remaining_hour):
