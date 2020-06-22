@@ -147,9 +147,13 @@
 {% block javascript %}
   <script>
   $(document).ready(function () {
-      $(".submitBtn").click(function () {
-        $(".submitBtn").attr("disabled", true);
-        $('#leaveform').submit();
+      $("#leaveform").submit(function(e){
+        if ($(".submitBtn").attr('attempted') == 'true' ) {
+          e.preventDefault();
+        } else {
+          $(".submitBtn").html("Processing...");
+          $(".submitBtn").attr("attempted", 'true');          
+        }
       });
 
       $('#button').click(function () {
