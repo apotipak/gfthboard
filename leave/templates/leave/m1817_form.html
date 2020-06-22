@@ -82,11 +82,10 @@
                       {{ form.end_minute }}                      
                     </div>
 
-                    {% if request.user.username == '900662' %}
+                    {% if request.user.username == '900662' or request.user.username == '900576' %}
                     <div class="input-group col-xs-12 .hidden-md-down text-left">
-                      <span id='button'>แนบไฟล์&nbsp;&nbsp;<i class="fa fa-paperclip" aria-hidden="true"></i></span>
+                      <span id='button'>แนบไฟล์&nbsp;&nbsp;<i class="fa fa-paperclip" aria-hidden="true"></i></span>&nbsp;&nbsp;
                       <input id="id_document" name="document" type='file' accept='image/png, image/jpeg'>
-                      <span id='val'></span>                      
                     </div>
                     {% endif %}
 

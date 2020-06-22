@@ -14,6 +14,7 @@ from django.db.models import Sum
 from .rules import *
 from django.utils.dateparse import parse_datetime
 from django import forms
+from django.template.defaultfilters import filesizeformat
 
 
 current_year = datetime.now().year
@@ -81,6 +82,14 @@ class EmployeeM1817Form(forms.ModelForm):
         end_hour = self.cleaned_data.get('end_hour')
         end_minute = self.cleaned_data.get('end_minute')
 
+        document = self.cleaned_data['document']
+        document_type = document.content_type.split('/')[0]
+        if document_type in settings.CONTENT_TYPES:
+            if document.size > settings.MAX_UPLOAD_SIZE:
+                raise forms.ValidationError(_('ไฟล์แนบมีขนาดเกิน 1 เมกะไบท์'))
+        else:
+            raise forms.ValidationError(_('แนบไฟล์รูปภาพได้เท่านั้น'))
+
         username = self.user.username
         employee_type = 'M1'
 
@@ -88,12 +97,13 @@ class EmployeeM1817Form(forms.ModelForm):
         d2 = str(end_date) + ' ' + str(end_hour) + ':' + str(end_minute) + ':00'
         start_date = datetime.strptime(d1, datetime_format)
         end_date = datetime.strptime(d2, datetime_format)
-        
+
         if(start_hour < self.start_working_hour or start_hour > self.stop_working_hour):
             raise forms.ValidationError(_("ข้อมูล ลาวันที่ ไม่ถูกต้อง"))
 
         if(end_hour  < self.start_working_hour or end_hour > self.stop_working_hour):
             raise forms.ValidationError(_("ข้อมูล ถึงวันที่ ไม่ถูกต้อง"))        
+
 
         if start_date != None:
             # ------------------------------------------------ 
