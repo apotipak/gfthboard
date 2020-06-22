@@ -40,6 +40,7 @@ class EmployeeM1817Form(forms.ModelForm):
     end_minute = forms.IntegerField(widget=forms.Select(choices=minute_range), initial="00")
 
     employee_type = forms.CharField(required=False, widget=forms.HiddenInput(), initial="M1817")
+    
     document = forms.FileField(required=False)
 
     class Meta:
@@ -82,7 +83,11 @@ class EmployeeM1817Form(forms.ModelForm):
         end_hour = self.cleaned_data.get('end_hour')
         end_minute = self.cleaned_data.get('end_minute')
 
-        document = self.cleaned_data['document']
+        document = self.cleaned_data.get('document')
+        print("a")        
+        print(document)
+        print("b")
+        
         document_type = document.content_type.split('/')[0]
         if document_type in settings.CONTENT_TYPES:
             if document.size > settings.MAX_UPLOAD_SIZE:

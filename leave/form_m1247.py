@@ -13,6 +13,9 @@ from decimal import Decimal
 from django.db.models import Sum
 from .rules import *
 from django.utils.dateparse import parse_datetime
+from django import forms
+from django.template.defaultfilters import filesizeformat
+
 
 current_year = datetime.now().year
 standard_start_working_hour = 0
@@ -36,9 +39,11 @@ class EmployeeM1247Form(forms.ModelForm):
 
     employee_type = forms.CharField(required=False, widget=forms.HiddenInput(), initial="M1247")
 
+    document = forms.FileField(required=False)
+
     class Meta:
         model = EmployeeInstance
-        fields = ['start_date', 'end_date', 'leave_type', 'lve_act', 'lve_act_hr']
+        fields = ['start_date', 'end_date', 'leave_type', 'lve_act', 'lve_act_hr', 'document']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
@@ -78,6 +83,20 @@ class EmployeeM1247Form(forms.ModelForm):
         end_date = self.cleaned_data.get('end_date')
         end_hour = self.cleaned_data.get('end_hour')
         end_minute = self.cleaned_data.get('end_minute')
+        
+        document = self.cleaned_data.get('document')
+        print("a")        
+        print(document)
+        print("b")
+
+        '''
+        document_type = document.content_type.split('/')[0]
+        if document_type in settings.CONTENT_TYPES:
+            if document.size > settings.MAX_UPLOAD_SIZE:
+                raise forms.ValidationError(_('ไฟล์แนบมีขนาดเกิน 1 เมกะไบท์'))
+        else:
+            raise forms.ValidationError(_('แนบไฟล์รูปภาพได้เท่านั้น'))
+        '''
 
         username = self.user.username
         employee_type = 'M1'

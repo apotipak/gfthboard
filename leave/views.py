@@ -114,14 +114,14 @@ def EmployeeNew(request):
     project_version = settings.PROJECT_VERSION
     today_date = settings.TODAY_DATE
     
-    render_template_name = 'leave/employeeinstance_form.html'
+    # render_template_name = 'leave/employeeinstance_form.html'
     
     if request.method == "POST":
         if request.user.groups.filter(name__in=['E-Leave Staff', 'E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
             form = EmployeeM1817Form(request.POST, request.FILES, user=request.user)
             render_template_name = 'leave/m1817_form.html'
         elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():
-            form = EmployeeM1247Form(request.POST, user=request.user)
+            form = EmployeeM1247Form(request.POST, request.FILES, user=request.user)
             render_template_name = 'leave/m1247_form.html'
         else:
             form = EmployeeForm(request.POST, user=request.user)
