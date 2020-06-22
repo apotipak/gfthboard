@@ -82,12 +82,13 @@
                       {{ form.end_minute }}                      
                     </div>
 
+                    {% if request.user.username == '900662' %}
                     <div class="input-group col-xs-12 text-left">
                       <span id='button'>แนบไฟล์&nbsp;&nbsp;<i class="fa fa-paperclip" aria-hidden="true"></i></span>
                       <input id="id_document" name="document" type='file' accept='image/png, image/jpeg'>
                       <span id='val'></span>                      
                     </div>
-
+                    {% endif %}
                     <div class="text-danger">{{ form.end_date.errors }}</div>
 
                   </div>                
