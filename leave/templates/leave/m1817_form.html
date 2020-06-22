@@ -40,7 +40,7 @@
             <!-- jquery validation -->
             <div class="card card-primary">
 
-              <form action="" method="post" autocomplete="off" enctype="multipart/form-data" class="md-form">
+              <form action="" method="post" autocomplete="off" enctype="multipart/form-data" id="leaveform">
                 {% csrf_token %}
 
                 <div class="card-body"> 
@@ -152,6 +152,11 @@
   });
 
   $(document).ready(function () {
+      $("#leaveform").submit(function () {
+        $(".submitBtn").attr("disabled", true);
+        return true;
+      });
+
       $('#button').click(function () {
           $("input[type='file']").trigger('click');
       })
