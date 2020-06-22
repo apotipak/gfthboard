@@ -39,6 +39,7 @@ class EmployeeM1817Form(forms.ModelForm):
     end_minute = forms.IntegerField(widget=forms.Select(choices=minute_range), initial="00")
 
     employee_type = forms.CharField(required=False, widget=forms.HiddenInput(), initial="M1817")
+    document = forms.FileField(required=False)
 
     class Meta:
         model = EmployeeInstance

@@ -50,7 +50,12 @@
                 <tbody>
                 {% for leave in object_list %}
                     <tr>                        
-                        <td>{{leave.leave_type}}</td>
+                        <td>
+                          {{leave.leave_type}}
+                          {% if leave.document %}
+                          &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip" aria-hidden="true"></i></a>
+                          {% endif %}
+                        </td>
                         <td>
                           {{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}}
                         </td>
