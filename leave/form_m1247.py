@@ -85,18 +85,12 @@ class EmployeeM1247Form(forms.ModelForm):
         end_minute = self.cleaned_data.get('end_minute')
         
         document = self.cleaned_data.get('document')
-        print("a")        
-        print(document)
-        print("b")
-
-        '''
         document_type = document.content_type.split('/')[0]
         if document_type in settings.CONTENT_TYPES:
             if document.size > settings.MAX_UPLOAD_SIZE:
                 raise forms.ValidationError(_('ไฟล์แนบมีขนาดเกิน 1 เมกะไบท์'))
         else:
             raise forms.ValidationError(_('แนบไฟล์รูปภาพได้เท่านั้น'))
-        '''
 
         username = self.user.username
         employee_type = 'M1'
