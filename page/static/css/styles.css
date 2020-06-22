@@ -28,3 +28,7 @@
 }
 
 /* File input style */
+.custom-file-input ~ .custom-file-label::after {
+    content: "แนบใบรับรองแพทย์" !important;
+    font-size: 14px;
+}
