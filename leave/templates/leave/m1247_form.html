@@ -151,7 +151,8 @@
         if ($(".submitBtn").attr('attempted') == 'true' ) {
           e.preventDefault();
         } else {
-          $(".submitBtn").html("Processing...");
+          $(".submitBtn").html("<i class='fa fa-hourglass-half' aria-hidden='true'></i>&nbsp;Processing...");
+          $(".submitBtn").attr("disabled", true);
           $(".submitBtn").attr("attempted", 'true');          
         }
       });
