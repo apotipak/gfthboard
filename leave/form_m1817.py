@@ -83,11 +83,7 @@ class EmployeeM1817Form(forms.ModelForm):
         end_hour = self.cleaned_data.get('end_hour')
         end_minute = self.cleaned_data.get('end_minute')
 
-        document = self.cleaned_data.get('document')
-        print("a")        
-        print(document)
-        print("b")
-        
+        document = self.cleaned_data.get('document')        
         document_type = document.content_type.split('/')[0]
         if document_type in settings.CONTENT_TYPES:
             if document.size > settings.MAX_UPLOAD_SIZE:
