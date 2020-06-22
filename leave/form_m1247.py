@@ -88,7 +88,7 @@ class EmployeeM1247Form(forms.ModelForm):
         document_type = document.content_type.split('/')[0]
         if document_type in settings.CONTENT_TYPES:
             if document.size > settings.MAX_UPLOAD_SIZE:
-                raise forms.ValidationError(_('ไฟล์แนบมีขนาดเกิน 1 เมกะไบท์'))
+                raise forms.ValidationError(_('ไฟล์แนบมีขนาดเกิน 5 เมกะไบท์'))
         else:
             raise forms.ValidationError(_('แนบไฟล์รูปภาพได้เท่านั้น'))
 
