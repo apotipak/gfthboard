@@ -13,6 +13,8 @@ from decimal import Decimal
 from django.db.models import Sum
 from .rules import *
 from django.utils.dateparse import parse_datetime
+from django import forms
+
 
 current_year = datetime.now().year
 standard_start_working_hour = 8
@@ -40,7 +42,7 @@ class EmployeeM1817Form(forms.ModelForm):
 
     class Meta:
         model = EmployeeInstance
-        fields = ['start_date', 'end_date', 'leave_type', 'lve_act', 'lve_act_hr']
+        fields = ['start_date', 'end_date', 'leave_type', 'lve_act', 'lve_act_hr', 'document']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')

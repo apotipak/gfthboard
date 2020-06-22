@@ -158,7 +158,10 @@ class EmployeeInstance(models.Model):
     updated_by = models.DecimalField(max_digits=7, decimal_places=0, blank=True, null=True)
     
     comment = models.TextField(blank=True, null=True)
-    
+
+    document = models.FileField(upload_to='documents/', null=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True, null=True)
+
     LEAVE_STATUS = (
         ('a', 'Approved'),
         ('p', 'Pending'),

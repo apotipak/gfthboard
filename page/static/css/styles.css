@@ -24,6 +24,27 @@
 }
 
 .main-header .navbar-nav .nav-item .nav-link-menubar {
-    color: rgba(0,0,0,.5);
-    padding: .5rem 1rem;
+    color: rgba(0,0,0,.5);    
 }
+
+/* File input style */
+.btn-file-upload{
+     width: 245px;
+     position:relative;
+ }
+
+.btn-file-upload:after{
+    content: attr(value);
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;    
+    width: 38%;
+    /*background: #008248;*/
+    background: #e9ecef;
+    color: black;
+    border-radius: 2px;
+    text-align: center;
+    font-size: 12.5px;
+    line-height: 2.5;
+ }

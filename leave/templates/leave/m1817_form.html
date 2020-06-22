@@ -40,11 +40,11 @@
             <!-- jquery validation -->
             <div class="card card-primary">
 
-              <form action="" method="post" autocomplete="off">
+              <form action="" method="post" autocomplete="off" enctype="multipart/form-data" class="md-form">
                 {% csrf_token %}
 
                 <div class="card-body"> 
-                  <div class="float-right"><a href="#"><small>แนบไฟล์</small>&nbsp;&nbsp;<i class="fas fa-paperclip"></i></a></div>
+
                   <div class="form-group">                                       
                     <label for="{{ form.leave_type.id_for_label }}">{{ form.leave_type.label }}</label>
                     {{ form.leave_type.errors }}
@@ -81,6 +81,33 @@
                       {{ form.end_hour }}
                       {{ form.end_minute }}                      
                     </div>
+
+                    <div class="input-group col-xs-12">
+                      <!--<a href="#"><small class="text-dark">แนบใบรับรองแพทย์</small>&nbsp;&nbsp;<i class="fas fa-paperclip"></i></a>&nbsp;-->
+                      
+                      <!--<input id="id_document" name="document" style="visibility:hidden;" type="file" class="filestyle">-->
+
+<!--<span  id="upfile1" style="cursor:pointer"><i class="fas fa-paperclip"></i></span>-->
+
+<!--
+<label class="btn btn-primary">
+  <i class="fas fa-paperclip"></i> แนบไฟล์<input type="file" id="id_document" name="document" style="display: none;"  name="image">
+</label>
+-->
+
+<!--
+<label for=id_document>
+  <i class="fas fa-paperclip"></i>  <u>Your</u> caption here
+  <input style='width:0px' type=file name=upfile id=id_document onchange='optionalExtraProcessing(id_document.files[0])' accept='image/png'>
+</label>
+-->
+
+<input type="file" id="id_document" name="document" class="btn-file-upload" value="ใบรับรองแพทย์" accept='image/png' />
+
+
+
+                    </div>
+
 
                     <div class="text-danger">{{ form.end_date.errors }}</div>
 
@@ -136,6 +163,10 @@
   <script>
 
   $(document).ready(function () {
+      $("#upfile1").click(function () {
+        $("#id_document").trigger('click');
+      });
+
       var datepicker_date_format = "yy-mm-dd";
       var selected_end_hour = $("select#id_end_hour").val();
 
