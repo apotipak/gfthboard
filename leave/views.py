@@ -28,6 +28,7 @@ from .rules import *
 from .forms import EmployeeForm
 from .form_m1817 import EmployeeM1817Form
 from .form_m1247 import EmployeeM1247Form
+from django.core.files.storage import FileSystemStorage
 
 
 excluded_username = {'900590','580816','900630'}
@@ -117,7 +118,7 @@ def EmployeeNew(request):
     
     if request.method == "POST":
         if request.user.groups.filter(name__in=['E-Leave Staff', 'E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
-            form = EmployeeM1817Form(request.POST, user=request.user)
+            form = EmployeeM1817Form(request.POST, request.FILES, user=request.user)
             render_template_name = 'leave/m1817_form.html'
         elif request.user.groups.filter(name__in=['E-Leave-M1247-Staff', 'E-Leave-M1247-Manager']).exists():
             form = EmployeeM1247Form(request.POST, user=request.user)

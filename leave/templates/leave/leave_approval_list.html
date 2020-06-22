@@ -41,7 +41,7 @@
                         <th scope="col">ประเภท</th>
                         <th scope="col">ลาวันที่</th>
                         <th scope="col">จำนวน</th>
-                        <th scope="col">วันที่ขอ</th>
+                        <th scope="col">วันที่ส่ง</th>
                         <td scope="col">&nbsp;</td>
                     </tr>
                 </thead>
@@ -49,7 +49,12 @@
                 {% for leave in object_list %}
                     <tr>
                         <td>{{leave.emp_fname_th}} {{leave.emp_lname_th}}</td>
-                        <td>{{leave.leave_type}}</td>
+                        <td>
+                          {{leave.leave_type}}
+                          {% if leave.document %}
+                            &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip" aria-hidden="true"></i></a>
+                          {% endif %}                          
+                        </td>
                         <td>{{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}}</td>
                         <td>
                         {% if leave.lve_act != 0 %}

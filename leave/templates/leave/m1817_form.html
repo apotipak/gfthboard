@@ -40,15 +40,15 @@
             <!-- jquery validation -->
             <div class="card card-primary">
 
-              <form action="" method="post" autocomplete="off">
+              <form action="" method="post" autocomplete="off" enctype="multipart/form-data" class="md-form">
                 {% csrf_token %}
 
                 <div class="card-body"> 
 
-                  <div class="form-group">                    
+                  <div class="form-group">                                       
                     <label for="{{ form.leave_type.id_for_label }}">{{ form.leave_type.label }}</label>
                     {{ form.leave_type.errors }}
-                    {{form.leave_type}} 
+                    {{form.leave_type}}
                   </div>
 
                   <div class="form-group">                                        
@@ -82,6 +82,13 @@
                       {{ form.end_minute }}                      
                     </div>
 
+                    {% if request.user.username == '900662' %}
+                    <div class="input-group col-xs-12 text-left">
+                      <span id='button'>แนบไฟล์&nbsp;&nbsp;<i class="fa fa-paperclip" aria-hidden="true"></i></span>
+                      <input id="id_document" name="document" type='file' accept='image/png, image/jpeg'>
+                      <span id='val'></span>                      
+                    </div>
+                    {% endif %}
                     <div class="text-danger">{{ form.end_date.errors }}</div>
 
                   </div>                
@@ -136,6 +143,13 @@
   <script>
 
   $(document).ready(function () {
+      $('#button').click(function () {
+          $("input[type='file']").trigger('click');
+      })
+      $("input[type='file']").change(function () {
+          $('#val').text(this.value.replace(/C:\\fakepath\\/i, ''))
+      })
+
       var datepicker_date_format = "yy-mm-dd";
       var selected_end_hour = $("select#id_end_hour").val();
 
@@ -264,7 +278,7 @@
             d1 = moment(start_date).format("MMMM D,  " + start_hour + ":" + start_minute);
             d2 = moment(end_date).format("MMMM D,  " + end_hour + ":" + end_minute);
 
-            $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br><small>เริ่ม&nbsp;</small><strong>" + d1 + "</strong>&nbsp;ถึง&nbsp;<strong>" + d2 + "</strong></div><div>หากข้อมูลถูกต้องแล้วให้ทำการคลิกปุ่มส่งใบลาเพื่อขออนุมัติ</div>");
+            $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>เริ่ม&nbsp;<strong>" + d1 + "</strong>&nbsp;ถึง&nbsp;<strong>" + d2 + "</strong></div><div>หากข้อมูลถูกต้องแล้วให้ทำการคลิกปุ่มส่งใบลาเพื่อขออนุมัติ</div>");
 
           } else {
             $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + data.error + "</strong></div>");
