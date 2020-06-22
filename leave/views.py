@@ -36,19 +36,6 @@ current_year = datetime.now().year
 
 
 @login_required(login_url='/accounts/login/')
-def simple_upload(request):
-    if request.method == 'POST' and request.FILES['myfile']:
-        myfile = request.FILES['myfile']
-        fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
-        uploaded_file_url = fs.url(filename)
-        return render(request, 'core/simple_upload.html', {
-            'uploaded_file_url': uploaded_file_url
-        })
-    return render(request, 'core/simple_upload.html')
-
-
-@login_required(login_url='/accounts/login/')
 def m1817_check_leave_request_day(request):
     result = {}
     total_day = 0
