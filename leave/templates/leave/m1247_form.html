@@ -40,10 +40,11 @@
             <!-- jquery validation -->
             <div class="card card-primary">
 
-              <form action="" method="post" autocomplete="off">
+              <form action="" method="post" autocomplete="off" enctype="multipart/form-data" class="md-form">
                 {% csrf_token %}
 
-                <div class="card-body">                  
+                <div class="card-body">      
+
                   <div class="form-group">                    
                     <label for="{{ form.leave_type.id_for_label }}">{{ form.leave_type.label }}</label>
                     {{ form.leave_type.errors }}
@@ -81,6 +82,11 @@
                       {{ form.end_minute }}                      
                     </div>
                     
+                    <div class="input-group col-xs-12 .hidden-md-down text-left">
+                      <span id='button'>แนบไฟล์&nbsp;&nbsp;<i class="fa fa-paperclip" aria-hidden="true"></i></span>&nbsp;&nbsp;
+                      <input id="id_document" name="document" type='file' accept='image/png, image/jpeg'>
+                    </div>
+
                     <div class="text-danger">{{ form.end_date.errors }}</div>
 
                   </div>                
@@ -114,9 +120,6 @@
                     <button type="submit" class="btn btn-success">ส่งใบลา</button>
                   </div>
                 </div>
-
-                <input type="hidden" id="id_employee_type" name="id_employee_type" value="{{ employee_type }}">
-
               </form>
 
 
@@ -136,6 +139,13 @@
 {% block javascript %}
   <script>
   $(document).ready(function () {
+      $('#button').click(function () {
+          $("input[type='file']").trigger('click');
+      })
+      $("input[type='file']").change(function () {
+          $('#val').text(this.value.replace(/C:\\fakepath\\/i, ''))
+      })
+
       $("#id_start_date").datepicker({
           dateFormat: "yy-mm-dd",
           minDate: -30,
