@@ -82,10 +82,15 @@
                       {{ form.end_minute }}                      
                     </div>
 
-                    <div class="input-group col-xs-12">
-                      <input type="file" id="id_document" name="document" class="btn-file-upload" value="ใบรับรองแพทย์" accept='image/png, image/jpeg' />
+                    <div class="input-group col-xs-12 text-left">
+                      <!--<input type="file" id="id_document" style="display:none;" name="document" class="btn-file-upload" value="ใบรับรองแพทย์" accept='image/png, image/jpeg' />-->
+                      
+                      <!--<input id="id_document" name="document" type="file" class="fullwidth input rqd" />-->
+                      <span id='button'>แนบไฟล์&nbsp;&nbsp;<i class="fa fa-paperclip" aria-hidden="true"></i></span>
+                      <input id="id_document" name="document" type='file' accept='image/png, image/jpeg'>
+                      <span id='val'></span>
+                      
                     </div>
-
 
                     <div class="text-danger">{{ form.end_date.errors }}</div>
 
@@ -141,9 +146,25 @@
   <script>
 
   $(document).ready(function () {
-      $("#upfile1").click(function () {
-        $("#id_document").trigger('click');
-      });
+      /*
+      $(function () {
+           $('input[type="file"]').change(function () {
+                if ($(this).val() != "") {
+                       $(this).css('color', '#333');
+                }else{
+                       $(this).css('color', 'transparent');
+                }
+           });
+      })
+      */
+
+      $('#button').click(function () {
+          $("input[type='file']").trigger('click');
+      })
+
+      $("input[type='file']").change(function () {
+          $('#val').text(this.value.replace(/C:\\fakepath\\/i, ''))
+      })
 
       var datepicker_date_format = "yy-mm-dd";
       var selected_end_hour = $("select#id_end_hour").val();

@@ -28,23 +28,41 @@
 }
 
 /* File input style */
-.btn-file-upload{
-     width: 245px;
-     position:relative;
- }
+/*input[type="file"]{
+    color: transparent;
+}*/
 
-.btn-file-upload:after{
-    content: attr(value);
-    position: absolute;
+input[type='file'] {
+    width:96px;
+    height:25px;
+    opacity:0
+}
+#val {
+    width: 200px;
+    height:25px;
+    position: relative;
     top: 0;
     left: 0;
-    bottom: 0;    
-    width: 38%;
-    /*background: #008248;*/
-    background: #e9ecef;
+    font-size:13px;
+    line-height: 25px;
+    text-indent: 0px;
+    text-align: left;
+    pointer-events: none;
+}
+#button {
+    cursor: pointer;
+    display: block;
+    width: 90px;
+    background-color: #e9ecef;
+    height:25px;
     color: black;
-    border-radius: 2px;
+    position: absolute;
+    /*right:0;*/
+    top: 0;
+    font-size: 11px;
+    line-height:25px;
     text-align: center;
-    font-size: 12.5px;
-    line-height: 2.5;
- }
+    -webkit-transition: 500ms all;
+    -moz-transition: 500ms all;
+    transition: 500ms all;
+}
