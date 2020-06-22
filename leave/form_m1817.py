@@ -83,13 +83,14 @@ class EmployeeM1817Form(forms.ModelForm):
         end_hour = self.cleaned_data.get('end_hour')
         end_minute = self.cleaned_data.get('end_minute')
 
-        document = self.cleaned_data.get('document')        
-        document_type = document.content_type.split('/')[0]
-        if document_type in settings.CONTENT_TYPES:
-            if document.size > settings.MAX_UPLOAD_SIZE:
-                raise forms.ValidationError(_('ไฟล์แนบมีขนาดเกิน 5 เมกะไบท์'))
-        else:
-            raise forms.ValidationError(_('แนบไฟล์รูปภาพได้เท่านั้น'))
+        document = self.cleaned_data.get('document')
+        if document is not None:
+            document_type = document.content_type.split('/')[0]
+            if document_type in settings.CONTENT_TYPES:
+                if document.size > settings.MAX_UPLOAD_SIZE:
+                    raise forms.ValidationError(_('ไฟล์แนบมีขนาดเกิน 5 เมกะไบท์'))
+            else:
+                raise forms.ValidationError(_('แนบไฟล์รูปภาพได้เท่านั้น'))
 
         username = self.user.username
         employee_type = 'M1'
