@@ -29,5 +29,8 @@
 
 /* File input style */
 .custom-file-input ~ .custom-file-label::after {
-    content: "แนบใบรับรองแพทย์" !important;
+    content: '\f15c \0020 แนบใบรับรองแพทย์' !important;
+    font-family: "Font Awesome 5 Free";
+    font-style: normal;
+    font-size: 13px;
 }
