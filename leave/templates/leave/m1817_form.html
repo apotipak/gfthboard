@@ -210,9 +210,13 @@
         }
       }); 
 
-      $("#id_start_date").datepicker({
+      var today = new Date();
+      var lastDate = new Date(today.getFullYear() + 0, 11, 31);
+
+      $("#id_start_date").datepicker({          
           dateFormat: datepicker_date_format,
-          minDate: -30,
+          minDate: -45,
+          maxDate: lastDate,
           onSelect: function () {
               var dt2 = $('#id_end_date');
               var startDate = $(this).datepicker('getDate');
@@ -241,7 +245,8 @@
       
       $('#id_end_date').datepicker({
         dateFormat: datepicker_date_format,
-        minDate: 0
+        minDate: 0,
+        maxDate: lastDate
       }).attr('readonly', 'readonly');
      
   });
