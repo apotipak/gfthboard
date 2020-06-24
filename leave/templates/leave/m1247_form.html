@@ -177,9 +177,13 @@
           $('#val').text(this.value.replace(/C:\\fakepath\\/i, ''))
       })
 
+      var today = new Date();
+      var lastDate = new Date(today.getFullYear() + 0, 11, 31);
+
       $("#id_start_date").datepicker({
           dateFormat: "yy-mm-dd",
-          minDate: -30,
+          minDate: -45,
+          maxDate: lastDate,
           onSelect: function () {
               var dt2 = $('#id_end_date');
               var startDate = $(this).datepicker('getDate');
@@ -204,17 +208,13 @@
               dt2.datepicker('option', 'maxDate', startDate);
               //first day which can be selected in dt2 is selected date in dt1
               dt2.datepicker('option', 'minDate', minDate);
-
-            //var date = $(this).datepicker('getDate');
-            //date.setDate(date.getDate() + 1, 0);
-            //$('#id_end_date').val($.datepicker.formatDate('yy-mm-dd', date));
-
           }
       }).attr('readonly', 'readonly');
       
       $('#id_end_date').datepicker({
           dateFormat: "yy-mm-dd",
-          minDate: 0
+          minDate: 0,
+          maxDate: lastDate
       }).attr('readonly', 'readonly');
   });
 
