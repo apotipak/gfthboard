@@ -62,12 +62,13 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
+        Welcome&nbsp;
         <a href="{% url 'staff-profile' %}" class="nav-link-menubar active">
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated %}                
                 {% if user.is_superuser %}
-                    Welcome <span class="text-primary"><b>Admin</b></span>
+                     <span class="text-primary"><b><a href="#">Admin</a></b></span>
                 {% else %}
-                    Welcome <span class="text-primary"><b>{{ user.get_short_name }}</b></span>
+                    <span class="text-primary"><b><a href="#">{{ user.get_short_name }}</a></b></span>
                 {% endif %}
             {% endif %}
         </a>
@@ -76,12 +77,11 @@
       <!-- Notifications Dropdown Menu -->
       {% include "notification.html" %}
 
-
       <li class="nav-item">
         <!--<a class="nav-link-menubar" href="/">Home</a>
         <a class="nav-link-menubar" href="#">Contact</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a class="nav-link-menubar" href="{% url 'logout'%}?next=/accounts/login"><i class="fas fa-sign-out-alt"></i>&nbsp;Sign Out</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-out-alt text-secondary"></i>
+        <a class="nav-link-menubar text-primary" href="{% url 'logout'%}?next=/accounts/login">Sign Out</a>
 
       </li>
 
