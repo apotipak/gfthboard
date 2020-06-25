@@ -1,7 +1,7 @@
 {% extends "page_base_index.html" %}
 {% block title %}หน้าแรก{% endblock %}
 {% load static %}
-
+{% load i18n %}
 {% block content %}
       <div class="container">
 
@@ -15,10 +15,10 @@
                 <div class="col-12">
                   <h4><span class="info-box-text">E-Leave</span></h4>
                   <div>
-                    <span class="info-box-number"><small>ระบบลางานออนไลน์ <br>
-                      <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">คู่มือการใช้</a><br>
-                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_v001_help.pdf' %}" target="_blank">ดาวน์โหลด</a></small>
-                      <a href="{% url 'leave_policy' %}" type="button" class="btn btn-outline-primary float-right">ใช้งาน</a>
+                    <span class="info-box-number"><small>{% trans 'Leave request system' %} <br>
+                      <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a><br>
+                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_v001_help.pdf' %}" target="_blank">{% trans 'Download' %}</a></small>
+                      <a href="{% url 'leave_policy' %}" type="button" class="btn btn-outline-primary float-right">{% trans 'Open' %}</a>
                     </span>
                   </div>
                 </div>
@@ -35,10 +35,10 @@
                 <div class="col-12">
                   <h4><span class="info-box-text">Daily Guard Info</span></h4>
                   <div>
-                    <span class="info-box-number"><small>ตรวจสอบตารางเวร</small>
+                    <span class="info-box-number"><small>{% trans 'Check clock-in time system' %}</small>
                       <br>
                       <br>
-                      <a href="contract/contract-list" type="button" class="btn btn-outline-primary float-right">ใช้งาน</a>
+                      <a href="contract/contract-list" type="button" class="btn btn-outline-primary float-right">{% trans 'Open' %}</a>
                     </span>
                   </div>
                 </div>

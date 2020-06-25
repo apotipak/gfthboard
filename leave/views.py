@@ -25,10 +25,12 @@ from django.utils.dateparse import parse_datetime
 from django.http import JsonResponse
 from post_office import mail
 from .rules import *
+from page.rules import *
 from .forms import EmployeeForm
 from .form_m1817 import EmployeeM1817Form
 from .form_m1247 import EmployeeM1247Form
 from django.core.files.storage import FileSystemStorage
+from django.utils import translation
 
 
 excluded_username = {'900590','580816','900630'}
@@ -412,6 +414,9 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
 
 @login_required(login_url='/accounts/login/')
 def LeavePolicy(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
@@ -486,6 +491,9 @@ def LeavePolicy(request):
 
 @permission_required('leave.approve_leaveplan', login_url='/accounts/login/')
 def LeaveApproval(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
@@ -549,6 +557,9 @@ class LeaveApprovalListView(generic.ListView):
 
 #@permission_required('leave.approve_leaveplan')
 def EmployeeInstanceApprove(request, pk):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
@@ -625,6 +636,9 @@ def EmployeeInstanceApprove(request, pk):
 
 #@permission_required('leave.approve_leaveplan')
 def EmployeeInstanceReject(request, pk):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
@@ -714,6 +728,9 @@ def get_leave_reject_comment(request, pk):
 
 @login_required(login_url='/accounts/login/')
 def LeaveTimeline(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME

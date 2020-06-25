@@ -20,11 +20,11 @@ class UserForm(ModelForm):
 		self.confirm_new_password = kwargs.pop('confirm_new_password', None)
 		super(UserForm, self).__init__(*args, **kwargs)
 		self.fields['password'].widget.attrs = {'class': 'form-control'}
-		self.fields['password'].widget.attrs['placeholder'] = "ป้อนรหัสผ่านเก่า"
+		self.fields['password'].widget.attrs['placeholder'] = _("Enter old password")
 		self.fields['new_password'].widget.attrs = {'class': 'form-control'}
-		self.fields['new_password'].widget.attrs['placeholder'] = "ป้อนรหัสผ่านใหม่"
+		self.fields['new_password'].widget.attrs['placeholder'] = _("Enter new password")
 		self.fields['confirm_new_password'].widget.attrs = {'class': 'form-control'}
-		self.fields['confirm_new_password'].widget.attrs['placeholder'] = "ป้อนรหัสผ่านใหม่อีกครั้ง"
+		self.fields['confirm_new_password'].widget.attrs['placeholder'] = _("Reenter new password")
 
 	def clean(self):
 		cleaned_data = super(UserForm, self).clean()
@@ -37,7 +37,7 @@ class UserForm(ModelForm):
 		if userobj.check_password(password):
 			if re.match(r"^(?=.*[\d])(?=.*[a-z])(?=.*[@#$])[\w\d@#$]{6,12}$", new_password):							
 				if new_password != confirm_new_password:
-					raise forms.ValidationError("รหัสผ่านใหม่ไม่ตรงกัน")
+					raise forms.ValidationError(_("New password is name same"))
 				else:
 					if new_password == password:
 						raise forms.ValidationError("รหัสผ่านใหม่ซ้ำกับรหัสผ่านเก่า")	
@@ -48,7 +48,7 @@ class UserForm(ModelForm):
 				raise forms.ValidationError("รหัสใหม่ควรยาวอย่างน้อย 6 ตัวอักษร และประกอบด้วย ตัวเลข ตัวหนังสือ สัญลักษณ์")			
 
 		else:
-			raise forms.ValidationError("รหัสเก่าไม่ถูกต้อง")
+			raise forms.ValidationError(_("Incorrect old password"))
 
 
 		return cleaned_data
