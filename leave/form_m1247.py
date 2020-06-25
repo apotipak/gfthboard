@@ -57,7 +57,7 @@ class EmployeeM1247Form(forms.ModelForm):
         self.initial['start_date'] = datetime.now().strftime("%Y-%m-%d")
         self.fields['start_date'].widget.attrs['placeholder'] = "YYYY-MM-DD"        
         self.fields['start_hour'].widget.attrs={'class': 'form-control border-top-0 border-left-0 rounded-0'}
-        self.initial['start_hour'] = 0
+        self.initial['start_hour'] = 8
         self.fields['start_minute'].widget.attrs={'class': 'form-control border-top-0 rounded-0'}
         self.initial['start_minute'] = 0
 
@@ -65,9 +65,9 @@ class EmployeeM1247Form(forms.ModelForm):
         self.initial['end_date'] = datetime.now().strftime("%Y-%m-%d") #default_end_date.strftime("%Y-%m-%d")
         self.fields['end_date'].widget.attrs['placeholder'] = "YYYY-MM-DD"        
         self.fields['end_hour'].widget.attrs={'class': 'form-control border-top-0 border-left-0 rounded-0'}
-        self.initial['end_hour'] = 23
+        self.initial['end_hour'] = 17
         self.fields['end_minute'].widget.attrs={'class': 'form-control border-top-0 rounded-0'}
-        self.initial['end_minute'] = 59
+        self.initial['end_minute'] = 0
 
     def clean(self):
         datetime_format = "%Y-%m-%d %H:%M:%S"
@@ -161,7 +161,7 @@ class EmployeeM1247Form(forms.ModelForm):
                 holiday_list = str(list(queryset)).replace("'", '')
                 if len(queryset) > 0:
                     #raise forms.ValidationError({'start_date': "เลือกวันลาตรงกับวันหยุด - " + str(holiday_list)})
-                    raise forms.ValidationError(_("เลือกวันลาตรงกับวันหยุดนักขัตฤกษ์ - " + str(holiday_list)))
+                    raise forms.ValidationError(_("ช่วงวันลาตรงกับวันหยุดนักขัตฤกษ์ - " + str(holiday_list)))
 
             # RULE 4: Check not allow over month
             if(checkLeaveRequestOverMonth("M1", start_date, end_date)):

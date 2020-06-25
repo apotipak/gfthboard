@@ -84,7 +84,7 @@ def m1247_check_leave_request_day(request):
 
     count = checkM1247TotalHours("m1247", start_date, end_date, leave_type_id)
     
-    print("count : " + str(count))
+    print("count1 : " + str(count))
 
     if count != 0:
         if count.is_integer():
@@ -100,6 +100,12 @@ def m1247_check_leave_request_day(request):
                 'total_hour' : count % 8,
                 'error' : "ช่วงวันลามีเศษครึ่งชั่วโมง",
             }
+    else:
+        result = {
+            'total_day' : count // 8,
+            'total_hour' : count % 8,
+            'error' : "เลือกช่วงวันลาไม่ถูกต้อง",
+        }
 
     return JsonResponse(result)
 
@@ -117,6 +123,7 @@ def EmployeeNew(request):
     # render_template_name = 'leave/employeeinstance_form.html'
     
     if request.method == "POST":
+        '''        
         if request.user.groups.filter(name__in=['E-Leave Staff', 'E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
             form = EmployeeM1817Form(request.POST, request.FILES, user=request.user)
             render_template_name = 'leave/m1817_form.html'
@@ -125,6 +132,10 @@ def EmployeeNew(request):
             render_template_name = 'leave/m1247_form.html'
         else:
             form = EmployeeForm(request.POST, user=request.user)
+        '''
+
+        form = EmployeeM1247Form(request.POST, request.FILES, user=request.user)
+        render_template_name = 'leave/m1247_form.html'
 
         if form.is_valid():           
             start_date = form.cleaned_data['start_date']
@@ -155,7 +166,7 @@ def EmployeeNew(request):
             employee.emp_id = request.user.username
             employee.created_by = request.user.username
 
-
+            '''
             if request.user.groups.filter(name__in=['E-Leave Staff','E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
                 grand_total_hours = checkM1817BusinessRules('M1817', start_date, end_date, leave_type_id)
                 employee.lve_act = grand_total_hours // 8
@@ -169,6 +180,17 @@ def EmployeeNew(request):
 
                 employee.lve_act = grand_total_hours // 8
                 employee.lve_act_hr = grand_total_hours % 8
+            '''
+            
+            found_m1247_error = checkM1247BusinessRules('M1247', start_date, end_date, leave_type_id)
+            if found_m1247_error[0]:
+                raise forms.ValidationError(found_m1247_error[1])
+            else:
+                grand_total_hours = found_m1247_error[1]
+
+            employee.lve_act = grand_total_hours // 8
+            employee.lve_act_hr = grand_total_hours % 8
+
 
             employee.save()
             ref = employee.id 
@@ -213,7 +235,7 @@ def EmployeeNew(request):
             return HttpResponseRedirect('/leave/leave-history/?submitted=True')
               
     else:
-
+        '''
         if request.user.groups.filter(name__in=['E-Leave Staff', 'E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
             form = EmployeeM1817Form(user=request.user)            
             render_template_name = 'leave/m1817_form.html'
@@ -222,7 +244,11 @@ def EmployeeNew(request):
             render_template_name = 'leave/m1247_form.html'
         else:
             form = EmployeeForm(user=request.user)
-    
+        '''
+
+        form = EmployeeM1247Form(user=request.user)
+        render_template_name = 'leave/m1247_form.html'
+        
     # Check number of waiting leave request
     waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))    
     
