@@ -8,19 +8,22 @@ from django.contrib.auth.models import User
 from .forms import UserForm, LanguageForm
 from django.http import HttpResponse
 from leave.rules import *
+from page.rules import *
 from django.contrib import messages
 from django.utils.translation import ugettext as _
+from django.utils import translation
 
 
 @login_required(login_url='/accounts/login/')
-def index(request):
-	page_title = settings.PROJECT_NAME
-	db_server = settings.DATABASES['default']['HOST']
-	project_name = settings.PROJECT_NAME
-	project_version = settings.PROJECT_VERSION
-	today_date = settings.TODAY_DATE
-
-	return render(request, 'index.html', {
+def index(request):    
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+    page_title = settings.PROJECT_NAME    
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE    
+    return render(request, 'index.html', {
         'page_title': page_title, 
         'project_name': project_name, 
         'project_version': project_version, 
@@ -29,6 +32,9 @@ def index(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffProfile(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
@@ -57,6 +63,9 @@ def StaffProfile(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffPassword(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
@@ -86,6 +95,9 @@ def StaffPassword(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffLanguage(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
@@ -127,6 +139,9 @@ def StaffLanguage(request):
 
 @login_required(login_url='/accounts/login/')
 def HelpEleave(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
