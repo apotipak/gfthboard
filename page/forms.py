@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from django.contrib.auth.models import User
+from .models import UserProfile
 from django import forms
 import re
 
@@ -89,3 +90,22 @@ class UserForm(ModelForm):
 		else:
 			raise forms.ValidationError("กรุณาป้อนรหัสผ่านใหม่อีกครั้ง")
 	'''
+
+class LanguageForm(ModelForm):
+	language_options = (('en','en'),('th','th'))
+	language_code = forms.CharField(max_length=2, widget=forms.Select(choices=language_options), initial=0)	
+
+	class Meta:
+		model = UserProfile
+		fields = ['language']
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user')
+		super(LanguageForm, self).__init__(*args, **kwargs)
+		self.fields['language_code'].widget.attrs={'class': 'form-control'}
+        
+	def clean(self):
+		cleaned_data = super(UserForm, self).clean()
+		language = self.cleaned_data.get('language_code')
+
+		return cleaned_data

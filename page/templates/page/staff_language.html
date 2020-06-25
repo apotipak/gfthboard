@@ -1,0 +1,96 @@
+{% extends "page_base_generic.html" %}
+
+{% block title %}เปลี่ยนภาษา{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            &nbsp;
+          </div><!-- /.col -->
+
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
+              <li class="breadcrumb-item active">ตั้งค่าภาษา</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card card-primary">
+
+              <form action="" method="post" autocomplete="off">
+                {% csrf_token %}
+
+                <div class="card-body">                  
+
+                  <!--
+                  <div class="form-group">                                       
+                    <label for="{{ form.language_code.id_for_label }}">{{ form.language_code.label }}</label>
+                    {{ form.language_code.errors }}
+                    {{form.language_code}}
+                  </div>
+
+                  <div class="container-fluid mb-12">
+                  {% if form.errors %}
+                      {% for field in form %}
+                          {% for error in field.errors %}
+                              <div class="alert alert-danger">
+                                  <strong><i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}</strong>
+                              </div>
+                          {% endfor %}
+                      {% endfor %}
+                      {% for error in form.non_field_errors %}
+                          <div class="alert alert-danger">
+                              <strong><i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}</strong>
+                          </div>
+                      {% endfor %}
+                  {% endif %}
+                  </div> 
+                </div>
+
+
+                <div class="card-footer text-right">                 
+                  <button type="submit" class="btn btn-success">ตกลง</button>
+                </div>
+                -->
+                
+              </form>
+
+
+            </div>
+          </div>
+          
+        </div>
+        <!-- /.row -->
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+  </div>
+  <!-- /.content-wrapper -->
+
+{% endblock %}
