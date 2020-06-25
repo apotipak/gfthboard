@@ -258,7 +258,8 @@ def checkM1247BusinessRules(employee_type, start_date, end_date, leave_type_id):
 
 	leave_type_include_weekend_list = {'6', '7', '10', '11', '13', '15'}
 	if leave_type_id not in leave_type_include_weekend_list:
-		excluded_day = {5, 6}
+		#excluded_day = {5, 6}
+		excluded_day = {}
 	else:
 		excluded_day = {}
 
