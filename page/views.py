@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from .forms import UserForm, LanguageForm
 from django.http import HttpResponse
 from leave.rules import *
+from django.contrib import messages
+from django.utils.translation import ugettext as _
 
 
 @login_required(login_url='/accounts/login/')
@@ -91,13 +93,25 @@ def StaffLanguage(request):
     today_date = settings.TODAY_DATE    
 
     form = LanguageForm(request.POST, user=request.user)
- 
+
     if request.method == "POST":
-        if form.is_valid():            
+        if form.is_valid():
             language_code = form.cleaned_data['language_code']
-            u = UserProfile.objects.get(username__exact=request.user)
-            u.set_language(language_code)
-            u.save()
+            username = request.user.username
+            userid = request.user.id
+
+            if not UserProfile.objects.filter(username=username).exists():
+                print("debug 1")
+                UserProfile.objects.create(language=language_code, updated_by_id=userid, username=username)
+            else:
+                print("debug 2")
+                employee = UserProfile.objects.get(username=username)
+                employee.language = language_code
+                employee.updated_by_id = userid
+                employee.username = username
+                employee.save()
+            
+            messages.success(request, _('A new language has been set.'))
             return HttpResponseRedirect('/staff-language')
     else:
         form = LanguageForm(user=request.user)    

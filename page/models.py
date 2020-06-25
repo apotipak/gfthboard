@@ -3,6 +3,6 @@ from django.contrib.auth.models import User
 
 
 class UserProfile(models.Model):
-   user = models.OneToOneField(User, on_delete=models.CASCADE)
-   language = models.CharField(max_length=2, blank=True, null=True)   
-
+   language = models.CharField(max_length=2, blank=True, null=True)
+   username = models.CharField(max_length=10, blank=True, null=True)
+   updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

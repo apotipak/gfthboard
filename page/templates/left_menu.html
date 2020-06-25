@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -51,14 +52,14 @@
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-language' %}" class="nav-link active">
                 &nbsp;&nbsp;<i class="fas fa-font"></i>&nbsp;&nbsp;&nbsp;
-                <p>ตั้งค่าภาษา</p>
+                <p>{% trans 'Set Default Language' %}</p>
               </a>
             </li>
             {% else %}
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-language' %}" class="nav-link">
                 &nbsp;&nbsp;<i class="fas fa-font"></i>&nbsp;&nbsp;&nbsp;
-                <p>ตั้งค่าภาษา</p>
+                <p>{% trans 'Set Default Language' %}</p>
               </a>
             </li>
             {% endif %}
