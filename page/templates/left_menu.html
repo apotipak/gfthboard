@@ -20,14 +20,14 @@
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-profile' %}" class="nav-link active">
                 &nbsp;&nbsp;<i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;
-                <p>โปรไฟล์</p>
+                <p>{% trans 'Profile' %}</p>
               </a>
             </li>
             {% else%}
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-profile' %}" class="nav-link">
                 &nbsp;&nbsp;<i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;
-                <p>โปรไฟล์</p>
+                <p>{% trans 'Profile' %}</p>
               </a>
             </li>          
             {% endif %}
@@ -36,14 +36,14 @@
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-password' %}" class="nav-link active">
                 &nbsp;&nbsp;<i class="fas fa-key"></i>&nbsp;&nbsp;&nbsp;
-                <p>เปลี่ยนรหัสผ่าน</p>
+                <p>{% trans 'Change Password' %}</p>
               </a>
             </li>
             {% else %}
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-password' %}" class="nav-link">
                 &nbsp;&nbsp;<i class="fas fa-key"></i>&nbsp;&nbsp;&nbsp;
-                <p>เปลี่ยนรหัสผ่าน</p>
+                <p>{% trans 'Change Password' %}</p>
               </a>
             </li>
             {% endif %}

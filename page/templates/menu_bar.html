@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -38,7 +39,7 @@
           &nbsp;
         </div>
         <div class="float-right">
-          <h3>โปรไฟล์</h3>
+          <h3>{% trans 'Profile' %}</h3>
         </div>                  
         <div class="clearfix"></div>
         </div>        
@@ -50,7 +51,19 @@
           &nbsp;
         </div>
         <div class="float-right">
-          <h3>เปลี่ยนรหัสผ่าน</h3>
+          <h3>{% trans 'Change Password' %}</h3>
+        </div>                  
+        <div class="clearfix"></div>
+        </div>        
+        {% endif %}
+
+        {% if request.path|slice:":15" == '/staff-language' %}
+        <div>
+        <div class="float-left">
+          &nbsp;
+        </div>
+        <div class="float-right">
+          <h3>Set Display Language</h3>
         </div>                  
         <div class="clearfix"></div>
         </div>        
