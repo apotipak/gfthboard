@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-25 15:18+0700\n"
+"POT-Creation-Date: 2020-06-25 15:39+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1351,6 +1351,16 @@ msgstr "ชื่อ-สกุล"
 msgid "Position"
 msgstr "ตำแหน่ง"
 
-#: .\page\views.py:114
+#: .\page\views.py:126
 msgid "A new language has been set."
 msgstr ""
+
+#: .\templates\registration\login.html:59
+msgid "Employee ID"
+msgstr ""
+
+#: .\templates\registration\login.html:68
+#, fuzzy
+#| msgid "Change Password"
+msgid "Password"
+msgstr "เปลี่ยนรหัสผ่าน"
