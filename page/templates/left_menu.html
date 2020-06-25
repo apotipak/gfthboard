@@ -46,6 +46,24 @@
               </a>
             </li>
             {% endif %}
+
+
+            {% if request.path|slice:":15" == '/staff-language' %}
+            <li class="nav-item has-treeview active menu-open">
+              <a href="{% url 'staff-language' %}" class="nav-link active">
+                &nbsp;&nbsp;<i class="fas fa-key"></i>&nbsp;&nbsp;&nbsp;
+                <p>ตั้งค่าภาษา</p>
+              </a>
+            </li>
+            {% else %}
+            <li class="nav-item has-treeview active menu-open">
+              <a href="{% url 'staff-language' %}" class="nav-link">
+                &nbsp;&nbsp;<i class="fas fa-key"></i>&nbsp;&nbsp;&nbsp;
+                <p>ตั้งค่าภาษา</p>
+              </a>
+            </li>
+            {% endif %}
+
           {% endif %}
 
           {% if request.path|slice:":7" == '/leave/' %}
