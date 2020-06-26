@@ -1573,10 +1573,9 @@ msgid "Set Default Language"
 msgstr "เลือกแสดงภาษา"
 
 #: .\page\templates\left_menu.html:139 .\page\templates\left_menu.html:240
-#, fuzzy
 #| msgid "Leave request system"
 msgid "Leave Request List"
-msgstr "ระบบลางานออนไลน์"
+msgstr "อนุมัติใบลา"
 
 #: .\page\templates\left_menu.html:219
 #, fuzzy

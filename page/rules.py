@@ -10,7 +10,7 @@ def getDefaultLanguage(username):
 		try:
 			default_language = UserProfile.objects.filter(username=username).values_list('language', flat=True).get()
 		except UserProfile.DoesNotExists:
-			default_language = 'en'
+			default_language = 'th'
 	
 	print("debug: " + default_language)
 
