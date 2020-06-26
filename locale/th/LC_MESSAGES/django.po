@@ -1486,8 +1486,6 @@ msgid "hour"
 msgstr "ช.ม."
 
 #: .\leave\templates\leave\leave_timeline.html:120
-#, fuzzy
-#| msgid "There is no record. Would like to take leave?"
 msgid ""
 "There is no record in E-Leave system. Would you like to take leave, please"
 msgstr "ยังไม่มีรายการอยู่ในระบบ หากต้องการใช้วันลา"
