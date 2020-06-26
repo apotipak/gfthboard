@@ -89,7 +89,7 @@
                 <a href="{% url 'leave_policy' %}" class="nav-link">
                     {% endif %}
                   &nbsp;&nbsp;<i class="fas fa-tasks"></i>
-                  &nbsp;&nbsp;&nbsp;<p>สิทธิ์การลา</p>
+                  &nbsp;&nbsp;&nbsp;<p>{% trans 'Leave Entitlement' %}</p>
                 </a>
               </li>
 
@@ -100,7 +100,7 @@
                 <a href="{% url 'leave_history' %}" class="nav-link">
                 {% endif %}
                   &nbsp;&nbsp;<i class="fas fa-history"></i>
-                  &nbsp;&nbsp;&nbsp;<p>ประวัติการลา</p>
+                  &nbsp;&nbsp;&nbsp;<p>{% trans 'Leave History' %}</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -120,7 +120,7 @@
                 <a href="{% url 'employee_create' %}" class="nav-link">
                 {% endif %}
                   &nbsp;&nbsp;<i class="far fa-edit"></i>
-                  &nbsp;&nbsp;&nbsp;<p>ใช้วันลา</p>
+                  &nbsp;&nbsp;&nbsp;<p>{% trans 'Leave Request' %}</p>
                 </a>
               </li>
 
@@ -136,7 +136,7 @@
                 <a href="{% url 'leave_approval' %}" class="nav-link">
                 {% endif %}
                   &nbsp;<i class="fa fa-check nav-icon"></i>
-                  <p>อนุมัติใบลา 
+                  <p>{% trans 'Leave Request List' %}
                     {% if waiting_for_approval_item  > 0 %}
                     <span class="badge badge-success right">{{ waiting_for_approval_item }}</span>
                     {% endif %}                  
@@ -206,7 +206,7 @@
                 <a href="{% url 'leave_history' %}" class="nav-link">
                 {% endif %}
                   &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
-                  <p>ประวัติการลา</p>
+                  <p>{% trans 'Leave History' %}</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -216,7 +216,7 @@
                 <a href="{% url 'employee_create' %}" class="nav-link">
                 {% endif %}
                   &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
-                  <p>เขียนใบลา</p>
+                  <p>{% trans 'Leave Request' %}</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -226,7 +226,7 @@
                 <a href="{% url 'leave_policy' %}" class="nav-link">
                     {% endif %}
                   &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
-                  <p>สิทธิการลา</p>
+                  <p>{% trans 'Leave Entitlement' %}</p>
                 </a>
               </li>
               {% if perms.leave.approve_leaveplan %}
@@ -237,7 +237,7 @@
                 <a href="{% url 'leave_approval' %}" class="nav-link">
                 {% endif %}
                   &nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
-                  <p>อนุมัติใบลา</p>
+                  <p>{% trans 'Leave Request List' %}</p>
                 </a>
               </li>
               {% endif %}

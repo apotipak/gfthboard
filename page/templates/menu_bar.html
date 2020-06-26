@@ -63,7 +63,7 @@
           &nbsp;
         </div>
         <div class="float-right">
-          <h3>Set Display Language</h3>
+          <h3>{% trans 'Set Display Language' %}</h3>
         </div>                  
         <div class="clearfix"></div>
         </div>        
@@ -75,7 +75,7 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        Welcome&nbsp;
+        {% trans 'Welcome' %}&nbsp;
         <a href="{% url 'staff-profile' %}" class="nav-link-menubar active">
             {% if user.is_authenticated %}                
                 {% if user.is_superuser %}
@@ -95,7 +95,7 @@
         <a class="nav-link-menubar" href="#">Contact</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <i class="fas fa-sign-out-alt text-secondary"></i>
-        <a class="nav-link-menubar text-primary" href="{% url 'logout'%}?next=/accounts/login">Sign Out</a>
+        <a class="nav-link-menubar text-primary" href="{% url 'logout'%}?next=/accounts/login">{% trans 'Sign Out' %}</a>
 
       </li>
 

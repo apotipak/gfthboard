@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def getDefaultLanguage(username):
-	default_language = 'en'
+	default_language = 'th'
 	
 	if UserProfile.objects.filter(username=username).exists():
 		try:

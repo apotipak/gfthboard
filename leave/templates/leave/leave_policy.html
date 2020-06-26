@@ -6,6 +6,8 @@
 
 {% block content %}
 
+{% load i18n %}
+
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -13,12 +15,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">สิทธิ์การลาปี {% now 'Y' %}</h1>
+            <h1 class="m-0 text-dark">{% trans 'Leave Entitlement' %} {% now 'Y' %}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
-              <li class="breadcrumb-item active">สิทธิ์การลา</li>
+              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
+              <li class="breadcrumb-item active">{% trans 'Leave Entitlement' %}</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -36,11 +38,11 @@
                 <table class="table table-striped">
                   <thead>
                     <tr>                  
-                      <th scope="col"><h6>ประเภท</h6></th>
-                      <th scope="col" style="text-align: left"><h6>คงเหลือ</h6></th>
-                      <th scope="col" style="text-align: left"><h6>ใช้ไป&nbsp;<small><small>| HRMS</small></small></h6></th>
-                      <th scope="col" style="text-align: left"><h6>ใช้ไป&nbsp;<small><small>| E-Leave</small></small></h6></th>
-                      <th scope="col"><h6>รออนุมัติ</h6></th>
+                      <th scope="col"><h6>{% trans 'Type' %}</h6></th>
+                      <th scope="col" style="text-align: left"><h6>{% trans 'Remaining' %}</h6></th>
+                      <th scope="col" style="text-align: left"><h6>{% trans 'Used' %}&nbsp;<small><small>| HRMS</small></small></h6></th>
+                      <th scope="col" style="text-align: left"><h6>{% trans 'Used' %}&nbsp;<small><small>| E-Leave</small></small></h6></th>
+                      <th scope="col"><h6>{% trans 'Pending' %}</h6></th>
                     </tr>
                   </thead>
                   <tbody>   
@@ -48,17 +50,17 @@
                 <tr>                  
                   <!-- ประเภทการลา -->
                   <td>
-                    <h6><b>{{ policy.lve_th }}</b>&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;<small>วัน</small></h6>
+                    <h6><b>{{ policy.lve_th }}</b>&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;<small>{% trans 'Day' %}</small></h6>
                   </td>
                   
                   <!-- วันคงเหลือ -->
                   <td>
                     {% if policy.total_day_remaining > 0 %}
-                      {{policy.total_day_remaining}} <small>วัน</small>
+                      {{policy.total_day_remaining}} <small>{% trans 'Day' %}</small>
                     {% endif %}
 
                     {% if policy.total_hour_remaining > 0 %}
-                      {{ policy.total_hour_remaining|stringformat:"1.0f" }} <small>ช.ม.</small>
+                      {{ policy.total_hour_remaining|stringformat:"1.0f" }} <small>{% trans 'Hour' %}</small>
                     {% endif %}
 
                     {% if policy.total_day_remaining == 0 and policy.total_hour_remaining == 0 %}
@@ -87,11 +89,11 @@
                     {% endif %}
                     -->
                     {% if policy.lve_HRMS > 0 %}
-                      {{policy.lve_HRMS}} <small>วัน</small>
+                      {{policy.lve_HRMS}} <small>{% trans 'Day' %}</small>
                     {% endif %}
 
                     {% if policy.lve_HRMS_HR > 0 %}
-                      {{ policy.lve_HRMS_HR|stringformat:"1.0f" }} <small>ช.ม.</small>
+                      {{ policy.lve_HRMS_HR|stringformat:"1.0f" }} <small>{% trans 'Hour' %}</small>
                     {% endif %}
 
                     {% if policy.lve_HRMS == 0 and policy.lve_HRMS_HR == 0 %}
@@ -102,11 +104,11 @@
                   <!-- E-Leave ใช้ไป -->
                   <td style="text-align: left">                    
                     {% if policy.total_approved_lve_act_eleave > 0 %}
-                        <a href="{% url 'leave_history' %}">{{ policy.total_approved_lve_act_eleave }} <small>วัน</small></a>
+                        <a href="{% url 'leave_history' %}">{{ policy.total_approved_lve_act_eleave }} <small>{% trans 'Day' %}</small></a>
                     {% endif %}
 
                     {% if policy.total_approved_lve_act_hr_eleave > 0 %}
-                        <a href="{% url 'leave_history' %}">{{ policy.total_approved_lve_act_hr_eleave }} <small>ช.ม.</small></a>
+                        <a href="{% url 'leave_history' %}">{{ policy.total_approved_lve_act_hr_eleave }} <small>{% trans 'Hour' %}</small></a>
                     {% endif %}
 
                     {% if policy.total_approved_lve_act_eleave == 0 and policy.total_approved_lve_act_hr_eleave == 0 %}
@@ -117,11 +119,11 @@
                   <!-- รออนุมัติ -->
                   <td>
                     {% if policy.total_pending_lve_act_eleave > 0 %}
-                        <a href="{% url 'leave_history' %}">{{ policy.total_pending_lve_act_eleave }} <small>วัน</small></a>
+                        <a href="{% url 'leave_history' %}">{{ policy.total_pending_lve_act_eleave }} <small>{% trans 'Day' %}</small></a>
                     {% endif %}
 
                     {% if policy.total_pending_lve_act_hr_eleave > 0 %}
-                        <a href="{% url 'leave_history' %}">{{ policy.total_pending_lve_act_hr_eleave }} <small>ช.ม.</small></a>
+                        <a href="{% url 'leave_history' %}">{{ policy.total_pending_lve_act_hr_eleave }} <small>{% trans 'Hour' %}</small></a>
                     {% endif %}
 
                     {% if policy.total_pending_lve_act_eleave == 0 and policy.total_pending_lve_act_hr_eleave == 0 %}
@@ -136,7 +138,7 @@
 
                 {% else %}
                 <div class="alert alert-success" role="alert">
-                    <i class="fa fa-info-circle"></i>&nbsp;&nbsp;สิทธิ์วันลาของคุณยังไม่ได้สร้างไว้ในระบบ กรุณาสอบถามข้อมูลจากฝ่ายบุคคล
+                    <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{% trans 'Your leave entitlement is not defined yet. Please contact HR officer for more detais' %}
                 </div>                                     
                 {% endif %}           
           </div>

@@ -6,6 +6,7 @@
 
 {% block content %}
 
+{% load i18n %}
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -13,12 +14,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">ใช้วันลา</h1>
+            <h1 class="m-0 text-dark">{% trans 'Leave Request' %}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
-              <li class="breadcrumb-item active">ใช้วันลา</li>
+              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
+              <li class="breadcrumb-item active">{% trans 'Leave Request' %}</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -55,13 +56,13 @@
 
                     <div class="input-group col-xs-12">                      
                       <div class="input-group-prepend">
-                        <span class="input-group-text border-bottom-0 rounded-0"><i class="far fa-calendar"></i>&nbsp;&nbsp;ลาวันที่</span>
+                        <span class="input-group-text border-bottom-0 rounded-0"><i class="far fa-calendar"></i>&nbsp;&nbsp;{% trans 'Start' %}</span>
                       </div>
                       {{ form.start_date }}                      
                     </div>     
                     <div class="input-group mb-3 col-xs-12">
                       <div class="input-group-prepend">
-                        <span class="input-group-text border-top-0 rounded-0"><i class="far fa-clock"></i>&nbsp;&nbsp;เวลา&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="input-group-text border-top-0 rounded-0"><i class="far fa-clock"></i>&nbsp;&nbsp;{% trans 'Time' %}&nbsp;&nbsp;&nbsp;&nbsp;</span>
                       </div>
                       {{ form.start_hour }}
                       {{ form.start_minute }}
@@ -70,13 +71,13 @@
 
                     <div class="input-group col-xs-12">
                       <div class="input-group-prepend">
-                        <span class="input-group-text border-bottom-0 rounded-0"><i class="far fa-calendar"></i>&nbsp;&nbsp;ถึงวันที่</span>
+                        <span class="input-group-text border-bottom-0 rounded-0"><i class="far fa-calendar"></i>&nbsp;&nbsp;{% trans 'End' %}</span>
                       </div>
                       {{ form.end_date }}
                     </div>
                     <div class="input-group mb-3 col-xs-12">
                       <div class="input-group-prepend">
-                        <span class="input-group-text border-top-0 rounded-0"><i class="far fa-clock"></i>&nbsp;&nbsp;เวลา&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="input-group-text border-top-0 rounded-0"><i class="far fa-clock"></i>&nbsp;&nbsp;{% trans 'Time' %}&nbsp;&nbsp;&nbsp;&nbsp;</span>
                       </div>
                       {{ form.end_hour }}
                       {{ form.end_minute }}                      
@@ -85,7 +86,7 @@
 
                     <div class="custom-file">
                       <input type="file" class="custom-file-input" id="id_document" name="document">
-                      <label class="custom-file-label" for="id_document">เลือกไฟล์...</label>
+                      <label class="custom-file-label" for="id_document">{% trans 'Choose file' %}...</label>
                     </div>
 
                     <!--                                        
@@ -131,9 +132,9 @@
 
                 <div class="card-footer clearfix bg-light">
                   <div class="float-right text-right col-md-12">
-                    <button type="button" id="check-request-date" name="check-request-date" data-url="{% url 'm1247_check_leave_request_day' %}" class="btn btn-info">คำนวณวัน</button>
+                    <button type="button" id="check-request-date" name="check-request-date" data-url="{% url 'm1247_check_leave_request_day' %}" class="btn btn-info">{% trans 'Preview' %}</button>
 
-                    <button type="submit" class="btn btn-success submitBtn">ส่งใบลา</button>
+                    <button type="submit" class="btn btn-success submitBtn">{% trans 'Send Request' %}</button>
                   </div>
                 </div>
               </form>
