@@ -34,7 +34,7 @@ def checkM1247TotalHours(employee_type, start_date, end_date, leave_type_id):
 			if hour > 8:
 				hour = 8
 			elif hour > 4:
-				hour = 4
+				hour = hour - 1			
 
 		else:
 			if start_date.weekday() not in excluded_day:
@@ -45,7 +45,7 @@ def checkM1247TotalHours(employee_type, start_date, end_date, leave_type_id):
 			if hour > 8:
 				hour = 8
 			elif hour > 4:
-				hour = 4				
+				hour = hour - 1
 
 		total_day = total_day + day
 		total_hour = total_hour + hour
@@ -90,7 +90,7 @@ def checkM1247BusinessRules(employee_type, start_date, end_date, leave_type_id):
 			if hour > 8:
 				hour = 8
 			elif hour > 4:
-				hour = 4
+				hour = hour - 1
 
 		else:
 			if start_date.weekday() not in excluded_day:
@@ -101,7 +101,7 @@ def checkM1247BusinessRules(employee_type, start_date, end_date, leave_type_id):
 			if hour > 8:
 				hour = 8
 			elif hour > 4:
-				hour = 4				
+				hour = hour - 1				
 
 		total_day = total_day + day
 		total_hour = total_hour + hour
