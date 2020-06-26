@@ -4,6 +4,7 @@ manage.py
 web.config
 temp/
 maintenance_mode_state.txt
+media/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
