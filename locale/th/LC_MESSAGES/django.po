@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-26 08:16+0700\n"
+"POT-Creation-Date: 2020-06-26 08:36+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1462,11 +1462,9 @@ msgstr "ยังไม่มีรายการอยู่ในระบบ
 
 #: .\leave\templates\leave\m1247_form.html:17
 #: .\leave\templates\leave\m1247_form.html:22
-#: .\page\templates\left_menu.html:219
-#, fuzzy
-#| msgid "Leave request system"
-msgid "Leave Request"
-msgstr "ระบบลางานออนไลน์"
+#: .\page\templates\left_menu.html:123
+msgid "New Request"
+msgstr "เขียนใบลา"
 
 #: .\leave\templates\leave\m1247_form.html:89
 msgid "Choose file"
@@ -1477,10 +1475,9 @@ msgid "Preview"
 msgstr "คำนวณวัน"
 
 #: .\leave\templates\leave\m1247_form.html:137
-#, fuzzy
-#| msgid "Leave request system"
-msgid "Send Request"
-msgstr "ระบบลางานออนไลน์"
+#| msgid "New Request"
+msgid "Submit Request"
+msgstr "ขออนุมัติ"
 
 #: .\page\forms.py:23
 #, fuzzy
@@ -1547,14 +1544,16 @@ msgstr "เปลี่ยนรหัสผ่าน"
 msgid "Set Default Language"
 msgstr "เลือกแสดงภาษา"
 
-#: .\page\templates\left_menu.html:123
-msgid "New Request"
-msgstr "เขียนใบลา"
-
 #: .\page\templates\left_menu.html:139 .\page\templates\left_menu.html:240
 #, fuzzy
 #| msgid "Leave request system"
 msgid "Leave Request List"
+msgstr "ระบบลางานออนไลน์"
+
+#: .\page\templates\left_menu.html:219
+#, fuzzy
+#| msgid "Leave request system"
+msgid "Leave Request"
 msgstr "ระบบลางานออนไลน์"
 
 #: .\page\templates\menu_bar.html:78
