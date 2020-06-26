@@ -1,6 +1,8 @@
 {% extends "page_default.html" %}
 
-{% block title %}ลบประวัติการลา{% endblock %}
+{% load i18n %}
+
+{% block title %}{% trans 'Cancel Leave Request' %}{% endblock %}
 
 {% block content %}
 
@@ -11,12 +13,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">ต้องการยกเลิกรายการวันลา</h1>
+            <h1 class="m-0 text-dark">{% trans 'Do you want to cancel this request?' %}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
-              <li class="breadcrumb-item active">ประวัติการลา</li>
+              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
+              <li class="breadcrumb-item active">{% trans 'Leave History' %}</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -30,25 +32,25 @@
         <div class="row">
           <div class="col-lg-12">
 
-            <b>ประเภทการลา:</b>&nbsp;&nbsp;{{ object.leave_type }}<br>
-            <b>ลาวันที่:</b>&nbsp;&nbsp;{{ object.start_date|date:'d N y H:i'}} - {{ object.end_date|date:'d N y H:i'}}<br>
-            <b>จำนวน:</b>&nbsp;&nbsp;
+            <b>{% trans 'Leave type' %}:</b>&nbsp;&nbsp;{{ object.leave_type }}<br>
+            <b>{% trans 'Start date' %}:</b>&nbsp;&nbsp;{{ object.start_date|date:'d N y H:i'}} - {{ object.end_date|date:'d N y H:i'}}<br>
+            <b>{% trans 'No. of days' %}:</b>&nbsp;&nbsp;
             {% if object.lve_act != 0 %}
-                {{object.lve_act}} วัน
+                {{object.lve_act}} {% trans 'Day' %}
                 {% if object.lve_act_hr != 0 %}
                   &nbsp;{{object.lve_act_hr}} ช.ม.
                 {% endif %}
             {% else %}
-                {{object.lve_act_hr}} ช.ม.
+                {{object.lve_act_hr}} {% trans 'Hour' %}
             {% endif %}
             <br><br>
 
-            <div class="alert alert-warning" role="alert"><i class="fas fa-exclamation"></i>&nbsp;&nbsp;กรุณาตรวจสอบข้อมูลอีกครั้งก่อนกดปุ่มยืนยัน</div>
+            <div class="alert alert-warning" role="alert"><i class="fas fa-exclamation"></i>&nbsp;&nbsp;{% trans 'Please make sure that you are going to cancel this request.' %}</div>
 
             <form action="" method="POST">
               {% csrf_token %}
-              <input type="button" class="btn btn-secondary" onclick="history.back()" value="ย้อนกลับ" />
-              <input type="submit" class="btn btn-danger" action="" value="ยืนยัน" />
+              <input type="button" class="btn btn-secondary" onclick="history.back()" value="{% trans 'Back' %}" />
+              <input type="submit" class="btn btn-danger" action="" value="{% trans 'Confirm' %}" />
             </form>
 
           </div>
