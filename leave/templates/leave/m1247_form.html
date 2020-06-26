@@ -254,15 +254,6 @@
             total_day = data.total_day;
             total_hour = data.total_hour;
 
-            if (total_day > 0) {
-              result += total_day + " วัน ";
-            }
-
-            if (total_hour > 0) {
-              result += total_hour + " ช.ม.";
-            }
-            
-            //$('#show-error').html("<div class='alert alert-warning' role='alert'><small>หากข้อมูลถูกต้องแล้วให้ทำการคลิกปุ่มส่งใบลาเพื่อขออนุมัติ</small><br><strong>" + leave_type_value + " " + result + "</strong></div>");
             if (start_minute == 0)
               start_minute = '00';
             
@@ -272,7 +263,20 @@
             d1 = moment(start_date).format("MMMM D  " + start_hour + ":" + start_minute);
             d2 = moment(end_date).format("MMMM D  " + end_hour + ":" + end_minute);
 
-            $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>เริ่ม&nbsp;<strong>" + d1 + "</strong> ถึง <strong>" + d2 + "</strong><br></div><div>หากข้อมูลถูกต้องแล้วให้ทำการคลิกปุ่มส่งใบลาเพื่อขออนุมัติ</div>");
+            if (total_day > 0) {
+              result += total_day + " วัน ";
+              text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>เริ่ม&nbsp;<strong>" + d1 + "</strong> ถึง <strong>" + d2 + "</strong><br></div>";
+            }
+
+            if (total_hour > 0) {
+              result += total_hour + " ช.ม.";
+              text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>เริ่ม&nbsp;<strong>" + d1 + "</strong> ถึง <strong>" + d2 + "</strong><br>" + "</div><div><small>* หากจำนวนชั๋วโมงที่เลือกเกิน 4 หรือ 8 ชั่วโมงต่อวัน ระบบจะหักเวลาพักหนึ่งชั่วโมงให้อัตโนมัติ</small></div>";
+            }
+            
+
+            //text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>เริ่ม&nbsp;<strong>" + d1 + "</strong> ถึง <strong>" + d2 + "</strong><br>" + "</div><div><small>* หากจำนวนชั๋วโมงที่เลือกเกิน 4 หรือ 8 ชั่วโมงต่อวัน ระบบจะหักเวลาพักหนึ่งชั่วโมงให้อัตโนมัติ</small></div>";
+
+            $('#show-error').html(text);
 
           } else {
             $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + data.error + "</strong></div>");
