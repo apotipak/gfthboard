@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-26 00:51+0700\n"
+"POT-Creation-Date: 2020-06-26 07:33+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1202,8 +1202,8 @@ msgid "\"%(value)s\" value must be valid JSON."
 msgstr ""
 
 #: .\leave\form_m1247.py:30
-msgid "เลือกประเภทการลา"
-msgstr "Select Leave Type"
+msgid "Select Leave Type"
+msgstr "เลือกประเภทการลา"
 
 #: .\leave\form_m1247.py:32
 #: .\leave\templates\leave\employeeinstance_list.html:45
@@ -1629,3 +1629,6 @@ msgstr "รหัสพนักงาน"
 #| msgid "Change Password"
 msgid "Password"
 msgstr "เปลี่ยนรหัสผ่าน"
+
+#~ msgid "เลือกประเภทการลา"
+#~ msgstr "Select Leave Type"
