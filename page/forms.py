@@ -109,7 +109,7 @@ class LanguageForm(ModelForm):
 			default_language = UserProfile.objects.filter(username=self.user.username).values_list('language', flat=True).get()
 			print("default lang = " + default_language)
 		else:
-			default_language = 'en'
+			default_language = 'th'
 
 		self.initial['language_code'] = default_language
 
