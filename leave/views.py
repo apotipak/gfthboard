@@ -114,6 +114,9 @@ def m1247_check_leave_request_day(request):
 
 @login_required(login_url='/accounts/login/')
 def EmployeeNew(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+    
     dattime_format = "%Y-%m-%d %H:%M:%S"
 
     page_title = settings.PROJECT_NAME
