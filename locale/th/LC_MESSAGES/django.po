@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-26 07:33+0700\n"
+"POT-Creation-Date: 2020-06-26 08:16+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1327,7 +1327,7 @@ msgstr "ประเภท"
 
 #: .\leave\templates\leave\employeeinstance_list.html:46
 msgid "Day/Hrs"
-msgstr "วัน/ช.ม."
+msgstr "วัน | ช.ม."
 
 #: .\leave\templates\leave\employeeinstance_list.html:47
 msgid "Status"
@@ -1359,7 +1359,7 @@ msgstr "รออนุมัติ"
 
 #: .\leave\templates\leave\employeeinstance_list.html:103
 msgid "Note"
-msgstr "Note"
+msgstr "เหตุผล"
 
 #: .\leave\templates\leave\employeeinstance_list.html:106
 msgid "Success"
@@ -1439,6 +1439,7 @@ msgid ""
 msgstr "สิทธิ์วันลาของคุณยังไม่ได้สร้างไว้ในระบบ กรุณาสอบถามข้อมูลจากฝ่ายบุคคล"
 
 #: .\leave\templates\leave\leave_timeline.html:23
+#: .\page\templates\left_menu.html:113
 msgid "Timeline"
 msgstr "Timeline"
 
@@ -1461,7 +1462,7 @@ msgstr "ยังไม่มีรายการอยู่ในระบบ
 
 #: .\leave\templates\leave\m1247_form.html:17
 #: .\leave\templates\leave\m1247_form.html:22
-#: .\page\templates\left_menu.html:123 .\page\templates\left_menu.html:219
+#: .\page\templates\left_menu.html:219
 #, fuzzy
 #| msgid "Leave request system"
 msgid "Leave Request"
@@ -1545,6 +1546,10 @@ msgstr "เปลี่ยนรหัสผ่าน"
 #: .\page\templates\page\staff_language.html:23
 msgid "Set Default Language"
 msgstr "เลือกแสดงภาษา"
+
+#: .\page\templates\left_menu.html:123
+msgid "New Request"
+msgstr "เขียนใบลา"
 
 #: .\page\templates\left_menu.html:139 .\page\templates\left_menu.html:240
 #, fuzzy
