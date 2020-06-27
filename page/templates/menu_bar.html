@@ -81,7 +81,7 @@
                 {% if user.is_superuser %}
                      <span class="text-primary"><b><a href="#">Admin</a></b></span>
                 {% else %}
-                    <span class="text-primary"><b>{{ user.get_short_name }}</b></span>
+                    <span class="text-primary"><b>{{ username_display }}</b></span>
                 {% endif %}
             {% endif %}
         </a>

@@ -5,8 +5,11 @@ from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import TclContractQty, TclDailyWorking
 from system.models import ContractPolicy
+from leave.models import LeaveEmployee
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from page.rules import *
+from django.utils import translation
 
 
 class ContractListView(PermissionRequiredMixin, generic.ListView):
@@ -20,13 +23,23 @@ class ContractListView(PermissionRequiredMixin, generic.ListView):
 	model = TclContractQty
 	
 	def get_context_data(self, **kwargs):
-		context = super(ContractListView, self).get_context_data(**kwargs)		
+		context = super(ContractListView, self).get_context_data(**kwargs)
+
+		user_language = getDefaultLanguage(self.request.user.username)
+		translation.activate(user_language)
+
+		if user_language == "th":
+			username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
+		else:
+			username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()		
+
 		context.update({
 			'page_title': settings.PROJECT_NAME,
 			'today_date': settings.TODAY_DATE,
 			'project_version': settings.PROJECT_VERSION,
 			'db_server': settings.DATABASES['default']['HOST'],
 			'project_name': settings.PROJECT_NAME,
+			'username_display': username_display,
 		})
 
 		return context
@@ -57,6 +70,15 @@ class ContractDetailView(PermissionRequiredMixin, generic.DetailView):
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
+
+		user_language = getDefaultLanguage(self.request.user.username)
+		translation.activate(user_language)
+
+		if user_language == "th":
+			username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
+		else:
+			username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()		
+
 		context['cnt_id'] = self.kwargs['pk']
 		context['TclContractQty'] = TclContractQty.objects.all()
 		context['TclDailyWorking'] = TclDailyWorking.objects.filter(cnt_id__exact=context['cnt_id']).order_by('shf_type')
@@ -67,6 +89,7 @@ class ContractDetailView(PermissionRequiredMixin, generic.DetailView):
 		context['today_date'] = settings.TODAY_DATE
 		context['template_name'] = 'contract/contract_detail.html'    
 		context['permission_required'] = ('contract.view_tclcontractqty')
+		context['username_display'] = username_display
 
 		return context
 
