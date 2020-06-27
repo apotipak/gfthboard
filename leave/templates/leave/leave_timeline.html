@@ -94,7 +94,11 @@
                   
                   
                   <div class="timeline-item">
-                    <h3 class="timeline-header"><strong>{{ item.leave_type.lve_th }}</strong>&nbsp;|&nbsp;                 
+                    {% if user_language == "th" %}
+                    <h3 class="timeline-header"><strong>{{ item.leave_type.lve_th }}</strong>&nbsp;|&nbsp;
+                    {% else %}
+                    <h3 class="timeline-header"><strong>{{ item.leave_type.lve_en }}</strong>&nbsp;|&nbsp;
+                    {% endif %}                    
                      {% if item.lve_act != 0 %}
                      {{ item.lve_act }} {% trans 'day' %}
                      {% endif %}

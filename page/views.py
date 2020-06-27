@@ -59,6 +59,7 @@ def StaffProfile(request):
         'SuperVisorInstance': SuperVisorInstance,
         'TeamMemberList': TeamMemberList,
         'able_to_approve_leave_request': able_to_approve_leave_request,
+        'user_language': user_language,
     })
 
 @login_required(login_url='/accounts/login/')

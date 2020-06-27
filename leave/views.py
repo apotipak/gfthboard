@@ -273,6 +273,7 @@ def EmployeeNew(request):
         'project_name': settings.PROJECT_NAME,
         'waiting_for_approval_item': waiting_for_approval_item,
         'able_to_approve_leave_request': able_to_approve_leave_request,
+        'user_language': user_language,
     })
 
 
@@ -288,6 +289,9 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
     #paginate_by = 20    
 
     def get_context_data(self, **kwargs):
+        user_language = getDefaultLanguage(self.request.user.username)
+        translation.activate(user_language)
+
         context = super(EmployeeInstanceListView, self).get_context_data(**kwargs)
 
         # Check number of waiting leave request
@@ -299,6 +303,8 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         else:
             able_to_approve_leave_request = False
 
+        print("debugggg :" + user_language)
+
         context.update({
             'page_title': settings.PROJECT_NAME,
             'today_date': settings.TODAY_DATE,
@@ -307,6 +313,7 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
             'project_name': settings.PROJECT_NAME,
             'waiting_for_approval_item': waiting_for_approval_item,
             'able_to_approve_leave_request': able_to_approve_leave_request,
+            'user_language': user_language,
         })
         return context
 
@@ -489,6 +496,7 @@ def LeavePolicy(request):
         'leave_policy': leave_policy,
         'waiting_for_approval_item': waiting_for_approval_item,
         'able_to_approve_leave_request': able_to_approve_leave_request,
+        'user_language': user_language,
     })
 
 
@@ -759,6 +767,7 @@ def LeaveTimeline(request):
         'today_date' : settings.TODAY_DATE,
         'leave_approved_items': leave_approved_items,
         'able_to_approve_leave_request': able_to_approve_leave_request,
+        'user_language': user_language,        
     }
 
     return render(request, 'leave/leave_timeline.html', context)
