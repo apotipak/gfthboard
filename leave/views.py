@@ -263,6 +263,10 @@ def EmployeeNew(request):
     else:
         able_to_approve_leave_request = False
 
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
     return render(request, render_template_name, {
         'form': form,
@@ -274,6 +278,7 @@ def EmployeeNew(request):
         'waiting_for_approval_item': waiting_for_approval_item,
         'able_to_approve_leave_request': able_to_approve_leave_request,
         'user_language': user_language,
+        'username_display': username_display,
     })
 
 
@@ -303,7 +308,10 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         else:
             able_to_approve_leave_request = False
 
-        print("debugggg :" + user_language)
+        if user_language == "th":
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
+        else:
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
         context.update({
             'page_title': settings.PROJECT_NAME,
@@ -314,6 +322,7 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
             'waiting_for_approval_item': waiting_for_approval_item,
             'able_to_approve_leave_request': able_to_approve_leave_request,
             'user_language': user_language,
+            'username_display': username_display,
         })
         return context
 
@@ -326,7 +335,7 @@ class EmployeeInstanceDetailView(generic.DetailView):
     model = EmployeeInstance
 
 
-class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
+class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):    
     permission_required = ('leave.view_employeeinstance')
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
@@ -350,14 +359,24 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
         
         return HttpResponseRedirect(success_url)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):        
         context = super(EmployeeInstanceDelete, self).get_context_data(**kwargs)
+
+        user_language = getDefaultLanguage(self.request.user.username)
+        translation.activate(user_language)
+
+        if user_language == "th":
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
+        else:
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
+
         context.update({
             'page_title': settings.PROJECT_NAME,
             'today_date': settings.TODAY_DATE,
             'project_version': settings.PROJECT_VERSION,
             'db_server': settings.DATABASES['default']['HOST'],
             'project_name': settings.PROJECT_NAME,
+            'username_display': username_display,
         })
 
         return context
@@ -487,6 +506,11 @@ def LeavePolicy(request):
     else:
         able_to_approve_leave_request = False
 
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
         'today_date': settings.TODAY_DATE,
@@ -497,6 +521,7 @@ def LeavePolicy(request):
         'waiting_for_approval_item': waiting_for_approval_item,
         'able_to_approve_leave_request': able_to_approve_leave_request,
         'user_language': user_language,
+        'username_display': username_display,
     })
 
 
@@ -541,15 +566,24 @@ class LeaveApprovalListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(LeaveApprovalListView, self).get_context_data(**kwargs)
+
+        user_language = getDefaultLanguage(self.request.user.username)
+        translation.activate(user_language)
         
         # Check number of waiting leave request
         waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p')"))
+
         
         # Check leave approval right
         if checkLeaveRequestApproval(self.request.user.username):
             able_to_approve_leave_request = True
         else:
             able_to_approve_leave_request = False
+
+        if user_language == "th":
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
+        else:
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
         context.update({
             'page_title': settings.PROJECT_NAME,
@@ -558,7 +592,8 @@ class LeaveApprovalListView(generic.ListView):
             'db_server': settings.DATABASES['default']['HOST'],
             'project_name': settings.PROJECT_NAME,
             'waiting_for_approval_item': waiting_for_approval_item,
-            'able_to_approve_leave_request': able_to_approve_leave_request
+            'able_to_approve_leave_request': able_to_approve_leave_request,
+            'username_display': username_display,
         })
         return context
 
@@ -631,6 +666,13 @@ def EmployeeInstanceApprove(request, pk):
     
     leaveEmployee = LeaveEmployee.objects.get(emp_id=employee_leave_instance.emp_id)
     waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))    
+
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+
     context = {
         'leave_employee': leaveEmployee,
         'employee_leave_instance': employee_leave_instance,
@@ -640,6 +682,7 @@ def EmployeeInstanceApprove(request, pk):
         'project_version': settings.PROJECT_VERSION,
         'today_date' : settings.TODAY_DATE,
         'waiting_for_approval_item': waiting_for_approval_item,
+        'username_display': username_display,
     }
 
     return render(request, 'leave/employeeinstance_approve.html', context)
@@ -715,6 +758,12 @@ def EmployeeInstanceReject(request, pk):
 
         return HttpResponseRedirect(reverse('leave_approval'))
 
+
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
     leaveEmployee = LeaveEmployee.objects.get(emp_id=employee_leave_instance.emp_id)
     waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))
     context = {
@@ -725,7 +774,8 @@ def EmployeeInstanceReject(request, pk):
         'project_name': settings.PROJECT_NAME,
         'project_version': settings.PROJECT_VERSION,
         'today_date' : settings.TODAY_DATE,
-        'waiting_for_approval_item': waiting_for_approval_item
+        'waiting_for_approval_item': waiting_for_approval_item,
+        'username_display': username_display,
     }
 
     return render(request, 'leave/employeeinstance_reject.html', context)
@@ -759,6 +809,11 @@ def LeaveTimeline(request):
     else:
         able_to_approve_leave_request = False
 
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
     context = {
         'page_title': settings.PROJECT_NAME,
         'db_server': settings.DATABASES['default']['HOST'],
@@ -767,7 +822,8 @@ def LeaveTimeline(request):
         'today_date' : settings.TODAY_DATE,
         'leave_approved_items': leave_approved_items,
         'able_to_approve_leave_request': able_to_approve_leave_request,
-        'user_language': user_language,        
+        'user_language': user_language,
+        'username_display': username_display,
     }
 
     return render(request, 'leave/leave_timeline.html', context)

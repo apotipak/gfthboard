@@ -61,6 +61,11 @@ def StaffProfile(request):
     else:
         able_to_approve_leave_request = False
 
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
     return render(request, 'page/staff_profile.html', {
         'page_title': page_title, 
         'project_name': project_name, 
@@ -71,6 +76,7 @@ def StaffProfile(request):
         'TeamMemberList': TeamMemberList,
         'able_to_approve_leave_request': able_to_approve_leave_request,
         'user_language': user_language,
+        'username_display': username_display,
     })
 
 @login_required(login_url='/accounts/login/')
@@ -96,12 +102,18 @@ def StaffPassword(request):
     else:
         form = UserForm(user=request.user)    
     
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
     return render(request, 'page/staff_password_form.html', {
         'form': form,
         'page_title': page_title, 
         'project_name': project_name, 
         'project_version': project_version, 
         'db_server': db_server, 'today_date': today_date,
+        'username_display': username_display,
     })
 
 
@@ -139,13 +151,19 @@ def StaffLanguage(request):
             return HttpResponseRedirect('/staff-language')
     else:
         form = LanguageForm(user=request.user)    
-    
+
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
     return render(request, 'page/staff_language.html', {
         'form': form,
         'page_title': page_title, 
         'project_name': project_name, 
         'project_version': project_version, 
         'db_server': db_server, 'today_date': today_date,
+        'username_display': username_display,
     })
 
 
