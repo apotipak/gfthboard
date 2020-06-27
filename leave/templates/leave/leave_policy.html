@@ -50,7 +50,11 @@
                 <tr>                  
                   <!-- ประเภทการลา -->
                   <td>
+                    {% if user_language == "th" %}
                     <h6><b>{{ policy.lve_th }}</b>&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;<small>{% trans 'Day' %}</small></h6>
+                    {% else %}
+                    <h6><b>{{ policy.lve_en }}</b>&nbsp;&nbsp;{{policy.lve_plan}}&nbsp;&nbsp;<small>{% trans 'Day' %}</small></h6>
+                    {% endif %}
                   </td>
                   
                   <!-- วันคงเหลือ -->

@@ -52,7 +52,12 @@
                 {% for leave in object_list %}
                     <tr>                        
                         <td>
-                          {{leave.leave_type}}
+                          {% if user_language == "th" %}
+                            {{leave.leave_type.lve_th}}
+                          {% else %}
+                            {{leave.leave_type.lve_en}}
+                          {% endif %}
+                          
                           {% if leave.document %}
                           &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip" aria-hidden="true"></i></a>
                           {% endif %}

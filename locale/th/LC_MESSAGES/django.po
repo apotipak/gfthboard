@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-27 12:45+0700\n"
+"POT-Creation-Date: 2020-06-27 17:56+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -376,8 +376,8 @@ msgid ""
 msgstr ""
 
 #: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2065
-#: .\leave\templates\leave\m1247_form.html:65
-#: .\leave\templates\leave\m1247_form.html:80
+#: .\leave\templates\leave\m1247_form.html:83
+#: .\leave\templates\leave\m1247_form.html:98
 msgid "Time"
 msgstr "เวลา"
 
@@ -1207,11 +1207,11 @@ msgstr "เลือกประเภทการลา"
 
 #: .\leave\form_m1247.py:32
 #: .\leave\templates\leave\employeeinstance_list.html:45
-#: .\leave\templates\leave\m1247_form.html:59
+#: .\leave\templates\leave\m1247_form.html:77
 msgid "Start"
 msgstr "ลาวันที่"
 
-#: .\leave\form_m1247.py:36 .\leave\templates\leave\m1247_form.html:74
+#: .\leave\form_m1247.py:36 .\leave\templates\leave\m1247_form.html:92
 msgid "End"
 msgstr "ถึงวันที่"
 
@@ -1342,19 +1342,20 @@ msgid "No. of days"
 msgstr "จำนวนวัน"
 
 #: .\leave\templates\leave\employeeinstance_confirm_delete.html:39
-#: .\leave\templates\leave\leave_policy.html:53
-#: .\leave\templates\leave\leave_policy.html:59
-#: .\leave\templates\leave\leave_policy.html:92
-#: .\leave\templates\leave\leave_policy.html:107
-#: .\leave\templates\leave\leave_policy.html:122
-msgid "Day"
-msgstr "วัน"
-
-#: .\leave\templates\leave\employeeinstance_confirm_delete.html:44
+#: .\leave\templates\leave\leave_policy.html:54
+#: .\leave\templates\leave\leave_policy.html:56
 #: .\leave\templates\leave\leave_policy.html:63
 #: .\leave\templates\leave\leave_policy.html:96
 #: .\leave\templates\leave\leave_policy.html:111
 #: .\leave\templates\leave\leave_policy.html:126
+msgid "Day"
+msgstr "วัน"
+
+#: .\leave\templates\leave\employeeinstance_confirm_delete.html:44
+#: .\leave\templates\leave\leave_policy.html:67
+#: .\leave\templates\leave\leave_policy.html:100
+#: .\leave\templates\leave\leave_policy.html:115
+#: .\leave\templates\leave\leave_policy.html:130
 msgid "Hour"
 msgstr "ช.ม."
 
@@ -1363,18 +1364,19 @@ msgid "Please make sure that you are going to cancel this request."
 msgstr "กรุณาตรวจสอบข้อมูลให้แน่ใจก่อนทำรายการ"
 
 #: .\leave\templates\leave\employeeinstance_confirm_delete.html:52
-#: .\leave\templates\leave\employeeinstance_list.html:173
+#: .\leave\templates\leave\employeeinstance_list.html:178
 msgid "Back"
 msgstr "ย้อนกลับ"
 
 #: .\leave\templates\leave\employeeinstance_confirm_delete.html:53
-#: .\leave\templates\leave\employeeinstance_list.html:174
+#: .\leave\templates\leave\employeeinstance_list.html:179
 msgid "Confirm"
 msgstr "ยืนยัน"
 
 #: .\leave\templates\leave\employeeinstance_list.html:44
 #: .\leave\templates\leave\leave_policy.html:41
-#: .\page\templates\page\staff_profile.html:55
+#: .\page\templates\page\staff_profile.html:56
+#: .\page\templates\page\staff_profile.html:73
 msgid "Type"
 msgstr "ประเภท"
 
@@ -1386,64 +1388,64 @@ msgstr "วัน | ช.ม."
 msgid "Status"
 msgstr "สถานะ"
 
-#: .\leave\templates\leave\employeeinstance_list.html:75
-#: .\leave\templates\leave\employeeinstance_list.html:84
-#: .\leave\templates\leave\employeeinstance_list.html:86
+#: .\leave\templates\leave\employeeinstance_list.html:80
+#: .\leave\templates\leave\employeeinstance_list.html:89
+#: .\leave\templates\leave\employeeinstance_list.html:91
 msgid "Approved"
 msgstr "อนุมัติ"
 
-#: .\leave\templates\leave\employeeinstance_list.html:77
+#: .\leave\templates\leave\employeeinstance_list.html:82
 msgid "Waiting"
 msgstr "รออนุมัติ"
 
-#: .\leave\templates\leave\employeeinstance_list.html:80
+#: .\leave\templates\leave\employeeinstance_list.html:85
 msgid "Rejected"
 msgstr "ไม่อนุมัติ"
 
-#: .\leave\templates\leave\employeeinstance_list.html:82
-#: .\leave\templates\leave\employeeinstance_list.html:96
+#: .\leave\templates\leave\employeeinstance_list.html:87
+#: .\leave\templates\leave\employeeinstance_list.html:101
 msgid "Cancel"
 msgstr "ยกเลิก"
 
-#: .\leave\templates\leave\employeeinstance_list.html:100
+#: .\leave\templates\leave\employeeinstance_list.html:105
 #: .\leave\templates\leave\leave_policy.html:45
 msgid "Pending"
 msgstr "รออนุมัติ"
 
-#: .\leave\templates\leave\employeeinstance_list.html:103
+#: .\leave\templates\leave\employeeinstance_list.html:108
 msgid "Note"
 msgstr "เหตุผล"
 
-#: .\leave\templates\leave\employeeinstance_list.html:106
+#: .\leave\templates\leave\employeeinstance_list.html:111
 msgid "Success"
 msgstr "สำเร็จ"
 
-#: .\leave\templates\leave\employeeinstance_list.html:108
+#: .\leave\templates\leave\employeeinstance_list.html:113
 msgid "Fail"
 msgstr "ผิดพลาด"
 
-#: .\leave\templates\leave\employeeinstance_list.html:144
+#: .\leave\templates\leave\employeeinstance_list.html:149
 msgid "There is no record. Would like to take leave? Please"
 msgstr "ยังไม่มีรายการอยู่ในระบบ หากต้องการใช้วันลา"
 
-#: .\leave\templates\leave\employeeinstance_list.html:145
-#: .\leave\templates\leave\leave_timeline.html:121
+#: .\leave\templates\leave\employeeinstance_list.html:150
+#: .\leave\templates\leave\leave_timeline.html:125
 msgid "click here"
 msgstr "คลิกที่นี่"
 
-#: .\leave\templates\leave\employeeinstance_list.html:164
+#: .\leave\templates\leave\employeeinstance_list.html:169
 msgid "Do you want to cancel?"
 msgstr "ยืนยันการยกเลิกรายการ"
 
-#: .\leave\templates\leave\employeeinstance_list.html:170
+#: .\leave\templates\leave\employeeinstance_list.html:175
 msgid "Click confirm button if you are sure to cancel."
 msgstr "ตรวจสอบข้อมูลก่อนคลิกปุ่มยกเลิก"
 
-#: .\leave\templates\leave\employeeinstance_list.html:188
+#: .\leave\templates\leave\employeeinstance_list.html:193
 msgid "Reason"
 msgstr "เหตุผล"
 
-#: .\leave\templates\leave\employeeinstance_list.html:197
+#: .\leave\templates\leave\employeeinstance_list.html:202
 msgid "Close"
 msgstr "ปิด"
 
@@ -1462,7 +1464,7 @@ msgstr "คงเหลือ"
 msgid "Used"
 msgstr "ใช้ไป"
 
-#: .\leave\templates\leave\leave_policy.html:141
+#: .\leave\templates\leave\leave_policy.html:145
 msgid ""
 "Your leave entitlement is not defined yet. Please contact HR officer for "
 "more detais"
@@ -1474,17 +1476,17 @@ msgstr "สิทธิ์วันลาของคุณยังไม่ไ
 msgid "Timeline"
 msgstr "ไทม์ไลน์"
 
-#: .\leave\templates\leave\leave_timeline.html:99
+#: .\leave\templates\leave\leave_timeline.html:103
 #, fuzzy
 #| msgid "Day"
 msgid "day"
 msgstr "วัน"
 
-#: .\leave\templates\leave\leave_timeline.html:103
+#: .\leave\templates\leave\leave_timeline.html:107
 msgid "hour"
 msgstr "ช.ม."
 
-#: .\leave\templates\leave\leave_timeline.html:120
+#: .\leave\templates\leave\leave_timeline.html:124
 msgid ""
 "There is no record in E-Leave system. Would you like to take leave, please"
 msgstr "ยังไม่มีรายการอยู่ในระบบ หากต้องการใช้วันลา"
@@ -1495,15 +1497,15 @@ msgstr "ยังไม่มีรายการอยู่ในระบบ
 msgid "New Request"
 msgstr "เขียนใบลา"
 
-#: .\leave\templates\leave\m1247_form.html:89
+#: .\leave\templates\leave\m1247_form.html:107
 msgid "Choose file"
 msgstr "เลือกไฟล์"
 
-#: .\leave\templates\leave\m1247_form.html:135
+#: .\leave\templates\leave\m1247_form.html:153
 msgid "Preview"
 msgstr "คำนวณวัน"
 
-#: .\leave\templates\leave\m1247_form.html:137
+#: .\leave\templates\leave\m1247_form.html:155
 msgid "Submit Request"
 msgstr "ขออนุมัติ"
 
@@ -1605,40 +1607,55 @@ msgstr "รหัสผ่านใหม่"
 msgid "Confirm New Password"
 msgstr "ยืนยันรหัสผ่านใหม่"
 
-#: .\page\templates\page\staff_profile.html:52
-#: .\page\templates\page\staff_profile.html:142
+#: .\page\templates\page\staff_profile.html:53
+#: .\page\templates\page\staff_profile.html:70
+#: .\page\templates\page\staff_profile.html:167
 msgid "ID"
 msgstr "รหัส"
 
-#: .\page\templates\page\staff_profile.html:58
-#: .\page\templates\page\staff_profile.html:104
+#: .\page\templates\page\staff_profile.html:59
+#: .\page\templates\page\staff_profile.html:76
+#: .\page\templates\page\staff_profile.html:123
 msgid "Department"
 msgstr "แผนก"
 
-#: .\page\templates\page\staff_profile.html:61
-#: .\page\templates\page\staff_profile.html:145
+#: .\page\templates\page\staff_profile.html:62
+#: .\page\templates\page\staff_profile.html:79
+#: .\page\templates\page\staff_profile.html:170
 msgid "Start Date"
 msgstr "วันเริ่มงาน"
 
-#: .\page\templates\page\staff_profile.html:82
+#: .\page\templates\page\staff_profile.html:101
 msgid "My Manager"
 msgstr "หัวหน้า"
 
-#: .\page\templates\page\staff_profile.html:84
+#: .\page\templates\page\staff_profile.html:103
 msgid "My Team"
 msgstr "สมาชิกในแผนก"
 
-#: .\page\templates\page\staff_profile.html:103
-#: .\page\templates\page\staff_profile.html:143
+#: .\page\templates\page\staff_profile.html:122
+#: .\page\templates\page\staff_profile.html:168
 msgid "Full Name"
 msgstr "ชื่อ-สกุล"
 
-#: .\page\templates\page\staff_profile.html:105
-#: .\page\templates\page\staff_profile.html:144
+#: .\page\templates\page\staff_profile.html:124
+#: .\page\templates\page\staff_profile.html:169
 msgid "Position"
 msgstr "ตำแหน่ง"
 
-#: .\page\views.py:126
+#: .\page\templates\page\staff_profile.html:145
+msgid "There is no information. Please contact HR officer."
+msgstr "ไม่พบข้อมูลในระบบ กรุณาสอบถามข้อมูลจากเจ้าหน้าที่ฝ่ายบุคคล"
+
+#: .\page\templates\page_daterange.html:105
+msgid "Search"
+msgstr "ค้นหา"
+
+#: .\page\templates\page_daterange.html:114
+msgid "Leave Type"
+msgstr "ลาประเภท"
+
+#: .\page\views.py:127
 msgid "A new language has been set."
 msgstr "ตั้งค่าใหม่สำเร็จ"
 
