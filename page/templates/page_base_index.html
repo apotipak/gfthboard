@@ -34,9 +34,9 @@
           <a class="nav-link" href="{% url 'staff-profile' %}">
               {% if user.is_authenticated %}
                   {% if user.is_superuser %}
-                      Welcome <b>Admin</b>
+                      {% trans 'Welcome' %} <b>Admin</b>
                   {% else %}
-                      Welcome <b class="text-primary">{{ user.get_short_name }}</b>
+                      {% trans 'Welcome' %} <b class="text-primary">{{ username_display }}</b>
                   {% endif %}
               {% endif %}
           </a>
@@ -50,7 +50,7 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'logout'%}?next=/accounts/login">
-            <i class="fas fa-sign-out-alt"></i> <span class="text-primary">Sign Out</span>
+            <i class="fas fa-sign-out-alt"></i> <span class="text-primary">{% trans 'Sign Out' %}</span>
           </a>
         </li>        
       </ul>

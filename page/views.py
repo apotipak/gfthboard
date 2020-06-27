@@ -12,22 +12,33 @@ from page.rules import *
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.utils import translation
+from django.db.models import CharField, Value as V
+from django.db.models.functions import Concat
 
 
 @login_required(login_url='/accounts/login/')
 def index(request):    
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
+
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
     page_title = settings.PROJECT_NAME    
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE    
+    today_date = settings.TODAY_DATE
+
     return render(request, 'index.html', {
         'page_title': page_title, 
         'project_name': project_name, 
         'project_version': project_version, 
-        'db_server': db_server, 'today_date': today_date
+        'db_server': db_server, 'today_date': today_date,
+        'user_language': user_language,
+        'username_display' : username_display,
     })
 
 @login_required(login_url='/accounts/login/')
