@@ -29,7 +29,7 @@
 
 /* File input style */
 .custom-file-input ~ .custom-file-label::after {
-    content: '\f15c \0020 แนบใบรับรองแพทย์ (Attached File)' !important;
+    content: '\f15c \0020 แนบไฟล์ (Attached File)' !important;
     font-family: "Font Awesome 5 Free";
     font-style: normal;
     font-size: 13px;
