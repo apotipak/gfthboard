@@ -58,9 +58,6 @@
                       <li class="list-group-item">
                         <b>{% trans 'Department' %}</b> <a class="float-right">{{ employee.div_th }}</a>
                       </li>
-                      <li class="list-group-item">
-                        <b>{% trans 'Start Date' %}</b> <a class="float-right">{{ employee.emp_join_date|date:'d F Y' }}</a>
-                      </li>
                     </ul>
                     {% else %}
                     <h3 class="profile-username text-center">{{ employee.emp_fname_en }} {{ employee.emp_lname_en }}</h3>
@@ -74,9 +71,6 @@
                       </li>                      
                       <li class="list-group-item">
                         <b>{% trans 'Department' %}</b> <a class="float-right">{{ employee.div_en }}</a>
-                      </li>
-                      <li class="list-group-item">
-                        <b>{% trans 'Start Date' %}</b> <a class="float-right">{{ employee.emp_join_date|date:'d F Y' }}</a>
                       </li>
                     </ul>
                     {% endif %}
@@ -167,7 +161,6 @@
                                         <th scope="col">{% trans 'ID' %}</th>
                                         <th scope="col">{% trans 'Full Name' %}</th>
                                         <th scope="col">{% trans 'Position' %}</th>
-                                        <th scope="col">{% trans 'Start Date' %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -181,7 +174,6 @@
                                         {% else %}
                                         <td>{{member.emp_fname_en}} {{member.emp_lname_en}}</td>
                                         <td>{{member.pos_en}}</td>
-                                        <td>{{member.emp_join_date|date:"d F Y"}}</td>
                                         {% endif %}
                                     </tr>
                                 {% endfor %}
