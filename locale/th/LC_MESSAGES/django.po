@@ -1585,7 +1585,7 @@ msgstr "ระบบลางานออนไลน์"
 #: .\page\templates\menu_bar.html:78 .\page\templates\page_base_index.html:37
 #: .\page\templates\page_base_index.html:39
 msgid "Welcome"
-msgstr "ยินดีต้อนรับ"
+msgstr "Welcome"
 
 #: .\page\templates\menu_bar.html:98 .\page\templates\page_base_index.html:53
 msgid "Sign Out"

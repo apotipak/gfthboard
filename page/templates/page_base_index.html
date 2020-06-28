@@ -22,40 +22,50 @@
 <body class="hold-transition layout-top-nav">
 <div class="wrapper">
 
+
   <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white container-fluid full" style="background-image: url({% static 'img/10.jpg' %});background-repeat: no-repeat;background-position:center;background-size:cover;min-height:15vh;">
-    <div class="container">
+  <nav class="main-header navbar-expand-md navbar-light navbar-white container-fluid full" style="background-image: url({% static 'img/10.jpg' %});background-repeat: no-repeat;background-position:center;background-size:cover;min-height:15vh;">
+    <div class="container full">
 
-      <span class="col-12 text-center .d-block .d-sm-none">
-      <a href="/" class="navbar-brand">
-        <img src="{% static 'dist/img/logo-big.png' %}" alt="Logo" width="140px;" class="img-responsive">
-      </a>
-      </span>
-
-      {% trans 'Welcome' %}
-      <a class="nav-link d-block d-sm-none" href="{% url 'staff-profile' %}">
-          {% if user.is_authenticated %}
-              {% if user.is_superuser %}
-                   <b>Admin</b>
-              {% else %}
-                  <b class="text-primary">{{ username_display }}</b>
-              {% endif %}
-          {% endif %}
-      </a>                          
-      <!-- Right navbar links -->
-      <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
-        <!-- Notifications Dropdown Menu -->
-        {% include "notification.html" %}
-
-        <li class="nav-item">
-          <a class="nav-link" href="#"></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout'%}?next=/accounts/login">
-            <i class="fas fa-sign-out-alt"></i> <span class="text-primary">{% trans 'Sign Out' %}</span>
+      <div class="row">
+        <div class="col-12 text-center .d-block .d-sm-none">
+          <a href="/" class="navbar-brand">
+            <img src="{% static 'dist/img/logo-big.png' %}" alt="Logo" width="160px;" class="img-responsive">
           </a>
-        </li>        
-      </ul>
+        </div>
+
+        <div class="col-6">
+          <a class="nav-link" href="{% url 'staff-profile' %}">
+            <span class="text-secondary">{% trans 'Welcome' %}</span>&nbsp;
+            {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                     <b>Admin</b>
+                {% else %}
+                    <b class="text-primary">{{ username_display }}</b>
+                {% endif %}
+            {% endif %}
+          </a>
+        </div>
+
+        <div class="col-6">
+          <!-- Right navbar links -->
+          <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto float-right">
+            <!-- Notifications Dropdown Menu -->
+            {% include "notification.html" %}
+
+            <li class="nav-item">
+              <a class="nav-link" href="#"></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-nowrap" href="{% url 'logout'%}?next=/accounts/login">
+                <i class="fas fa-sign-out-alt"></i> <span class="text-primary">{% trans 'Sign Out' %}</span>
+              </a>
+            </li>        
+          </ul>
+        </div>
+
+      </div>
+
     </div>
   </nav>
   <!-- /.navbar -->
