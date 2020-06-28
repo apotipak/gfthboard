@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-27 17:56+0700\n"
+"POT-Creation-Date: 2020-06-28 10:43+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1376,7 +1376,7 @@ msgstr "ยืนยัน"
 #: .\leave\templates\leave\employeeinstance_list.html:44
 #: .\leave\templates\leave\leave_policy.html:41
 #: .\page\templates\page\staff_profile.html:56
-#: .\page\templates\page\staff_profile.html:73
+#: .\page\templates\page\staff_profile.html:70
 msgid "Type"
 msgstr "ประเภท"
 
@@ -1425,7 +1425,7 @@ msgid "Fail"
 msgstr "ผิดพลาด"
 
 #: .\leave\templates\leave\employeeinstance_list.html:149
-msgid "There is no record. Would like to take leave? Please"
+msgid "There is no record. If you would like to take leave, please"
 msgstr "ยังไม่มีรายการอยู่ในระบบ หากต้องการใช้วันลา"
 
 #: .\leave\templates\leave\employeeinstance_list.html:150
@@ -1488,7 +1488,7 @@ msgstr "ช.ม."
 
 #: .\leave\templates\leave\leave_timeline.html:124
 msgid ""
-"There is no record in E-Leave system. Would you like to take leave, please"
+"There is no record in E-Leave system. If you would like to take leave, please"
 msgstr "ยังไม่มีรายการอยู่ในระบบ หากต้องการใช้วันลา"
 
 #: .\leave\templates\leave\m1247_form.html:17
@@ -1582,11 +1582,12 @@ msgstr "อนุมัติใบลา"
 msgid "Leave Request"
 msgstr "ระบบลางานออนไลน์"
 
-#: .\page\templates\menu_bar.html:78
+#: .\page\templates\menu_bar.html:78 .\page\templates\page_base_index.html:37
+#: .\page\templates\page_base_index.html:39
 msgid "Welcome"
 msgstr "ยินดีต้อนรับ"
 
-#: .\page\templates\menu_bar.html:98
+#: .\page\templates\menu_bar.html:98 .\page\templates\page_base_index.html:53
 msgid "Sign Out"
 msgstr "ออกจากระบบ"
 
@@ -1608,42 +1609,36 @@ msgid "Confirm New Password"
 msgstr "ยืนยันรหัสผ่านใหม่"
 
 #: .\page\templates\page\staff_profile.html:53
-#: .\page\templates\page\staff_profile.html:70
-#: .\page\templates\page\staff_profile.html:167
+#: .\page\templates\page\staff_profile.html:67
+#: .\page\templates\page\staff_profile.html:161
 msgid "ID"
 msgstr "รหัส"
 
 #: .\page\templates\page\staff_profile.html:59
-#: .\page\templates\page\staff_profile.html:76
-#: .\page\templates\page\staff_profile.html:123
+#: .\page\templates\page\staff_profile.html:73
+#: .\page\templates\page\staff_profile.html:117
 msgid "Department"
 msgstr "แผนก"
 
-#: .\page\templates\page\staff_profile.html:62
-#: .\page\templates\page\staff_profile.html:79
-#: .\page\templates\page\staff_profile.html:170
-msgid "Start Date"
-msgstr "วันเริ่มงาน"
-
-#: .\page\templates\page\staff_profile.html:101
+#: .\page\templates\page\staff_profile.html:95
 msgid "My Manager"
 msgstr "หัวหน้า"
 
-#: .\page\templates\page\staff_profile.html:103
+#: .\page\templates\page\staff_profile.html:97
 msgid "My Team"
 msgstr "สมาชิกในแผนก"
 
-#: .\page\templates\page\staff_profile.html:122
-#: .\page\templates\page\staff_profile.html:168
+#: .\page\templates\page\staff_profile.html:116
+#: .\page\templates\page\staff_profile.html:162
 msgid "Full Name"
 msgstr "ชื่อ-สกุล"
 
-#: .\page\templates\page\staff_profile.html:124
-#: .\page\templates\page\staff_profile.html:169
+#: .\page\templates\page\staff_profile.html:118
+#: .\page\templates\page\staff_profile.html:163
 msgid "Position"
 msgstr "ตำแหน่ง"
 
-#: .\page\templates\page\staff_profile.html:145
+#: .\page\templates\page\staff_profile.html:139
 msgid "There is no information. Please contact HR officer."
 msgstr "ไม่พบข้อมูลในระบบ กรุณาสอบถามข้อมูลจากเจ้าหน้าที่ฝ่ายบุคคล"
 
@@ -1655,7 +1650,7 @@ msgstr "ค้นหา"
 msgid "Leave Type"
 msgstr "ลาประเภท"
 
-#: .\page\views.py:127
+#: .\page\views.py:150
 msgid "A new language has been set."
 msgstr "ตั้งค่าใหม่สำเร็จ"
 
@@ -1668,6 +1663,9 @@ msgstr "รหัสพนักงาน"
 #| msgid "Change Password"
 msgid "Password"
 msgstr "เปลี่ยนรหัสผ่าน"
+
+#~ msgid "Start Date"
+#~ msgstr "วันเริ่มงาน"
 
 #~ msgid "เลือกประเภทการลา"
 #~ msgstr "Select Leave Type"

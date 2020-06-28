@@ -25,23 +25,25 @@
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white container-fluid full" style="background-image: url({% static 'img/10.jpg' %});background-repeat: no-repeat;background-position:center;background-size:cover;min-height:15vh;">
     <div class="container">
+
+      <span class="col-12 text-center .d-block .d-sm-none">
       <a href="/" class="navbar-brand">
-        <img src="{% static 'dist/img/logo-big.png' %}" alt="Logo" width="230px;" class="img-responsive">
+        <img src="{% static 'dist/img/logo-big.png' %}" alt="Logo" width="140px;" class="img-responsive">
       </a>
+      </span>
+
+      {% trans 'Welcome' %}
+      <a class="nav-link d-block d-sm-none" href="{% url 'staff-profile' %}">
+          {% if user.is_authenticated %}
+              {% if user.is_superuser %}
+                   <b>Admin</b>
+              {% else %}
+                  <b class="text-primary">{{ username_display }}</b>
+              {% endif %}
+          {% endif %}
+      </a>                          
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'staff-profile' %}">
-              {% if user.is_authenticated %}
-                  {% if user.is_superuser %}
-                      {% trans 'Welcome' %} <b>Admin</b>
-                  {% else %}
-                      {% trans 'Welcome' %} <b class="text-primary">{{ username_display }}</b>
-                  {% endif %}
-              {% endif %}
-          </a>
-        </li>
-
         <!-- Notifications Dropdown Menu -->
         {% include "notification.html" %}
 
