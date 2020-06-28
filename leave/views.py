@@ -123,7 +123,8 @@ def EmployeeNew(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE
+    # today_date = settings.TODAY_DATE
+    today_date = getDateFormatDisplay(user_language)
     
     # render_template_name = 'leave/employeeinstance_form.html'
     
@@ -271,7 +272,7 @@ def EmployeeNew(request):
     return render(request, render_template_name, {
         'form': form,
         'page_title': settings.PROJECT_NAME,
-        'today_date': settings.TODAY_DATE,
+        'today_date': today_date,
         'project_version': settings.PROJECT_VERSION,
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,
@@ -283,13 +284,13 @@ def EmployeeNew(request):
 
 
 class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):    
+
     #template_name = 'leave/employeeinstance_list.html'
     permission_required = ('leave.view_employeeinstance')
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE    
     model = EmployeeInstance
     #paginate_by = 20    
 
@@ -313,9 +314,12 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         else:
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
+        # today_date = settings.TODAY_DATE
+        today_date = getDateFormatDisplay(user_language)
+
         context.update({
             'page_title': settings.PROJECT_NAME,
-            'today_date': settings.TODAY_DATE,
+            'today_date': today_date,
             'project_version': settings.PROJECT_VERSION,
             'db_server': settings.DATABASES['default']['HOST'],
             'project_name': settings.PROJECT_NAME,
@@ -341,7 +345,6 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE    
     model = EmployeeInstance
     paginate_by = 10
     permission_required = 'leave.view_employeeinstance'
@@ -370,9 +373,12 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
         else:
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
+        # today_date = settings.TODAY_DATE
+        today_date = getDateFormatDisplay(user_language)
+
         context.update({
             'page_title': settings.PROJECT_NAME,
-            'today_date': settings.TODAY_DATE,
+            'today_date': today_date,
             'project_version': settings.PROJECT_VERSION,
             'db_server': settings.DATABASES['default']['HOST'],
             'project_name': settings.PROJECT_NAME,
@@ -450,7 +456,8 @@ def LeavePolicy(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE    
+    # today_date = settings.TODAY_DATE
+    today_date = getDateFormatDisplay(user_language)
     leave_policy = LeavePlan.EmployeeLeavePolicy(request)
 
     username = request.user.username
@@ -513,7 +520,7 @@ def LeavePolicy(request):
 
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
-        'today_date': settings.TODAY_DATE,
+        'today_date': today_date,
         'project_version': settings.PROJECT_VERSION,
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,        
@@ -534,11 +541,12 @@ def LeaveApproval(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE
+    # today_date = settings.TODAY_DATE
+    today_date = getDateFormatDisplay(user_language)
 
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
-        'today_date': settings.TODAY_DATE,
+        'today_date': today_date,
         'project_version': settings.PROJECT_VERSION,
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,        
@@ -558,7 +566,6 @@ class LeaveApprovalListView(generic.ListView):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE
     template_name = 'leave/leave_approval_list.html'
     #permission_required = ('leave.approve_leaveplan')
     model = EmployeeInstance
@@ -569,6 +576,8 @@ class LeaveApprovalListView(generic.ListView):
 
         user_language = getDefaultLanguage(self.request.user.username)
         translation.activate(user_language)
+        # today_date = settings.TODAY_DATE
+        today_date = getDateFormatDisplay(user_language)
         
         # Check number of waiting leave request
         waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p')"))
@@ -587,7 +596,7 @@ class LeaveApprovalListView(generic.ListView):
 
         context.update({
             'page_title': settings.PROJECT_NAME,
-            'today_date': settings.TODAY_DATE,
+            'today_date': today_date,
             'project_version': settings.PROJECT_VERSION,
             'db_server': settings.DATABASES['default']['HOST'],
             'project_name': settings.PROJECT_NAME,
@@ -610,7 +619,8 @@ def EmployeeInstanceApprove(request, pk):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE    
+    # today_date = settings.TODAY_DATE
+    today_date = getDateFormatDisplay(user_language)
     employee_leave_instance = get_object_or_404(EmployeeInstance, pk=pk)
 
     if request.method == 'POST':
@@ -680,7 +690,7 @@ def EmployeeInstanceApprove(request, pk):
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,
         'project_version': settings.PROJECT_VERSION,
-        'today_date' : settings.TODAY_DATE,
+        'today_date' : today_date,
         'waiting_for_approval_item': waiting_for_approval_item,
         'username_display': username_display,
     }
@@ -697,7 +707,8 @@ def EmployeeInstanceReject(request, pk):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE   
+    # today_date = settings.TODAY_DATE
+    today_date = getDateFormatDisplay(user_language)
     employee_leave_instance = get_object_or_404(EmployeeInstance, pk=pk)
 
     if request.method == 'POST':
@@ -773,7 +784,7 @@ def EmployeeInstanceReject(request, pk):
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,
         'project_version': settings.PROJECT_VERSION,
-        'today_date' : settings.TODAY_DATE,
+        'today_date' : today_date,
         'waiting_for_approval_item': waiting_for_approval_item,
         'username_display': username_display,
     }
@@ -796,7 +807,8 @@ def LeaveTimeline(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE    
+    # today_date = settings.TODAY_DATE
+    today_date = getDateFormatDisplay(user_language)
     leave_policy = LeavePlan.EmployeeLeavePolicy(request)
 
     username = request.user.username
@@ -819,7 +831,7 @@ def LeaveTimeline(request):
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,
         'project_version': settings.PROJECT_VERSION,
-        'today_date' : settings.TODAY_DATE,
+        'today_date' : today_date,
         'leave_approved_items': leave_approved_items,
         'able_to_approve_leave_request': able_to_approve_leave_request,
         'user_language': user_language,

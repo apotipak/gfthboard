@@ -2,22 +2,7 @@
   <footer class="main-footer">
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
-    	{{ today_date|date:"D d M Y" }}
-
-        <!--
-        {% load i18n %}
-        {% language 'th' %}
-          {{ today_date|date:'D, d N Y' }}
-        {% endlanguage %}
-        -->
-
-        <!--
-        {% load l10n %}
-        {% localize on %}
-            {{ today_date|localize }}
-        {% endlocalize %}
-        -->
-
+        {{ today_date }}
     </div>
 <!-- Default to the left -->
     v. <b>{{ project_version }}</b> | 

@@ -14,13 +14,14 @@ from django.utils.translation import ugettext as _
 from django.utils import translation
 from django.db.models import CharField, Value as V
 from django.db.models.functions import Concat
+from django.utils import timezone
 
 
 @login_required(login_url='/accounts/login/')
 def index(request):    
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
-
+    
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
@@ -30,7 +31,9 @@ def index(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE
+
+    # today_date = settings.TODAY_DATE
+    today_date = getDateFormatDisplay(user_language)
 
     return render(request, 'index.html', {
         'page_title': page_title, 
@@ -50,7 +53,8 @@ def StaffProfile(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE    
+    # today_date = settings.TODAY_DATE    
+    today_date = getDateFormatDisplay(user_language)
     EmployeeInstance = LeaveEmployee.EmployeeInstance(request)
     SuperVisorInstance = LeaveEmployee.SuperVisorInstance(request)
     TeamMemberList = LeaveEmployee.TeamMemberList(request)
@@ -88,7 +92,8 @@ def StaffPassword(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE    
+    # today_date = settings.TODAY_DATE
+    today_date = getDateFormatDisplay(user_language)  
 
     form = UserForm(request.POST, user=request.user)
  
@@ -126,7 +131,8 @@ def StaffLanguage(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE    
+    # today_date = settings.TODAY_DATE
+    today_date = getDateFormatDisplay(user_language)   
 
     form = LanguageForm(request.POST, user=request.user)
 
@@ -176,7 +182,8 @@ def HelpEleave(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE   
+    # today_date = settings.TODAY_DATE
+    today_date = getDateFormatDisplay(user_language) 
 
     return render(request, 'page/help_eleave.html', {
         'page_title': page_title, 

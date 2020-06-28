@@ -686,275 +686,275 @@ msgstr ""
 
 #: .\env\Lib\site-packages\django\utils\dates.py:6
 msgid "Monday"
-msgstr ""
+msgstr "จันทร์"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:6
 msgid "Tuesday"
-msgstr ""
+msgstr "อังคาร"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:6
 msgid "Wednesday"
-msgstr ""
+msgstr "พุธ"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:6
 msgid "Thursday"
-msgstr ""
+msgstr "พฤหัส"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:6
 msgid "Friday"
-msgstr ""
+msgstr "ศุกร์"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:7
 msgid "Saturday"
-msgstr ""
+msgstr "เสาร์"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:7
 msgid "Sunday"
-msgstr ""
+msgstr "อาทิตย์"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:10
 msgid "Mon"
-msgstr ""
+msgstr "จ."
 
 #: .\env\Lib\site-packages\django\utils\dates.py:10
 msgid "Tue"
-msgstr ""
+msgstr "อ."
 
 #: .\env\Lib\site-packages\django\utils\dates.py:10
 msgid "Wed"
-msgstr ""
+msgstr "พ."
 
 #: .\env\Lib\site-packages\django\utils\dates.py:10
 msgid "Thu"
-msgstr ""
+msgstr "พฤ."
 
 #: .\env\Lib\site-packages\django\utils\dates.py:10
 msgid "Fri"
-msgstr ""
+msgstr "ศ."
 
 #: .\env\Lib\site-packages\django\utils\dates.py:11
 msgid "Sat"
-msgstr ""
+msgstr "ส."
 
 #: .\env\Lib\site-packages\django\utils\dates.py:11
 msgid "Sun"
-msgstr ""
+msgstr "อา."
 
 #: .\env\Lib\site-packages\django\utils\dates.py:14
 msgid "January"
-msgstr ""
+msgstr "มกราคม"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:14
 msgid "February"
-msgstr ""
+msgstr "กุมภาพันธ์"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:14
 msgid "March"
-msgstr ""
+msgstr "มีนาคม"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:14
 msgid "April"
-msgstr ""
+msgstr "เมษายน"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:14
 msgid "May"
-msgstr ""
+msgstr "พฤษภาคม"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:14
 msgid "June"
-msgstr ""
+msgstr "มิถุนายน"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:15
 msgid "July"
-msgstr ""
+msgstr "กรกฎาคม"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:15
 msgid "August"
-msgstr ""
+msgstr "สิงหาคม"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:15
 msgid "September"
-msgstr ""
+msgstr "กันยายน"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:15
 msgid "October"
-msgstr ""
+msgstr "ตุลาคม"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:15
 msgid "November"
-msgstr ""
+msgstr "พฤศจิกายน"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:16
 msgid "December"
-msgstr ""
+msgstr "ธันวาคม"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:19
 msgid "jan"
-msgstr ""
+msgstr "jan"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:19
 msgid "feb"
-msgstr ""
+msgstr "feb"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:19
 msgid "mar"
-msgstr ""
+msgstr "mar"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:19
 msgid "apr"
-msgstr ""
+msgstr "apr"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:19
 msgid "may"
-msgstr ""
+msgstr "may"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:19
 msgid "jun"
-msgstr ""
+msgstr "jun"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:20
 msgid "jul"
-msgstr ""
+msgstr "jul"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:20
 msgid "aug"
-msgstr ""
+msgstr "aug"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:20
 msgid "sep"
-msgstr ""
+msgstr "sep"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:20
 msgid "oct"
-msgstr ""
+msgstr "oct"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:20
 msgid "nov"
-msgstr ""
+msgstr "nov"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:20
 msgid "dec"
-msgstr ""
+msgstr "dev"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:23
 msgctxt "abbrev. month"
 msgid "Jan."
-msgstr ""
+msgstr "Jan"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:24
 msgctxt "abbrev. month"
 msgid "Feb."
-msgstr ""
+msgstr "Feb"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:25
 msgctxt "abbrev. month"
 msgid "March"
-msgstr ""
+msgstr "March"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:26
 msgctxt "abbrev. month"
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:27
 msgctxt "abbrev. month"
 msgid "May"
-msgstr ""
+msgstr "May"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:28
 msgctxt "abbrev. month"
 msgid "June"
-msgstr ""
+msgstr "June"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:29
 msgctxt "abbrev. month"
 msgid "July"
-msgstr ""
+msgstr "July"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:30
 msgctxt "abbrev. month"
 msgid "Aug."
-msgstr ""
+msgstr "Aug"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:31
 msgctxt "abbrev. month"
 msgid "Sept."
-msgstr ""
+msgstr "Sept"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:32
 msgctxt "abbrev. month"
 msgid "Oct."
-msgstr ""
+msgstr "Oct"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:33
 msgctxt "abbrev. month"
 msgid "Nov."
-msgstr ""
+msgstr "Nov"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:34
 msgctxt "abbrev. month"
 msgid "Dec."
-msgstr ""
+msgstr "Dec"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:37
 msgctxt "alt. month"
 msgid "January"
-msgstr ""
+msgstr "January"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:38
 msgctxt "alt. month"
 msgid "February"
-msgstr ""
+msgstr "February"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:39
 msgctxt "alt. month"
 msgid "March"
-msgstr ""
+msgstr "March"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:40
 msgctxt "alt. month"
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:41
 msgctxt "alt. month"
 msgid "May"
-msgstr ""
+msgstr "May"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:42
 msgctxt "alt. month"
 msgid "June"
-msgstr ""
+msgstr "June"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:43
 msgctxt "alt. month"
 msgid "July"
-msgstr ""
+msgstr "July"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:44
 msgctxt "alt. month"
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:45
 msgctxt "alt. month"
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:46
 msgctxt "alt. month"
 msgid "October"
-msgstr ""
+msgstr "October"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:47
 msgctxt "alt. month"
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #: .\env\Lib\site-packages\django\utils\dates.py:48
 msgctxt "alt. month"
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #: .\env\Lib\site-packages\django\utils\ipv6.py:8
 msgid "This is not a valid IPv6 address."
@@ -1622,7 +1622,7 @@ msgstr "แผนก"
 
 #: .\page\templates\page\staff_profile.html:95
 msgid "My Manager"
-msgstr "หัวหน้า"
+msgstr "ผู้จัดการ"
 
 #: .\page\templates\page\staff_profile.html:97
 msgid "My Team"
