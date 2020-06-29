@@ -24,44 +24,65 @@
 
 
   <!-- Navbar -->
-  <nav class="main-header navbar-expand-md navbar-light navbar-white container-fluid full" style="background-image: url({% static 'img/10.jpg' %});background-repeat: no-repeat;background-position:center;background-size:cover;min-height:15vh;">
+  <nav class="main-header navbar-expand-md navbar-light navbar-white container-fluid full" style="background-image: url({% static 'img/10.jpg' %});background-repeat: no-repeat;background-position:center;background-size:cover;min-height:12vh;">
+
     <div class="container full">
 
       <div class="row">
         <div class="col-12 text-center .d-block .d-sm-none">
+          <!--
+          <a href="/" class="navbar-brand">
+            <img src="{% static 'dist/img/logo-big.png' %}" alt="Logo" width="160px;" class="img-responsive">
+          </a>
+          -->
+          &nbsp;
+        </div>
+
+        <div class="col-6">
           <a href="/" class="navbar-brand">
             <img src="{% static 'dist/img/logo-big.png' %}" alt="Logo" width="160px;" class="img-responsive">
           </a>
         </div>
 
-        <div class="col-6">
-          <a class="nav-link" href="{% url 'staff-profile' %}">
-            <span class="text-secondary">{% trans 'Welcome' %}</span>&nbsp;
-            {% if user.is_authenticated %}
-                {% if user.is_superuser %}
-                     <b>Admin</b>
-                {% else %}
-                    <b class="text-primary">{{ username_display }}</b>
-                {% endif %}
-            {% endif %}
-          </a>
-        </div>
-
-        <div class="col-6">
+        <div class="col-6 pt-1">
           <!-- Right navbar links -->
           <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto float-right">
-            <!-- Notifications Dropdown Menu -->
-            {% include "notification.html" %}
-
-            <li class="nav-item">
-              <a class="nav-link" href="#"></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-nowrap" href="{% url 'logout'%}?next=/accounts/login">
-                <i class="fas fa-sign-out-alt"></i> <span class="text-primary">{% trans 'Sign Out' %}</span>
+            <li class="nav-item dropdown">
+              <a class="nav-link pt-2 m-0" data-toggle="dropdown" href="#">
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                         <b>Admin</b>
+                    {% else %}
+                        <b class="text-primary">{{ username_display }}</b>
+                    {% endif %}
+                {% endif %}
+                  &nbsp;<i class="fas fa-caret-down fa-xs"></i>
               </a>
-            </li>        
+
+              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">            
+                <div class="dropdown-divider"></div>
+
+                <a href="{% url 'staff-profile' %}" class="dropdown-item">
+                  <i class="fas fa-user-alt text-secondary"></i>&nbsp;&nbsp;{% trans 'View Profile' %}
+                </a>
+
+                <div class="dropdown-divider"></div>
+
+                <a href="{% url 'staff-password' %}" class="dropdown-item">
+                  <i class="fas fa-key text-secondary"></i>&nbsp;&nbsp;{% trans 'Change Password' %}
+                </a>
+
+                <div class="dropdown-divider"></div>              
+
+                <a href="{% url 'logout'%}?next=/accounts/login" class="dropdown-item">
+                  <i class="fas fa-sign-out-alt text-secondary"></i>&nbsp;&nbsp;{% trans 'Sign Out' %}
+                </a>
+              </div>
+
+            </li>
+
           </ul>
+
         </div>
 
       </div>

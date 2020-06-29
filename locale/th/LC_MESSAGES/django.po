@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-29 10:07+0700\n"
+"POT-Creation-Date: 2020-06-29 21:46+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -376,8 +376,8 @@ msgid ""
 msgstr ""
 
 #: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2065
-#: .\leave\templates\leave\m1247_form.html:84
-#: .\leave\templates\leave\m1247_form.html:99
+#: .\leave\templates\leave\m1247_form.html:82
+#: .\leave\templates\leave\m1247_form.html:97
 msgid "Time"
 msgstr "เวลา"
 
@@ -1207,11 +1207,11 @@ msgstr "เลือกประเภทการลา"
 
 #: .\leave\form_m1247.py:32
 #: .\leave\templates\leave\employeeinstance_list.html:45
-#: .\leave\templates\leave\m1247_form.html:78
+#: .\leave\templates\leave\m1247_form.html:76
 msgid "Start"
 msgstr "ลาวันที่"
 
-#: .\leave\form_m1247.py:36 .\leave\templates\leave\m1247_form.html:93
+#: .\leave\form_m1247.py:36 .\leave\templates\leave\m1247_form.html:91
 msgid "End"
 msgstr "ถึงวันที่"
 
@@ -1324,7 +1324,7 @@ msgstr "อนุมัติ"
 #: .\leave\templates\leave\leave_approval_list.html:22
 #: .\leave\templates\leave\leave_policy.html:22
 #: .\leave\templates\leave\leave_timeline.html:22
-#: .\leave\templates\leave\m1247_form.html:22
+#: .\leave\templates\leave\m1247_form.html:20
 #: .\page\templates\page\staff_language.html:23
 #: .\page\templates\page\staff_password_form.html:23
 #: .\page\templates\page\staff_profile.html:22
@@ -1440,7 +1440,7 @@ msgstr "กรุณาตรวจสอบข้อมูลให้แน่
 msgid "Confirm"
 msgstr "ยืนยัน"
 
-#: .\leave\templates\leave\employeeinstance_list.html:11
+#: .\leave\templates\leave\employeeinstance_list.html:7
 #, fuzzy
 #| msgid "Leave History"
 msgid "Leave Histr"
@@ -1543,12 +1543,7 @@ msgstr ""
 msgid "There is no record."
 msgstr ""
 
-#: .\leave\templates\leave\leave_policy.html:9
-#, fuzzy
-#| msgid "Leave Entitlement"
-msgid "Leave ntitlement"
-msgstr "สิทธิ์การลา"
-
+#: .\leave\templates\leave\leave_policy.html:7
 #: .\leave\templates\leave\leave_policy.html:18
 #: .\leave\templates\leave\leave_policy.html:23
 #: .\page\templates\left_menu.html:92 .\page\templates\left_menu.html:229
@@ -1570,7 +1565,7 @@ msgid ""
 "more detais"
 msgstr "สิทธิ์วันลาของคุณยังไม่ได้สร้างไว้ในระบบ กรุณาสอบถามข้อมูลจากฝ่ายบุคคล"
 
-#: .\leave\templates\leave\leave_timeline.html:9
+#: .\leave\templates\leave\leave_timeline.html:7
 #: .\leave\templates\leave\leave_timeline.html:18
 #: .\leave\templates\leave\leave_timeline.html:23
 #: .\page\templates\left_menu.html:113
@@ -1592,22 +1587,22 @@ msgid ""
 "There is no record in E-Leave system. If you would like to take leave, please"
 msgstr "ยังไม่มีรายการอยู่ในระบบ หากต้องการใช้วันลา"
 
-#: .\leave\templates\leave\m1247_form.html:9
-#: .\leave\templates\leave\m1247_form.html:18
-#: .\leave\templates\leave\m1247_form.html:23
+#: .\leave\templates\leave\m1247_form.html:5
+#: .\leave\templates\leave\m1247_form.html:16
+#: .\leave\templates\leave\m1247_form.html:21
 #: .\page\templates\left_menu.html:123
 msgid "New Request"
 msgstr "เขียนใบลา"
 
-#: .\leave\templates\leave\m1247_form.html:108
+#: .\leave\templates\leave\m1247_form.html:106
 msgid "Choose file"
 msgstr "เลือกไฟล์"
 
-#: .\leave\templates\leave\m1247_form.html:154
+#: .\leave\templates\leave\m1247_form.html:152
 msgid "Preview"
 msgstr "คำนวณวัน"
 
-#: .\leave\templates\leave\m1247_form.html:156
+#: .\leave\templates\leave\m1247_form.html:154
 msgid "Submit Request"
 msgstr "ขออนุมัติ"
 
@@ -1664,9 +1659,10 @@ msgid "Profile"
 msgstr "โปรไฟล์"
 
 #: .\page\templates\left_menu.html:39 .\page\templates\left_menu.html:46
-#: .\page\templates\menu_bar.html:54
-#: .\page\templates\page\staff_password_form.html:9
+#: .\page\templates\menu_bar.html:54 .\page\templates\menu_bar.html:102
+#: .\page\templates\page\staff_password_form.html:7
 #: .\page\templates\page\staff_password_form.html:24
+#: .\page\templates\page_base_index.html:72
 msgid "Change Password"
 msgstr "เปลี่ยนรหัสผ่าน"
 
@@ -1686,11 +1682,11 @@ msgstr "อนุมัติใบลา"
 msgid "Leave Request"
 msgstr "ระบบลางานออนไลน์"
 
-#: .\page\templates\menu_bar.html:78 .\page\templates\page_base_index.html:39
-msgid "Welcome"
-msgstr "Welcome"
+#: .\page\templates\menu_bar.html:96 .\page\templates\page_base_index.html:66
+msgid "View Profile"
+msgstr "โปรไฟล์"
 
-#: .\page\templates\menu_bar.html:98 .\page\templates\page_base_index.html:61
+#: .\page\templates\menu_bar.html:108 .\page\templates\page_base_index.html:78
 msgid "Sign Out"
 msgstr "ออกจากระบบ"
 
@@ -1758,6 +1754,14 @@ msgstr "ตั้งค่าใหม่สำเร็จ"
 #| msgid "Change Password"
 msgid "Password"
 msgstr "เปลี่ยนรหัสผ่าน"
+
+#, fuzzy
+#~| msgid "Leave Entitlement"
+#~ msgid "Leave ntitlement"
+#~ msgstr "สิทธิ์การลา"
+
+#~ msgid "Welcome"
+#~ msgstr "Welcome"
 
 #~ msgid "Start Date"
 #~ msgstr "วันเริ่มงาน"

@@ -73,33 +73,47 @@
     </ul>
 
     <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        {% trans 'Welcome' %}&nbsp;
-        <a href="{% url 'staff-profile' %}" class="nav-link-menubar active">
-            {% if user.is_authenticated %}                
+    <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+
+
+      <li class="nav-item dropdown">
+        <a class="nav-link pt-2 m-0" data-toggle="dropdown" href="#">
+          <!--<i class="fas fa-user-alt text-secondary mr-2"></i>-->
+            {% if user.is_authenticated %}
                 {% if user.is_superuser %}
-                     <span class="text-primary"><b><a href="#">Admin</a></b></span>
+                     <b>Admin</b>
                 {% else %}
-                    <span class="text-primary"><b>{{ username_display }}</b></span>
+                    <b class="text-primary">{{ username_display }}</b>
                 {% endif %}
             {% endif %}
+            &nbsp;<i class="fas fa-caret-down fa-xs"></i>
         </a>
-      </li>
 
-      <!-- Notifications Dropdown Menu -->
-      {% include "notification.html" %}
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">            
+          <div class="dropdown-divider"></div>
 
-      <li class="nav-item">
-        <!--<a class="nav-link-menubar" href="/">Home</a>
-        <a class="nav-link-menubar" href="#">Contact</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <i class="fas fa-sign-out-alt text-secondary"></i>
-        <a class="nav-link-menubar text-primary" href="{% url 'logout'%}?next=/accounts/login">{% trans 'Sign Out' %}</a>
+          <a href="{% url 'staff-profile' %}" class="dropdown-item">
+            <i class="fas fa-user-alt text-secondary"></i>&nbsp;&nbsp;{% trans 'View Profile' %}
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="{% url 'staff-password' %}" class="dropdown-item">
+            <i class="fas fa-key text-secondary"></i>&nbsp;&nbsp;{% trans 'Change Password' %}
+          </a>
+
+          <div class="dropdown-divider"></div>              
+
+          <a href="{% url 'logout'%}?next=/accounts/login" class="dropdown-item">
+            <i class="fas fa-sign-out-alt text-secondary"></i>&nbsp;&nbsp;{% trans 'Sign Out' %}
+          </a>
+        </div>
 
       </li>
 
     </ul>
+
+
   </nav>
   <!-- /.navbar -->    
   </nav>
