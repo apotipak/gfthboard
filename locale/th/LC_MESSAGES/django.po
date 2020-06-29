@@ -1630,7 +1630,7 @@ msgstr "ป้อนรหัสเก่าไม่ถูกต้อง"
 
 #: .\page\forms.py:97 .\page\templates\menu_bar.html:66
 msgid "Set Display Language"
-msgstr "เลือกแสดงภาษา"
+msgstr "สลับภาษา"
 
 #: .\page\templates\index.html:17
 msgid "Leave request system"
