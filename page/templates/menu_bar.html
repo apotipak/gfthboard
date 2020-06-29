@@ -98,6 +98,12 @@
 
           <div class="dropdown-divider"></div>
 
+          <a href="{% url 'staff-language' %}" class="dropdown-item">
+            <i class="fas fa-font text-secondary"></i>&nbsp;&nbsp;{% trans 'Set Display Language' %}
+          </a>
+
+          <div class="dropdown-divider"></div>
+
           <a href="{% url 'staff-password' %}" class="dropdown-item">
             <i class="fas fa-key text-secondary"></i>&nbsp;&nbsp;{% trans 'Change Password' %}
           </a>
