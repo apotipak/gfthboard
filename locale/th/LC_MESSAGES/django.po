@@ -1541,7 +1541,7 @@ msgstr ""
 
 #: .\leave\templates\leave\leave_approval_list.html:110
 msgid "There is no record."
-msgstr ""
+msgstr "ยังไม่มีรายการอยู่ในระบบ"
 
 #: .\leave\templates\leave\leave_policy.html:9
 #, fuzzy
