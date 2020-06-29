@@ -1,8 +1,10 @@
 {% extends "page_default.html" %}
 
-{% block title %}อนุมัติประวัติการลา{% endblock %}
-
 {% block content %}
+
+{% load i18n %}
+
+{% block title %}{%trans 'Approval'%}{% endblock %}
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -11,12 +13,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">ต้องการอนุมัติวันลา</h1>
+            <h1 class="m-0 text-dark">{% trans 'Approve' %}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
-              <li class="breadcrumb-item active">ประวัติการลา</li>
+              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
+              <li class="breadcrumb-item active">{% trans 'Approve' %}</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -33,23 +35,23 @@
 
             <form action="" method="POST">
               {% csrf_token %}              
-              <b>รหัส:</b>&nbsp;&nbsp;{{ employee_leave_instance.emp_id }}<br>
-              <b>พนักงาน:</b>&nbsp;&nbsp;{{ leave_employee.emp_fname_th }} {{ leave_employee.emp_lname_th }}<br>
-              <b>ประเภทการลา:</b>&nbsp;&nbsp;{{ employee_leave_instance.leave_type }}<br>
-              <b>ลาวันที่:</b>&nbsp;&nbsp;{{ employee_leave_instance.start_date|date:'d N y H:i'}} - {{ employee_leave_instance.end_date|date:'d N y H:i'}}<br>
-              <b>จำนวน:</b>&nbsp;&nbsp;
+              <b>{% trans 'Employee ID' %}:</b>&nbsp;&nbsp;{{ employee_leave_instance.emp_id }}<br>
+              <b>{% trans 'Employee' %}:</b>&nbsp;&nbsp;{{ leave_employee.emp_fname_th }} {{ leave_employee.emp_lname_th }}<br>
+              <b>{% trans 'Leave Type' %}:</b>&nbsp;&nbsp;{{ employee_leave_instance.leave_type }}<br>
+              <b>{% trans 'Date' %}:</b>&nbsp;&nbsp;{{ employee_leave_instance.start_date|date:'d N y H:i'}} - {{ employee_leave_instance.end_date|date:'d N y H:i'}}<br>
+              <b>{% trans 'Amount' %}:</b>&nbsp;&nbsp;
               {% if employee_leave_instance.lve_act != 0 %}
-                  {{employee_leave_instance.lve_act}} วัน
+                  {{employee_leave_instance.lve_act}} {% trans 'Day' %}
                   {% if employee_leave_instance.lve_act_hr != 0 %}
-                    &nbsp;{{employee_leave_instance.lve_act_hr}} ช.ม.
+                    &nbsp;{{employee_leave_instance.lve_act_hr}} {% trans 'Hour' %}
                   {% endif %}
               {% else %}
-                  {{employee_leave_instance.lve_act_hr}} ช.ม.
+                  {{employee_leave_instance.lve_act_hr}} {% trans 'Hour' %}
               {% endif %}
               <br><br>
-              <div class="alert alert-warning" role="alert"><i class="fas fa-exclamation"></i>&nbsp;&nbsp;กรุณาตรวจสอบข้อมูลอีกครั้งก่อนกดปุ่มอนุมัติ</div>
-              <input type="button" class="btn btn-secondary" onclick="history.back()" value="ย้อนกลับ" />
-              <input type="submit" class="btn btn-success" action="" value="อนุมัติ" />
+              <div class="alert alert-warning" role="alert"><i class="fas fa-exclamation"></i>&nbsp;&nbsp;{% trans 'Please check data carefully before approve this request.' %}</div>
+              <input type="button" class="btn btn-secondary" onclick="history.back()" value="{% trans 'Back' %}" />
+              <input type="submit" class="btn btn-success" action="" value="{% trans 'Approve' %}" />
             </form>
 
           </div>

@@ -1,8 +1,10 @@
 {% extends "page_base_generic.html" %}
 
-{% block title %}อนุมัติการลา{% endblock %}
-
 {% load humanize %}
+
+{% load i18n %}
+
+{% block title %}{%trans 'Approval'%}{% endblock %}
 
 {% block content %}
 
@@ -13,12 +15,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">อนุมัติใบลา</h1>
+            <h1 class="m-0 text-dark">{% trans 'Approval' %}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
-              <li class="breadcrumb-item active">อนุมัติใบลา</li>
+              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
+              <li class="breadcrumb-item active">{% trans 'Approval' %}</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -37,11 +39,11 @@
             <table id="leave_approval_table" class="table table-hover table-bordered table-striped">            
                 <thead>
                     <tr>
-                        <th scope="col">พนักงาน</th>
-                        <th scope="col">ประเภท</th>
-                        <th scope="col">ลาวันที่</th>
-                        <th scope="col">จำนวน</th>
-                        <th scope="col">วันที่ส่ง</th>
+                        <th scope="col">{% trans 'Employee' %}</th>
+                        <th scope="col">{% trans 'Type' %}</th>
+                        <th scope="col">{% trans 'Date' %}</th>
+                        <th scope="col">{% trans 'Amount' %}</th>
+                        <th scope="col">{% trans 'Created' %}</th>
                         <td scope="col">&nbsp;</td>
                     </tr>
                 </thead>
@@ -58,20 +60,20 @@
                         <td>{{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}}</td>
                         <td>
                         {% if leave.lve_act != 0 %}
-                            {{leave.lve_act}} วัน
+                            {{leave.lve_act}} {% trans 'Day' %}
                             {% if leave.lve_act_hr != 0 %}
-                              | {{leave.lve_act_hr}} ช.ม.
+                              | {{leave.lve_act_hr}} {% trans 'Hour' %}
                             {% endif %}
                         {% else %}
-                            {{leave.lve_act_hr}} ช.ม.
+                            {{leave.lve_act_hr}} {% trans 'Hour' %}
                         {% endif %}
                         </td>                        
                         <td><small>{{ leave.created_date|naturaltime }}</small></td>
                         <td class="text-right py-0 align-middle">
                           <div class="btn-group btn-group-sm">
                              {% if leave.status == 'p' %}
-                             <a href="/leave/leave-approval/{{leave.id}}/approve" class="btn btn-success"><i class="fas fa-check"></i> อนุมัติ</a>&nbsp;
-                             <a href="/leave/leave-approval/{{leave.id}}/reject" class="btn btn-danger"><i class="fas fa-times"></i> ไม่อนุมัติ</a>
+                             <a href="/leave/leave-approval/{{leave.id}}/approve" class="btn btn-success"><i class="fas fa-check"></i> {% trans 'Approve' %}</a>&nbsp;
+                             <a href="/leave/leave-approval/{{leave.id}}/reject" class="btn btn-danger"><i class="fas fa-times"></i> {% trans 'Reject' %}</a>
                              {% else %}
                                 &nbsp;
                              {% endif %}
@@ -105,7 +107,7 @@
             {% else %}
             <div class="col-lg-12">
               <div class="alert alert-success" role="alert">
-                  <i class="fa fa-info-circle"></i>&nbsp;&nbsp;ยังไม่มีรายการอยู่ในระบบ</a>
+                  <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{% trans 'There is no record.' %}</a>
               </div>           
             </div>
             {% endif %}
