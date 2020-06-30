@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-30 07:34+0700\n"
+"POT-Creation-Date: 2020-06-30 13:48+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1376,6 +1376,7 @@ msgstr ""
 #: .\leave\templates\leave\leave_policy.html:96
 #: .\leave\templates\leave\leave_policy.html:111
 #: .\leave\templates\leave\leave_policy.html:126
+#: .\leave\templates\leave\leave_timeline.html:103
 #: .\leave\templates\leave\m1247_form.html:284
 msgid "Day"
 msgstr "วัน"
@@ -1390,6 +1391,7 @@ msgstr "วัน"
 #: .\leave\templates\leave\leave_policy.html:100
 #: .\leave\templates\leave\leave_policy.html:115
 #: .\leave\templates\leave\leave_policy.html:130
+#: .\leave\templates\leave\leave_timeline.html:107
 #: .\leave\templates\leave\m1247_form.html:289
 msgid "Hour"
 msgstr "ช.ม."
@@ -1486,20 +1488,19 @@ msgid "Cancel"
 msgstr "ยกเลิก"
 
 #: .\leave\templates\leave\employeeinstance_list.html:105
-#: .\leave\templates\leave\leave_policy.html:45
-msgid "Pending"
-msgstr "รออนุมัติ"
+msgid "Sync Pending"
+msgstr "Pending"
 
 #: .\leave\templates\leave\employeeinstance_list.html:108
 msgid "Note"
 msgstr "เหตุผล"
 
 #: .\leave\templates\leave\employeeinstance_list.html:111
-msgid "Success"
+msgid "Sync Success"
 msgstr "Success"
 
 #: .\leave\templates\leave\employeeinstance_list.html:113
-msgid "Fail"
+msgid "Sync Fail"
 msgstr "Fail"
 
 #: .\leave\templates\leave\employeeinstance_list.html:149
@@ -1563,6 +1564,10 @@ msgstr "คงเหลือ"
 msgid "Used"
 msgstr "ใช้ไป"
 
+#: .\leave\templates\leave\leave_policy.html:45
+msgid "Pending"
+msgstr "รออนุมัติ"
+
 #: .\leave\templates\leave\leave_policy.html:145
 msgid ""
 "Your leave entitlement is not defined yet. Please contact HR officer for "
@@ -1575,16 +1580,6 @@ msgstr "สิทธิ์วันลาของคุณยังไม่ไ
 #: .\page\templates\left_menu.html:113
 msgid "Timeline"
 msgstr "ไทม์ไลน์"
-
-#: .\leave\templates\leave\leave_timeline.html:103
-#, fuzzy
-#| msgid "Day"
-msgid "day"
-msgstr "วัน"
-
-#: .\leave\templates\leave\leave_timeline.html:107
-msgid "hour"
-msgstr "ช.ม."
 
 #: .\leave\templates\leave\leave_timeline.html:124
 msgid ""
@@ -1774,6 +1769,14 @@ msgstr "A new language has been set."
 #| msgid "Change Password"
 msgid "Password"
 msgstr "เปลี่ยนรหัสผ่าน"
+
+#, fuzzy
+#~| msgid "Day"
+#~ msgid "day"
+#~ msgstr "วัน"
+
+#~ msgid "hour"
+#~ msgstr "ช.ม."
 
 #, fuzzy
 #~| msgid "Leave Entitlement"

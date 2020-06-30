@@ -102,15 +102,15 @@
                               {% endif %}
 
                               {% if leave.status == 'a' %}
-                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Pending' %}</span>
+                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Sync Pending' %}</span>
                               {% elif leave.status == 'r' %}                              
                               <a href="#" data-url="{% url 'get_leave_reject_comment' leave.id %}" class="get_leave_reject_comment">
                                 <span class="badge badge-pill badge-light"><i class="far fa-comment-alt fa-sm text-secondary"></i>&nbsp;&nbsp;{% trans 'Note' %}</span>
                               </a>
                               {% elif leave.status == 'C' %}                              
-                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Success' %}</span>
+                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Sync Success' %}</span>
                               {% elif leave.status == 'F' %}
-                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Fail' %}</span>
+                              <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Sync Fail' %}</span>
                               {% else %}
                                 &nbsp;
                               {% endif %}
