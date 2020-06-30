@@ -1488,7 +1488,7 @@ msgstr "ยกเลิก"
 #: .\leave\templates\leave\employeeinstance_list.html:105
 #: .\leave\templates\leave\leave_policy.html:45
 msgid "Pending"
-msgstr "Pending"
+msgstr "รออนุมัติ"
 
 #: .\leave\templates\leave\employeeinstance_list.html:108
 msgid "Note"
