@@ -1611,8 +1611,6 @@ msgid "Submit Request"
 msgstr "ขออนุมัติ"
 
 #: .\leave\templates\leave\m1247_form.html:251
-#, fuzzy
-#| msgid "Please select leave type"
 msgid "Please select Leave Type"
 msgstr "ยังไม่ได้เลือกประเภทการลา"
 
