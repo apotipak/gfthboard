@@ -1488,7 +1488,7 @@ msgstr "ยกเลิก"
 #: .\leave\templates\leave\employeeinstance_list.html:105
 #: .\leave\templates\leave\leave_policy.html:45
 msgid "Pending"
-msgstr "รออนุมัติ"
+msgstr "Pending"
 
 #: .\leave\templates\leave\employeeinstance_list.html:108
 msgid "Note"
@@ -1496,11 +1496,11 @@ msgstr "เหตุผล"
 
 #: .\leave\templates\leave\employeeinstance_list.html:111
 msgid "Success"
-msgstr "สำเร็จ"
+msgstr "Success"
 
 #: .\leave\templates\leave\employeeinstance_list.html:113
 msgid "Fail"
-msgstr "ผิดพลาด"
+msgstr "Fail"
 
 #: .\leave\templates\leave\employeeinstance_list.html:149
 msgid "There is no record. If you would like to take leave, please"
