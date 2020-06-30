@@ -153,7 +153,7 @@ def StaffLanguage(request):
                 employee.username = username
                 employee.save()
             
-            messages.success(request, _('A new language has been set.'))
+            messages.success(request, _('ตั้งค่าใหม่สำเร็จ'))
             return HttpResponseRedirect('/staff-language')
     else:
         form = LanguageForm(user=request.user)    

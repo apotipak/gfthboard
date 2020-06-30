@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-29 21:46+0700\n"
+"POT-Creation-Date: 2020-06-30 07:34+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1208,6 +1208,8 @@ msgstr "เลือกประเภทการลา"
 #: .\leave\form_m1247.py:32
 #: .\leave\templates\leave\employeeinstance_list.html:45
 #: .\leave\templates\leave\m1247_form.html:76
+#: .\leave\templates\leave\m1247_form.html:285
+#: .\leave\templates\leave\m1247_form.html:290
 msgid "Start"
 msgstr "ลาวันที่"
 
@@ -1374,6 +1376,7 @@ msgstr ""
 #: .\leave\templates\leave\leave_policy.html:96
 #: .\leave\templates\leave\leave_policy.html:111
 #: .\leave\templates\leave\leave_policy.html:126
+#: .\leave\templates\leave\m1247_form.html:284
 msgid "Day"
 msgstr "วัน"
 
@@ -1387,6 +1390,7 @@ msgstr "วัน"
 #: .\leave\templates\leave\leave_policy.html:100
 #: .\leave\templates\leave\leave_policy.html:115
 #: .\leave\templates\leave\leave_policy.html:130
+#: .\leave\templates\leave\m1247_form.html:289
 msgid "Hour"
 msgstr "ช.ม."
 
@@ -1539,9 +1543,9 @@ msgstr "กรุณาตรวจสอบข้อมูลให้แน่
 msgid "Created"
 msgstr ""
 
-#: .\leave\templates\leave\leave_approval_list.html:110
-msgid "There is no record."
-msgstr ""
+#: .\leave\templates\leave\leave_approval_list.html:90
+msgid "There is no leave request item."
+msgstr "ยังไม่มีรายการขออนุมัติวันลา"
 
 #: .\leave\templates\leave\leave_policy.html:7
 #: .\leave\templates\leave\leave_policy.html:18
@@ -1563,7 +1567,7 @@ msgstr "ใช้ไป"
 msgid ""
 "Your leave entitlement is not defined yet. Please contact HR officer for "
 "more detais"
-msgstr "สิทธิ์วันลาของคุณยังไม่ได้สร้างไว้ในระบบ กรุณาสอบถามข้อมูลจากฝ่ายบุคคล"
+msgstr "สิทธิ์วันลาของคุณยังไม่ได้สร้างไว้ในระบบ กรุณาติดต่อขอข้อมูลเพิ่มเติมจากฝ่ายบุคคล"
 
 #: .\leave\templates\leave\leave_timeline.html:7
 #: .\leave\templates\leave\leave_timeline.html:18
@@ -1606,6 +1610,23 @@ msgstr "คำนวณวัน"
 msgid "Submit Request"
 msgstr "ขออนุมัติ"
 
+#: .\leave\templates\leave\m1247_form.html:251
+#, fuzzy
+#| msgid "Please select leave type"
+msgid "Please select Leave Type"
+msgstr "ยังไม่ได้เลือกประเภทการลา"
+
+#: .\leave\templates\leave\m1247_form.html:285
+#: .\leave\templates\leave\m1247_form.html:290
+msgid "To"
+msgstr "ถึง"
+
+#: .\leave\templates\leave\m1247_form.html:290
+msgid ""
+"Please notice that if your leave period is between 4 hours or 8 hours, "
+"system will deduct 1 hour for lunch time automatcally."
+msgstr "หากจำนวนชั่วโมงที่เลือกเกิน 4 หรือ 8 ชั่วโมงต่อวัน ระบบจะหักเวลาพักหนึ่งชั่วโมงให้อัตโนมัติ"
+
 #: .\page\forms.py:23
 msgid "Enter old password"
 msgstr "ป้อนรหัสผ่านเก่า"
@@ -1628,7 +1649,8 @@ msgstr "ยืนยันรหัสไม่ตรงกัน"
 msgid "Incorrect old password"
 msgstr "ป้อนรหัสเก่าไม่ถูกต้อง"
 
-#: .\page\forms.py:97 .\page\templates\menu_bar.html:66
+#: .\page\forms.py:59 .\page\templates\menu_bar.html:66
+#: .\page\templates\menu_bar.html:102 .\page\templates\page_base_index.html:72
 msgid "Set Display Language"
 msgstr "สลับภาษา"
 
@@ -1659,10 +1681,10 @@ msgid "Profile"
 msgstr "โปรไฟล์"
 
 #: .\page\templates\left_menu.html:39 .\page\templates\left_menu.html:46
-#: .\page\templates\menu_bar.html:54 .\page\templates\menu_bar.html:102
+#: .\page\templates\menu_bar.html:54 .\page\templates\menu_bar.html:108
 #: .\page\templates\page\staff_password_form.html:7
 #: .\page\templates\page\staff_password_form.html:24
-#: .\page\templates\page_base_index.html:72
+#: .\page\templates\page_base_index.html:78
 msgid "Change Password"
 msgstr "เปลี่ยนรหัสผ่าน"
 
@@ -1686,7 +1708,7 @@ msgstr "ระบบลางานออนไลน์"
 msgid "View Profile"
 msgstr "โปรไฟล์"
 
-#: .\page\templates\menu_bar.html:108 .\page\templates\page_base_index.html:78
+#: .\page\templates\menu_bar.html:114 .\page\templates\page_base_index.html:84
 msgid "Sign Out"
 msgstr "ออกจากระบบ"
 
@@ -1739,15 +1761,15 @@ msgstr "ตำแหน่ง"
 
 #: .\page\templates\page\staff_profile.html:139
 msgid "There is no information. Please contact HR officer."
-msgstr "ไม่พบข้อมูลในระบบ กรุณาสอบถามข้อมูลจากเจ้าหน้าที่ฝ่ายบุคคล"
+msgstr "ไม่พบข้อมูลในระบบ กรุณาสอบถามข้อมูลเพิ่มเติมจากเจ้าหน้าที่ฝ่ายบุคคล"
 
 #: .\page\templates\page_daterange.html:105
 msgid "Search"
 msgstr "ค้นหา"
 
 #: .\page\views.py:156
-msgid "A new language has been set."
-msgstr "ตั้งค่าใหม่สำเร็จ"
+msgid "ตั้งค่าใหม่สำเร็จ"
+msgstr "A new language has been set."
 
 #: .\templates\registration\login.html:68
 #, fuzzy

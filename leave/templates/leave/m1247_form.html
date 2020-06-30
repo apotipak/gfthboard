@@ -248,7 +248,7 @@
     var end_minute = $('#id_end_minute').val();
 
     if(leave_type_id == "") {
-      $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>ยังไม่ได้เลือกประเภทการลา</strong></div>");
+      $('#show-error').html("<div class='alert alert-warning' role='alert'><i class='fas fa-exclamation'></i>&nbsp;&nbsp;{% trans 'Please select Leave Type' %}</div>");
 
     } else {
       $.ajax({
@@ -281,17 +281,14 @@
             d2 = moment(end_date).format("MMMM D  " + end_hour + ":" + end_minute);
 
             if (total_day > 0) {
-              result += total_day + " วัน ";
-              text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>เริ่ม&nbsp;<strong>" + d1 + "</strong> ถึง <strong>" + d2 + "</strong><br></div>";
+              result += total_day + " {% trans 'Day' %}";
+              text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br></div>";
             }
 
             if (total_hour > 0) {
-              result += total_hour + " ช.ม.";
-              text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>เริ่ม&nbsp;<strong>" + d1 + "</strong> ถึง <strong>" + d2 + "</strong><br>" + "</div><div><small>* หากจำนวนชั๋วโมงที่เลือกเกิน 4 หรือ 8 ชั่วโมงต่อวัน ระบบจะหักเวลาพักหนึ่งชั่วโมงให้อัตโนมัติ</small></div>";
-            }
-            
-
-            //text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>เริ่ม&nbsp;<strong>" + d1 + "</strong> ถึง <strong>" + d2 + "</strong><br>" + "</div><div><small>* หากจำนวนชั๋วโมงที่เลือกเกิน 4 หรือ 8 ชั่วโมงต่อวัน ระบบจะหักเวลาพักหนึ่งชั่วโมงให้อัตโนมัติ</small></div>";
+              result += total_hour + " {% trans 'Hour' %}";
+              text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br>" + "</div><div><small>* {% trans 'Please notice that if your leave period is between 4 hours or 8 hours, system will deduct 1 hour for lunch time automatcally.' %}</small></div>";
+            }            
 
             $('#show-error').html(text);
 
