@@ -37,14 +37,16 @@
           -->
           &nbsp;
         </div>
+      </div>
 
+      <div class="row">
         <div class="col-6">
           <a href="/" class="navbar-brand">
             <img src="{% static 'dist/img/logo-big.png' %}" alt="Logo" width="160px;" class="img-responsive">
           </a>
         </div>
 
-        <div class="col-6 pt-1">
+        <div class="col-6 pt-1 float-right text-right">
           <!-- Right navbar links -->
           <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto float-right">
             <li class="nav-item dropdown">
@@ -92,8 +94,8 @@
         </div>
 
       </div>
-
     </div>
+
   </nav>
   <!-- /.navbar -->
 
@@ -113,6 +115,12 @@
 
     <!-- Main content -->
     <div class="content">
+      
+      <div class="row">
+        <div class="col-12 text-center pb-4">
+          <span class="text-info"><i class="fas fa-bullhorn"></i>&nbsp;&nbsp;รายการต่างๆในระบบ E-Leave ทั้งหมดจะถูกลบออกวันที่ 1 ก.ค. 2520 เวลา 8.30 - 9.30 น. </span>
+        </div>
+      </div>
 
       {% block content %}{% endblock %}      
 
