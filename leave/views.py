@@ -33,7 +33,8 @@ from django.core.files.storage import FileSystemStorage
 from django.utils import translation
 
 
-excluded_username = {'900590','580816','900630'}
+# excluded_username = {'900590','580816','900630'}
+excluded_username = {}
 current_year = datetime.now().year
 
 
