@@ -1314,8 +1314,6 @@ msgstr "อนุมัติ"
 #: .\leave\templates\leave\employeeinstance_approve.html:21
 #: .\leave\templates\leave\employeeinstance_approve.html:54
 #: .\leave\templates\leave\leave_approval_list.html:75
-#, fuzzy
-#| msgid "Approved"
 msgid "Approve"
 msgstr "อนุมัติ"
 
