@@ -158,10 +158,9 @@ def EmployeeNew(request):
             start_date = datetime.strptime(d1, dattime_format)
             end_date = datetime.strptime(d2, dattime_format)
 
-            #leave_type_id = form.cleaned_data['leave_type']
             leave_type_id = form.data['leave_type']
             leave_type = form.cleaned_data['leave_type']
-
+            leave_reason = form.cleaned_data['leave_reason']
             username = request.user.username
             fullname = request.user.first_name + " " + request.user.last_name
             created_by = request.user.username                        
@@ -172,6 +171,7 @@ def EmployeeNew(request):
             employee.end_date = end_date
             employee.emp_id = request.user.username
             employee.created_by = request.user.username
+            employee.leave_reason = leave_reason
 
             '''
             if request.user.groups.filter(name__in=['E-Leave Staff','E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
@@ -797,6 +797,13 @@ def EmployeeInstanceReject(request, pk):
 def get_leave_reject_comment(request, pk):
     comment = EmployeeInstance.objects.filter(id__exact=pk).values('comment')[0] or None
     return JsonResponse(comment)
+
+
+@login_required(login_url='/accounts/login/')
+def get_leave_reason(request, pk):    
+    reason = EmployeeInstance.objects.filter(id__exact=pk).values('leave_reason')[0] or None
+    print("pk: " + str(pk) + " " + str(reason))
+    return JsonResponse(reason)
 
 
 @login_required(login_url='/accounts/login/')

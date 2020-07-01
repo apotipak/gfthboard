@@ -100,11 +100,12 @@
                       {{ form.end_minute }}                      
                     </div>
 
-                    <!--
-                    <div class="input-group col-xs-12">
+                    <div class="input-group mb-3 col-xs-12">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text rounded-0"><i class="fa fa-comment" aria-hidden="true"></i>&nbsp;{% trans 'Reason' %}&nbsp;&nbsp;&nbsp;</span>
+                      </div>                      
                       {{ form.leave_reason }}
                     </div>
-                    -->
                     
                     <div class="custom-file col-12">
                       <input type="file" class="custom-file-input" id="id_document" name="document">

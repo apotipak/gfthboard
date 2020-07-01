@@ -42,14 +42,11 @@ class EmployeeM1247Form(forms.ModelForm):
 
     document = forms.FileField(required=False)
 
-    # leave_resaon = forms.CharField(widget=forms.Textarea)
+    leave_reason = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 2, 'cols': 20}), max_length=200)
 
     class Meta:
         model = EmployeeInstance
-        fields = ['start_date', 'end_date', 'leave_type', 'lve_act', 'lve_act_hr', 'document']
-        widgets = {
-            'leave_resaon': Textarea(attrs={'rows':2, 'cols':10}),
-        }
+        fields = ['start_date', 'end_date', 'leave_type', 'lve_act', 'lve_act_hr', 'document', 'leave_reason']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
@@ -74,6 +71,8 @@ class EmployeeM1247Form(forms.ModelForm):
         self.initial['end_hour'] = 17
         self.fields['end_minute'].widget.attrs={'class': 'form-control border-top-0 rounded-0'}
         self.initial['end_minute'] = 0
+
+        self.fields['leave_reason'].widget.attrs={'class': 'form-control rounded-0'}
 
     def clean(self):
         datetime_format = "%Y-%m-%d %H:%M:%S"

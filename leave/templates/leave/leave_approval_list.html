@@ -53,8 +53,15 @@
                         <td>{{leave.emp_fname_th}} {{leave.emp_lname_th}}</td>
                         <td>
                           {{leave.leave_type}}
+
+                          {% if leave.leave_reason %}
+                            <a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason">
+                              <i class="fa fa-comment fa-xs"></i>
+                            </a>                            
+                          {% endif %}
+
                           {% if leave.document %}
-                            &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip" aria-hidden="true"></i></a>
+                            &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-xs" aria-hidden="true"></i></a>
                           {% endif %}                          
                         </td>
                         <td>{{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}}</td>
@@ -95,10 +102,31 @@
 
       </div><!-- /.container-fluid -->
     </section>
-    <!-- /.content -->
+    <!-- /.content -->    
   </div>
   <!-- /.content-wrapper -->
 
+  <!-- Modal -->
+  <div class="modal fade" id="leaveReasonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">{% trans 'Leave Reason' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">{% trans 'Close' %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->
+  
 {% endblock %}
 
 {% block javascript %}
@@ -137,5 +165,25 @@
       ]           
     });
   });
+
+  $(document).ready(function(){    
+
+   $("body").on("click", "a.get_leave_reason", function(event){
+      console.log("test");
+      var obj = $(this);  
+      $.ajax({
+          url: obj.attr("data-url"),
+          type: 'get',          
+          dataType: 'json',
+          beforeSend: function () {
+            $("#leaveReasonModal").modal("show");
+          },
+          success: function (data) {              
+            $("#leaveReasonModal .modal-body").html(data.leave_reason);
+          }
+      });
+   });
+
+  });  
 </script>
 {% endblock %}
