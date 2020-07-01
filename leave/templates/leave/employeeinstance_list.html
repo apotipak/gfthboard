@@ -60,7 +60,7 @@
 
                           {% if leave.leave_reason %}
                             <a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason">
-                              <i class="fa fa-comment fa-xs"></i>
+                              <i class="far fa-comment-alt fa-xs"></i>
                             </a>                            
                           {% endif %}
 
@@ -104,7 +104,7 @@
 
                           <div class="btn-group btn-group-xs">
                               {% if leave.status == 'p' %}
-                              <a href="/leave/leave-history/{{leave.id}}/delete" class="btn btn-danger btn-sm"><i class="fas fa-trash fa-xs"></i>&nbsp;&nbsp;{% trans 'Cancel' %}</a>
+                              <a href="/leave/leave-history/{{leave.id}}/delete" class="btn btn-danger btn-xs"><i class="fas fa-trash fa-xs"></i>&nbsp;&nbsp;{% trans 'Cancel' %}</a>
                               {% endif %}
 
                               {% if leave.status == 'a' %}
@@ -271,7 +271,7 @@
             }
         });
      });
-     
+
     });
 
   </script>

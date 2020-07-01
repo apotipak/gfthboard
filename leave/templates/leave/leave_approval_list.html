@@ -56,7 +56,7 @@
 
                           {% if leave.leave_reason %}
                             <a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason">
-                              <i class="fa fa-comment fa-xs"></i>
+                              <i class="far fa-comment-alt fa-xs"></i>
                             </a>                            
                           {% endif %}
 
@@ -79,8 +79,8 @@
                         <td class="text-right py-0 align-middle">
                           <div class="btn-group btn-group-sm">
                              {% if leave.status == 'p' %}
-                             <a href="/leave/leave-approval/{{leave.id}}/approve" class="btn btn-success"><i class="fas fa-check"></i> {% trans 'Approve' %}</a>&nbsp;
-                             <a href="/leave/leave-approval/{{leave.id}}/reject" class="btn btn-danger"><i class="fas fa-times"></i> {% trans 'Reject' %}</a>
+                             <a href="/leave/leave-approval/{{leave.id}}/approve" class="btn btn-success btn-xs"><i class="fas fa-check fa-xs"></i>&nbsp;{% trans 'Approve' %}</a>&nbsp;
+                             <a href="/leave/leave-approval/{{leave.id}}/reject" class="btn btn-danger btn-xs"><i class="fas fa-times fa-xs"></i>&nbsp;{% trans 'Reject' %}</a>
                              {% else %}
                                 &nbsp;
                              {% endif %}
@@ -126,7 +126,7 @@
     </div>
   </div>
   <!-- /.modal -->
-  
+
 {% endblock %}
 
 {% block javascript %}
