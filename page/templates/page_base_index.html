@@ -116,12 +116,13 @@
     <!-- Main content -->
     <div class="content">
       
+      {% if turn_announcement_on %}
       <div class="row">
         <div class="col-12 text-center pb-4">
-        <span class="text-info"><i class="fas fa-bullhorn"></i>&nbsp;&nbsp;รายการทั้งหมดที่ทดสอบวันนี้จะถูกลบออกวันที่ 1 ก.ค. 2020 เวลา 8.30 - 9.30 น.</span>
+        <span class="text-info"><i class="fas fa-bullhorn"></i>&nbsp;&nbsp;{{ announcement_message }}</span>
         </div>
       </div>
-
+      {% endif %}
       {% block content %}{% endblock %}      
 
     </div>
