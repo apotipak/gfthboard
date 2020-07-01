@@ -42,7 +42,7 @@ class EmployeeM1247Form(forms.ModelForm):
 
     document = forms.FileField(required=False)
 
-    leave_resaon = forms.CharField(widget=forms.Textarea)
+    # leave_resaon = forms.CharField(widget=forms.Textarea)
 
     class Meta:
         model = EmployeeInstance
