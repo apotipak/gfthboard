@@ -223,6 +223,9 @@ def EmployeeNew(request):
                     if settings.TURN_DUMMY_EMAIL_ON:
                         recipients = settings.DUMMY_EMAIL
 
+                    if len(leave_reason) <= 0:
+                        leave_reason = _('There is no reason provided.')
+
                     mail.send(                        
                         recipients, # To
                         settings.DEFAULT_FROM_EMAIL, # From
@@ -233,7 +236,8 @@ def EmployeeNew(request):
                             'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
                             'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
                             'ลาวันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึงวันที่ <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br>'
-                            'จำนวน: <strong>' + day_hour_display + '</strong><br><br>'
+                            'จำนวน: <strong>' + day_hour_display + '</strong><br>'
+                            'เหตุผลการลา: <strong>' + leave_reason + '</strong><br><br>'
                             'กรุณา <a href="http://27.254.207.51:8080">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br>'
                             '<br><br>--This email was sent from E-Leave System<br>'
                             'ref: ' + str(ref) + '<br>'
