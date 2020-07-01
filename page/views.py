@@ -22,6 +22,9 @@ def index(request):
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
     
+    TURN_ANNOUNCEMENT_ON = settings.TURN_ANNOUNCEMENT_ON
+    ANNOUNCEMENT_MESSAGE = settings.ANNOUNCEMENT_MESSAGE
+
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
@@ -42,6 +45,8 @@ def index(request):
         'db_server': db_server, 'today_date': today_date,
         'user_language': user_language,
         'username_display' : username_display,
+        'turn_announcement_on': TURN_ANNOUNCEMENT_ON,
+        'announcement_message': ANNOUNCEMENT_MESSAGE,
     })
 
 @login_required(login_url='/accounts/login/')
