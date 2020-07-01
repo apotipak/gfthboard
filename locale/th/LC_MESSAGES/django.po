@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-01 12:16+0700\n"
+"POT-Creation-Date: 2020-07-01 12:39+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1313,7 +1313,7 @@ msgstr "อนุมัติ"
 #: .\leave\templates\leave\employeeinstance_approve.html:16
 #: .\leave\templates\leave\employeeinstance_approve.html:21
 #: .\leave\templates\leave\employeeinstance_approve.html:54
-#: .\leave\templates\leave\leave_approval_list.html:80
+#: .\leave\templates\leave\leave_approval_list.html:82
 msgid "Approve"
 msgstr "อนุมัติ"
 
@@ -1367,7 +1367,7 @@ msgstr ""
 #: .\leave\templates\leave\employeeinstance_confirm_delete.html:39
 #: .\leave\templates\leave\employeeinstance_reject.html:45
 #: .\leave\templates\leave\employeeinstance_reject.html:47
-#: .\leave\templates\leave\leave_approval_list.html:68
+#: .\leave\templates\leave\leave_approval_list.html:70
 #: .\leave\templates\leave\leave_policy.html:54
 #: .\leave\templates\leave\leave_policy.html:56
 #: .\leave\templates\leave\leave_policy.html:63
@@ -1383,8 +1383,8 @@ msgstr "วัน"
 #: .\leave\templates\leave\employeeinstance_approve.html:49
 #: .\leave\templates\leave\employeeinstance_confirm_delete.html:44
 #: .\leave\templates\leave\employeeinstance_reject.html:50
-#: .\leave\templates\leave\leave_approval_list.html:70
-#: .\leave\templates\leave\leave_approval_list.html:73
+#: .\leave\templates\leave\leave_approval_list.html:72
+#: .\leave\templates\leave\leave_approval_list.html:75
 #: .\leave\templates\leave\leave_policy.html:67
 #: .\leave\templates\leave\leave_policy.html:100
 #: .\leave\templates\leave\leave_policy.html:115
@@ -1526,17 +1526,19 @@ msgstr "เหตุผล"
 
 #: .\leave\templates\leave\employeeinstance_list.html:208
 #: .\leave\templates\leave\employeeinstance_list.html:229
+#: .\leave\templates\leave\leave_approval_list.html:123
 msgid "Close"
 msgstr "ปิด"
 
 #: .\leave\templates\leave\employeeinstance_list.html:220
+#: .\leave\templates\leave\leave_approval_list.html:114
 msgid "Leave Reason"
 msgstr "เหตุผลการลา"
 
 #: .\leave\templates\leave\employeeinstance_reject.html:5
 #: .\leave\templates\leave\employeeinstance_reject.html:16
 #: .\leave\templates\leave\employeeinstance_reject.html:59
-#: .\leave\templates\leave\leave_approval_list.html:81
+#: .\leave\templates\leave\leave_approval_list.html:83
 msgid "Reject"
 msgstr "ไม่อนุมัติ"
 
@@ -1548,7 +1550,7 @@ msgstr "กรุณาตรวจสอบข้อมูลให้แน่
 msgid "Created"
 msgstr ""
 
-#: .\leave\templates\leave\leave_approval_list.html:95
+#: .\leave\templates\leave\leave_approval_list.html:97
 msgid "There is no leave request item."
 msgstr "ยังไม่มีรายการขออนุมัติวันลา"
 
@@ -1623,6 +1625,10 @@ msgid ""
 "Please notice that if your leave period is between 4 hours or 8 hours, "
 "system will deduct 1 hour for lunch time automatcally."
 msgstr "หากจำนวนชั่วโมงที่เลือกเกิน 4 หรือ 8 ชั่วโมงต่อวัน ระบบจะหักเวลาพักหนึ่งชั่วโมงให้อัตโนมัติ"
+
+#: .\leave\views.py:227
+msgid "There is no reason provided."
+msgstr "ไม่ได้ระบุเหตุผลการลา"
 
 #: .\page\forms.py:23
 msgid "Enter old password"
