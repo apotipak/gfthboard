@@ -15,6 +15,7 @@ from .rules import *
 from django.utils.dateparse import parse_datetime
 from django import forms
 from django.template.defaultfilters import filesizeformat
+from django.forms import Textarea
 
 
 current_year = datetime.now().year
@@ -41,9 +42,14 @@ class EmployeeM1247Form(forms.ModelForm):
 
     document = forms.FileField(required=False)
 
+    leave_resaon = forms.CharField(widget=forms.Textarea)
+
     class Meta:
         model = EmployeeInstance
         fields = ['start_date', 'end_date', 'leave_type', 'lve_act', 'lve_act_hr', 'document']
+        widgets = {
+            'leave_resaon': Textarea(attrs={'rows':2, 'cols':10}),
+        }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
