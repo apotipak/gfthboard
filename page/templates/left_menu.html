@@ -51,14 +51,14 @@
             {% if request.path|slice:":15" == '/staff-language' %}
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-language' %}" class="nav-link active">
-                &nbsp;&nbsp;<i class="fas fa-font"></i>&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;<i class="fa fa-language" aria-hidden="true"></i></i>&nbsp;&nbsp;&nbsp;
                 <p>{% trans 'Set Default Language' %}</p>
               </a>
             </li>
             {% else %}
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-language' %}" class="nav-link">
-                &nbsp;&nbsp;<i class="fas fa-font"></i>&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;<i class="fa fa-language" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;
                 <p>{% trans 'Set Default Language' %}</p>
               </a>
             </li>
