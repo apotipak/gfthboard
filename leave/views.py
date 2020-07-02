@@ -584,7 +584,6 @@ class LeavePendingApproveListView(PermissionRequiredMixin, generic.ListView):
 
         user_language = getDefaultLanguage(self.request.user.username)
         translation.activate(user_language)
-        # today_date = settings.TODAY_DATE
         today_date = getDateFormatDisplay(user_language)
         
         # Check number of waiting leave request
@@ -633,7 +632,6 @@ class LeaveApprovedListView(PermissionRequiredMixin, generic.ListView):
 
         user_language = getDefaultLanguage(self.request.user.username)
         translation.activate(user_language)
-        # today_date = settings.TODAY_DATE
         today_date = getDateFormatDisplay(user_language)
         
         # Check number of waiting leave request
@@ -711,7 +709,7 @@ class LeaveRejectedListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('r') order by updated_date desc")
+        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.comment, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('r') order by updated_date desc")
 
 
 #@permission_required('leave.approve_leaveplan')
@@ -905,7 +903,6 @@ def get_leave_reject_comment(request, pk):
 @login_required(login_url='/accounts/login/')
 def get_leave_reason(request, pk):    
     reason = EmployeeInstance.objects.filter(id__exact=pk).values('leave_reason')[0] or None
-    # print("pk: " + str(pk) + " " + str(reason))
     return JsonResponse(reason)
 
 

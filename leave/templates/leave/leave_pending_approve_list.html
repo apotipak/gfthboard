@@ -13,11 +13,14 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
+
         <div class="row mb-2">
-          <div class="col-sm-6">
+          
+          <div class="col-4 text-nowrap">
             <h1 id="page-title" class="m-0 text-dark">{% trans 'Pending List' %}</h1>
           </div><!-- /.col -->
-          <div class="col-sm-6">
+
+          <div class="col-8">
 
             <!--
             <ol class="breadcrumb float-sm-right">
@@ -26,7 +29,7 @@
             </ol>
             -->
 
-            <div class="dropdown float-right">
+            <div class="dropdown float-right mt-2">
               <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="leaverequestfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Pending Status' %}
               </button>
@@ -82,7 +85,7 @@
                           {% endif %}
 
                           {% if leave.document %}
-                            &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-xs" aria-hidden="true"></i></a>
+                            &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-xs text-secondary" aria-hidden="true"></i></a>
                           {% endif %}                          
                         </td>
                         <td>
@@ -230,21 +233,20 @@
     });
 
     $('.dropdown-menu a').click(function () {
-
-      if($(this).text() == "Pending Status") {
+      if($(this).text() == "Pending Status" || $(this).text() == "รายการรออนุมัติ") {
         var url = "{% url 'leave_approve_pending_list' %}";
         window.location.href = url;            
       }
 
-      if($(this).text() == "Approved Status") {
+      if($(this).text() == "Approved Status" || $(this).text() == "รายการอนุมัติแล้ว") {
         var url = "{% url 'leave_approved_list' %}";
         window.location.href = url;      
       }
 
-      if($(this).text() == "Rejected Status") {
+      if($(this).text() == "Rejected Status" || $(this).text() == "รายการที่ไม่อนุมัติ") {
         var url = "{% url 'leave_rejected_list' %}";
         window.location.href = url;      
-      }
+      }  
     });
 
     $("body").on("click", "a.get_employee_leave_history", function(event){

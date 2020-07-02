@@ -1601,10 +1601,8 @@ msgstr "กรุณาตรวจสอบข้อมูลให้แน่
 #: .\leave\templates\leave\leave_pending_approve_list.html:18
 #: .\leave\templates\leave\leave_rejected_list.html:31
 #: .\leave\templates\leave\leave_rejected_list.html:35
-#, fuzzy
-#| msgid "Pending"
 msgid "Pending List"
-msgstr "รออนุมัติ"
+msgstr "รายการรออนุมัติ"
 
 #: .\leave\templates\leave\leave_approval_list.html:34
 #: .\leave\templates\leave\leave_approved_list.html:34
@@ -1622,10 +1620,8 @@ msgstr ""
 #: .\leave\templates\leave\leave_approved_list.html:210
 #: .\leave\templates\leave\leave_approved_list.html:211
 #: .\leave\templates\leave\leave_rejected_list.html:36
-#, fuzzy
-#| msgid "Approved"
 msgid "Approved List"
-msgstr "อนุมัติ"
+msgstr "รายการอนุมัติแล้ว"
 
 #: .\leave\templates\leave\leave_approval_list.html:37
 #: .\leave\templates\leave\leave_approval_list.html:219
@@ -1636,10 +1632,8 @@ msgstr "อนุมัติ"
 #: .\leave\templates\leave\leave_rejected_list.html:18
 #: .\leave\templates\leave\leave_rejected_list.html:37
 #: .\leave\templates\leave\leave_rejected_list.html:183
-#, fuzzy
-#| msgid "Rejected"
 msgid "Rejected List"
-msgstr "ไม่อนุมัติ"
+msgstr "รายการที่ไม่อนุมัติ"
 
 #: .\leave\templates\leave\leave_approval_list.html:64
 msgid "Created"
@@ -1662,10 +1656,8 @@ msgstr "ค้นหา"
 #: .\leave\templates\leave\leave_approved_list.html:170
 #: .\leave\templates\leave\leave_pending_approve_list.html:202
 #: .\leave\templates\leave\leave_rejected_list.html:170
-#, fuzzy
-#| msgid "Employee ID"
 msgid "Employee Name"
-msgstr "รหัสพนักงาน"
+msgstr "ชื่อพนักงาน"
 
 #: .\leave\templates\leave\leave_approved_list.html:60
 msgid "Fullname"
@@ -1680,7 +1672,7 @@ msgstr "ลาวันที่"
 #: .\leave\templates\leave\leave_pending_approve_list.html:63
 #: .\leave\templates\leave\leave_rejected_list.html:63
 msgid "Requested Date"
-msgstr "ส่งวันที่"
+msgstr "ขออนุมัติวันที่"
 
 #: .\leave\templates\leave\leave_approved_list.html:64
 msgid "Approved Date"
