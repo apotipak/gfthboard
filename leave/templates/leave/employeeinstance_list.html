@@ -59,13 +59,13 @@
                           {% endif %}
 
                           {% if leave.leave_reason %}
-                            <a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason">
-                              <i class="far fa-comment-alt fa-xs"></i>
+                            &nbsp;<a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason">
+                              <i class="far fa-comment-alt text-secondary fa-xs"></i>
                             </a>                            
                           {% endif %}
 
                           {% if leave.document %}
-                          &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-xs" aria-hidden="true"></i></a>
+                          &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-xs text-secondary" aria-hidden="true"></i></a>
                           {% endif %}
                         </td>
                         <td>

@@ -92,9 +92,9 @@
 
               <div class="card-header p-2">
                 <ul class="nav nav-pills">
-                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">{% trans 'My Manager' %}</a></li>
+                  <li class="nav-item"><a class="nav-link active" href="#mymanager" data-toggle="tab">{% trans 'My Manager' %}</a></li>
                   {% if able_to_approve_leave_request %}
-                  <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">{% trans 'My Team' %}</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#myteam" data-toggle="tab">{% trans 'My Team' %}</a></li>
                   {% endif %}
                 </ul>
               </div><!-- /.card-header -->
@@ -105,7 +105,7 @@
                 <div class="tab-content">
 
                   <!-- Supervisor Tab --> 
-                  <div class="active tab-pane" id="activity">
+                  <div class="active tab-pane" id="mymanager">
                     <!-- Supervisor Information -->
                     <div>
                       <div>
@@ -146,10 +146,10 @@
                   <!-- /.tab-pane -->
 
                   {% if able_to_approve_leave_request %}
-                  <div class="tab-pane" id="timeline">
-                    <!-- The timeline -->
+                  <div class="tab-pane" id="myteam">
+                    <!-- The myteam -->
                     <div>
-                      <!-- timeline time label -->
+                      <!-- myteam time label -->
                       <div>
 
                         <!-- Team Member List -->
@@ -161,18 +161,25 @@
                                         <th scope="col">{% trans 'ID' %}</th>
                                         <th scope="col">{% trans 'Full Name' %}</th>
                                         <th scope="col">{% trans 'Position' %}</th>
+                                        <!--<th scope="col"></th>-->
                                     </tr>
                                 </thead>
                                 <tbody>
                                 {% for member in TeamMemberList %}
                                     <tr>
-                                        <th scope="row">{{member.emp_id}}</th>
+                                        <th>{{member.emp_id}}</th>
                                         {% if user_language == "th" %}
                                         <td>{{member.emp_fname_th}} {{member.emp_lname_th}}</td>
                                         <td>{{member.pos_th}}</td>
                                         {% else %}
                                         <td>{{member.emp_fname_en}} {{member.emp_lname_en}}</td>
                                         <td>{{member.pos_en}}</td>
+                                        <!--
+                                        <td>
+                                          <i class="fas fa-clock fa-xs text-secondary"></i>&nbsp;
+                                          <a href="#" data-url="{% url 'get_employee_leave_history' member.emp_id %}" class="get_employee_leave_history"><small>{% trans 'leave history' %}</small></a>
+                                        </td>
+                                        -->
                                         {% endif %}
                                     </tr>
                                 {% endfor %}
@@ -186,7 +193,7 @@
                         
 
                       </div>
-                      <!-- /.timeline-label -->
+                      <!-- /.myteam-label -->
                     </div>
                   </div>
                   {% endif %}
@@ -206,4 +213,67 @@
   </div>
   <!-- /.content-wrapper -->
 
+  <!-- Modal -->
+  <div class="modal fade" id="employeeLeaveHistoryModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{% trans 'Employee Leave History' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          content
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">{% trans 'Close' %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->
+
+{% endblock %}
+
+{% block javascript %}
+  <script>
+
+    $(document).ready(function(){    
+
+      $("body").on("click", "a.get_employee_leave_history", function(event){
+        var obj = $(this);  
+        $.ajax({
+            url: obj.attr("data-url"),
+            type: 'get',          
+            dataType: 'json',
+            beforeSend: function () {
+              $("#employeeLeaveHistoryModal").modal("show");
+            },
+            success: function (data) {
+              console.log(data.results);
+
+              var result = ""
+              var count = data.results.length;
+             
+              for(var i=0; i<count; i++) {
+                //var leave_reason = data.results[i]["leave_reason"];
+                var fullname = data.results[i]["fullname"];
+                var status = data.results[i]["status"];
+
+                result += fullname + " | " + status + "<br>";
+              }
+
+              $("#employeeLeaveHistoryModal .modal-body").html(result);
+
+            },
+            error: function(data){
+              $("#employeeLeaveHistoryModal .modal-body").html("{% trans 'There is no data.' %}");
+            }
+        });
+      });
+
+    });
+
+  </script>
 {% endblock %}

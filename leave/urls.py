@@ -26,6 +26,7 @@ urlpatterns += [
 urlpatterns += [
 	url(r'^ajax/get_leave_reject_comment/(?P<pk>[^/]+)/$', views.get_leave_reject_comment, name='get_leave_reject_comment'),
     url(r'^ajax/get_leave_reason/(?P<pk>[^/]+)/$', views.get_leave_reason, name='get_leave_reason'),
+    url(r'^ajax/get_employee_leave_history/(?P<emp_id>[^/]+)/$', views.get_employee_leave_history, name='get_employee_leave_history'),
     url(r'^ajax/m1817_check_leave_request_day/$', views.m1817_check_leave_request_day, name='m1817_check_leave_request_day'),
     url(r'^ajax/m1247_check_leave_request_day/$', views.m1247_check_leave_request_day, name='m1247_check_leave_request_day'),    
 ]

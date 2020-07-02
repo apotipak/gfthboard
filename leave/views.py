@@ -31,6 +31,9 @@ from .form_m1817 import EmployeeM1817Form
 from .form_m1247 import EmployeeM1247Form
 from django.core.files.storage import FileSystemStorage
 from django.utils import translation
+from django.core import serializers
+import collections
+import json
 
 
 # excluded_username = {'900590','580816','900630'}
@@ -808,6 +811,52 @@ def get_leave_reason(request, pk):
     reason = EmployeeInstance.objects.filter(id__exact=pk).values('leave_reason')[0] or None
     print("pk: " + str(pk) + " " + str(reason))
     return JsonResponse(reason)
+
+
+@login_required(login_url='/accounts/login/')
+def get_employee_leave_history(request, emp_id):        
+    
+    employee = LeaveEmployee.objects.filter(emp_id=emp_id).values() or None
+    employee_leave = EmployeeInstance.objects.filter(emp_id=emp_id, status__in=('a','C','F')).values() or None
+
+    objemp = LeaveEmployee.objects.filter(emp_id=emp_id) or None
+    objleave = EmployeeInstance.objects.filter(emp_id=emp_id, status__in=('a','C','F')) or None
+
+    if employee_leave:
+        data = list()
+        data = [
+            {
+                'emp_id': '1',
+                'leave_type_id': 2,
+                'leave_reason': 'test 1 2 3',
+                'leave_status': 'a'
+            },
+            {
+                'emp_id': '2',
+                'leave_type_id': 3,
+                'leave_reason': 'test 4 5 6',
+                'leave_status': 'a'
+            }
+        ]
+
+        pickup_dict = {}
+        pickup_records=[]
+
+        for e in objemp:            
+            for l in objleave:
+                record = {"emp_id":e.emp_id, "fullname": e.emp_fname_en + " " + e.emp_lname_en,"status": l.status}
+                pickup_records.append(record)
+
+        response = JsonResponse(data={"success": True, "results": list(pickup_records)})
+        response.status_code = 200
+        return response
+
+    else:
+        response = JsonResponse({"error": "there was an error"})
+        response.status_code = 403
+        return response
+
+    return JsonResponse(data={"success": False, "results": ""})
 
 
 @login_required(login_url='/accounts/login/')
