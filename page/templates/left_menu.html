@@ -124,16 +124,12 @@
                 </a>
               </li>
 
-              {% if perms.leave.approve_leaveplan %}
-
-              {% endif %}
-
               {% if able_to_approve_leave_request %}
               <li class="nav-item">
-                {% if request.path == "/leave/leave-approval/" %}
-                <a href="{% url 'leave_approval' %}" class="nav-link active">
+                {% if request.path == "/leave/leave-pending-approve/" %}
+                <a href="{% url 'leave_pending_approve' %}" class="nav-link active">
                 {% else %}
-                <a href="{% url 'leave_approval' %}" class="nav-link">
+                <a href="{% url 'leave_pending_approve' %}" class="nav-link">
                 {% endif %}
                   &nbsp;<i class="fa fa-check nav-icon"></i>
                   <p>{% trans 'Leave Request List' %}
@@ -144,9 +140,6 @@
                 </a>
               </li>
               {% endif %}
-
-
-
 
             </ul>
           </li>

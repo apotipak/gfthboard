@@ -15,7 +15,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 id="page-title" class="m-0 text-dark">{% trans 'Pending List' %}</h1>
+            <h1 id="page-title" class="m-0 text-dark">{% trans 'Rejected List' %}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
 
@@ -184,8 +184,8 @@
   });
 
   $(document).ready(function(){    
-
-   $("body").on("click", "a.get_leave_reason", function(event){
+    $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Rejected List' %}");
+    $("body").on("click", "a.get_leave_reason", function(event){
       console.log("test");
       var obj = $(this);  
       $.ajax({
@@ -199,29 +199,23 @@
             $("#leaveReasonModal .modal-body").html(data.leave_reason);
           }
       });
-   });
+    });
 
   $('.dropdown-menu a').click(function () {
-    //alert($(this).text());
     if($(this).text() == "Pending List") {
-      $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Pending List' %}");
-      $('#page-title').text("{% trans 'Pending List' %}")
-      $('#leave_pending_approve_list_table').show();
+      var url = "{% url 'leave_pending_approve' %}";
+      window.location.href = url;            
     }
 
     if($(this).text() == "Approved List") {
-      $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Approved List' %}");
-      $('#page-title').text("{% trans 'Approved List' %}")
-      $('#leave_pending_approve_list_table').hide();
+      var url = "{% url 'leave_approved' %}";
+      window.location.href = url;      
     }
 
     if($(this).text() == "Rejected List") {
-      $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Rejected List' %}");
-      $('#page-title').text("{% trans 'Rejected List' %}")
-      $('#leave_pending_approve_list_table').hide();
-    }
-
-
+      var url = "{% url 'leave_rejected' %}";
+      window.location.href = url;      
+    }  
   });
 
   });  
