@@ -126,10 +126,10 @@
 
               {% if able_to_approve_leave_request %}
               <li class="nav-item">
-                {% if request.path == "/leave/leave-pending-approve/" %}
-                <a href="{% url 'leave_pending_approve' %}" class="nav-link active">
+                {% if request.path == "/leave/leave-approve-pending-list/" or request.path == "/leave/leave-approved-list/" or request.path == "/leave/leave-rejected-list/" %}
+                <a href="{% url 'leave_approve_pending_list' %}" class="nav-link active">
                 {% else %}
-                <a href="{% url 'leave_pending_approve' %}" class="nav-link">
+                <a href="{% url 'leave_approve_pending_list' %}" class="nav-link">
                 {% endif %}
                   &nbsp;<i class="fa fa-check nav-icon"></i>
                   <p>{% trans 'Leave Request List' %}

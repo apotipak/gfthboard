@@ -14,12 +14,12 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('leave-pending-approve/', views.LeavePendingApproveListView.as_view(), name='leave_pending_approve'),
+    path('leave-approve-pending-list/', views.LeavePendingApproveListView.as_view(), name='leave_approve_pending_list'),
     path('leave-approval/<uuid:pk>/approve/', views.EmployeeInstanceApprove, name='leave_approve'),
     path('leave-approval/<uuid:pk>/reject/', views.EmployeeInstanceReject, name='leave_reject'),
 
-    path('leave-approved/', views.LeaveApprovedListView.as_view(), name='leave_approved'),
-    path('leave-rejected/', views.LeaveRejectedListView.as_view(), name='leave_rejected'),
+    path('leave-approved-list/', views.LeaveApprovedListView.as_view(), name='leave_approved_list'),
+    path('leave-rejected-list/', views.LeaveRejectedListView.as_view(), name='leave_rejected_list'),
 ]
 
 urlpatterns += [

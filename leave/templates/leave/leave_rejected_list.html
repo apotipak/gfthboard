@@ -54,15 +54,14 @@
             {% if object_list %}
 
 
-            <table id="leave_pending_approve_list_table" class="table table-hover table-bordered table-striped">            
+            <table id="leave_list_table" class="table table-hover table-bordered table-striped">            
                 <thead>
                     <tr>
                         <th scope="col">{% trans 'Employee' %}</th>
                         <th scope="col">{% trans 'Type' %}</th>
                         <th scope="col">{% trans 'Date' %}</th>
-                        <th scope="col">{% trans 'Amount' %}</th>
-                        <th scope="col">{% trans 'Created' %}</th>
-                        <td scope="col">&nbsp;</td>
+                        <th scope="col">{% trans 'Requested Date' %}</th>
+                        <th scope="col">{% trans 'Rejected Date' %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -79,29 +78,26 @@
                           {% endif %}
 
                           {% if leave.document %}
-                            &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-xs" aria-hidden="true"></i></a>
+                            &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-xs text-secondary" aria-hidden="true"></i></a>
                           {% endif %}                          
                         </td>
-                        <td>{{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}}</td>
                         <td>
-                        {% if leave.lve_act != 0 %}
-                            {{leave.lve_act}} {% trans 'Day' %}
-                            {% if leave.lve_act_hr != 0 %}
-                              | {{leave.lve_act_hr}} {% trans 'Hour' %}
-                            {% endif %}
-                        {% else %}
-                            {{leave.lve_act_hr}} {% trans 'Hour' %}
-                        {% endif %}
-                        </td>                        
+                          {{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}} | 
+                          <strong>
+                          {% if leave.lve_act != 0 %}
+                              {{leave.lve_act}} {% trans 'Day' %}
+                              {% if leave.lve_act_hr != 0 %}
+                                | {{leave.lve_act_hr}} {% trans 'Hour' %}
+                              {% endif %}
+                          {% else %}
+                              {{leave.lve_act_hr}} {% trans 'Hour' %}
+                          {% endif %}
+                          </strong>
+                        </td>
                         <td><small>{{ leave.created_date|naturaltime }}</small></td>
                         <td class="text-right py-0 align-middle">
                           <div class="btn-group btn-group-sm">
-                             {% if leave.status == 'p' %}
-                             <a href="/leave/leave-approval/{{leave.id}}/approve" class="btn btn-success btn-xs"><i class="fas fa-check fa-xs"></i>&nbsp;{% trans 'Approve' %}</a>&nbsp;
-                             <a href="/leave/leave-approval/{{leave.id}}/reject" class="btn btn-danger btn-xs"><i class="fas fa-times fa-xs"></i>&nbsp;{% trans 'Reject' %}</a>
-                             {% else %}
-                                &nbsp;
-                             {% endif %}
+                            <small>{{ leave.updated_date|naturaltime }}</small>
                           </div>
                         </td>                        
                     </tr>
@@ -150,7 +146,7 @@
 {% block javascript %}
 <script>
   $(function () {
-    $('#leave_pending_approve_list_table').DataTable({
+    $('#leave_list_table').DataTable({
       "paging": true,
       "lengthChange": false,
       "searching": true,
@@ -203,17 +199,17 @@
 
   $('.dropdown-menu a').click(function () {
     if($(this).text() == "Pending List") {
-      var url = "{% url 'leave_pending_approve' %}";
+      var url = "{% url 'leave_approve_pending_list' %}";
       window.location.href = url;            
     }
 
     if($(this).text() == "Approved List") {
-      var url = "{% url 'leave_approved' %}";
+      var url = "{% url 'leave_approved_list' %}";
       window.location.href = url;      
     }
 
     if($(this).text() == "Rejected List") {
-      var url = "{% url 'leave_rejected' %}";
+      var url = "{% url 'leave_rejected_list' %}";
       window.location.href = url;      
     }  
   });

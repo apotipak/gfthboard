@@ -613,7 +613,8 @@ class LeavePendingApproveListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by emp_id, start_date asc")
+        # return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by emp_id, start_date asc")
+        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by created_date")
 
 
 class LeaveApprovedListView(PermissionRequiredMixin, generic.ListView):
@@ -661,7 +662,7 @@ class LeaveApprovedListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by emp_id, start_date asc")
+        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('a','C','F') order by updated_date desc")
 
 
 class LeaveRejectedListView(PermissionRequiredMixin, generic.ListView):
@@ -709,7 +710,7 @@ class LeaveRejectedListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by emp_id, start_date asc")
+        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('r') order by updated_date desc")
 
 
 #@permission_required('leave.approve_leaveplan')
@@ -774,7 +775,7 @@ def EmployeeInstanceApprove(request, pk):
                         'ref: ' + str(ref) + '<br>'
                 )
 
-        return HttpResponseRedirect(reverse('leave_approval'))
+        return HttpResponseRedirect(reverse('leave_approve_pending_list'))
     
     leaveEmployee = LeaveEmployee.objects.get(emp_id=employee_leave_instance.emp_id)
     waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))    
@@ -869,7 +870,7 @@ def EmployeeInstanceReject(request, pk):
                         'ref: ' + str(ref) + '<br>'
                 )
 
-        return HttpResponseRedirect(reverse('leave_approval'))
+        return HttpResponseRedirect(reverse('leave_approve_pending_list'))
 
 
     if user_language == "th":
