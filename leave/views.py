@@ -957,9 +957,6 @@ def GetEmployeeEntitlementRemaining(request, check_employee_id):
         policy.total_day_remaining = total_day_remaining
         policy.total_hour_remaining = total_hour_remaining
     
-    # Check number of waiting leave request
-    waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))
-
     return leave_policy
 
 
@@ -970,7 +967,7 @@ def get_employee_leave_history(request, emp_id):
     now = datetime.now()
     LeaveYear = str(now.year)
     employee_leave_plan = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_year, lt.lve_id as lve_type_id, lp.lve_code, lp.lve_plan, lt.lve_th, lt.lve_en, lp.lve_act, lp.lve_act_hr, lp.lve_miss, lp.lve_miss_hr, lp.lve_HRMS, lp.lve_HRMS_HR from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + emp_id + " and lp.lve_year=" + LeaveYear)
-
+    
     if employee_leave_plan:
 
         pickup_dict = {}
@@ -978,11 +975,54 @@ def get_employee_leave_history(request, emp_id):
 
         for e in employee:
             for l in employee_leave_plan:
+
+                leave_plan_day = l.lve_plan
+                leave_plan_hour = l.lve_plan * 8
+
+                # จำนวน วัน/ช.ม. ที่ใช้ใน HRMS
+                total_lve_act = l.lve_act
+                total_lve_act_hr = l.lve_act_hr
+                grand_total_lve_act_hr = total_lve_act_hr + (total_lve_act * 8)
+
+                # จำนวน วัน/ช.ม. คงเหลือใน HRMS
+                total_lve_miss = l.lve_miss
+                total_lve_miss_hr = l.lve_miss_hr
+                grand_total_lve_miss_hr = total_lve_miss_hr + (total_lve_miss * 8)
+
+                # จำนวน วัน/ช.ม. ที่ใช้ใน HRMS 2
+                total_lve_hrms = l.lve_HRMS
+                total_lve_hrms_hr = l.lve_HRMS_HR
+                grand_total_lve_hrms = total_lve_hrms_hr + (total_lve_hrms * 8)
+
+
+                # จำนวน วัน/ช.ม. ที่รออนุมัติใน E-Leave
+                total_pending_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+                total_pending_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
+                grand_total_pending_eleave = total_pending_lve_act_hr_eleave + (total_pending_lve_act_eleave * 8)
+                l.total_pending_lve_act_eleave = grand_total_pending_eleave // 8
+                l.total_pending_lve_act_hr_eleave = grand_total_pending_eleave % 8  
+
+                # จำนวน วัน/ช.ม. ที่อนุมัติแล้ว E-Leave
+                total_approved_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
+                total_approved_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+                grand_total_approved_eleave = total_approved_lve_act_hr_eleave + (total_approved_lve_act_eleave * 8)
+                l.total_approved_lve_act_eleave = grand_total_approved_eleave // 8
+                l.total_approved_lve_act_hr_eleave = grand_total_approved_eleave % 8
+
+                # จำนวนวันคงเหลือสุทธิ
+                result = leave_plan_hour - (grand_total_lve_hrms + grand_total_approved_eleave + grand_total_pending_eleave)        
+                total_day_remaining = result // 8
+                total_hour_remaining = result % 8
+                l.total_day_remaining = total_day_remaining
+                l.total_hour_remaining = total_hour_remaining
+
+
                 record = {
                     "emp_id":e.emp_id, 
-                    "fullname": e.emp_fname_en + " " + e.emp_lname_en,                    
-                    "leave_code": l.lve_code,
-                    "leave_plan_day": l.lve_plan
+                    "fullname": e.emp_fname_en + " " + e.emp_lname_en,
+                    "leave_name": l.lve_th,
+                    "leave_plan": l.lve_plan,
+                    "total_day_remaining": l.total_day_remaining,
                 }
 
                 pickup_records.append(record)
