@@ -568,19 +568,19 @@ class EmployeeCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'leave.add_employeeinstance'
 
 
-#class LeaveApprovalListView(PermissionRequiredMixin, generic.ListView):
-class LeaveApprovalListView(generic.ListView):
+#class LeaveApprovalListView(generic.ListView):
+class LeavePendingApproveListView(PermissionRequiredMixin, generic.ListView):
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
     template_name = 'leave/leave_approval_list.html'
-    #permission_required = ('leave.approve_leaveplan')
+    permission_required = ('leave.approve_leaveplan')
     model = EmployeeInstance
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
-        context = super(LeaveApprovalListView, self).get_context_data(**kwargs)
+        context = super(LeavePendingApproveListView, self).get_context_data(**kwargs)
 
         user_language = getDefaultLanguage(self.request.user.username)
         translation.activate(user_language)
@@ -589,7 +589,54 @@ class LeaveApprovalListView(generic.ListView):
         
         # Check number of waiting leave request
         waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p')"))
+        
+        # Check leave approval right
+        if checkLeaveRequestApproval(self.request.user.username):
+            able_to_approve_leave_request = True
+        else:
+            able_to_approve_leave_request = False
 
+        if user_language == "th":
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
+        else:
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
+
+        context.update({
+            'page_title': settings.PROJECT_NAME,
+            'today_date': today_date,
+            'project_version': settings.PROJECT_VERSION,
+            'db_server': settings.DATABASES['default']['HOST'],
+            'project_name': settings.PROJECT_NAME,
+            'waiting_for_approval_item': waiting_for_approval_item,
+            'able_to_approve_leave_request': able_to_approve_leave_request,
+            'username_display': username_display,
+        })
+        return context
+
+    def get_queryset(self):
+        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by emp_id, start_date asc")
+
+
+class LeaveApprovedListView(PermissionRequiredMixin, generic.ListView):
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    template_name = 'leave/leave_approval_list.html'
+    permission_required = ('leave.approve_leaveplan')
+    model = EmployeeInstance
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super(LeaveApprovedListView, self).get_context_data(**kwargs)
+
+        user_language = getDefaultLanguage(self.request.user.username)
+        translation.activate(user_language)
+        # today_date = settings.TODAY_DATE
+        today_date = getDateFormatDisplay(user_language)
+        
+        # Check number of waiting leave request
+        waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p')"))
         
         # Check leave approval right
         if checkLeaveRequestApproval(self.request.user.username):
@@ -872,6 +919,9 @@ def LeaveTimeline(request):
     today_date = getDateFormatDisplay(user_language)
     leave_policy = LeavePlan.EmployeeLeavePolicy(request)
 
+    # Check number of waiting leave request
+    waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))
+
     username = request.user.username
 
     leave_approved_items = EmployeeInstance.objects.filter(emp_id__exact=username).filter(status__in=('a','C','F')).order_by('-start_date') or None
@@ -897,6 +947,7 @@ def LeaveTimeline(request):
         'able_to_approve_leave_request': able_to_approve_leave_request,
         'user_language': user_language,
         'username_display': username_display,
+        'waiting_for_approval_item': waiting_for_approval_item,
     }
 
     return render(request, 'leave/leave_timeline.html', context)

@@ -15,7 +15,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">{% trans 'Approval' %}</h1>
+            <h1 id="page-title" class="m-0 text-dark">{% trans 'Pending List' %}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
 
@@ -28,12 +28,13 @@
 
             <div class="dropdown float-right">
               <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="leaverequestfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Approved Status' %}
+                <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Pending List' %}
               </button>
-              <div class="dropdown-menu">
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="leaverequestfilter">
                 <h6 class="dropdown-header">{% trans 'filter by' %}</h6>
-                <a class="dropdown-item" href="#">{% trans 'Approved Status' %}</a>
-                <a class="dropdown-item" href="#">{% trans 'Rejected Status' %}</a>
+                <a class="dropdown-item" href="#">{% trans 'Pending List' %}</a>
+                <a class="dropdown-item" href="#">{% trans 'Approved List' %}</a>
+                <a class="dropdown-item" href="#">{% trans 'Rejected List' %}</a>
               </div>
             </div>
 
@@ -121,7 +122,7 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <!-- Modal -->
+  <!-- Modal - Leave Reason -->
   <div class="modal fade" id="leaveReasonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -160,16 +161,15 @@
           "caseInsensitive": true
       },      
       "oLanguage": {
-         "sSearch": "ค้นหา"
+         "sSearch": "{% trans 'Search' %}"
        },
       "language": {
         "paginate": {
-          "previous": "ย้อนกลับ",
+          "previous": "{% trans 'Back' %}",
           "next": "ถัดไป",
         },
         "lengthMenu": '_MENU_ &nbsp;&nbsp;&nbsp;&nbsp;เลือกจำนวนแสดงรายการ',
-            //"search": '<i class="fa fa-search"></i>',
-            "searchPlaceholder": "ชื่อพนักงาน",
+            "searchPlaceholder": "{% trans 'Employee Name' %}",
             "paginate": {
             "previous": '<i class="fa fa-angle-left"></i>',
                 "next": '<i class="fa fa-angle-right"></i>'
@@ -201,13 +201,25 @@
 
   $('.dropdown-menu a').click(function () {
     //alert($(this).text());
-    if($(this).text() == "Approved Status") {
-      $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Approved Status' %}");
-    } else {
-      $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Rejected Status' %}");
+    if($(this).text() == "Pending List") {
+      $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Pending List' %}");
+      $('#page-title').text("{% trans 'Pending List' %}")
+      $('#leave_approval_table').show();
     }
-    //$('button[data-toggle="dropdown"]').text($(this).text());
-    //<i class="fa fa-filter" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Approved Status' %}
+
+    if($(this).text() == "Approved List") {
+      $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Approved List' %}");
+      $('#page-title').text("{% trans 'Approved List' %}")
+      $('#leave_approval_table').hide();
+    }
+
+    if($(this).text() == "Rejected List") {
+      $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Rejected List' %}");
+      $('#page-title').text("{% trans 'Rejected List' %}")
+      $('#leave_approval_table').hide();
+    }
+
+
   });
 
   });  

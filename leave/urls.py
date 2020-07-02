@@ -14,7 +14,7 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('leave-approval/', views.LeaveApprovalListView.as_view(), name='leave_approval'),
+    path('leave-approval/', views.LeavePendingApproveListView.as_view(), name='leave_approval'),
     path('leave-approval/<uuid:pk>/approve/', views.EmployeeInstanceApprove, name='leave_approve'),
     path('leave-approval/<uuid:pk>/reject/', views.EmployeeInstanceReject, name='leave_reject'),
 ]
