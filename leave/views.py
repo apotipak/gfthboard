@@ -33,6 +33,7 @@ from django.core.files.storage import FileSystemStorage
 from django.utils import translation
 from django.core import serializers
 import collections
+from django.utils.timezone import now
 import json
 
 
@@ -909,10 +910,98 @@ def get_leave_reason(request, pk):
 
 
 @login_required(login_url='/accounts/login/')
+def GetEmployeeEntitlementRemaining(request, check_employee_id):
+    leave_policy = LeavePlan.EmployeeLeavePolicy(request)
+
+    username = check_employee_id
+
+    for policy in leave_policy:
+
+        leave_plan_day = policy.lve_plan
+        leave_plan_hour = policy.lve_plan * 8
+
+        # จำนวน วัน/ช.ม. ที่ใช้ใน HRMS
+        total_lve_act = policy.lve_act
+        total_lve_act_hr = policy.lve_act_hr
+        grand_total_lve_act_hr = total_lve_act_hr + (total_lve_act * 8)
+
+        # จำนวน วัน/ช.ม. คงเหลือใน HRMS
+        total_lve_miss = policy.lve_miss
+        total_lve_miss_hr = policy.lve_miss_hr
+        grand_total_lve_miss_hr = total_lve_miss_hr + (total_lve_miss * 8)
+
+        # จำนวน วัน/ช.ม. ที่ใช้ใน HRMS 2
+        total_lve_hrms = policy.lve_HRMS
+        total_lve_hrms_hr = policy.lve_HRMS_HR
+        grand_total_lve_hrms = total_lve_hrms_hr + (total_lve_hrms * 8)
+
+
+        # จำนวน วัน/ช.ม. ที่รออนุมัติใน E-Leave
+        total_pending_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+        total_pending_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
+        grand_total_pending_eleave = total_pending_lve_act_hr_eleave + (total_pending_lve_act_eleave * 8)
+        policy.total_pending_lve_act_eleave = grand_total_pending_eleave // 8
+        policy.total_pending_lve_act_hr_eleave = grand_total_pending_eleave % 8  
+
+        # จำนวน วัน/ช.ม. ที่อนุมัติแล้ว E-Leave
+        total_approved_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
+        total_approved_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+        grand_total_approved_eleave = total_approved_lve_act_hr_eleave + (total_approved_lve_act_eleave * 8)
+        policy.total_approved_lve_act_eleave = grand_total_approved_eleave // 8
+        policy.total_approved_lve_act_hr_eleave = grand_total_approved_eleave % 8
+
+        # จำนวนวันคงเหลือสุทธิ
+        result = leave_plan_hour - (grand_total_lve_hrms + grand_total_approved_eleave + grand_total_pending_eleave)        
+        total_day_remaining = result // 8
+        total_hour_remaining = result % 8
+        policy.total_day_remaining = total_day_remaining
+        policy.total_hour_remaining = total_hour_remaining
+    
+    # Check number of waiting leave request
+    waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))
+
+    return leave_policy
+
+
+@login_required(login_url='/accounts/login/')
 def get_employee_leave_history(request, emp_id):        
-    
+
+    employee = LeaveEmployee.objects.filter(emp_id=emp_id) or None
+    now = datetime.now()
+    LeaveYear = str(now.year)
+    employee_leave_plan = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_year, lt.lve_id as lve_type_id, lp.lve_code, lp.lve_plan, lt.lve_th, lt.lve_en, lp.lve_act, lp.lve_act_hr, lp.lve_miss, lp.lve_miss_hr, lp.lve_HRMS, lp.lve_HRMS_HR from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + emp_id + " and lp.lve_year=" + LeaveYear)
+
+    if employee_leave_plan:
+
+        pickup_dict = {}
+        pickup_records=[]
+
+        for e in employee:
+            for l in employee_leave_plan:
+                record = {
+                    "emp_id":e.emp_id, 
+                    "fullname": e.emp_fname_en + " " + e.emp_lname_en,                    
+                    "leave_code": l.lve_code,
+                    "leave_plan_day": l.lve_plan
+                }
+
+                pickup_records.append(record)
+
+        response = JsonResponse(data={"success": True, "results": list(pickup_records)})
+        response.status_code = 200
+
+        return response
+    else:
+        response = JsonResponse({"error": "there was an error"})
+        response.status_code = 403
+        return response
+
+    return JsonResponse(data={"success": False, "results": ""})
+
+
+    '''
     print("debug: " + emp_id)
-    
+
     employee = LeaveEmployee.objects.filter(emp_id=emp_id).values() or None
     employee_leave = EmployeeInstance.objects.filter(emp_id=emp_id, status__in=('a','C','F')).values() or None
 
@@ -954,7 +1043,7 @@ def get_employee_leave_history(request, emp_id):
         return response
 
     return JsonResponse(data={"success": False, "results": ""})
-
+    '''
 
 @login_required(login_url='/accounts/login/')
 def LeaveTimeline(request):

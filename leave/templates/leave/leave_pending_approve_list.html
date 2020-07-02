@@ -262,8 +262,9 @@
               //var leave_reason = data.results[i]["leave_reason"];
               var fullname = data.results[i]["fullname"];
               var status = data.results[i]["status"];
-
-              result += fullname + " | " + status + "<br>";
+              var leave_code = data.results[i]["leave_code"];
+              var leave_plan_day = data.results[i]["leave_plan_day"];
+              result += fullname + " | " + leave_code + " | " + leave_plan_day + "<br>";
             }
 
             $("#employeeLeaveEntitlementModal .modal-body").html(result);
