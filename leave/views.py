@@ -911,6 +911,8 @@ def get_leave_reason(request, pk):
 @login_required(login_url='/accounts/login/')
 def get_employee_leave_history(request, emp_id):        
     
+    print("debug: " + emp_id)
+    
     employee = LeaveEmployee.objects.filter(emp_id=emp_id).values() or None
     employee_leave = EmployeeInstance.objects.filter(emp_id=emp_id, status__in=('a','C','F')).values() or None
 

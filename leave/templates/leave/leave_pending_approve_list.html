@@ -67,7 +67,9 @@
                 <tbody>
                 {% for leave in object_list %}
                     <tr>
-                        <td>{{leave.emp_fname_th}} {{leave.emp_lname_th}}</td>
+                        <td>
+                         <a href="#" data-url="{% url 'get_employee_leave_history' leave.emp_id %}" class="get_employee_leave_history">{{leave.emp_fname_th}} {{leave.emp_lname_th}}</a>
+                        </td>
                         <td>
                           {{leave.leave_type}}
 
@@ -146,6 +148,27 @@
   </div>
   <!-- /.modal -->
 
+  <!-- Modal - Leave Entitlement -->
+  <div class="modal fade" id="employeeLeaveEntitlementModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{% trans 'Entitlement Remaining' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          content
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">{% trans 'Close' %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->
+
 {% endblock %}
 
 {% block javascript %}
@@ -186,7 +209,7 @@
 
   $(document).ready(function(){    
 
-   $("body").on("click", "a.get_leave_reason", function(event){
+    $("body").on("click", "a.get_leave_reason", function(event){
       console.log("test");
       var obj = $(this);  
       $.ajax({
@@ -200,27 +223,57 @@
             $("#leaveReasonModal .modal-body").html(data.leave_reason);
           }
       });
-   });
+    });
 
-  $('.dropdown-menu a').click(function () {
+    $('.dropdown-menu a').click(function () {
 
-    if($(this).text() == "Pending List") {
-      var url = "{% url 'leave_approve_pending_list' %}";
-      window.location.href = url;            
-    }
+      if($(this).text() == "Pending List") {
+        var url = "{% url 'leave_approve_pending_list' %}";
+        window.location.href = url;            
+      }
 
-    if($(this).text() == "Approved List") {
-      var url = "{% url 'leave_approved_list' %}";
-      window.location.href = url;      
-    }
+      if($(this).text() == "Approved List") {
+        var url = "{% url 'leave_approved_list' %}";
+        window.location.href = url;      
+      }
 
-    if($(this).text() == "Rejected List") {
-      var url = "{% url 'leave_rejected_list' %}";
-      window.location.href = url;      
-    }
+      if($(this).text() == "Rejected List") {
+        var url = "{% url 'leave_rejected_list' %}";
+        window.location.href = url;      
+      }
+    });
 
+    $("body").on("click", "a.get_employee_leave_history", function(event){
+      var obj = $(this);  
+      $.ajax({
+          url: obj.attr("data-url"),
+          type: 'get',          
+          dataType: 'json',
+          beforeSend: function () {
+            $("#employeeLeaveEntitlementModal").modal("show");
+          },
+          success: function (data) {
+            console.log(data.results);
 
-  });
+            var result = ""
+            var count = data.results.length;
+           
+            for(var i=0; i<count; i++) {
+              //var leave_reason = data.results[i]["leave_reason"];
+              var fullname = data.results[i]["fullname"];
+              var status = data.results[i]["status"];
+
+              result += fullname + " | " + status + "<br>";
+            }
+
+            $("#employeeLeaveEntitlementModal .modal-body").html(result);
+
+          },
+          error: function(data){
+            $("#employeeLeaveEntitlementModal .modal-body").html("{% trans 'There is no data.' %}");
+          }
+      });      
+    });
 
   });  
 </script>
