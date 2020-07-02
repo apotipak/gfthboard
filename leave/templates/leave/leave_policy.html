@@ -79,19 +79,6 @@
                   
                   <!-- HRMS ใช้ไป -->
                   <td style="text-align: left" class="text-secondary">
-                    <!--
-                    {% if policy.lve_act > 0 %}
-                      {{policy.lve_act}} <small>วัน</small>
-                    {% endif %}
-
-                    {% if policy.lve_act_hr > 0 %}
-                      &nbsp;{{ policy.lve_act_hr|stringformat:"1.0f" }} <small>ช.ม.</small>
-                    {% endif %}
-
-                    {% if policy.lve_act == 0 and policy.lve_act_hr == 0 %}
-                      0
-                    {% endif %}
-                    -->
                     {% if policy.lve_HRMS > 0 %}
                       {{policy.lve_HRMS}} <small>{% trans 'Day' %}</small>
                     {% endif %}

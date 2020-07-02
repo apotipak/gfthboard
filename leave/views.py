@@ -967,13 +967,21 @@ def get_employee_leave_history(request, emp_id):
     now = datetime.now()
     LeaveYear = str(now.year)
     employee_leave_plan = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_year, lt.lve_id as lve_type_id, lp.lve_code, lp.lve_plan, lt.lve_th, lt.lve_en, lp.lve_act, lp.lve_act_hr, lp.lve_miss, lp.lve_miss_hr, lp.lve_HRMS, lp.lve_HRMS_HR from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + emp_id + " and lp.lve_year=" + LeaveYear)
+    print(LeaveYear)
     
-    if employee_leave_plan:
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
 
+    if employee_leave_plan:
         pickup_dict = {}
         pickup_records=[]
 
         for e in employee:
+            if user_language == 'th':
+                fullname = e.emp_fname_th + " " + e.emp_lname_th
+            else:
+                fullname = e.emp_fname_en + " " + e.emp_lname_en
+
             for l in employee_leave_plan:
 
                 leave_plan_day = l.lve_plan
@@ -1009,7 +1017,7 @@ def get_employee_leave_history(request, emp_id):
 
                 record = {
                     "emp_id":e.emp_id, 
-                    "fullname": e.emp_fname_en + " " + e.emp_lname_en, # ชื่อพนักงาน
+                    "fullname": fullname, # ชื่อพนักงาน
                     "leave_name": l.lve_th, # ชื่อประเภทวันลา
                     "leave_plan": leave_plan_day, # สิทธิ์วันลา
                     "total_day_remaining": total_day_remaining, # วันลาคงเหลือ
@@ -1018,6 +1026,7 @@ def get_employee_leave_history(request, emp_id):
                     "total_hour_used": total_hour_used, # จำนวนชั่วโมงที่ใช้ไป
                     "total_day_pending": total_pending_lve_act_eleave, # จำนวนวันที่รออนุมัติ
                     "total_hour_pending": total_pending_lve_act_hr_eleave, # จำนวนชั่วโมงที่รออนุมัติ
+                    "entitlement_year": LeaveYear,
                 }
 
                 pickup_records.append(record)
