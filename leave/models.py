@@ -162,7 +162,7 @@ class EmployeeInstance(models.Model):
     document = models.FileField(upload_to='documents/', null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, null=True)
 
-    leave_resaon = models.TextField(blank=True, null=True, max_length=200)
+    leave_reason = models.TextField(blank=True, null=True, max_length=200)
 
     LEAVE_STATUS = (
         ('a', 'Approved'),

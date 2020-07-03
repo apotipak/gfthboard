@@ -1,0 +1,353 @@
+{% extends "page_base_generic.html" %}
+
+{% load humanize %}
+
+{% load i18n %}
+
+{% block title %}{%trans 'Approval'%}{% endblock %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+
+        <div class="row mb-2">
+          
+          <div class="col-4 text-nowrap">
+            <h1 id="page-title" class="m-0 text-dark">{% trans 'Pending List' %}</h1>
+          </div>
+
+          <div class="col-8">
+            <!--
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
+              <li class="breadcrumb-item active">{% trans 'Approval' %}</li>
+            </ol>
+            -->
+            <div class="dropdown float-right mt-2">
+              <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="leaverequestfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Pending Status' %}
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="leaverequestfilter">
+                <h6 class="dropdown-header">{% trans 'filter by' %}</h6>
+                <a id="filterpending" class="dropdown-item" href="#"><i class="fa fa-clock fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Pending Status' %}</a>
+                <a id="filterapproved" class="dropdown-item" href="#"><i class="fa fa-check fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Approved Status' %}</a>
+                <a id="filterrejected" class="dropdown-item" href="#"><i class="fa fa-ban fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Rejected Status' %}</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-12">
+
+            {% if object_list %}
+
+
+            <table id="leave_list_table" class="table table-hover table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">{% trans 'Employee' %}</th>
+                        <th scope="col">{% trans 'Type' %}</th>
+                        <th scope="col">{% trans 'Leave Date' %}</th>
+                        <th scope="col">{% trans 'Requested Date' %}</th>
+                        <td scope="col">&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for leave in object_list %}
+                    <tr>
+                        
+                        <td>
+                         <a href="#" data-url="{% url 'get_employee_leave_history' leave.emp_id %}" class="get_employee_leave_history">{{leave.emp_fname_th}} {{leave.emp_lname_th}}</a>
+                        </td>
+
+                        <td>
+                          {{leave.leave_type}}
+
+                          {% if leave.leave_reason %}
+                            <span class="badge badge-pill badge-light"><a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason"><i class="far fa-comment-alt fa-sm text-secondary"></i></a></span>
+                          {% endif %}
+
+                          {% if leave.document %}
+                            <span class="badge badge-pill badge-light"><a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-sm text-secondary" aria-hidden="true"></i></a></span>
+                          {% endif %}                          
+                        </td>
+                        <td>
+                          {{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}} |
+                          <strong>
+                          {% if leave.lve_act != 0 %}
+                              {{leave.lve_act}} {% trans 'Day' %}
+                              {% if leave.lve_act_hr != 0 %}
+                                | {{leave.lve_act_hr}} {% trans 'Hour' %}
+                              {% endif %}
+                          {% else %}
+                              {{leave.lve_act_hr}} {% trans 'Hour' %}
+                          {% endif %}
+                          </strong>
+                        </td>                      
+                        <td><small>{{ leave.created_date|naturaltime }}</small></td>
+                        <td class="text-right py-0 align-middle">
+                          <div class="btn-group btn-group-sm">
+                             {% if leave.status == 'p' %}
+                             <a href="/leave/leave-approval/{{leave.id}}/approve" class="btn btn-success btn-xs"><i class="fas fa-check fa-xs"></i>&nbsp;{% trans 'Approve' %}</a>&nbsp;
+                             <a href="/leave/leave-approval/{{leave.id}}/reject" class="btn btn-danger btn-xs"><i class="fas fa-times fa-xs"></i>&nbsp;{% trans 'Reject' %}</a>
+                             {% else %}
+                                &nbsp;
+                             {% endif %}
+                          </div>
+                        </td>                        
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+                        
+            {% else %}
+            <div class="col-lg-12">
+              <div class="alert alert-success" role="alert">
+                  <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{% trans 'There is no leave request item.' %}</a>
+              </div>           
+            </div>
+            {% endif %}
+          </div>
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->    
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Modal - Leave Reason -->
+  <div class="modal fade" id="leaveReasonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">{% trans 'Leave Reason' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">{% trans 'Close' %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->
+
+  <!-- Modal - Leave Entitlement -->
+  <div class="modal fade" id="employeeLeaveEntitlementModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">a{% trans 'Entitlement Remaining' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          content
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">{% trans 'Close' %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+  $(function () {
+    $('#leave_list_table').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": false,
+      "info": false,
+      "autoWidth": false,
+      "pageLength": 10,
+      "lengthMenu": [[10, 20, 25, 50, -1], [10, 20, 25, 50, "All"]],
+      "search": {
+          "caseInsensitive": true
+      },      
+      "oLanguage": {
+         "sSearch": "{% trans 'Search' %}"
+       },
+      "language": {
+        "paginate": {
+          "previous": "{% trans 'Back' %}",
+          "next": "ถัดไป",
+        },
+        "lengthMenu": '_MENU_ &nbsp;&nbsp;&nbsp;&nbsp;เลือกจำนวนแสดงรายการ',
+            "searchPlaceholder": "{% trans 'Employee Name' %}",
+            "paginate": {
+            "previous": '<i class="fa fa-angle-left"></i>',
+                "next": '<i class="fa fa-angle-right"></i>'
+        }
+      },
+      "columnDefs": [
+        //{ "orderable": false, "targets": 4 }
+      ]           
+    });
+  });
+
+  $(document).ready(function(){    
+
+    $("body").on("click", "a.get_leave_reason", function(event){
+      console.log("test");
+      var obj = $(this);  
+      $.ajax({
+          url: obj.attr("data-url"),
+          type: 'get',          
+          dataType: 'json',
+          beforeSend: function () {
+            $("#leaveReasonModal").modal("show");
+          },
+          success: function (data) {              
+            $("#leaveReasonModal .modal-body").html(data.leave_reason);
+          }
+      });
+    });
+
+    $('.dropdown-menu a').click(function () {
+      
+      var filterid = $(this).attr('id');
+
+      if(filterid == "filterpending") {
+        var url = "{% url 'leave_approve_pending_list' %}";
+        window.location.href = url;            
+      }
+      
+      if(filterid == "filterapproved") {
+        var url = "{% url 'leave_approved_list' %}";
+        window.location.href = url;      
+      }
+      
+      if(filterid == "filterrejected") {
+        var url = "{% url 'leave_rejected_list' %}";
+        window.location.href = url;      
+      }  
+    });
+
+    $("body").on("click", "a.get_employee_leave_history", function(event){
+      var obj = $(this);  
+      $.ajax({
+          url: obj.attr("data-url"),
+          type: 'get',          
+          dataType: 'json',
+          beforeSend: function () {
+            $("#employeeLeaveEntitlementModal").modal("show");
+          },
+          success: function (data) {
+            //console.log(data.results);
+            
+            var result = ""
+            var count = data.results.length;
+            var fullname = data.results[0]["fullname"];
+            var entitlement_year = data.results[0]["entitlement_year"];
+
+            result += "<div class='col-12 text-center pb-2'><h5>" + fullname + "</h5></div>";
+            result += "<table class='table table-hover table-sm'>";
+            result += " <thead>";
+            result += "   <tr>";
+            result += "     <th scope='col'>{% trans 'Leave Type' %}</th>";
+            result += "     <th scope='col'>{% trans 'Remaining' %}</th>";
+            result += "     <th scope='col'>{% trans 'Used' %}</th>";
+            result += "     <th scope='col'>{% trans 'Waiting' %}</th>";
+            result += "       </tr>";
+            result += " </thead>";
+            result += " <tbody>";
+           
+            for(var i=0; i<count; i++) {
+              var leave_name = data.results[i]["leave_name"];
+              var leave_plan = data.results[i]["leave_plan"];
+              var total_day_remaining = data.results[i]["total_day_remaining"];
+              var total_hour_remaining = data.results[i]["total_hour_remaining"];
+
+              var total_day_used = data.results[i]["total_day_used"];
+              var total_hour_used = data.results[i]["total_hour_used"];
+
+              var total_day_pending = data.results[i]["total_day_pending"];
+              var total_hour_pending = data.results[i]["total_hour_pending"];
+
+              // Type + Entitlement
+              result += "<tr>";
+              result += "<td><small><strong>" + leave_name + "</strong>&nbsp;" + leave_plan + "&nbsp;{% trans 'Day' %}</small></td>";
+
+              // Remaining
+              result += "<td>";
+              if(total_day_remaining > 0) {
+                result += "<small>" + total_day_remaining + "&nbsp;</small><small>{% trans 'Day' %}</small>";
+              }
+              if(total_hour_remaining > 0) {
+                result += "&nbsp;<small>" + parseFloat(total_hour_remaining).toFixed() + "&nbsp;</small><small>{% trans 'Hour' %}</small>";
+              }
+              if(total_day_remaining == 0 && parseFloat(total_hour_remaining).toFixed() == 0) {
+                result += "<small>0</small>";
+              }
+              result += "</td>";
+
+              // Used
+              result += "<td>";
+              if(total_day_used > 0) {
+                result += "&nbsp;<small>" + total_day_used + "&nbsp;{% trans 'Day' %}</small>";
+              }
+              if(total_hour_used > 0) {
+                result += "&nbsp;<small>" + parseFloat(total_hour_used).toFixed() + "&nbsp;{% trans 'Hour' %}</small>";
+              }
+              if(total_day_used == 0 && parseFloat(total_hour_used).toFixed() == 0) {
+                result += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>0</small>"; 
+              }
+              result += "</td>";
+
+              // Pending
+              result += "<td>";
+              if(total_day_pending > 0) {
+                result += "&nbsp;<small>" + total_day_pending + "&nbsp;{% trans 'Day' %}</small>";
+              }
+              if(total_hour_pending > 0) {
+                result += "&nbsp;<small>" + parseFloat(total_hour_pending).toFixed() + "&nbsp;{% trans 'Hour' %}</small>";
+              }
+              if(total_day_pending == 0 && parseFloat(total_hour_pending).toFixed() == 0) {
+                result += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>0</small>"; 
+              }              
+              result += "</td>";
+
+              result += "</tr>";              
+            }
+
+            result += " </tbody>";
+            result += "</table>";
+
+            $("#employeeLeaveEntitlementModal .modal-title").html("<h5><i class='fa fa-tasks text-secondary fa-xs'></i>&nbsp;&nbsp;{% trans 'Leave Entitlement' %}&nbsp;&nbsp;" + entitlement_year + "</h5>");
+            $("#employeeLeaveEntitlementModal .modal-body").html(result);
+
+          },
+          error: function(data){
+            $("#employeeLeaveEntitlementModal .modal-body").html("{% trans 'There is no data.' %}");
+          }
+      });      
+    });
+
+  });  
+</script>
+{% endblock %}

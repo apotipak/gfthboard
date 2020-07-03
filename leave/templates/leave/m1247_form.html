@@ -14,15 +14,17 @@
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0 text-dark">{% trans 'New Request' %}</h1>
-          </div><!-- /.col -->
+          </div>
           <div class="col-sm-6">
+            <!--
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
               <li class="breadcrumb-item active">{% trans 'New Request' %}</li>
             </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+            -->
+          </div>
+        </div>
+      </div>
     </div>
     <!-- /.content-header -->
 
@@ -100,11 +102,12 @@
                       {{ form.end_minute }}                      
                     </div>
 
-                    <!--
-                    <div class="input-group col-xs-12">
+                    <div class="input-group mb-3 col-xs-12">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text rounded-0"><i class="far fa-comment-alt" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Reason' %}</span>
+                      </div>                      
                       {{ form.leave_reason }}
                     </div>
-                    -->
                     
                     <div class="custom-file col-12">
                       <input type="file" class="custom-file-input" id="id_document" name="document">

@@ -51,14 +51,14 @@
             {% if request.path|slice:":15" == '/staff-language' %}
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-language' %}" class="nav-link active">
-                &nbsp;&nbsp;<i class="fas fa-font"></i>&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;<i class="fa fa-language" aria-hidden="true"></i></i>&nbsp;&nbsp;&nbsp;
                 <p>{% trans 'Set Default Language' %}</p>
               </a>
             </li>
             {% else %}
             <li class="nav-item has-treeview active menu-open">
               <a href="{% url 'staff-language' %}" class="nav-link">
-                &nbsp;&nbsp;<i class="fas fa-font"></i>&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;<i class="fa fa-language" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;
                 <p>{% trans 'Set Default Language' %}</p>
               </a>
             </li>
@@ -124,16 +124,12 @@
                 </a>
               </li>
 
-              {% if perms.leave.approve_leaveplan %}
-
-              {% endif %}
-
               {% if able_to_approve_leave_request %}
               <li class="nav-item">
-                {% if request.path == "/leave/leave-approval/" %}
-                <a href="{% url 'leave_approval' %}" class="nav-link active">
+                {% if request.path == "/leave/leave-approve-pending-list/" or request.path == "/leave/leave-approved-list/" or request.path == "/leave/leave-rejected-list/" %}
+                <a href="{% url 'leave_approve_pending_list' %}" class="nav-link active">
                 {% else %}
-                <a href="{% url 'leave_approval' %}" class="nav-link">
+                <a href="{% url 'leave_approve_pending_list' %}" class="nav-link">
                 {% endif %}
                   &nbsp;<i class="fa fa-check nav-icon"></i>
                   <p>{% trans 'Leave Request List' %}
@@ -144,9 +140,6 @@
                 </a>
               </li>
               {% endif %}
-
-
-
 
             </ul>
           </li>

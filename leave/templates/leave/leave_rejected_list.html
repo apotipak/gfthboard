@@ -14,10 +14,10 @@
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 id="page-title" class="m-0 text-dark">{% trans 'Pending List' %}</h1>
+          <div class="col-4 text-nowrap">
+            <h1 id="page-title" class="m-0 text-dark">{% trans 'Rejected List' %}</h1>
           </div><!-- /.col -->
-          <div class="col-sm-6">
+          <div class="col-8">
 
             <!--
             <ol class="breadcrumb float-sm-right">
@@ -26,15 +26,15 @@
             </ol>
             -->
 
-            <div class="dropdown float-right">
+            <div class="dropdown float-right mt-2">
               <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="leaverequestfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Pending Status' %}
               </button>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="leaverequestfilter">
                 <h6 class="dropdown-header">{% trans 'filter by' %}</h6>
-                <a class="dropdown-item" href="#">{% trans 'Pending Status' %}</a>
-                <a class="dropdown-item" href="#">{% trans 'Approved Status' %}</a>
-                <a class="dropdown-item" href="#">{% trans 'Rejected Status' %}</a>
+                <a id="filterpending" class="dropdown-item" href="#"><i class="fa fa-clock fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Pending Status' %}</a>
+                <a id="filterapproved" class="dropdown-item" href="#"><i class="fa fa-check fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Approved Status' %}</a>
+                <a id="filterrejected" class="dropdown-item" href="#"><i class="fa fa-ban fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Rejected Status' %}</a>
               </div>
             </div>
 
@@ -54,15 +54,14 @@
             {% if object_list %}
 
 
-            <table id="leave_pending_approve_list_table" class="table table-hover table-bordered table-striped">            
+            <table id="leave_list_table" class="table table-hover table-bordered table-striped">            
                 <thead>
                     <tr>
-                        <th scope="col">{% trans 'Employee' %}</th>
+                        <th scope="col">{% trans 'Fullname' %}</th>
                         <th scope="col">{% trans 'Type' %}</th>
-                        <th scope="col">{% trans 'Date' %}</th>
-                        <th scope="col">{% trans 'Amount' %}</th>
-                        <th scope="col">{% trans 'Created' %}</th>
-                        <td scope="col">&nbsp;</td>
+                        <th scope="col">{% trans 'Leave Date' %}</th>
+                        <th scope="col">{% trans 'Requested Date' %}</th>
+                        <th scope="col">{% trans 'Rejected Date' %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,37 +72,32 @@
                           {{leave.leave_type}}
 
                           {% if leave.leave_reason %}
-                            &nbsp;<a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason">
-                              <i class="far fa-comment-alt fa-xs text-secondary"></i>
-                            </a>                            
+                            <span class="badge badge-pill badge-light"><a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason"><i class="far fa-comment-alt fa-sm text-secondary"></i></a></span>       
                           {% endif %}
 
                           {% if leave.document %}
-                            &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-xs" aria-hidden="true"></i></a>
+                            <span class="badge badge-pill badge-light"><a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-sm text-primary" aria-hidden="true"></i></a></span>
+                          {% endif %}
+
+                          {% if leave.comment %}
+                            <span class="badge badge-pill badge-light"><a href="#" data-url="{% url 'get_leave_reject_comment' leave.id %}" class="get_leave_reject_comment"><i class="far fa-comment-alt fa-sm text-danger"></i></a></span>
                           {% endif %}                          
                         </td>
-                        <td>{{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}}</td>
                         <td>
-                        {% if leave.lve_act != 0 %}
-                            {{leave.lve_act}} {% trans 'Day' %}
-                            {% if leave.lve_act_hr != 0 %}
-                              | {{leave.lve_act_hr}} {% trans 'Hour' %}
-                            {% endif %}
-                        {% else %}
-                            {{leave.lve_act_hr}} {% trans 'Hour' %}
-                        {% endif %}
-                        </td>                        
-                        <td><small>{{ leave.created_date|naturaltime }}</small></td>
-                        <td class="text-right py-0 align-middle">
-                          <div class="btn-group btn-group-sm">
-                             {% if leave.status == 'p' %}
-                             <a href="/leave/leave-approval/{{leave.id}}/approve" class="btn btn-success btn-xs"><i class="fas fa-check fa-xs"></i>&nbsp;{% trans 'Approve' %}</a>&nbsp;
-                             <a href="/leave/leave-approval/{{leave.id}}/reject" class="btn btn-danger btn-xs"><i class="fas fa-times fa-xs"></i>&nbsp;{% trans 'Reject' %}</a>
-                             {% else %}
-                                &nbsp;
-                             {% endif %}
-                          </div>
-                        </td>                        
+                          {{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}} | 
+                          <strong>
+                          {% if leave.lve_act != 0 %}
+                              {{leave.lve_act}} {% trans 'Day' %}
+                              {% if leave.lve_act_hr != 0 %}
+                                | {{leave.lve_act_hr}} {% trans 'Hour' %}
+                              {% endif %}
+                          {% else %}
+                              {{leave.lve_act_hr}} {% trans 'Hour' %}
+                          {% endif %}
+                          </strong>
+                        </td>
+                        <td><small>{{ leave.created_date|date:"d N y H:i" }}</small></td>
+                        <td><small>{{ leave.updated_date|date:"d N y H:i" }}</small></td>                        
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -112,7 +106,7 @@
             {% else %}
             <div class="col-lg-12">
               <div class="alert alert-success" role="alert">
-                  <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{% trans 'There is no leave request item.' %}</a>
+                  <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{% trans 'There is no rejected item.' %}</a>
               </div>           
             </div>
             {% endif %}
@@ -145,12 +139,33 @@
   </div>
   <!-- /.modal -->
 
+  <!-- Modal - Leave Reason -->
+  <div class="modal fade" id="leaveRejectCommentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">{% trans 'Rejected Reason' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">{% trans 'Close' %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->  
+
 {% endblock %}
 
 {% block javascript %}
 <script>
   $(function () {
-    $('#leave_pending_approve_list_table').DataTable({
+    $('#leave_list_table').DataTable({
       "paging": true,
       "lengthChange": false,
       "searching": true,
@@ -184,9 +199,8 @@
   });
 
   $(document).ready(function(){    
-
-   $("body").on("click", "a.get_leave_reason", function(event){
-      console.log("test");
+    $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Rejected Status' %}");
+    $("body").on("click", "a.get_leave_reason", function(event){
       var obj = $(this);  
       $.ajax({
           url: obj.attr("data-url"),
@@ -199,30 +213,42 @@
             $("#leaveReasonModal .modal-body").html(data.leave_reason);
           }
       });
-   });
+    });
 
-  $('.dropdown-menu a').click(function () {
-    //alert($(this).text());
-    if($(this).text() == "Pending Status") {
-      $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Pending List' %}");
-      $('#page-title').text("{% trans 'Pending List' %}")
-      $('#leave_pending_approve_list_table').show();
-    }
+    $("body").on("click", "a.get_leave_reject_comment", function(event){
+      var obj = $(this);  
+      $.ajax({
+          url: obj.attr("data-url"),
+          type: 'get',          
+          dataType: 'json',
+          beforeSend: function () {
+            $("#leaveRejectCommentModal").modal("show");
+          },
+          success: function (data) {              
+            $("#leaveRejectCommentModal .modal-body").html(data.comment);
+          }
+      });
+    });
 
-    if($(this).text() == "Approved Status") {
-      $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Approved List' %}");
-      $('#page-title').text("{% trans 'Approved List' %}")
-      $('#leave_pending_approve_list_table').hide();
-    }
+    $('.dropdown-menu a').click(function () {
+      
+      var filterid = $(this).attr('id');
 
-    if($(this).text() == "Rejected Status" || $(this).text() == "รายการที่ไม่อนุมัติ") {
-      $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Rejected List' %}");
-      $('#page-title').text("{% trans 'Rejected List' %}")
-      $('#leave_pending_approve_list_table').hide();
-    }
-
-
-  });
+      if(filterid == "filterpending") {
+        var url = "{% url 'leave_approve_pending_list' %}";
+        window.location.href = url;            
+      }
+      
+      if(filterid == "filterapproved") {
+        var url = "{% url 'leave_approved_list' %}";
+        window.location.href = url;      
+      }
+      
+      if(filterid == "filterrejected") {
+        var url = "{% url 'leave_rejected_list' %}";
+        window.location.href = url;      
+      }  
+    });
 
   });  
 </script>

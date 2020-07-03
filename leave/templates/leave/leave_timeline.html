@@ -18,13 +18,15 @@
             <h1 class="m-0 text-dark">{% trans 'Timeline' %} {% now 'Y' %}</h1>
           </div>
           <div class="col-sm-6">
+            <!--
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
               <li class="breadcrumb-item active">{% trans 'Timeline' %}</li>
             </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+            -->
+          </div>
+        </div>
+      </div>
     </div>
     <!-- /.content-header -->
 
@@ -43,31 +45,31 @@
 
                 {% for item in leave_approved_items %}                  
                   {% if item.start_date|date:"n" == '1' %}
-                    {% firstof "#F5B041" as color %}
+                    {% firstof "#2E8B57" as color %}
                     {% elif item.start_date|date:"n" == '2' %}
-                    {% firstof "#B22222" as color %}
+                    {% firstof "#2E8B57" as color %}
                     {% elif item.start_date|date:"n" == '3' %}
-                    {% firstof "#008B8B" as color %}
+                    {% firstof "#2E8B57" as color %}
                     {% elif item.start_date|date:"n" == '4' %}
-                    {% firstof "#6A5ACD" as color %}
+                    {% firstof "#2E8B57" as color %}
                     {% elif item.start_date|date:"n" == '5' %}
-                    {% firstof "#BB8FCE" as color %}
+                    {% firstof "#2E8B57" as color %}
                     {% elif item.start_date|date:"n" == '6' %}
-                    {% firstof "#D4AC0D" as color %}
+                    {% firstof "#2E8B57" as color %}
                     {% elif item.start_date|date:"n" == '7' %}
                     {% firstof "#2E8B57" as color %}
                     {% elif item.start_date|date:"n" == '8' %}
-                    {% firstof "#BA55D3" as color %}
+                    {% firstof "#2E8B57" as color %}
                     {% elif item.start_date|date:"n" == '9' %}
-                    {% firstof "#E67E22" as color %}
+                    {% firstof "#2E8B57" as color %}
                     {% elif item.start_date|date:"n" == '10' %}
-                    {% firstof "#3498DB" as color %}
+                    {% firstof "#2E8B57" as color %}
                     {% elif item.start_date|date:"n" == '11' %}
-                    {% firstof "#1F618D" as color %}
+                    {% firstof "#2E8B57" as color %}
                     {% elif item.start_date|date:"n" == '12' %}
-                    {% firstof "#76448A" as color %}
+                    {% firstof "#2E8B57" as color %}
                     {% else %}
-                    {% firstof "#A93226" as color %}
+                    {% firstof "#2E8B57" as color %}
                   {% endif %}
                 
                 {% if item.start_date|date:"n" != month_number %}

@@ -18,15 +18,17 @@
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0 text-dark">{% trans 'Leave History' %}</h1>
-          </div><!-- /.col -->
+          </div>
           <div class="col-sm-6">
+            <!--
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
               <li class="breadcrumb-item active">{% trans 'Leave History' %}</li>
             </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+            -->
+          </div>          
+        </div>
+      </div>
     </div>
     <!-- /.content-header -->
 
@@ -38,7 +40,7 @@
           <div class="col-lg-12">
 
             {% if object_list %}            
-            <table id="leave_history_table" class="table table-hover table-bordered">
+            <table id="leave_history_table" class="table table-hover table-bordered table-striped">
                 <thead>
                     <tr>                        
                         <th scope="col">{% trans 'Type' %}</th>
@@ -57,9 +59,15 @@
                           {% else %}
                             {{leave.leave_type.lve_en}}
                           {% endif %}
-                          
+
+                          {% if leave.leave_reason %}
+                            <span class="badge badge-pill badge-light"><a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason">
+                              <i class="far fa-comment-alt text-secondary fa-sm"></i>
+                            </a></span>
+                          {% endif %}
+
                           {% if leave.document %}
-                          &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip" aria-hidden="true"></i></a>
+                          <span class="badge badge-pill badge-light"><a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-sm text-primary" aria-hidden="true"></i></a></span>
                           {% endif %}
                         </td>
                         <td>
@@ -98,14 +106,14 @@
 
                           <div class="btn-group btn-group-xs">
                               {% if leave.status == 'p' %}
-                              <a href="/leave/leave-history/{{leave.id}}/delete" class="btn btn-danger btn-sm"><i class="fas fa-trash fa-xs"></i>&nbsp;&nbsp;{% trans 'Cancel' %}</a>
+                              <a href="/leave/leave-history/{{leave.id}}/delete" class="btn btn-danger btn-xs"><i class="fas fa-trash fa-xs"></i>&nbsp;&nbsp;{% trans 'Cancel' %}</a>
                               {% endif %}
 
                               {% if leave.status == 'a' %}
                               <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Sync Pending' %}</span>
                               {% elif leave.status == 'r' %}                              
                               <a href="#" data-url="{% url 'get_leave_reject_comment' leave.id %}" class="get_leave_reject_comment">
-                                <span class="badge badge-pill badge-light"><i class="far fa-comment-alt fa-sm text-secondary"></i>&nbsp;&nbsp;{% trans 'Note' %}</span>
+                                <span class="badge badge-pill badge-light"><i class="far fa-comment-alt fa-xs fa-sm text-danger"></i>&nbsp;&nbsp;{% trans 'Note' %}</span>
                               </a>
                               {% elif leave.status == 'C' %}                         
                               <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Sync Success' %}</span>
@@ -190,7 +198,28 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">{% trans 'Reason' %}</h5>
+          <h5 class="modal-title" id="exampleModalLongTitle">{% trans 'Rejected Reason' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">{% trans 'Close' %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="leaveReasonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">{% trans 'Leave Reason' %}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -208,7 +237,45 @@
 
 {% endblock %}
 
-{% block javascript %}
 
+{% block javascript %}
+  <script>
+
+    $(document).ready(function(){    
+
+     $("body").on("click", "a.get_leave_reject_comment", function(event){       
+        var obj = $(this);  
+        $.ajax({
+            url: obj.attr("data-url"),
+            type: 'get',          
+            dataType: 'json',
+            beforeSend: function () {
+              $("#leaveRejectCommentModal").modal("show");
+            },
+            success: function (data) {
+                $("#leaveRejectCommentModal .modal-body").html(data.comment);
+            }
+        });
+     });
+
+     $("body").on("click", "a.get_leave_reason", function(event){
+        console.log("test");
+        var obj = $(this);  
+        $.ajax({
+            url: obj.attr("data-url"),
+            type: 'get',          
+            dataType: 'json',
+            beforeSend: function () {
+              $("#leaveReasonModal").modal("show");
+            },
+            success: function (data) {              
+              $("#leaveReasonModal .modal-body").html(data.leave_reason);
+            }
+        });
+     });
+
+    });
+
+  </script>
 {% endblock %}
 

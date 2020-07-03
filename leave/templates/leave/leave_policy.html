@@ -16,15 +16,17 @@
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0 text-dark">{% trans 'Leave Entitlement' %} {% now 'Y' %}</h1>
-          </div><!-- /.col -->
+          </div>
           <div class="col-sm-6">
+            <!--
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
               <li class="breadcrumb-item active">{% trans 'Leave Entitlement' %}</li>
             </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+            -->
+          </div>
+        </div>
+      </div>
     </div>
     <!-- /.content-header -->
 
@@ -79,19 +81,6 @@
                   
                   <!-- HRMS ใช้ไป -->
                   <td style="text-align: left" class="text-secondary">
-                    <!--
-                    {% if policy.lve_act > 0 %}
-                      {{policy.lve_act}} <small>วัน</small>
-                    {% endif %}
-
-                    {% if policy.lve_act_hr > 0 %}
-                      &nbsp;{{ policy.lve_act_hr|stringformat:"1.0f" }} <small>ช.ม.</small>
-                    {% endif %}
-
-                    {% if policy.lve_act == 0 and policy.lve_act_hr == 0 %}
-                      0
-                    {% endif %}
-                    -->
                     {% if policy.lve_HRMS > 0 %}
                       {{policy.lve_HRMS}} <small>{% trans 'Day' %}</small>
                     {% endif %}

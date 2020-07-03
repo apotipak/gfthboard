@@ -31,6 +31,10 @@ from .form_m1817 import EmployeeM1817Form
 from .form_m1247 import EmployeeM1247Form
 from django.core.files.storage import FileSystemStorage
 from django.utils import translation
+from django.core import serializers
+import collections
+from django.utils.timezone import now
+import json
 
 
 # excluded_username = {'900590','580816','900630'}
@@ -51,8 +55,8 @@ def m1817_check_leave_request_day(request):
     start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:00")
     end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:00")
 
-    print("debug 1 : " + str(start_date))
-    print("debug 2 : " + str(end_date))
+    # print("debug 1 : " + str(start_date))
+    # print("debug 2 : " + str(end_date))
 
     found_m1817_error = checkM1817TotalHours('M1817', start_date, end_date, leave_type_id)
     if found_m1817_error[0]:
@@ -87,7 +91,7 @@ def m1247_check_leave_request_day(request):
 
     count = checkM1247TotalHours("m1247", start_date, end_date, leave_type_id)
     
-    print("count1 : " + str(count))
+    # print("count1 : " + str(count))
 
     if count != 0:
         if count.is_integer():
@@ -158,10 +162,9 @@ def EmployeeNew(request):
             start_date = datetime.strptime(d1, dattime_format)
             end_date = datetime.strptime(d2, dattime_format)
 
-            #leave_type_id = form.cleaned_data['leave_type']
             leave_type_id = form.data['leave_type']
             leave_type = form.cleaned_data['leave_type']
-
+            leave_reason = form.cleaned_data['leave_reason']
             username = request.user.username
             fullname = request.user.first_name + " " + request.user.last_name
             created_by = request.user.username                        
@@ -172,6 +175,7 @@ def EmployeeNew(request):
             employee.end_date = end_date
             employee.emp_id = request.user.username
             employee.created_by = request.user.username
+            employee.leave_reason = leave_reason
 
             '''
             if request.user.groups.filter(name__in=['E-Leave Staff','E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
@@ -223,6 +227,9 @@ def EmployeeNew(request):
                     if settings.TURN_DUMMY_EMAIL_ON:
                         recipients = settings.DUMMY_EMAIL
 
+                    if len(leave_reason) <= 0:
+                        leave_reason = _('There is no reason provided.')
+
                     mail.send(                        
                         recipients, # To
                         settings.DEFAULT_FROM_EMAIL, # From
@@ -233,7 +240,8 @@ def EmployeeNew(request):
                             'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
                             'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
                             'ลาวันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึงวันที่ <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br>'
-                            'จำนวน: <strong>' + day_hour_display + '</strong><br><br>'
+                            'จำนวน: <strong>' + day_hour_display + '</strong><br>'
+                            'เหตุผลการลา: <strong>' + leave_reason + '</strong><br><br>'
                             'กรุณา <a href="http://27.254.207.51:8080">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br>'
                             '<br><br>--This email was sent from E-Leave System<br>'
                             'ref: ' + str(ref) + '<br>'
@@ -561,28 +569,25 @@ class EmployeeCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'leave.add_employeeinstance'
 
 
-#class LeaveApprovalListView(PermissionRequiredMixin, generic.ListView):
-class LeaveApprovalListView(generic.ListView):
+class LeavePendingApproveListView(PermissionRequiredMixin, generic.ListView):
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    template_name = 'leave/leave_approval_list.html'
-    #permission_required = ('leave.approve_leaveplan')
+    template_name = 'leave/leave_pending_approve_list.html'
+    permission_required = ('leave.approve_leaveplan')
     model = EmployeeInstance
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
-        context = super(LeaveApprovalListView, self).get_context_data(**kwargs)
+        context = super(LeavePendingApproveListView, self).get_context_data(**kwargs)
 
         user_language = getDefaultLanguage(self.request.user.username)
         translation.activate(user_language)
-        # today_date = settings.TODAY_DATE
         today_date = getDateFormatDisplay(user_language)
         
         # Check number of waiting leave request
         waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p')"))
-
         
         # Check leave approval right
         if checkLeaveRequestApproval(self.request.user.username):
@@ -608,7 +613,103 @@ class LeaveApprovalListView(generic.ListView):
         return context
 
     def get_queryset(self):
-        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by emp_id, start_date asc")
+        # return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by emp_id, start_date asc")
+        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') order by created_date")
+
+
+class LeaveApprovedListView(PermissionRequiredMixin, generic.ListView):
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    template_name = 'leave/leave_approved_list.html'
+    permission_required = ('leave.approve_leaveplan')
+    model = EmployeeInstance
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super(LeaveApprovedListView, self).get_context_data(**kwargs)
+
+        user_language = getDefaultLanguage(self.request.user.username)
+        translation.activate(user_language)
+        today_date = getDateFormatDisplay(user_language)
+        
+        # Check number of waiting leave request
+        waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p')"))
+        
+        # Check leave approval right
+        if checkLeaveRequestApproval(self.request.user.username):
+            able_to_approve_leave_request = True
+        else:
+            able_to_approve_leave_request = False
+
+        if user_language == "th":
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
+        else:
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
+
+        context.update({
+            'page_title': settings.PROJECT_NAME,
+            'today_date': today_date,
+            'project_version': settings.PROJECT_VERSION,
+            'db_server': settings.DATABASES['default']['HOST'],
+            'project_name': settings.PROJECT_NAME,
+            'waiting_for_approval_item': waiting_for_approval_item,
+            'able_to_approve_leave_request': able_to_approve_leave_request,
+            'username_display': username_display,
+        })
+        return context
+
+    def get_queryset(self):
+        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('a','C','F') order by updated_date desc")
+
+
+class LeaveRejectedListView(PermissionRequiredMixin, generic.ListView):
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    template_name = 'leave/leave_rejected_list.html'
+    permission_required = ('leave.approve_leaveplan')
+    model = EmployeeInstance
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super(LeaveRejectedListView, self).get_context_data(**kwargs)
+
+        user_language = getDefaultLanguage(self.request.user.username)
+        translation.activate(user_language)
+        # today_date = settings.TODAY_DATE
+        today_date = getDateFormatDisplay(user_language)
+        
+        # Check number of waiting leave request
+        waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p')"))
+        
+        # Check leave approval right
+        if checkLeaveRequestApproval(self.request.user.username):
+            able_to_approve_leave_request = True
+        else:
+            able_to_approve_leave_request = False
+
+        if user_language == "th":
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
+        else:
+            username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
+
+        context.update({
+            'page_title': settings.PROJECT_NAME,
+            'today_date': today_date,
+            'project_version': settings.PROJECT_VERSION,
+            'db_server': settings.DATABASES['default']['HOST'],
+            'project_name': settings.PROJECT_NAME,
+            'waiting_for_approval_item': waiting_for_approval_item,
+            'able_to_approve_leave_request': able_to_approve_leave_request,
+            'username_display': username_display,
+        })
+        return context
+
+    def get_queryset(self):
+        return EmployeeInstance.objects.raw("select ei.id, ei.start_date, ei.end_date, ei.created_date, ei.created_by, ei.status, ei.comment, ei.emp_id, ei.leave_type_id, e.emp_fname_th, e.emp_lname_th from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('r') order by updated_date desc")
 
 
 #@permission_required('leave.approve_leaveplan')
@@ -673,7 +774,7 @@ def EmployeeInstanceApprove(request, pk):
                         'ref: ' + str(ref) + '<br>'
                 )
 
-        return HttpResponseRedirect(reverse('leave_approval'))
+        return HttpResponseRedirect(reverse('leave_approve_pending_list'))
     
     leaveEmployee = LeaveEmployee.objects.get(emp_id=employee_leave_instance.emp_id)
     waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))    
@@ -768,7 +869,7 @@ def EmployeeInstanceReject(request, pk):
                         'ref: ' + str(ref) + '<br>'
                 )
 
-        return HttpResponseRedirect(reverse('leave_approval'))
+        return HttpResponseRedirect(reverse('leave_approve_pending_list'))
 
 
     if user_language == "th":
@@ -800,6 +901,191 @@ def get_leave_reject_comment(request, pk):
 
 
 @login_required(login_url='/accounts/login/')
+def get_leave_reason(request, pk):    
+    reason = EmployeeInstance.objects.filter(id__exact=pk).values('leave_reason')[0] or None
+    return JsonResponse(reason)
+
+
+@login_required(login_url='/accounts/login/')
+def GetEmployeeEntitlementRemaining(request, check_employee_id):
+    leave_policy = LeavePlan.EmployeeLeavePolicy(request)
+
+    username = check_employee_id
+
+    for policy in leave_policy:
+
+        leave_plan_day = policy.lve_plan
+        leave_plan_hour = policy.lve_plan * 8
+
+        # จำนวน วัน/ช.ม. ที่ใช้ใน HRMS
+        total_lve_act = policy.lve_act
+        total_lve_act_hr = policy.lve_act_hr
+        grand_total_lve_act_hr = total_lve_act_hr + (total_lve_act * 8)
+
+        # จำนวน วัน/ช.ม. คงเหลือใน HRMS
+        total_lve_miss = policy.lve_miss
+        total_lve_miss_hr = policy.lve_miss_hr
+        grand_total_lve_miss_hr = total_lve_miss_hr + (total_lve_miss * 8)
+
+        # จำนวน วัน/ช.ม. ที่ใช้ใน HRMS 2
+        total_lve_hrms = policy.lve_HRMS
+        total_lve_hrms_hr = policy.lve_HRMS_HR
+        grand_total_lve_hrms = total_lve_hrms_hr + (total_lve_hrms * 8)
+
+
+        # จำนวน วัน/ช.ม. ที่รออนุมัติใน E-Leave
+        total_pending_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+        total_pending_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
+        grand_total_pending_eleave = total_pending_lve_act_hr_eleave + (total_pending_lve_act_eleave * 8)
+        policy.total_pending_lve_act_eleave = grand_total_pending_eleave // 8
+        policy.total_pending_lve_act_hr_eleave = grand_total_pending_eleave % 8  
+
+        # จำนวน วัน/ช.ม. ที่อนุมัติแล้ว E-Leave
+        total_approved_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
+        total_approved_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+        grand_total_approved_eleave = total_approved_lve_act_hr_eleave + (total_approved_lve_act_eleave * 8)
+        policy.total_approved_lve_act_eleave = grand_total_approved_eleave // 8
+        policy.total_approved_lve_act_hr_eleave = grand_total_approved_eleave % 8
+
+        # จำนวนวันคงเหลือสุทธิ
+        result = leave_plan_hour - (grand_total_lve_hrms + grand_total_approved_eleave + grand_total_pending_eleave)        
+        total_day_remaining = result // 8
+        total_hour_remaining = result % 8
+        policy.total_day_remaining = total_day_remaining
+        policy.total_hour_remaining = total_hour_remaining
+    
+    return leave_policy
+
+
+@login_required(login_url='/accounts/login/')
+def get_employee_leave_history(request, emp_id):        
+
+    employee = LeaveEmployee.objects.filter(emp_id=emp_id) or None
+    now = datetime.now()
+    LeaveYear = str(now.year)
+    employee_leave_plan = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_year, lt.lve_id as lve_type_id, lp.lve_code, lp.lve_plan, lt.lve_th, lt.lve_en, lp.lve_act, lp.lve_act_hr, lp.lve_miss, lp.lve_miss_hr, lp.lve_HRMS, lp.lve_HRMS_HR from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + emp_id + " and lp.lve_year=" + LeaveYear)
+    
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
+    if employee_leave_plan:
+        pickup_dict = {}
+        pickup_records=[]
+
+        for e in employee:
+            if user_language == 'th':
+                fullname = e.emp_fname_th + " " + e.emp_lname_th
+            else:
+                fullname = e.emp_fname_en + " " + e.emp_lname_en
+
+            for l in employee_leave_plan:
+
+                leave_plan_day = l.lve_plan
+                leave_plan_hour = l.lve_plan * 8
+
+                # จำนวน วัน/ช.ม. ที่ใช้ใน HRMS 2
+                total_lve_hrms = l.lve_HRMS
+                total_lve_hrms_hr = l.lve_HRMS_HR
+                grand_total_lve_hrms = total_lve_hrms_hr + (total_lve_hrms * 8)
+
+                # จำนวน วัน/ช.ม. ที่อนุมัติแล้ว E-Leave
+                total_approved_lve_act_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
+                total_approved_lve_act_hr_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+                grand_total_approved_eleave = total_approved_lve_act_hr_eleave_obj + (total_approved_lve_act_eleave_obj * 8)
+                total_approved_lve_act_eleave = grand_total_approved_eleave // 8
+                total_approved_lve_act_hr_eleave = grand_total_approved_eleave % 8
+
+                # จำนวน วัน/ช.ม. ที่รออนุมัติใน E-Leave
+                total_pending_lve_act_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+                total_pending_lve_act_hr_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
+                grand_total_pending_eleave = total_pending_lve_act_hr_eleave_obj + (total_pending_lve_act_eleave_obj * 8)
+                total_pending_lve_act_eleave = grand_total_pending_eleave // 8
+                total_pending_lve_act_hr_eleave = grand_total_pending_eleave % 8  
+
+                # จำนวนวันคงเหลือสุทธิ
+                result = leave_plan_hour - (grand_total_lve_hrms + grand_total_approved_eleave + grand_total_pending_eleave)        
+                total_day_remaining = result // 8
+                total_hour_remaining = result % 8
+
+                # จำนวนวันที่ใช้สุทธิ (รวมวันจากระบบ HRMS และ E-Leave)
+                total_day_used = (grand_total_lve_hrms // 8) + total_approved_lve_act_eleave
+                total_hour_used = (grand_total_lve_hrms % 8) + total_approved_lve_act_hr_eleave
+                
+                record = {
+                    "emp_id":e.emp_id, 
+                    "fullname": fullname, # ชื่อพนักงาน
+                    "leave_name": l.lve_th, # ชื่อประเภทวันลา
+                    "leave_plan": leave_plan_day, # สิทธิ์วันลา
+                    "total_day_remaining": total_day_remaining, # วันลาคงเหลือ
+                    "total_hour_remaining": total_hour_remaining, # ชั่วโมงลาคงเหลือ
+                    "total_day_used": total_day_used, # จำนวนวันที่ใช้ไป
+                    "total_hour_used": total_hour_used, # จำนวนชั่วโมงที่ใช้ไป
+                    "total_day_pending": total_pending_lve_act_eleave, # จำนวนวันที่รออนุมัติ
+                    "total_hour_pending": total_pending_lve_act_hr_eleave, # จำนวนชั่วโมงที่รออนุมัติ
+                    "entitlement_year": LeaveYear,
+                }
+
+                pickup_records.append(record)
+
+        response = JsonResponse(data={"success": True, "results": list(pickup_records)})
+        response.status_code = 200
+
+        return response
+    else:
+        response = JsonResponse({"error": "there was an error"})
+        response.status_code = 403
+        return response
+
+    return JsonResponse(data={"success": False, "results": ""})
+
+
+    '''
+    print("debug: " + emp_id)
+
+    employee = LeaveEmployee.objects.filter(emp_id=emp_id).values() or None
+    employee_leave = EmployeeInstance.objects.filter(emp_id=emp_id, status__in=('a','C','F')).values() or None
+
+    objemp = LeaveEmployee.objects.filter(emp_id=emp_id) or None
+    objleave = EmployeeInstance.objects.filter(emp_id=emp_id, status__in=('a','C','F')) or None
+
+    if employee_leave:
+        data = list()
+        data = [
+            {
+                'emp_id': '1',
+                'leave_type_id': 2,
+                'leave_reason': 'test 1 2 3',
+                'leave_status': 'a'
+            },
+            {
+                'emp_id': '2',
+                'leave_type_id': 3,
+                'leave_reason': 'test 4 5 6',
+                'leave_status': 'a'
+            }
+        ]
+
+        pickup_dict = {}
+        pickup_records=[]
+
+        for e in objemp:            
+            for l in objleave:
+                record = {"emp_id":e.emp_id, "fullname": e.emp_fname_en + " " + e.emp_lname_en,"status": l.status}
+                pickup_records.append(record)
+
+        response = JsonResponse(data={"success": True, "results": list(pickup_records)})
+        response.status_code = 200
+        return response
+
+    else:
+        response = JsonResponse({"error": "there was an error"})
+        response.status_code = 403
+        return response
+
+    return JsonResponse(data={"success": False, "results": ""})
+    '''
+
+@login_required(login_url='/accounts/login/')
 def LeaveTimeline(request):
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
@@ -811,6 +1097,9 @@ def LeaveTimeline(request):
     # today_date = settings.TODAY_DATE
     today_date = getDateFormatDisplay(user_language)
     leave_policy = LeavePlan.EmployeeLeavePolicy(request)
+
+    # Check number of waiting leave request
+    waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))
 
     username = request.user.username
 
@@ -837,6 +1126,7 @@ def LeaveTimeline(request):
         'able_to_approve_leave_request': able_to_approve_leave_request,
         'user_language': user_language,
         'username_display': username_display,
+        'waiting_for_approval_item': waiting_for_approval_item,
     }
 
     return render(request, 'leave/leave_timeline.html', context)
