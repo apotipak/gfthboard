@@ -170,12 +170,12 @@
                                 <tbody>
                                 {% for member in TeamMemberList %}
                                     <tr>
-                                        <th>{{member.emp_id}}</th>
+                                        <td>{{member.emp_id}}</td>
                                         {% if user_language == "th" %}
                                         <td><a href="#" data-url="{% url 'get_employee_leave_history' member.emp_id %}" class="get_employee_leave_history">{{member.emp_fname_th}} {{member.emp_lname_th}}</a></td>
                                         <td>{{member.pos_th}}</td>
                                         {% else %}
-                                        <td>{{member.emp_fname_en}} {{member.emp_lname_en}}</td>
+                                        <td><a href="#" data-url="{% url 'get_employee_leave_history' member.emp_id %}" class="get_employee_leave_history">{{member.emp_fname_en}} {{member.emp_lname_en}}</a></td>
                                         <td>{{member.pos_en}}</td>
                                         {% endif %}
                                     </tr>
