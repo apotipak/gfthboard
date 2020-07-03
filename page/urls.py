@@ -8,6 +8,6 @@ urlpatterns = [
     path('staff-password', views.StaffPassword, name='staff-password'),
     path('staff-language', views.StaffLanguage, name='staff-language'),
     path('faq', views.faq, name='faq'),
-    path('what-is-new', views.whatisnew, name='what-is-new'),
+    path('news', views.news, name='news'),
     path('help-eleave', views.HelpEleave, name='help-eleave'),    
 ]

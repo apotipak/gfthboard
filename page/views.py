@@ -228,7 +228,7 @@ def faq(request):
     })
 
 @login_required(login_url='/accounts/login/')
-def whatisnew(request):
+def news(request):
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -243,7 +243,7 @@ def whatisnew(request):
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
-    return render(request, 'page/what-is-new.html', {
+    return render(request, 'page/news.html', {
         'page_title': page_title, 
         'project_name': project_name, 
         'project_version': project_version, 
