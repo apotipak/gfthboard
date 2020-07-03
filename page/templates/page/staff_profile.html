@@ -10,23 +10,23 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <!--
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            &nbsp;
+            {% trans 'Profile' %}
           </div>
           <div class="col-sm-6">
+            <!--
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
               <li class="breadcrumb-item active">{% trans 'Profile' %}</li>
             </ol>
+            -->
           </div>
         </div>
       </div>
     </div>
-    -->
     <!-- /.content-header -->
 
     <!-- Main content -->
@@ -123,7 +123,9 @@
                             {% for member in SuperVisorInstance %}
                                 <tr>
                                     {% if user_language == "th" %}
-                                    <td>{{member.emp_fname_th}} {{member.emp_lname_th}}</td>
+                                    <td>
+                                      {{member.emp_fname_th}} {{member.emp_lname_th}}
+                                    </td>
                                     <td>{{member.div_th}}</td>
                                     <td>{{member.pos_th}}</td>
                                     {% else %}
@@ -170,7 +172,7 @@
                                     <tr>
                                         <th>{{member.emp_id}}</th>
                                         {% if user_language == "th" %}
-                                        <td>{{member.emp_fname_th}} {{member.emp_lname_th}}</td>
+                                        <td><a href="#" data-url="{% url 'get_employee_leave_history' member.emp_id %}" class="get_employee_leave_history">{{member.emp_fname_th}} {{member.emp_lname_th}}</a></td>
                                         <td>{{member.pos_th}}</td>
                                         {% else %}
                                         <td>{{member.emp_fname_en}} {{member.emp_lname_en}}</td>
@@ -208,13 +210,132 @@
   </div>
   <!-- /.content-wrapper -->
 
+  <!-- Modal - Leave Entitlement -->
+  <div class="modal fade" id="employeeLeaveEntitlementModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">a{% trans 'Entitlement Remaining' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          content
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">{% trans 'Close' %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->
+  
 {% endblock %}
 
 {% block javascript %}
   <script>
 
     $(document).ready(function(){    
-      //
+    $("body").on("click", "a.get_employee_leave_history", function(event){
+      var obj = $(this);  
+      $.ajax({
+          url: obj.attr("data-url"),
+          type: 'get',          
+          dataType: 'json',
+          beforeSend: function () {
+            $("#employeeLeaveEntitlementModal").modal("show");
+          },
+          success: function (data) {
+            //console.log(data.results);
+            
+            var result = ""
+            var count = data.results.length;
+            var fullname = data.results[0]["fullname"];
+            var entitlement_year = data.results[0]["entitlement_year"];
+
+            result += "<div class='col-12 text-center pb-2'><h5>" + fullname + "</h5></div>";
+            result += "<table class='table table-hover table-sm'>";
+            result += " <thead>";
+            result += "   <tr>";
+            result += "     <th scope='col'>{% trans 'Leave Type' %}</th>";
+            result += "     <th scope='col'>{% trans 'Remaining' %}</th>";
+            result += "     <th scope='col'>{% trans 'Used' %}</th>";
+            result += "     <th scope='col'>{% trans 'Waiting' %}</th>";
+            result += "       </tr>";
+            result += " </thead>";
+            result += " <tbody>";
+           
+            for(var i=0; i<count; i++) {
+              var leave_name = data.results[i]["leave_name"];
+              var leave_plan = data.results[i]["leave_plan"];
+              var total_day_remaining = data.results[i]["total_day_remaining"];
+              var total_hour_remaining = data.results[i]["total_hour_remaining"];
+
+              var total_day_used = data.results[i]["total_day_used"];
+              var total_hour_used = data.results[i]["total_hour_used"];
+
+              var total_day_pending = data.results[i]["total_day_pending"];
+              var total_hour_pending = data.results[i]["total_hour_pending"];
+
+              // Type + Entitlement
+              result += "<tr>";
+              result += "<td><small><strong>" + leave_name + "</strong>&nbsp;" + leave_plan + "&nbsp;{% trans 'Day' %}</small></td>";
+
+              // Remaining
+              result += "<td>";
+              if(total_day_remaining > 0) {
+                result += "<small>" + total_day_remaining + "&nbsp;</small><small>{% trans 'Day' %}</small>";
+              }
+              if(total_hour_remaining > 0) {
+                result += "&nbsp;<small>" + parseFloat(total_hour_remaining).toFixed() + "&nbsp;</small><small>{% trans 'Hour' %}</small>";
+              }
+              if(total_day_remaining == 0 && parseFloat(total_hour_remaining).toFixed() == 0) {
+                result += "<small>0</small>";
+              }
+              result += "</td>";
+
+              // Used
+              result += "<td>";
+              if(total_day_used > 0) {
+                result += "&nbsp;<small>" + total_day_used + "&nbsp;{% trans 'Day' %}</small>";
+              }
+              if(total_hour_used > 0) {
+                result += "&nbsp;<small>" + parseFloat(total_hour_used).toFixed() + "&nbsp;{% trans 'Hour' %}</small>";
+              }
+              if(total_day_used == 0 && parseFloat(total_hour_used).toFixed() == 0) {
+                result += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>0</small>"; 
+              }
+              result += "</td>";
+
+              // Pending
+              result += "<td>";
+              if(total_day_pending > 0) {
+                result += "&nbsp;<small>" + total_day_pending + "&nbsp;{% trans 'Day' %}</small>";
+              }
+              if(total_hour_pending > 0) {
+                result += "&nbsp;<small>" + parseFloat(total_hour_pending).toFixed() + "&nbsp;{% trans 'Hour' %}</small>";
+              }
+              if(total_day_pending == 0 && parseFloat(total_hour_pending).toFixed() == 0) {
+                result += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>0</small>"; 
+              }              
+              result += "</td>";
+
+              result += "</tr>";              
+            }
+
+            result += " </tbody>";
+            result += "</table>";
+
+            $("#employeeLeaveEntitlementModal .modal-title").html("<h5><i class='fa fa-tasks text-secondary fa-xs'></i>&nbsp;&nbsp;{% trans 'Leave Entitlement' %}&nbsp;&nbsp;" + entitlement_year + "</h5>");
+            $("#employeeLeaveEntitlementModal .modal-body").html(result);
+
+          },
+          error: function(data){
+            $("#employeeLeaveEntitlementModal .modal-body").html("{% trans 'There is no data.' %}");
+          }
+      });      
+    });
     });
 
   </script>
