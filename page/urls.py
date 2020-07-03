@@ -7,5 +7,6 @@ urlpatterns = [
     path('staff-profile', views.StaffProfile, name='staff-profile'),
     path('staff-password', views.StaffPassword, name='staff-password'),
     path('staff-language', views.StaffLanguage, name='staff-language'),
-    path('help-eleave', views.HelpEleave, name='help-eleave'),
+    path('faq', views.faq, name='faq'),
+    path('help-eleave', views.HelpEleave, name='help-eleave'),    
 ]

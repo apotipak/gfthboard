@@ -1,0 +1,82 @@
+{% extends "page_base_generic.html" %}
+
+{% load i18n %}
+
+{% block title %}คู่มือการใช้งาน E-Leave{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <!--
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            &nbsp;
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
+              <li class="breadcrumb-item active">คู่มือการใช้งาน E-Leave</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    -->
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content pt-4">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="container">
+            <h1>{% trans 'FAQ' %}</h1>
+            <h5>ระบบ E-Leave</h5>
+            <div class="accordion" id="accordionExample">
+              <div class="card">
+                <div class="card-header" id="headingOne">
+                  <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#q1" aria-expanded="true" aria-controls="collapseOne">
+                      <h5 class="text-dark">เราจะรู้ไดยังไงเหรอคะว่า.. ใครเป็นคนอนุมัติวันลาให้เรา?</h5>                      
+                    </button>
+                  </h2>
+                </div>
+
+                <div id="q1" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                  <div class="card-body">
+                    ให้ลองตรวจสอบที่เมนู <a href="/staff-profile">โปรไฟล์</a> ได้เลยครับว่าใครเป็นผู้จัดการของเรา ระบบจะไปตรวจสอบดูก่อนว่าในช่องผู้จัดการเป็นชื่อใคร จากนั้นระบบจะส่งอีเมล์เกี่ยวกับวันลาที่เราขอไปให้กับผู้จัดการเพื่อพิจารณาอนุมัติครับ
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header" id="headingTwo">
+                  <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      <h5 class="text-dark">
+                      สถานะ Pending กับ Success ที่เห็นตอนส่งรายการขออนุมัติวันลา มันคืออะไรเหรอคะ...?</h5>
+                    </button>
+                  </h2>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                  <div class="card-body">
+                    สถานะ Pending คือรายการวันลาที่ได้รับการอนุมัติแล้ว และรอการบาลานซ์วันกลับไปยังระบบ HRMS ส่วนสถานะ Success จะเกิดขึ้นหลังจากการปรับปรุงวันลาที่ระบบ HRMS เสร็จเรียบร้อยครับ
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <!-- /.content-wrapper -->
+
+{% endblock %}
