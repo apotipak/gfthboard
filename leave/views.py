@@ -35,6 +35,7 @@ from django.core import serializers
 import collections
 from django.utils.timezone import now
 import json
+from django.utils.translation import ugettext as _
 
 
 # excluded_username = {'900590','580816','900630'}
