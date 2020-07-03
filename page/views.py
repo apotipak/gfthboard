@@ -226,3 +226,27 @@ def faq(request):
         'db_server': db_server, 'today_date': today_date,
         'username_display' : username_display,
     })
+
+@login_required(login_url='/accounts/login/')
+def whatisnew(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = getDateFormatDisplay(user_language) 
+
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+    return render(request, 'page/what-is-new.html', {
+        'page_title': page_title, 
+        'project_name': project_name, 
+        'project_version': project_version, 
+        'db_server': db_server, 'today_date': today_date,
+        'username_display' : username_display,
+    })
