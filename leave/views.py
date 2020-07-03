@@ -213,7 +213,6 @@ def EmployeeNew(request):
                 day_hour_display += str(grand_total_hours % 8) + ' ช.ม.'
 
             # EMPLOYEE SENDS LEAVE REQUEST EMAIL
-            
             if request.user.username not in excluded_username:
 
                 if settings.TURN_SEND_MAIL_ON:                    
@@ -223,6 +222,8 @@ def EmployeeNew(request):
                     supervisor_email = supervisor.email
                     recipients = [supervisor_email]                
                     employee_full_name = employee.emp_fname_th + ' ' + employee.emp_lname_th
+                    supervisor_obj = LeaveEmployee.objects.get(emp_id=supervisor_id)
+                    supervisor_fullname = supervisor_obj.emp_fname_th + " " + supervisor_obj.emp_lname_th
                     
                     if settings.TURN_DUMMY_EMAIL_ON:
                         recipients = settings.DUMMY_EMAIL
@@ -235,7 +236,7 @@ def EmployeeNew(request):
                         settings.DEFAULT_FROM_EMAIL, # From
                         subject = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
                         message = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
-                        html_message = 'เรียน <strong>ผู้จัดการแผนก</strong><br><br>'
+                        html_message = 'เรียน คุณ <strong>' + supervisor_fullname + '</strong><br><br>'
                             'พนักงานแจ้งใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'                            
                             'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
                             'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
@@ -413,6 +414,8 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
                 supervisor = User.objects.get(username=supervisor_id)
                 supervisor_email = supervisor.email
                 employee_full_name = employee.emp_fname_th + ' ' + employee.emp_lname_th
+                supervisor_obj = LeaveEmployee.objects.get(emp_id=supervisor_id)
+                supervisor_fullname = supervisor_obj.emp_fname_th + " " + supervisor_obj.emp_lname_th
 
                 recipients = [supervisor_email]
                 
@@ -439,7 +442,7 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
                     settings.DEFAULT_FROM_EMAIL, # From
                     subject = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา',
                     message = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา',
-                    html_message = 'เรียน <strong>ผู้จัดการแผนก</strong><br><br>'
+                    html_message = 'เรียน คุณ <strong>' + supervisor_fullname + '</strong><br><br>'
                         'มีการขอแจ้งยกเลิกวันลาตามรายละเอียดด้านล่าง<br><br>'
                         'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
                         'ประเภทการลา: <strong>' + str(leave_type_name) + '</strong><br>'
