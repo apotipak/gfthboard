@@ -964,7 +964,6 @@ def get_employee_leave_history(request, emp_id):
     now = datetime.now()
     LeaveYear = str(now.year)
     employee_leave_plan = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_year, lt.lve_id as lve_type_id, lp.lve_code, lp.lve_plan, lt.lve_th, lt.lve_en, lp.lve_act, lp.lve_act_hr, lp.lve_miss, lp.lve_miss_hr, lp.lve_HRMS, lp.lve_HRMS_HR from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + emp_id + " and lp.lve_year=" + LeaveYear)
-    print(LeaveYear)
     
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
@@ -1009,9 +1008,9 @@ def get_employee_leave_history(request, emp_id):
                 total_hour_remaining = result % 8
 
                 # จำนวนวันที่ใช้สุทธิ (รวมวันจากระบบ HRMS และ E-Leave)
-                total_day_used = grand_total_lve_hrms // 8
-                total_hour_used = grand_total_lve_hrms % 8
-
+                total_day_used = (grand_total_lve_hrms // 8) + total_approved_lve_act_eleave
+                total_hour_used = (grand_total_lve_hrms % 8) + total_approved_lve_act_hr_eleave
+                
                 record = {
                     "emp_id":e.emp_id, 
                     "fullname": fullname, # ชื่อพนักงาน
