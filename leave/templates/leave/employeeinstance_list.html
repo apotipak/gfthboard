@@ -113,7 +113,7 @@
                               <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Sync Pending' %}</span>
                               {% elif leave.status == 'r' %}                              
                               <a href="#" data-url="{% url 'get_leave_reject_comment' leave.id %}" class="get_leave_reject_comment">
-                                <span class="badge badge-pill badge-light"><i class="far fa-comment-alt fa-xs fa-sm text-danger"></i>&nbsp;&nbsp;{% trans 'Note' %}</span>
+                                <span class="badge badge-pill badge-light"><i class="far fa-comment-alt fa-xs fa-sm text-secondary"></i>&nbsp;&nbsp;{% trans 'Note' %}</span>
                               </a>
                               {% elif leave.status == 'C' %}                         
                               <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Sync Success' %}</span>
