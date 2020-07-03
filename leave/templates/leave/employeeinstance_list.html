@@ -38,7 +38,7 @@
           <div class="col-lg-12">
 
             {% if object_list %}            
-            <table id="leave_history_table" class="table table-hover table-bordered">
+            <table id="leave_history_table" class="table table-hover table-bordered table-striped">
                 <thead>
                     <tr>                        
                         <th scope="col">{% trans 'Type' %}</th>
@@ -59,13 +59,13 @@
                           {% endif %}
 
                           {% if leave.leave_reason %}
-                            &nbsp;<a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason">
-                              <i class="far fa-comment-alt text-secondary fa-xs"></i>
-                            </a>                            
+                            <span class="badge badge-pill badge-light"><a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason">
+                              <i class="far fa-comment-alt text-secondary fa-sm"></i>
+                            </a></span>
                           {% endif %}
 
                           {% if leave.document %}
-                          &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-xs text-secondary" aria-hidden="true"></i></a>
+                          <span class="badge badge-pill badge-light"><a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-sm text-primary" aria-hidden="true"></i></a></span>
                           {% endif %}
                         </td>
                         <td>
@@ -111,7 +111,7 @@
                               <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Sync Pending' %}</span>
                               {% elif leave.status == 'r' %}                              
                               <a href="#" data-url="{% url 'get_leave_reject_comment' leave.id %}" class="get_leave_reject_comment">
-                                <span class="badge badge-pill badge-light"><i class="fas fa-ban fa-xs fa-sm text-secondary"></i>&nbsp;&nbsp;{% trans 'Note' %}</span>
+                                <span class="badge badge-pill badge-light"><i class="far fa-comment-alt fa-xs fa-sm text-danger"></i>&nbsp;&nbsp;{% trans 'Note' %}</span>
                               </a>
                               {% elif leave.status == 'C' %}                         
                               <span class="badge badge-pill badge-light"><i class="fas fa-sync fa-xs"></i>&nbsp;&nbsp;{% trans 'Sync Success' %}</span>

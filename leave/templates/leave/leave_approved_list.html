@@ -14,10 +14,10 @@
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
+          <div class="col-4 text-nowrap">
             <h1 id="page-title" class="m-0 text-dark">{% trans 'Approved List' %}</h1>
           </div><!-- /.col -->
-          <div class="col-sm-6">
+          <div class="col-8">
 
             <!--
             <ol class="breadcrumb float-sm-right">
@@ -26,15 +26,15 @@
             </ol>
             -->
 
-            <div class="dropdown float-right">
+            <div class="dropdown float-right mt-2">
               <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="leaverequestfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Pending Status' %}
               </button>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="leaverequestfilter">
                 <h6 class="dropdown-header">{% trans 'filter by' %}</h6>
-                <a class="dropdown-item" href="#">{% trans 'Pending Status' %}</a>
-                <a class="dropdown-item" href="#">{% trans 'Approved Status' %}</a>
-                <a class="dropdown-item" href="#">{% trans 'Rejected Status' %}</a>
+                <a id="filterpending" class="dropdown-item" href="#"><i class="fa fa-clock fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Pending Status' %}</a>
+                <a id="filterapproved" class="dropdown-item" href="#"><i class="fa fa-check fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Approved Status' %}</a>
+                <a id="filterrejected" class="dropdown-item" href="#"><i class="fa fa-ban fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Rejected Status' %}</a>
               </div>
             </div>
 
@@ -72,13 +72,11 @@
                           {{leave.leave_type}}
 
                           {% if leave.leave_reason %}
-                            &nbsp;<a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason">
-                              <i class="far fa-comment-alt fa-xs text-secondary"></i>
-                            </a>                            
+                            <span class="badge badge-pill badge-light"><a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason"><i class="far fa-comment-alt fa-sm text-secondary"></i></a></span>
                           {% endif %}
 
                           {% if leave.document %}
-                            &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-xs" aria-hidden="true"></i></a>
+                            <span class="badge badge-pill badge-light"><a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-sm" aria-hidden="true"></i></a></span>
                           {% endif %}                          
                         </td>
                         <td>
@@ -94,10 +92,10 @@
                           {% endif %}
                           </strong>
                         </td>
-                        <td><small>{{ leave.created_date|naturaltime }}</small></td>
+                        <td><small>{{ leave.created_date|date:"d N y H:i" }}</small></td>
                         <td class="text-right py-0 align-middle">
                           <div class="btn-group btn-group-sm">
-                            <small>{{ leave.updated_date|naturaltime }}</small>
+                            <small>{{ leave.updated_date|date:"d N y H:i" }}</small>
                           </div>
                         </td>                        
                     </tr>
@@ -180,7 +178,7 @@
   });
 
   $(document).ready(function(){    
-    $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Approved List' %}");
+    $('button[data-toggle="dropdown"]').html("<i class='fa fa-filter' aria-hidden='true'></i>&nbsp;&nbsp;{% trans 'Approved Status' %}");
 
     $("body").on("click", "a.get_leave_reason", function(event){
       console.log("test");
@@ -199,17 +197,20 @@
     });
 
     $('.dropdown-menu a').click(function () {
-      if($(this).text() == "Pending Status" || $(this).text() == "รายการรออนุมัติ") {
+      
+      var filterid = $(this).attr('id');
+
+      if(filterid == "filterpending") {
         var url = "{% url 'leave_approve_pending_list' %}";
         window.location.href = url;            
       }
-
-      if($(this).text() == "Approved Status" || $(this).text() == "รายการอนุมัติแล้ว") {
+      
+      if(filterid == "filterapproved") {
         var url = "{% url 'leave_approved_list' %}";
         window.location.href = url;      
       }
-
-      if($(this).text() == "Rejected Status" || $(this).text() == "รายการที่ไม่อนุมัติ") {
+      
+      if(filterid == "filterrejected") {
         var url = "{% url 'leave_rejected_list' %}";
         window.location.href = url;      
       }  

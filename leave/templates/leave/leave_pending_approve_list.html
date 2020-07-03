@@ -35,9 +35,9 @@
               </button>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="leaverequestfilter">
                 <h6 class="dropdown-header">{% trans 'filter by' %}</h6>
-                <a class="dropdown-item" href="#">{% trans 'Pending Status' %}</a>
-                <a class="dropdown-item" href="#">{% trans 'Approved Status' %}</a>
-                <a class="dropdown-item" href="#">{% trans 'Rejected Status' %}</a>
+                <a id="filterpending" class="dropdown-item" href="#"><i class="fa fa-clock fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Pending Status' %}</a>
+                <a id="filterapproved" class="dropdown-item" href="#"><i class="fa fa-check fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Approved Status' %}</a>
+                <a id="filterrejected" class="dropdown-item" href="#"><i class="fa fa-ban fa-xs text-secondary" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Rejected Status' %}</a>
               </div>
             </div>
 
@@ -57,7 +57,7 @@
             {% if object_list %}
 
 
-            <table id="leave_list_table" class="table table-hover table-bordered table-striped">            
+            <table id="leave_list_table" class="table table-hover table-bordered table-striped">
                 <thead>
                     <tr>
                         <th scope="col">{% trans 'Employee' %}</th>
@@ -79,13 +79,11 @@
                           {{leave.leave_type}}
 
                           {% if leave.leave_reason %}
-                            &nbsp;<a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason">
-                              <i class="far fa-comment-alt fa-xs text-secondary"></i>
-                            </a>                            
+                            <span class="badge badge-pill badge-light"><a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason"><i class="far fa-comment-alt fa-sm text-secondary"></i></a></span>
                           {% endif %}
 
                           {% if leave.document %}
-                            &nbsp;<a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-xs text-secondary" aria-hidden="true"></i></a>
+                            <span class="badge badge-pill badge-light"><a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-sm text-secondary" aria-hidden="true"></i></a></span>
                           {% endif %}                          
                         </td>
                         <td>
@@ -233,17 +231,20 @@
     });
 
     $('.dropdown-menu a').click(function () {
-      if($(this).text() == "Pending Status" || $(this).text() == "รายการรออนุมัติ") {
+      
+      var filterid = $(this).attr('id');
+
+      if(filterid == "filterpending") {
         var url = "{% url 'leave_approve_pending_list' %}";
         window.location.href = url;            
       }
-
-      if($(this).text() == "Approved Status" || $(this).text() == "รายการอนุมัติแล้ว") {
+      
+      if(filterid == "filterapproved") {
         var url = "{% url 'leave_approved_list' %}";
         window.location.href = url;      
       }
-
-      if($(this).text() == "Rejected Status" || $(this).text() == "รายการที่ไม่อนุมัติ") {
+      
+      if(filterid == "filterrejected") {
         var url = "{% url 'leave_rejected_list' %}";
         window.location.href = url;      
       }  

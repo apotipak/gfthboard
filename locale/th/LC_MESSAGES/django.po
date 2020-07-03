@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 22:27+0700\n"
+"POT-Creation-Date: 2020-07-03 07:15+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1309,7 +1309,7 @@ msgstr ""
 #: .\leave\templates\leave\leave_approved_list.html:7
 #: .\leave\templates\leave\leave_approved_list.html:25
 #: .\leave\templates\leave\leave_pending_approve_list.html:7
-#: .\leave\templates\leave\leave_pending_approve_list.html:25
+#: .\leave\templates\leave\leave_pending_approve_list.html:28
 #: .\leave\templates\leave\leave_rejected_list.html:7
 #: .\leave\templates\leave\leave_rejected_list.html:25
 msgid "Approval"
@@ -1319,7 +1319,7 @@ msgstr "อนุมัติ"
 #: .\leave\templates\leave\employeeinstance_approve.html:21
 #: .\leave\templates\leave\employeeinstance_approve.html:54
 #: .\leave\templates\leave\leave_approval_list.html:100
-#: .\leave\templates\leave\leave_pending_approve_list.html:105
+#: .\leave\templates\leave\leave_pending_approve_list.html:108
 msgid "Approve"
 msgstr "อนุมัติ"
 
@@ -1329,7 +1329,7 @@ msgstr "อนุมัติ"
 #: .\leave\templates\leave\employeeinstance_reject.html:20
 #: .\leave\templates\leave\leave_approval_list.html:24
 #: .\leave\templates\leave\leave_approved_list.html:24
-#: .\leave\templates\leave\leave_pending_approve_list.html:24
+#: .\leave\templates\leave\leave_pending_approve_list.html:27
 #: .\leave\templates\leave\leave_policy.html:22
 #: .\leave\templates\leave\leave_rejected_list.html:24
 #: .\leave\templates\leave\leave_timeline.html:22
@@ -1349,8 +1349,7 @@ msgstr "รหัสพนักงาน"
 #: .\leave\templates\leave\employeeinstance_approve.html:39
 #: .\leave\templates\leave\employeeinstance_reject.html:40
 #: .\leave\templates\leave\leave_approval_list.html:60
-#: .\leave\templates\leave\leave_pending_approve_list.html:60
-#: .\leave\templates\leave\leave_rejected_list.html:60
+#: .\leave\templates\leave\leave_pending_approve_list.html:63
 #, fuzzy
 #| msgid "Employee ID"
 msgid "Employee"
@@ -1358,7 +1357,7 @@ msgstr "รหัสพนักงาน"
 
 #: .\leave\templates\leave\employeeinstance_approve.html:40
 #: .\leave\templates\leave\employeeinstance_reject.html:41
-#: .\leave\templates\leave\leave_pending_approve_list.html:271
+#: .\leave\templates\leave\leave_pending_approve_list.html:273
 #: .\page\templates\page_daterange.html:114
 msgid "Leave Type"
 msgstr "ลาประเภท"
@@ -1366,7 +1365,6 @@ msgstr "ลาประเภท"
 #: .\leave\templates\leave\employeeinstance_approve.html:41
 #: .\leave\templates\leave\employeeinstance_reject.html:42
 #: .\leave\templates\leave\leave_approval_list.html:62
-#: .\leave\templates\leave\leave_rejected_list.html:62
 msgid "Date"
 msgstr ""
 
@@ -1382,18 +1380,18 @@ msgstr ""
 #: .\leave\templates\leave\employeeinstance_reject.html:47
 #: .\leave\templates\leave\leave_approval_list.html:88
 #: .\leave\templates\leave\leave_approved_list.html:88
-#: .\leave\templates\leave\leave_pending_approve_list.html:92
-#: .\leave\templates\leave\leave_pending_approve_list.html:293
-#: .\leave\templates\leave\leave_pending_approve_list.html:298
-#: .\leave\templates\leave\leave_pending_approve_list.html:311
-#: .\leave\templates\leave\leave_pending_approve_list.html:324
+#: .\leave\templates\leave\leave_pending_approve_list.html:95
+#: .\leave\templates\leave\leave_pending_approve_list.html:295
+#: .\leave\templates\leave\leave_pending_approve_list.html:300
+#: .\leave\templates\leave\leave_pending_approve_list.html:313
+#: .\leave\templates\leave\leave_pending_approve_list.html:326
 #: .\leave\templates\leave\leave_policy.html:54
 #: .\leave\templates\leave\leave_policy.html:56
 #: .\leave\templates\leave\leave_policy.html:63
-#: .\leave\templates\leave\leave_policy.html:96
-#: .\leave\templates\leave\leave_policy.html:111
-#: .\leave\templates\leave\leave_policy.html:126
-#: .\leave\templates\leave\leave_rejected_list.html:88
+#: .\leave\templates\leave\leave_policy.html:83
+#: .\leave\templates\leave\leave_policy.html:98
+#: .\leave\templates\leave\leave_policy.html:113
+#: .\leave\templates\leave\leave_rejected_list.html:94
 #: .\leave\templates\leave\leave_timeline.html:103
 #: .\leave\templates\leave\m1247_form.html:290
 msgid "Day"
@@ -1407,17 +1405,17 @@ msgstr "วัน"
 #: .\leave\templates\leave\leave_approval_list.html:93
 #: .\leave\templates\leave\leave_approved_list.html:90
 #: .\leave\templates\leave\leave_approved_list.html:93
-#: .\leave\templates\leave\leave_pending_approve_list.html:94
 #: .\leave\templates\leave\leave_pending_approve_list.html:97
-#: .\leave\templates\leave\leave_pending_approve_list.html:301
-#: .\leave\templates\leave\leave_pending_approve_list.html:314
-#: .\leave\templates\leave\leave_pending_approve_list.html:327
+#: .\leave\templates\leave\leave_pending_approve_list.html:100
+#: .\leave\templates\leave\leave_pending_approve_list.html:303
+#: .\leave\templates\leave\leave_pending_approve_list.html:316
+#: .\leave\templates\leave\leave_pending_approve_list.html:329
 #: .\leave\templates\leave\leave_policy.html:67
-#: .\leave\templates\leave\leave_policy.html:100
-#: .\leave\templates\leave\leave_policy.html:115
-#: .\leave\templates\leave\leave_policy.html:130
-#: .\leave\templates\leave\leave_rejected_list.html:90
-#: .\leave\templates\leave\leave_rejected_list.html:93
+#: .\leave\templates\leave\leave_policy.html:87
+#: .\leave\templates\leave\leave_policy.html:102
+#: .\leave\templates\leave\leave_policy.html:117
+#: .\leave\templates\leave\leave_rejected_list.html:96
+#: .\leave\templates\leave\leave_rejected_list.html:99
 #: .\leave\templates\leave\leave_timeline.html:107
 #: .\leave\templates\leave\m1247_form.html:295
 msgid "Hour"
@@ -1433,8 +1431,8 @@ msgstr "กรุณาตรวจสอบข้อมูลให้แน่
 #: .\leave\templates\leave\employeeinstance_reject.html:58
 #: .\leave\templates\leave\leave_approval_list.html:170
 #: .\leave\templates\leave\leave_approved_list.html:166
-#: .\leave\templates\leave\leave_pending_approve_list.html:198
-#: .\leave\templates\leave\leave_rejected_list.html:166
+#: .\leave\templates\leave\leave_pending_approve_list.html:201
+#: .\leave\templates\leave\leave_rejected_list.html:189
 msgid "Back"
 msgstr "ย้อนกลับ"
 
@@ -1486,7 +1484,7 @@ msgstr "ประวัติการลา"
 #: .\leave\templates\leave\employeeinstance_list.html:44
 #: .\leave\templates\leave\leave_approval_list.html:61
 #: .\leave\templates\leave\leave_approved_list.html:61
-#: .\leave\templates\leave\leave_pending_approve_list.html:61
+#: .\leave\templates\leave\leave_pending_approve_list.html:64
 #: .\leave\templates\leave\leave_policy.html:41
 #: .\leave\templates\leave\leave_rejected_list.html:61
 #: .\page\templates\page\staff_profile.html:56
@@ -1509,7 +1507,7 @@ msgid "Approved"
 msgstr "อนุมัติ"
 
 #: .\leave\templates\leave\employeeinstance_list.html:88
-#: .\leave\templates\leave\leave_pending_approve_list.html:274
+#: .\leave\templates\leave\leave_pending_approve_list.html:276
 msgid "Waiting"
 msgstr "รออนุมัติ"
 
@@ -1565,17 +1563,18 @@ msgstr "เหตุผล"
 #: .\leave\templates\leave\employeeinstance_list.html:229
 #: .\leave\templates\leave\leave_approval_list.html:141
 #: .\leave\templates\leave\leave_approved_list.html:137
-#: .\leave\templates\leave\leave_pending_approve_list.html:148
-#: .\leave\templates\leave\leave_pending_approve_list.html:169
-#: .\leave\templates\leave\leave_rejected_list.html:137
+#: .\leave\templates\leave\leave_pending_approve_list.html:151
+#: .\leave\templates\leave\leave_pending_approve_list.html:172
+#: .\leave\templates\leave\leave_rejected_list.html:139
+#: .\leave\templates\leave\leave_rejected_list.html:160
 msgid "Close"
 msgstr "ปิด"
 
 #: .\leave\templates\leave\employeeinstance_list.html:220
 #: .\leave\templates\leave\leave_approval_list.html:132
 #: .\leave\templates\leave\leave_approved_list.html:128
-#: .\leave\templates\leave\leave_pending_approve_list.html:138
-#: .\leave\templates\leave\leave_rejected_list.html:128
+#: .\leave\templates\leave\leave_pending_approve_list.html:141
+#: .\leave\templates\leave\leave_rejected_list.html:130
 msgid "Leave Reason"
 msgstr "เหตุผลการลา"
 
@@ -1583,7 +1582,7 @@ msgstr "เหตุผลการลา"
 #: .\leave\templates\leave\employeeinstance_reject.html:16
 #: .\leave\templates\leave\employeeinstance_reject.html:59
 #: .\leave\templates\leave\leave_approval_list.html:101
-#: .\leave\templates\leave\leave_pending_approve_list.html:106
+#: .\leave\templates\leave\leave_pending_approve_list.html:109
 msgid "Reject"
 msgstr "ไม่อนุมัติ"
 
@@ -1592,84 +1591,95 @@ msgid "Please check data carefully again before reject this request."
 msgstr "กรุณาตรวจสอบข้อมูลให้แน่ใจก่อนทำรายการ"
 
 #: .\leave\templates\leave\leave_approval_list.html:18
-#: .\leave\templates\leave\leave_approval_list.html:31
-#: .\leave\templates\leave\leave_approval_list.html:35
 #: .\leave\templates\leave\leave_approval_list.html:207
 #: .\leave\templates\leave\leave_approval_list.html:208
-#: .\leave\templates\leave\leave_approved_list.html:31
-#: .\leave\templates\leave\leave_approved_list.html:35
-#: .\leave\templates\leave\leave_pending_approve_list.html:18
-#: .\leave\templates\leave\leave_rejected_list.html:31
-#: .\leave\templates\leave\leave_rejected_list.html:35
+#: .\leave\templates\leave\leave_pending_approve_list.html:20
 msgid "Pending List"
 msgstr "รายการรออนุมัติ"
 
+#: .\leave\templates\leave\leave_approval_list.html:31
+#: .\leave\templates\leave\leave_approval_list.html:35
+#: .\leave\templates\leave\leave_approved_list.html:31
+#: .\leave\templates\leave\leave_approved_list.html:35
+#: .\leave\templates\leave\leave_pending_approve_list.html:34
+#: .\leave\templates\leave\leave_pending_approve_list.html:38
+#: .\leave\templates\leave\leave_rejected_list.html:31
+#: .\leave\templates\leave\leave_rejected_list.html:35
+msgid "Pending Status"
+msgstr "สถานะรออนุมัติ"
+
 #: .\leave\templates\leave\leave_approval_list.html:34
 #: .\leave\templates\leave\leave_approved_list.html:34
-#: .\leave\templates\leave\leave_pending_approve_list.html:34
+#: .\leave\templates\leave\leave_pending_approve_list.html:37
 #: .\leave\templates\leave\leave_rejected_list.html:34
 msgid "filter by"
-msgstr ""
+msgstr "เลือกดูข้อมูลจาก"
 
 #: .\leave\templates\leave\leave_approval_list.html:36
-#: .\leave\templates\leave\leave_approval_list.html:213
-#: .\leave\templates\leave\leave_approval_list.html:214
-#: .\leave\templates\leave\leave_approved_list.html:18
 #: .\leave\templates\leave\leave_approved_list.html:36
-#: .\leave\templates\leave\leave_approved_list.html:183
-#: .\leave\templates\leave\leave_approved_list.html:210
-#: .\leave\templates\leave\leave_approved_list.html:211
+#: .\leave\templates\leave\leave_pending_approve_list.html:39
 #: .\leave\templates\leave\leave_rejected_list.html:36
-msgid "Approved List"
-msgstr "รายการอนุมัติแล้ว"
+msgid "Approved Status"
+msgstr "สถานะอนุมัติ"
 
 #: .\leave\templates\leave\leave_approval_list.html:37
-#: .\leave\templates\leave\leave_approval_list.html:219
-#: .\leave\templates\leave\leave_approval_list.html:220
 #: .\leave\templates\leave\leave_approved_list.html:37
-#: .\leave\templates\leave\leave_approved_list.html:215
-#: .\leave\templates\leave\leave_approved_list.html:216
-#: .\leave\templates\leave\leave_rejected_list.html:18
+#: .\leave\templates\leave\leave_pending_approve_list.html:40
 #: .\leave\templates\leave\leave_rejected_list.html:37
-#: .\leave\templates\leave\leave_rejected_list.html:183
-msgid "Rejected List"
-msgstr "รายการที่ไม่อนุมัติ"
+msgid "Rejected Status"
+msgstr "สถานะไม่อนุมัติ"
 
 #: .\leave\templates\leave\leave_approval_list.html:64
 msgid "Created"
 msgstr ""
 
 #: .\leave\templates\leave\leave_approval_list.html:115
-#: .\leave\templates\leave\leave_pending_approve_list.html:120
+#: .\leave\templates\leave\leave_pending_approve_list.html:123
 msgid "There is no leave request item."
-msgstr "ยังไม่มีรายการขออนุมัติวันลา"
+msgstr "ยังไม่มีรายการ"
 
 #: .\leave\templates\leave\leave_approval_list.html:166
 #: .\leave\templates\leave\leave_approved_list.html:162
-#: .\leave\templates\leave\leave_pending_approve_list.html:194
-#: .\leave\templates\leave\leave_rejected_list.html:162
+#: .\leave\templates\leave\leave_pending_approve_list.html:197
+#: .\leave\templates\leave\leave_rejected_list.html:185
 #: .\page\templates\page_daterange.html:105
 msgid "Search"
 msgstr "ค้นหา"
 
 #: .\leave\templates\leave\leave_approval_list.html:174
 #: .\leave\templates\leave\leave_approved_list.html:170
-#: .\leave\templates\leave\leave_pending_approve_list.html:202
-#: .\leave\templates\leave\leave_rejected_list.html:170
+#: .\leave\templates\leave\leave_pending_approve_list.html:205
+#: .\leave\templates\leave\leave_rejected_list.html:193
 msgid "Employee Name"
 msgstr "ชื่อพนักงาน"
 
+#: .\leave\templates\leave\leave_approval_list.html:213
+#: .\leave\templates\leave\leave_approval_list.html:214
+#: .\leave\templates\leave\leave_approved_list.html:18
+#: .\leave\templates\leave\leave_approved_list.html:183
+msgid "Approved List"
+msgstr "รายการอนุมัติ"
+
+#: .\leave\templates\leave\leave_approval_list.html:219
+#: .\leave\templates\leave\leave_approval_list.html:220
+#: .\leave\templates\leave\leave_rejected_list.html:18
+#: .\leave\templates\leave\leave_rejected_list.html:206
+msgid "Rejected List"
+msgstr "รายการไม่อนุมัติ"
+
 #: .\leave\templates\leave\leave_approved_list.html:60
+#: .\leave\templates\leave\leave_rejected_list.html:60
 msgid "Fullname"
 msgstr "ชื่อพนักงาน"
 
 #: .\leave\templates\leave\leave_approved_list.html:62
-#: .\leave\templates\leave\leave_pending_approve_list.html:62
+#: .\leave\templates\leave\leave_pending_approve_list.html:65
+#: .\leave\templates\leave\leave_rejected_list.html:62
 msgid "Leave Date"
 msgstr "ลาวันที่"
 
 #: .\leave\templates\leave\leave_approved_list.html:63
-#: .\leave\templates\leave\leave_pending_approve_list.html:63
+#: .\leave\templates\leave\leave_pending_approve_list.html:66
 #: .\leave\templates\leave\leave_rejected_list.html:63
 msgid "Requested Date"
 msgstr "ขออนุมัติวันที่"
@@ -1679,37 +1689,27 @@ msgid "Approved Date"
 msgstr "อนุมัติวันที่"
 
 #: .\leave\templates\leave\leave_approved_list.html:111
-#, fuzzy
-#| msgid "There is no reason provided."
 msgid "There is no approved item."
-msgstr "ไม่ได้ระบุเหตุผลการลา"
+msgstr "ยังไม่มีรายการ"
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:31
-#: .\leave\templates\leave\leave_pending_approve_list.html:35
-#, fuzzy
-#| msgid "Pending"
-msgid "Pending Status"
-msgstr "รออนุมัติ"
-
-#: .\leave\templates\leave\leave_pending_approve_list.html:36
-#, fuzzy
-#| msgid "Approved"
-msgid "Approved Status"
-msgstr "อนุมัติ"
-
-#: .\leave\templates\leave\leave_pending_approve_list.html:37
-#, fuzzy
-#| msgid "Rejected"
-msgid "Rejected Status"
-msgstr "ไม่อนุมัติ"
-
-#: .\leave\templates\leave\leave_pending_approve_list.html:160
+#: .\leave\templates\leave\leave_pending_approve_list.html:163
 #, fuzzy
 #| msgid "Remaining"
 msgid "Entitlement Remaining"
 msgstr "คงเหลือ"
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:267
+#: .\leave\templates\leave\leave_pending_approve_list.html:274
+#: .\leave\templates\leave\leave_policy.html:42
+msgid "Remaining"
+msgstr "คงเหลือ"
+
+#: .\leave\templates\leave\leave_pending_approve_list.html:275
+#: .\leave\templates\leave\leave_policy.html:43
+#: .\leave\templates\leave\leave_policy.html:44
+msgid "Used"
+msgstr "ใช้ไป"
+
+#: .\leave\templates\leave\leave_pending_approve_list.html:342
 #: .\leave\templates\leave\leave_policy.html:7
 #: .\leave\templates\leave\leave_policy.html:18
 #: .\leave\templates\leave\leave_policy.html:23
@@ -1717,28 +1717,17 @@ msgstr "คงเหลือ"
 msgid "Leave Entitlement"
 msgstr "สิทธิ์การลา"
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:272
-#: .\leave\templates\leave\leave_policy.html:42
-msgid "Remaining"
-msgstr "คงเหลือ"
-
-#: .\leave\templates\leave\leave_pending_approve_list.html:273
-#: .\leave\templates\leave\leave_policy.html:43
-#: .\leave\templates\leave\leave_policy.html:44
-msgid "Used"
-msgstr "ใช้ไป"
-
-#: .\leave\templates\leave\leave_pending_approve_list.html:345
+#: .\leave\templates\leave\leave_pending_approve_list.html:347
 #, fuzzy
 #| msgid "There is no leave request item."
 msgid "There is no data."
-msgstr "ยังไม่มีรายการขออนุมัติวันลา"
+msgstr "ยังไม่มีรายการ"
 
 #: .\leave\templates\leave\leave_policy.html:45
 msgid "Pending"
 msgstr "รออนุมัติ"
 
-#: .\leave\templates\leave\leave_policy.html:145
+#: .\leave\templates\leave\leave_policy.html:132
 msgid ""
 "Your leave entitlement is not defined yet. Please contact HR officer for "
 "more detais"
@@ -1748,11 +1737,13 @@ msgstr "สิทธิ์วันลาของคุณยังไม่ไ
 msgid "Rejected Date"
 msgstr "ไม่อนุมัติวันที่"
 
-#: .\leave\templates\leave\leave_rejected_list.html:111
-#, fuzzy
-#| msgid "There is no leave request item."
+#: .\leave\templates\leave\leave_rejected_list.html:113
 msgid "There is no rejected item."
-msgstr "ยังไม่มีรายการขออนุมัติวันลา"
+msgstr "ยังไม่มีรายการ"
+
+#: .\leave\templates\leave\leave_rejected_list.html:151
+msgid "Rejected Reason"
+msgstr "เหตุผลไม่อนุมัติ"
 
 #: .\leave\templates\leave\leave_timeline.html:7
 #: .\leave\templates\leave\leave_timeline.html:18
