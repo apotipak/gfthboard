@@ -87,7 +87,7 @@ class ViewAllStaffForm(ModelForm):
 	
 	class Meta:
 		model = LeaveEmployee
-		fields = ['emp_fname_en','emp_fname_th','pos_en']
+		fields = ['emp_id','emp_fname_en','emp_fname_th','pos_en','emp_fname_th','emp_lname_th','pos_th']
 
 	def __init__(self, *args, **kwargs):
 		department_id_included = {30,35,98,102,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,124,125,126,127,128,129,133,134,136,137,138,139,140,141,142,208,211,213,226,228,231,233,249,257,258,259,261,265,267,268,270,271,272}

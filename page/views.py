@@ -186,7 +186,7 @@ def StaffLanguage(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffProfile(request):
-    item_per_page = 20
+    item_per_page = 12
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -214,21 +214,18 @@ def StaffProfile(request):
     if request.method == "POST":
         form = ViewAllStaffForm(request.POST, user=request.user)
         department_id = request.POST.get('department_list')
+        request.session['search'] = department_id
         department_name_en = "All Departments"
 
-        if department_id == '':
+        if len(department_id) <= 0:
             employee = LeaveEmployee.objects.all()            
         else:
-            print("amnaj : " + department_id)
             department_name_en = ComDivision.objects.filter(div_id=department_id).values_list('div_en', flat=True).get()
             employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
-
-        print("dept name : " + department_name_en)
 
         paginator = Paginator(employee, item_per_page)
 
         is_paginated = True if paginator.num_pages > 1 else False
-        # page = request.GET.get('page') or 1
         page = 1
 
         try:
@@ -258,14 +255,14 @@ def StaffProfile(request):
         department_name_en = "All Departments"
 
         if 'search' in request.session:
-            if len(request.session['search']) <= 0:
-                employee = LeaveEmployee.objects.all().order_by('emp_id')       
+            if request.session['search'] == '':
+                employee = LeaveEmployee.objects.all().order_by('emp_id')
             else:
                 department_name_en = ComDivision.objects.filter(div_id=request.session['search']).values_list('div_en', flat=True).get()
                 employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
         else:
             employee = LeaveEmployee.objects.all().order_by('emp_id')
-
+            
         paginator = Paginator(employee, item_per_page)
 
         is_paginated = True if paginator.num_pages > 1 else False
@@ -295,22 +292,6 @@ def StaffProfile(request):
 
     return render(request, 'page/staff_profile.html', context)
 
-    '''
-    return render(request, 'page/staff_profile.html', {
-        'page_title': page_title, 
-        'project_name': project_name, 
-        'project_version': project_version, 
-        'db_server': db_server, 'today_date': today_date,
-        'EmployeeInstance': EmployeeInstance,
-        'SuperVisorInstance': SuperVisorInstance,
-        'TeamMemberList': TeamMemberList,
-        'able_to_approve_leave_request': able_to_approve_leave_request,
-        'user_language': user_language,
-        'username_display': username_display,
-        'form': form,
-        'context': context,
-    })
-    '''
 
 @login_required(login_url='/accounts/login/')
 def viewallstaff(request):
