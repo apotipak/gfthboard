@@ -3,9 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from leave.models import LeaveEmployee
-from page.models import UserProfile
+from page.models import UserProfile, ComDivision
 from django.contrib.auth.models import User
-from .forms import UserForm, LanguageForm
+from .forms import UserForm, LanguageForm, ViewAllStaffForm
 from django.http import HttpResponse
 from leave.rules import *
 from page.rules import *
@@ -15,6 +15,11 @@ from django.utils import translation
 from django.db.models import CharField, Value as V
 from django.db.models.functions import Concat
 from django.utils import timezone
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
+from django.core import serializers
+import json
 
 
 @login_required(login_url='/accounts/login/')
@@ -148,10 +153,8 @@ def StaffLanguage(request):
             userid = request.user.id
 
             if not UserProfile.objects.filter(username=username).exists():
-                print("debug 1")
                 UserProfile.objects.create(language=language_code, updated_by_id=userid, username=username)
             else:
-                print("debug 2")
                 employee = UserProfile.objects.get(username=username)
                 employee.language = language_code
                 employee.updated_by_id = userid
@@ -176,6 +179,194 @@ def StaffLanguage(request):
         'db_server': db_server, 'today_date': today_date,
         'username_display': username_display,
     })
+
+
+@login_required(login_url='/accounts/login/')
+def viewallstaff(request):
+    item_per_page = 20  
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = getDateFormatDisplay(user_language)
+
+    if request.method == "POST":
+        form = ViewAllStaffForm(request.POST, user=request.user)
+        
+        # department_id = form.data['department_list']
+        department_id = request.POST.get('department_list')
+        request.session['search'] = department_id
+
+        if len(department_id) == 0:
+            employee = LeaveEmployee.objects.all()
+            department_name_en = "All Departments"
+        else:
+            department_name_en = ComDivision.objects.filter(div_id=department_id).values_list('div_en', flat=True).get()
+            employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
+        
+        paginator = Paginator(employee, item_per_page)
+
+        is_paginated = True if paginator.num_pages > 1 else False
+        # page = request.GET.get('page') or 1
+        page = 1
+
+        try:
+            current_page = paginator.page(page)
+        except InvalidPage as e:
+            raise Http404(str(e))
+
+        context = {
+            'current_page': current_page,
+            'is_paginated': is_paginated,        
+            'page_title': page_title, 
+            'project_name': project_name, 
+            'project_version': project_version, 
+            'db_server': db_server, 'today_date': today_date,
+            'username_display': username_display,
+            'form': form,
+            'dept': department_name_en,
+        }
+
+    else:
+        form = ViewAllStaffForm(user=request.user)
+
+        # print("debug: " + request.session['search'])
+        # department_id = request.session['search']
+        department_id = request.POST.get('department_list')
+        department_name_en = "All Departments"
+
+        if 'search' in request.session:
+            if len(request.session['search']) <= 0:
+                employee = LeaveEmployee.objects.all().order_by('emp_id')           
+            else:
+                department_name_en = ComDivision.objects.filter(div_id=request.session['search']).values_list('div_en', flat=True).get()
+                employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
+        else:
+            employee = LeaveEmployee.objects.all().order_by('emp_id')
+        
+        paginator = Paginator(employee, item_per_page)
+
+        is_paginated = True if paginator.num_pages > 1 else False
+        page = request.GET.get('page') or 1
+
+        try:
+            # current_page = paginator.page(page)
+            current_page = paginator.get_page(page)
+
+        except InvalidPage as e:
+            raise Http404(str(e))
+
+        context = {
+            'current_page': current_page,
+            'is_paginated': is_paginated,
+            'page_title': page_title, 
+            'project_name': project_name, 
+            'project_version': project_version, 
+            'db_server': db_server, 'today_date': today_date,
+            'username_display': username_display,
+            'form': form,
+            'dept': department_name_en,
+        }
+
+    return render(request, 'page/view_all_staff.html', context)
+
+
+    '''
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+    form = ViewAllStaffForm(request.POST, user=request.user)
+
+    if request.method == "POST":
+        if form.is_valid():
+            username = request.user.username
+            userid = request.user.id
+            first_name = form.cleaned_data['first_name']
+            
+            if len(first_name) > 0:
+                employee_list = LeaveEmployee.objects.filter(pos_en='Inspector').all()
+            else:
+                employee_list = None
+
+            if employee_list:  
+                paginator = Paginator(employee_list, 5)
+                is_paginated = True if paginator.num_pages > 1 else False
+                page = request.GET.get('page') or 1
+
+                try:
+                    current_page = paginator.page(page)
+                except InvalidPage as e:
+                    raise Http404(str(e))
+
+                context = {
+                    'current_page': current_page,
+                    'is_paginated': is_paginated
+                }
+
+                return render(request, 'page/view_all_staff.html', {
+                    'form': form,
+                    'page_title': page_title, 
+                    'project_name': project_name, 
+                    'project_version': project_version, 
+                    'db_server': db_server, 'today_date': today_date,
+                    'username_display': username_display,                    
+                    'employee_list': employee_list,
+                    'context': context
+                })
+
+
+            else:
+                messages.warning(request, _(first_name + ' is not found'))
+                return HttpResponseRedirect('/view-all-staff')                
+    else:
+        form = ViewAllStaffForm(user=request.user)    
+
+    return render(request, 'page/view_all_staff.html', {
+        'form': form,
+        'page_title': page_title, 
+        'project_name': project_name, 
+        'project_version': project_version, 
+        'db_server': db_server, 'today_date': today_date,
+        'username_display': username_display,
+    })
+    '''
+
+@login_required(login_url='/accounts/login/')
+def ajaxviewallstaff(request):
+    start = request.GET['iDisplayStart']
+
+    # employee_list = LeaveEmployee.objects.filter(pos_en='Supervisor').values_list('emp_id','emp_fname_en','emp_lname_en','pos_en')
+    # employee_list = LeaveEmployee.objects.filter(pos_en='Inspector').all()    
+    # json = serializers.serialize('json', employee_list)    
+    # json_objects=json.loads(serialized_objects)
+    # return HttpResponse(json, content_type='application/json')
+
+    '''
+    employee_list = LeaveEmployee.objects.all().values('emp_id','emp_fname_en','emp_lname_en','pos_en')
+    employee_list = json.dumps(list(employee_list), cls=DjangoJSONEncoder)
+    context = {'employee_list': employee_list}
+    return HttpResponse(employee_list, content_type='application/json')
+    '''
+
+    employee_list = LeaveEmployee.objects.filter(pos_en='Inspector').all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(employee_list, 10)
+    try:
+        employee = paginator.page(page)
+    except PageNotAnInteger:
+        employee = paginator.page(1)
+    except EmptyPage:
+        employee = paginator.page(paginator.num_pages)
+
+    return render(request, 'page/view_all_staff.html', { 'employee': employee })
 
 
 @login_required(login_url='/accounts/login/')
@@ -226,6 +417,7 @@ def faq(request):
         'db_server': db_server, 'today_date': today_date,
         'username_display' : username_display,
     })
+
 
 @login_required(login_url='/accounts/login/')
 def news(request):
