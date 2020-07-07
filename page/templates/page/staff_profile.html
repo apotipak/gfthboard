@@ -88,11 +88,13 @@
             <!-- /.card -->
         </div>
 
+
+
           <div class="col-md-9">
             <div class="card">
 
               <div class="card-header p-2">
-                <ul class="nav nav-pills">
+                <ul class="nav nav-pills nav-tabs" id="profiletab">
                   <li class="nav-item"><a class="nav-link active" href="#mymanager" data-toggle="tab">{% trans 'My Manager' %}</a></li>
                   {% if able_to_approve_leave_request %}
                   <li class="nav-item"><a class="nav-link" href="#myteam" data-toggle="tab">{% trans 'My Team' %}</a></li>
@@ -207,12 +209,12 @@
 
           <div class="col-md-12">
 
-              <form action="?d={{dept}}&page=1" method="post" autocomplete="off" class="form-inline">
+              <form action="?d={{dept}}&page=1#allemployees" method="post" autocomplete="off" class="form-inline">
                 {% csrf_token %}
 
                 <div class="card-body">                  
 
-                  <div class="form-group pb-4">
+                  <div class="form-group pb-5">
                     <label for="{{ form.department_list.id_for_label }}">{{ form.department_list.label }}</label>&nbsp;&nbsp;
                     {{ form.department_list.errors }}
                     {{form.department_list}}
@@ -315,7 +317,21 @@
 {% block javascript %}
   <script>
 
-    $(document).ready(function(){    
+  $(window).on("popstate", function() {
+      var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
+      $("a[href='" + anchor + "']").tab("show");
+  });
+
+  $(document).ready(function(){
+
+    if (location.hash) {
+        $("a[href='" + location.hash + "']").tab("show");
+    }
+    $(document.body).on("click", "a[data-toggle='tab']", function(event) {
+        location.hash = this.getAttribute("href");
+    });
+
+
     $("body").on("click", "a.get_employee_leave_history", function(event){
       var obj = $(this);  
       $.ajax({
@@ -415,7 +431,7 @@
           }
       });      
     });
-    });
+  });
 
   </script>
 {% endblock %}
