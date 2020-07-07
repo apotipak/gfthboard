@@ -53,6 +53,7 @@ class LeaveEmployee(models.Model):
     class Meta:
         managed = False
         db_table = 'Leave_employee'
+        ordering = ['emp_id']
         permissions = (
             ("approve_leaveplan", "Can approve leave employee"),
         )

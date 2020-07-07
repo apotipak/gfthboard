@@ -94,14 +94,14 @@
             <div class="card">
 
               <div class="card-header p-2">
-                <ul class="nav nav-pills nav-tabs" id="profiletab">
+                <ul class="nav nav-pills" id="profiletab">
                   <li class="nav-item"><a class="nav-link active" href="#mymanager" data-toggle="tab">{% trans 'My Manager' %}</a></li>
                   {% if able_to_approve_leave_request %}
                   <li class="nav-item"><a class="nav-link" href="#myteam" data-toggle="tab">{% trans 'My Team' %}</a></li>
                   {% endif %}
                   
                   {% if perms.page.can_view_all_employees %}
-                    <li class="nav-item"><a class="nav-link" href="#allemployees" data-toggle="tab">{% trans 'All Departments' %}</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#allemployees" data-toggle="tab">{% trans 'All Departments' %}</a></li>
                   {% endif %}
                 </ul>
               </div><!-- /.card-header -->
@@ -208,19 +208,27 @@
 
                         <div class="col-md-12">
 
-                            <form action="?d={{dept}}&page=1#allemployees" method="post" autocomplete="off" class="form-inline">
-                              {% csrf_token %}
+                          <form action="?d={{dept}}&page=1#allemployees" method="post" autocomplete="off" class="form-inline">
+                            {% csrf_token %}
+                            <div class="form-row align-items-center">
+                              <div class="col">
+                                {{form.department_list}}
+                              </div>
+                              <div class="col-auto">
+                                <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                                <div class="input-group">
+                                  {{form.first_name}}
+                                </div>
+                              </div>
+                              <div class="col-auto">
+                                <!--<button type="reset" class="btn btn-secondary btn-sm">{% trans 'Reset' %}</button>-->
+                                <button type="submit" class="btn btn-success btn-sm">{% trans 'Search' %}</button>
+                              </div>
+                            </div>  
+                          </form>
 
-                              <div class="card-body">                  
 
-                                <div class="form-group pb-5">
-                                  <label for="{{ form.department_list.id_for_label }}">{{ form.department_list.label }}</label>&nbsp;&nbsp;
-                                  {{ form.department_list.errors }}
-                                  {{form.department_list}}
-                                  &nbsp;&nbsp;<button type="submit" class="btn btn-success">{% trans 'Search' %}</button>
-                                </div>                  
-                                
-                                <div class="form-group">
+                                <div class="form-group pt-2">
                                   <p><h4><span class="badge badge-info">{{ dept }}</span></h4></p>
                                   <table class="table table-striped table-bordered table-hover">
                                       <thead class="thead-inverse">
@@ -231,6 +239,7 @@
                                           </tr>
                                       </thead>
                                       <tbody>
+                                        {% if current_page %}
                                          {% for employee in current_page %}
                                           <tr>                                
                                               <td>
@@ -254,6 +263,13 @@
                                               </td>
                                           </tr>
                                           {% endfor %}
+                                        {% else %}
+                                            <tr>                                
+                                              <td class="text-center" colspan="3">
+                                                No data
+                                              </td>                                          
+                                            </tr>
+                                        {% endif %}
                                       </tbody>
                                   </table>
 
@@ -274,14 +290,10 @@
                                       </span>
                                   </div>
                                   {% endif %}
-                              </div>
+                                </div>
 
-                              <!--
-                              <div class="card-footer text-right">                 
-                                &nbsp;
-                              </div>                
-                              -->
-                            </form>
+
+
 
                         </div>
 

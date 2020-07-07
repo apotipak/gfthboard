@@ -183,7 +183,6 @@ def StaffLanguage(request):
     })
 
 
-
 @login_required(login_url='/accounts/login/')
 def StaffProfile(request):
     item_per_page = 12
@@ -214,14 +213,27 @@ def StaffProfile(request):
     if request.method == "POST":
         form = ViewAllStaffForm(request.POST, user=request.user)
         department_id = request.POST.get('department_list')
-        request.session['search'] = department_id
+        first_name = request.POST.get('first_name')
+        request.session['search_department'] = department_id
+
         department_name_en = "All Departments"
 
-        if len(department_id) <= 0:
+        print("debug :" + department_id + "," + first_name)
+
+        if not department_id and not first_name:
             employee = LeaveEmployee.objects.all()            
-        else:
+        elif department_id and not first_name:
             department_name_en = ComDivision.objects.filter(div_id=department_id).values_list('div_en', flat=True).get()
             employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
+        elif first_name and not department_id:            
+            if user_language == "th":
+                # employee = LeaveEmployee.objects.filter(emp_fname_th=first_name)
+                employee = LeaveEmployee.objects.filter(emp_fname_th__contains=first_name)
+            else:
+                employee = LeaveEmployee.objects.filter(emp_fname_en__contains=first_name)
+        else:
+            department_name_en = ComDivision.objects.filter(div_id=department_id).values_list('div_en', flat=True).get()
+            employee = LeaveEmployee.objects.filter(div_en=department_name_en, emp_fname_th__contains=first_name)
 
         paginator = Paginator(employee, item_per_page)
 
@@ -254,11 +266,11 @@ def StaffProfile(request):
         department_id = request.POST.get('department_list')
         department_name_en = "All Departments"
 
-        if 'search' in request.session:
-            if request.session['search'] == '':
+        if 'search_department' in request.session:
+            if request.session['search_department'] == '':
                 employee = LeaveEmployee.objects.all().order_by('emp_id')
             else:
-                department_name_en = ComDivision.objects.filter(div_id=request.session['search']).values_list('div_en', flat=True).get()
+                department_name_en = ComDivision.objects.filter(div_id=request.session['search_department']).values_list('div_en', flat=True).get()
                 employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
         else:
             employee = LeaveEmployee.objects.all().order_by('emp_id')
@@ -313,7 +325,9 @@ def viewallstaff(request):
         
         # department_id = form.data['department_list']
         department_id = request.POST.get('department_list')
-        request.session['search'] = department_id
+        first_name = request.POST.get('first_name')
+
+        request.session['search_department'] = department_id
 
         if len(department_id) == 0:
             employee = LeaveEmployee.objects.all()
@@ -353,11 +367,11 @@ def viewallstaff(request):
         department_id = request.POST.get('department_list')
         department_name_en = "All Departments"
 
-        if 'search' in request.session:
-            if len(request.session['search']) <= 0:
+        if 'search_department' in request.session:
+            if len(request.session['search_department']) <= 0:
                 employee = LeaveEmployee.objects.all().order_by('emp_id')           
             else:
-                department_name_en = ComDivision.objects.filter(div_id=request.session['search']).values_list('div_en', flat=True).get()
+                department_name_en = ComDivision.objects.filter(div_id=request.session['search_department']).values_list('div_en', flat=True).get()
                 employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
         else:
             employee = LeaveEmployee.objects.all().order_by('emp_id')

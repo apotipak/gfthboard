@@ -1842,10 +1842,8 @@ msgid "Set Display Language"
 msgstr "เลือกแสดงภาษา"
 
 #: .\page\forms.py:86
-#, fuzzy
-#| msgid "Department"
 msgid "Select department"
-msgstr "แผนก"
+msgstr "เลือกแผนก"
 
 #: .\page\templates\index.html:17
 msgid "Leave request system"

@@ -19,7 +19,7 @@ class ComDivision(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'COM_DIVISION'
+        db_table = 'COM_DIVISION'        
         permissions = (
             ("can_view_all_employees", "Can view all employees"),
         )
