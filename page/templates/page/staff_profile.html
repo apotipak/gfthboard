@@ -99,14 +99,14 @@
                   {% if able_to_approve_leave_request %}
                   <li class="nav-item"><a class="nav-link" href="#myteam" data-toggle="tab">{% trans 'My Team' %}</a></li>
                   {% endif %}
-
-                  {% if request.user.username == '900538' %}
+                  
+                  {% if perms.page.can_view_all_employees %}
                     <li class="nav-item"><a class="nav-link" href="#allemployees" data-toggle="tab">{% trans 'All Departments' %}</a></li>
                   {% endif %}
                 </ul>
               </div><!-- /.card-header -->
 
-              
+
               <div class="card-body">
 
                 <div class="tab-content">
@@ -200,8 +200,8 @@
                     </div>
                   </div>
                   {% endif %}
-
-                  {% if request.user.username == '900538' %}
+                  
+                  {% if perms.page.can_view_all_employees %}
                   <div class="tab-pane" id="allemployees">
                     <div>
                       <div>

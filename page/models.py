@@ -20,6 +20,9 @@ class ComDivision(models.Model):
     class Meta:
         managed = False
         db_table = 'COM_DIVISION'
+        permissions = (
+            ("can_view_all_employees", "Can view all employees"),
+        )
 
     def __str__(self):
         return '{0}'.format(self.div_en)
