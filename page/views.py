@@ -55,7 +55,7 @@ def index(request):
     })
 
 @login_required(login_url='/accounts/login/')
-def StaffProfile(request):
+def StaffProfile11(request):
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -80,6 +80,7 @@ def StaffProfile(request):
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+
     return render(request, 'page/staff_profile.html', {
         'page_title': page_title, 
         'project_name': project_name, 
@@ -92,6 +93,7 @@ def StaffProfile(request):
         'user_language': user_language,
         'username_display': username_display,
     })
+
 
 @login_required(login_url='/accounts/login/')
 def StaffPassword(request):
@@ -180,6 +182,135 @@ def StaffLanguage(request):
         'username_display': username_display,
     })
 
+
+
+@login_required(login_url='/accounts/login/')
+def StaffProfile(request):
+    item_per_page = 20
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = getDateFormatDisplay(user_language)
+    EmployeeInstance = LeaveEmployee.EmployeeInstance(request)
+    SuperVisorInstance = LeaveEmployee.SuperVisorInstance(request)
+    TeamMemberList = LeaveEmployee.TeamMemberList(request)
+
+    # Check leave approval right
+    if checkLeaveRequestApproval(request.user.username):
+        able_to_approve_leave_request = True
+    else:
+        able_to_approve_leave_request = False
+
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+
+    if request.method == "POST":
+        form = ViewAllStaffForm(request.POST, user=request.user)
+        department_id = request.POST.get('department_list')
+        department_name_en = "All Departments"
+
+        if department_id == '':
+            employee = LeaveEmployee.objects.all()            
+        else:
+            print("amnaj : " + department_id)
+            department_name_en = ComDivision.objects.filter(div_id=department_id).values_list('div_en', flat=True).get()
+            employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
+
+        print("dept name : " + department_name_en)
+
+        paginator = Paginator(employee, item_per_page)
+
+        is_paginated = True if paginator.num_pages > 1 else False
+        # page = request.GET.get('page') or 1
+        page = 1
+
+        try:
+            current_page = paginator.page(page)
+        except InvalidPage as e:
+            raise Http404(str(e))
+
+        context = {
+            'current_page': current_page,
+            'is_paginated': is_paginated,
+            'page_title': page_title, 
+            'project_name': project_name, 
+            'project_version': project_version, 
+            'db_server': db_server, 'today_date': today_date,
+            'EmployeeInstance': EmployeeInstance,
+            'SuperVisorInstance': SuperVisorInstance,
+            'TeamMemberList': TeamMemberList,
+            'able_to_approve_leave_request': able_to_approve_leave_request,
+            'user_language': user_language,            
+            'username_display': username_display,
+            'form': form,
+            'dept': department_name_en,
+        }        
+    else:
+        form = ViewAllStaffForm(user=request.user)
+        department_id = request.POST.get('department_list')
+        department_name_en = "All Departments"
+
+        if 'search' in request.session:
+            if len(request.session['search']) <= 0:
+                employee = LeaveEmployee.objects.all().order_by('emp_id')       
+            else:
+                department_name_en = ComDivision.objects.filter(div_id=request.session['search']).values_list('div_en', flat=True).get()
+                employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
+        else:
+            employee = LeaveEmployee.objects.all().order_by('emp_id')
+
+        paginator = Paginator(employee, item_per_page)
+
+        is_paginated = True if paginator.num_pages > 1 else False
+        page = request.GET.get('page') or 1
+
+        try:
+            current_page = paginator.get_page(page)
+        except InvalidPage as e:
+            raise Http404(str(e))
+
+        context = {
+            'current_page': current_page,
+            'is_paginated': is_paginated,
+            'page_title': page_title, 
+            'project_name': project_name, 
+            'project_version': project_version, 
+            'db_server': db_server, 'today_date': today_date,
+            'EmployeeInstance': EmployeeInstance,
+            'SuperVisorInstance': SuperVisorInstance,
+            'TeamMemberList': TeamMemberList,
+            'able_to_approve_leave_request': able_to_approve_leave_request,
+            'user_language': user_language,            
+            'username_display': username_display,
+            'form': form,
+            'dept': department_name_en,
+        }
+
+    return render(request, 'page/staff_profile.html', context)
+
+    '''
+    return render(request, 'page/staff_profile.html', {
+        'page_title': page_title, 
+        'project_name': project_name, 
+        'project_version': project_version, 
+        'db_server': db_server, 'today_date': today_date,
+        'EmployeeInstance': EmployeeInstance,
+        'SuperVisorInstance': SuperVisorInstance,
+        'TeamMemberList': TeamMemberList,
+        'able_to_approve_leave_request': able_to_approve_leave_request,
+        'user_language': user_language,
+        'username_display': username_display,
+        'form': form,
+        'context': context,
+    })
+    '''
 
 @login_required(login_url='/accounts/login/')
 def viewallstaff(request):

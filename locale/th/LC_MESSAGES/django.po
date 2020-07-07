@@ -1915,7 +1915,7 @@ msgstr "ผู้จัดการ"
 
 #: .\page\templates\page\staff_profile.html:97
 msgid "My Team"
-msgstr "สมาชิกในแผนก"
+msgstr "พนักงานในแผนก"
 
 #: .\page\templates\page\staff_profile.html:116
 #: .\page\templates\page\staff_profile.html:162
