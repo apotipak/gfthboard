@@ -185,7 +185,7 @@ def StaffLanguage(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffProfile(request):
-    item_per_page = 3
+    item_per_page = 12
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -219,18 +219,19 @@ def StaffProfile(request):
 
         department_name_en = _("All departments")
 
-        print("debug :" + first_name + "," + department_id)
-
         if not department_id and not first_name:
             employee = LeaveEmployee.objects.all()            
         elif department_id and not first_name:
             department_name_en = ComDivision.objects.filter(div_id=department_id).values_list('div_en', flat=True).get()
             employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
         elif first_name and not department_id:            
-            if user_language == "th":
-                employee = LeaveEmployee.objects.filter(emp_fname_th__startswith=first_name)
+            if len(first_name) >= 2:
+                if user_language == "th":
+                    employee = LeaveEmployee.objects.filter(emp_fname_th__startswith=first_name)
+                else:
+                    employee = LeaveEmployee.objects.filter(emp_fname_en__startswith=first_name)
             else:
-                employee = LeaveEmployee.objects.filter(emp_fname_en__startswith=first_name)
+                employee = LeaveEmployee.objects.filter(emp_fname_th__startswith="None")
         else:
             department_name_en = ComDivision.objects.filter(div_id=department_id).values_list('div_en', flat=True).get()
             employee = LeaveEmployee.objects.filter(div_en=department_name_en, emp_fname_th__startswith=first_name)
@@ -284,17 +285,7 @@ def StaffProfile(request):
         else:
             first_name = ""
 
-        '''
-        if 'search_department' in request.session:
-            department_id = request.session['search_department']
-            if request.session['search_department'] == '':                
-                employee = LeaveEmployee.objects.all().order_by('emp_id')
-            else:
-                department_name_en = ComDivision.objects.filter(div_id=department_id).values_list('div_en', flat=True).get()
-                employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
-        else:
-            employee = LeaveEmployee.objects.all().order_by('emp_id')
-        '''
+
         if department_id == "" and first_name == "":
             employee = LeaveEmployee.objects.all().order_by('emp_id')
         elif 'search_department' in request.session and not 'search_first_name' in request.session:            
@@ -311,27 +302,6 @@ def StaffProfile(request):
                 employee = LeaveEmployee.objects.filter(emp_fname_th__startswith=first_name)
             else:
                 employee = LeaveEmployee.objects.filter(emp_fname_en__startswith=first_name)
-
-
-        '''
-        department_id = request.session['search_department']
-        first_name = request.session['first_name']
-        department_name_en = _("All departments")
-
-        if not 'search_department' in request.session and not 'search_first_name' in request.session:
-            employee = LeaveEmployee.objects.all()
-        elif 'search_department' in request.session and not 'search_first_name' in request.session:
-            department_name_en = ComDivision.objects.filter(div_id=request.session['search_department']).values_list('div_en', flat=True).get()
-            employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
-        elif 'search_first_name' in request.session and not 'search_department' in request.session:            
-            if user_language == "th":
-                employee = LeaveEmployee.objects.filter(emp_fname_th__startswith=request.session['search_first_name'])
-            else:
-                employee = LeaveEmployee.objects.filter(emp_fname_en__startswith=request.session['search_first_name'])            
-        else:
-            department_name_en = ComDivision.objects.filter(div_id=request.session['search_department']).values_list('div_en', flat=True).get()
-            employee = LeaveEmployee.objects.filter(div_en=department_name_en, emp_fname_th__startswith=request.session['search_first_name'])           
-        '''
 
         paginator = Paginator(employee, item_per_page)
 
