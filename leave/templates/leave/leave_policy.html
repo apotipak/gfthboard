@@ -70,7 +70,7 @@
                     {% endif %}
 
                     {% if policy.total_day_remaining == 0 and policy.total_hour_remaining == 0 %}
-                      0
+                      <span class="text-danger"><strong>0</strong></span>&nbsp;{% trans 'Day' %}
                     {% endif %}             
 
                     {% if policy.total_day_remaining < 0 or policy.total_hour_remaining < 0 %}

@@ -421,7 +421,7 @@
                 result += "&nbsp;<small>" + parseFloat(total_hour_remaining).toFixed() + "&nbsp;</small><small>{% trans 'Hour' %}</small>";
               }
               if(total_day_remaining == 0 && parseFloat(total_hour_remaining).toFixed() == 0) {
-                result += "<small class='text-danger'><strong>0</strong></small>";
+                result += "<small class='text-danger'><strong>0</strong></small><small>&nbsp;{% trans 'Day' %}</small>";
               }
               result += "</td>";
 
