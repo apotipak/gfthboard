@@ -10,23 +10,23 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
+    <!--
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            {% trans 'Profile' %}
+            <h1>{% trans 'Profile' %}</h1>
           </div>
           <div class="col-sm-6">
-            <!--
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
               <li class="breadcrumb-item active">{% trans 'Profile' %}</li>
             </ol>
-            -->
           </div>
         </div>
       </div>
     </div>
+    -->
     <!-- /.content-header -->
 
     <!-- Main content -->
@@ -88,19 +88,25 @@
             <!-- /.card -->
         </div>
 
+
+
           <div class="col-md-9">
             <div class="card">
 
               <div class="card-header p-2">
-                <ul class="nav nav-pills">
-                  <li class="nav-item"><a class="nav-link active" href="#mymanager" data-toggle="tab">{% trans 'My Manager' %}</a></li>
+                <ul class="nav nav-pills" id="profiletab">
+                  <li class="nav-item"><a class="nav-link active" href="#mymanager" data-toggle="tab"><span style="">{% trans 'My Manager' %}</span></a></li>
                   {% if able_to_approve_leave_request %}
                   <li class="nav-item"><a class="nav-link" href="#myteam" data-toggle="tab">{% trans 'My Team' %}</a></li>
+                  {% endif %}
+                  
+                  {% if perms.page.can_view_all_employees %}
+                  <li class="nav-item"><a class="nav-link" href="#allemployees" data-toggle="tab">{% trans 'All Employees' %}</a></li>
                   {% endif %}
                 </ul>
               </div><!-- /.card-header -->
 
-              
+
               <div class="card-body">
 
                 <div class="tab-content">
@@ -123,8 +129,8 @@
                             {% for member in SuperVisorInstance %}
                                 <tr>
                                     {% if user_language == "th" %}
-                                    <td>
-                                      {{member.emp_fname_th}} {{member.emp_lname_th}}
+                                    <td>                                      
+                                      {{member.emp_fname_th}} {{member.emp_lname_th}}                                      
                                     </td>
                                     <td>{{member.div_th}}</td>
                                     <td>{{member.pos_th}}</td>
@@ -194,6 +200,116 @@
                     </div>
                   </div>
                   {% endif %}
+
+                  
+                  {% if perms.page.can_view_all_employees %}
+                  <div class="tab-pane" id="allemployees">
+                    <div>
+                      <div>
+                        <div class="col-lg-12">
+
+                          <form role="form" action="?page=1#allemployees" method="post" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="row">
+                              <div class="form-group col-lg-12">
+                                  {{form.first_name}}
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="form-group col-lg-12">
+                                  {{form.department_list}}
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="form-group col-lg-12 text-right">
+                                <button type="submit" class="btn btn-success btn-md"><i class="fas fa-search"></i>&nbsp;&nbsp;{% trans 'Search' %}</button>
+                              </div>
+                            </div>
+                          </form>
+
+                          <div class="form-group pt-3">
+                            <div class="alert alert-info" role="alert">
+                            <!--<div class="alert alert-danger col-md-4 col-md-offset-4" align="center">-->
+
+                              {% trans 'Search' %}&nbsp;&nbsp;
+                              <strong style="border-bottom: 1px dotted;">
+
+                              {% if not emp_name %}
+                                {% trans 'All Employees' %}
+                              {% else %}
+                                {{ emp_name }}
+                              {% endif %}                                    
+                            </strong>&nbsp;&nbsp;{% trans 'in department' %}&nbsp;&nbsp;<strong style="border-bottom: 1px dotted;">{{ dept }}</strong>
+                            </div>
+
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead class="thead-inverse">
+                                    <tr>                                
+                                        <th>{% trans 'Employee ID' %}</th>
+                                        <th>{% trans 'Fullname' %}</th>
+                                        <th>{% trans 'Position' %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                  {% if current_page %}
+                                   {% for employee in current_page %}
+                                    <tr>                                
+                                        <td>
+                                          {{ employee.emp_id }}
+                                        </td>
+                                        <td>
+                                          <a href="javascript:void(0);" data-url="{% url 'get_employee_leave_history' employee.emp_id %}" class="get_employee_leave_history">
+                                          {% if user_language == "th" %}
+                                          {{ employee.emp_fname_th }} {{ employee.emp_lname_th }}
+                                          {% else %}
+                                          {{ employee.emp_fname_en }} {{ employee.emp_lname_en }}
+                                          {% endif %}
+                                          </a>
+                                        </td>
+                                        <td>
+                                          {% if user_language == "th" %}
+                                          {{ employee.pos_th }}
+                                          {% else %}
+                                          {{ employee.pos_en }}
+                                          {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                  {% else %}
+                                      <tr>                                
+                                        <td class="text-center" colspan="3">
+                                          {% trans 'Not found' %}
+                                        </td>                                          
+                                      </tr>
+                                  {% endif %}
+                                </tbody>
+                            </table>
+
+                            {% if is_paginated %}
+                            <div>
+                                <span>
+                                    {% if current_page.has_previous %}
+                                        <a href="?page={{ current_page.previous_page_number }}#allemployees"><i class="fas fa-arrow-circle-left"></i></a>
+                                    {% endif %}
+                                    &nbsp;
+                                    <span>
+                                        {% trans 'Page' %} {{ current_page.number }} {% trans '/' %} {{ current_page.paginator.num_pages }}
+                                    </span>
+                                    &nbsp;
+                                    {% if current_page.has_next %}
+                                        <a href="?page={{ current_page.next_page_number }}#allemployees"><i class="fas fa-arrow-circle-right"></i></a>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            {% endif %}
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
                   <!-- /.tab-pane -->
 
                 </div>
@@ -221,7 +337,7 @@
           </button>
         </div>
         <div class="modal-body">
-          content
+          {% trans 'Loading' %}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">{% trans 'Close' %}</button>
@@ -236,7 +352,21 @@
 {% block javascript %}
   <script>
 
-    $(document).ready(function(){    
+  $(window).on("popstate", function() {
+      var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
+      $("a[href='" + anchor + "']").tab("show");
+  });
+
+  $(document).ready(function(){
+
+    if (location.hash) {
+        $("a[href='" + location.hash + "']").tab("show");
+    }
+    $(document.body).on("click", "a[data-toggle='tab']", function(event) {
+        location.hash = this.getAttribute("href");
+    });
+
+
     $("body").on("click", "a.get_employee_leave_history", function(event){
       var obj = $(this);  
       $.ajax({
@@ -291,7 +421,7 @@
                 result += "&nbsp;<small>" + parseFloat(total_hour_remaining).toFixed() + "&nbsp;</small><small>{% trans 'Hour' %}</small>";
               }
               if(total_day_remaining == 0 && parseFloat(total_hour_remaining).toFixed() == 0) {
-                result += "<small>0</small>";
+                result += "<small class='text-danger'><strong>0</strong></small><small>&nbsp;{% trans 'Day' %}</small>";
               }
               result += "</td>";
 
@@ -311,10 +441,10 @@
               // Pending
               result += "<td>";
               if(total_day_pending > 0) {
-                result += "&nbsp;<small>" + total_day_pending + "&nbsp;{% trans 'Day' %}</small>";
+                result += "&nbsp;<small class='text-danger'><strong>" + total_day_pending + "</strong></small><small>&nbsp;{% trans 'Day' %}</small>";
               }
               if(total_hour_pending > 0) {
-                result += "&nbsp;<small>" + parseFloat(total_hour_pending).toFixed() + "&nbsp;{% trans 'Hour' %}</small>";
+                result += "&nbsp;<small class='text-danger'><strong>" + parseFloat(total_hour_pending).toFixed() + "</strong></small><small>&nbsp;{% trans 'Hour' %}</small>";
               }
               if(total_day_pending == 0 && parseFloat(total_hour_pending).toFixed() == 0) {
                 result += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>0</small>"; 
@@ -336,7 +466,7 @@
           }
       });      
     });
-    });
+  });
 
   </script>
 {% endblock %}

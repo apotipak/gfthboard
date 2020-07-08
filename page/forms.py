@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import UserProfile, ComDivision
+from leave.models import LeaveEmployee
 from django import forms
 import re
 from django.utils.translation import ugettext_lazy as _
@@ -69,7 +70,6 @@ class LanguageForm(ModelForm):
 
 		if UserProfile.objects.filter(username=self.user.username).exists():
 			default_language = UserProfile.objects.filter(username=self.user.username).values_list('language', flat=True).get()
-			print("default lang = " + default_language)
 		else:
 			default_language = 'th'
 
@@ -79,3 +79,29 @@ class LanguageForm(ModelForm):
 		cleaned_data = super(LanguageForm, self).clean()
 		language = self.cleaned_data.get('language_code')
 		return cleaned_data
+
+
+class ViewAllStaffForm(ModelForm):
+	first_name = forms.CharField(label=_('Employee Name'), max_length=128, required=False, widget=forms.TextInput(attrs={'autocomplete':'off'}))	
+	department_list = forms.ModelChoiceField(label=_('Select department'), queryset=None, required=False, widget=forms.Select(attrs={'class':'form-control'}))
+	
+	class Meta:
+		model = LeaveEmployee
+		fields = ['emp_id','emp_fname_en','emp_fname_th','pos_en','emp_fname_th','emp_lname_th','pos_th']
+
+	def __init__(self, *args, **kwargs):
+		department_id_included = {30,35,98,102,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,124,125,126,127,128,129,133,134,136,137,138,139,140,141,142,208,211,213,226,228,231,233,249,257,258,259,261,265,267,268,270,271,272}
+		self.user = kwargs.pop('user')		
+		super(ViewAllStaffForm, self).__init__(*args, **kwargs)
+		self.fields['first_name'].widget.attrs={'class': 'form-control form-control-md'}
+		self.fields['department_list'].queryset=ComDivision.objects.filter(com_id=1).filter(div_id__in=(department_id_included)).order_by('div_en')		
+		self.fields['department_list'].widget.attrs={'class': 'form-control form-control-md'}
+		self.fields['department_list'].empty_label = _("All departments")
+		self.fields['first_name'].widget.attrs['placeholder'] = _("Enter employee name")
+		#self.fields['department_list'].widget.attrs['placeholder'] = _("Select department")
+		
+	def clean(self):
+		cleaned_data = super(ViewAllStaffForm, self).clean()
+		first_name = self.cleaned_data.get('first_name')
+		return cleaned_data
+

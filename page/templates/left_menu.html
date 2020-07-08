@@ -15,6 +15,7 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">  
 
+          <!-- Profile -->
           {% if request.path|slice:":6" == '/staff' %}
             {% if request.path|slice:":14" == '/staff-profile' %}
             <li class="nav-item has-treeview active menu-open">
@@ -63,9 +64,12 @@
               </a>
             </li>
             {% endif %}
-
           {% endif %}
 
+          <!-- End Profile -->
+
+
+          <!-- Leave -->
           {% if request.path|slice:":7" == '/leave/' %}
           <li class="nav-item has-treeview active menu-open">
             {% if request.path|slice:":6" == '/leave' %}
@@ -145,6 +149,7 @@
           </li>
           {% endif %}
 
+          <!-- Contract -->
           {% if request.path|slice:":10" == '/contract/' %}
             {% if perms.contract.view_tclcontractqty %}
             <li class="nav-item has-treeview active menu-open">

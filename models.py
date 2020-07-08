@@ -2,10 +2,24 @@
 # You'll have to do the following manually to clean this up:
 #   * Rearrange models' order
 #   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
+#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+
+
+class ComDivision(models.Model):
+    div_id = models.DecimalField(primary_key=True, max_digits=3, decimal_places=0)
+    com_id = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True)
+    div_th = models.CharField(max_length=50, blank=True, null=True)
+    div_en = models.CharField(max_length=50, blank=True, null=True)
+    upd_date = models.DateTimeField(blank=True, null=True)
+    upd_by = models.CharField(max_length=10, blank=True, null=True)
+    upd_flag = models.CharField(max_length=1, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'COM_DIVISION'
 
 
 class ComZone(models.Model):
@@ -72,6 +86,8 @@ class LeavePlan(models.Model):
     lve_plan_hr = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
     lve_act = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
     lve_act_hr = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    lve_hrms = models.DecimalField(db_column='lve_HRMS', max_digits=3, decimal_places=0, blank=True, null=True)  # Field name made lowercase.
+    lve_hrms_hr = models.DecimalField(db_column='lve_HRMS_HR', max_digits=4, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
     lve_miss = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
     lve_miss_hr = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
     upd_date = models.DateTimeField()
@@ -80,7 +96,7 @@ class LeavePlan(models.Model):
     class Meta:
         managed = False
         db_table = 'Leave_Plan'
-        unique_together = (("lve_year", "emp_id"),)
+
 
 class LeaveEmployee(models.Model):
     emp_id = models.DecimalField(max_digits=7, decimal_places=0)
@@ -122,7 +138,7 @@ class TclDailyWorking(models.Model):
 
 
 class TclContractQty(models.Model):
-    cnt_id = models.DecimalField(max_digits=13, decimal_places=0, blank=True, null=True)
+    cnt_id = models.CharField(max_length=13, blank=True, null=True)
     cus_name_th = models.CharField(max_length=120, blank=True, null=True)
     zone_en = models.CharField(max_length=30, blank=True, null=True)
     cnt_sign_frm = models.CharField(max_length=30, blank=True, null=True)
@@ -138,7 +154,7 @@ class TclContractQty(models.Model):
     dly_stn = models.IntegerField(db_column='DLY_STN')  # Field name made lowercase.
     dly_dof = models.IntegerField(db_column='DLY_DOF')  # Field name made lowercase.
     dly_date = models.CharField(db_column='Dly_Date', max_length=13)  # Field name made lowercase.
-    upd_date = models.DateTimeField(db_column='UPD_Date')  # Field name made lowercase.
+    upd_date = models.CharField(db_column='UPD_Date', max_length=30)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -289,6 +305,15 @@ class AuthUserUserPermissions(models.Model):
         db_table = 'auth_user_user_permissions'
 
 
+class ContractPolicy(models.Model):
+    username = models.CharField(max_length=150, blank=True, null=True)
+    zone_id = models.DecimalField(max_digits=4, decimal_places=0, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'contract_policy'
+
+
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
     object_id = models.TextField(blank=True, null=True)
@@ -333,7 +358,7 @@ class DjangoSession(models.Model):
 
 
 class LeaveEmployeeinstance(models.Model):
-    id = models.CharField(primary_key=True, max_length=32)
+    id = models.CharField(max_length=32)
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     created_date = models.DateTimeField()
@@ -345,7 +370,102 @@ class LeaveEmployeeinstance(models.Model):
     status = models.CharField(max_length=1)
     emp_id = models.DecimalField(max_digits=7, decimal_places=0, blank=True, null=True)
     leave_type_id = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    document = models.CharField(max_length=100, blank=True, null=True)
+    uploaded_at = models.DateTimeField(blank=True, null=True)
+    leave_reason = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'leave_employeeinstance'
+
+
+class PageUserprofile(models.Model):
+    language = models.CharField(max_length=2, blank=True, null=True)
+    updated_by = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
+    username = models.CharField(max_length=10, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'page_userprofile'
+
+
+class PostOfficeAttachment(models.Model):
+    file = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
+    mimetype = models.CharField(max_length=255)
+    headers = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'post_office_attachment'
+
+
+class PostOfficeAttachmentEmails(models.Model):
+    attachment = models.ForeignKey(PostOfficeAttachment, models.DO_NOTHING)
+    email = models.ForeignKey('PostOfficeEmail', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'post_office_attachment_emails'
+
+
+class PostOfficeEmail(models.Model):
+    from_email = models.CharField(max_length=254)
+    to = models.TextField()
+    cc = models.TextField()
+    bcc = models.TextField()
+    subject = models.CharField(max_length=989)
+    message = models.TextField()
+    html_message = models.TextField()
+    status = models.SmallIntegerField(blank=True, null=True)
+    priority = models.SmallIntegerField(blank=True, null=True)
+    created = models.DateTimeField()
+    last_updated = models.DateTimeField()
+    scheduled_time = models.DateTimeField(blank=True, null=True)
+    headers = models.TextField(blank=True, null=True)
+    context = models.TextField(blank=True, null=True)
+    template = models.ForeignKey('PostOfficeEmailtemplate', models.DO_NOTHING, blank=True, null=True)
+    backend_alias = models.CharField(max_length=64)
+
+    class Meta:
+        managed = False
+        db_table = 'post_office_email'
+
+
+class PostOfficeEmailtemplate(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    subject = models.CharField(max_length=255)
+    content = models.TextField()
+    html_content = models.TextField()
+    created = models.DateTimeField()
+    last_updated = models.DateTimeField()
+    default_template = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
+    language = models.CharField(max_length=12)
+
+    class Meta:
+        managed = False
+        db_table = 'post_office_emailtemplate'
+
+
+class PostOfficeLog(models.Model):
+    date = models.DateTimeField()
+    status = models.SmallIntegerField()
+    exception_type = models.CharField(max_length=255)
+    message = models.TextField()
+    email = models.ForeignKey(PostOfficeEmail, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'post_office_log'
+
+
+class TmpAuthUserGroups(models.Model):
+    id = models.AutoField()
+    user_id = models.IntegerField()
+    group_id = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'tmp_auth_user_groups'
