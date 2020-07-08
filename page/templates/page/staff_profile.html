@@ -101,7 +101,7 @@
                   {% endif %}
                   
                   {% if perms.page.can_view_all_employees %}
-                  <li class="nav-item"><a class="nav-link" href="#allemployees" data-toggle="tab">{% trans 'All Departments' %}</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#allemployees" data-toggle="tab">{% trans 'All Employees' %}</a></li>
                   {% endif %}
                 </ul>
               </div><!-- /.card-header -->
@@ -208,18 +208,18 @@
 
                         <div class="col-md-12">
 
-                          <form action="?d={{dept}}&page=1#allemployees" method="post" autocomplete="off" class="form-inline">
+                          <form action="?page=1#allemployees" method="post" autocomplete="off" class="form-inline">
                             {% csrf_token %}
                             <div class="form-row align-items-center">
-                              <div class="col">
-                                {{form.department_list}}
-                              </div>
                               <div class="col-auto">
                                 <label class="sr-only" for="inlineFormInputGroup">Username</label>
                                 <div class="input-group">
                                   {{form.first_name}}
                                 </div>
                               </div>
+                              <div class="col-auto">
+                                {{form.department_list}}
+                              </div>                              
                               <div class="col-auto">
                                 <!--<button type="reset" class="btn btn-secondary btn-sm">{% trans 'Reset' %}</button>-->
                                 <button type="submit" class="btn btn-success btn-sm">{% trans 'Search' %}</button>
@@ -228,8 +228,20 @@
                           </form>
 
 
-                                <div class="form-group pt-2">
-                                  <p><h4><span class="badge badge-info">{{ dept }}</span></h4></p>
+                                <div class="form-group pt-3">
+                                  <div class="alert alert-info" role="alert">
+                                  <!--<div class="alert alert-danger col-md-4 col-md-offset-4" align="center">-->
+
+                                    {% trans 'Search' %}&nbsp;&nbsp;
+                                    <strong>
+                                    {% if not emp_name %}
+                                      {% trans 'All Employees' %}
+                                    {% else %}
+                                      {{ emp_name }}
+                                    {% endif %}                                    
+                                  </strong>&nbsp;&nbsp;{% trans 'in department' %}&nbsp;&nbsp;<strong>{{ dept }}</strong>
+                                  </div>
+
                                   <table class="table table-striped table-bordered table-hover">
                                       <thead class="thead-inverse">
                                           <tr>                                
@@ -266,7 +278,7 @@
                                         {% else %}
                                             <tr>                                
                                               <td class="text-center" colspan="3">
-                                                No data
+                                                {% trans 'Not found' %}
                                               </td>                                          
                                             </tr>
                                         {% endif %}
@@ -277,15 +289,15 @@
                                   <div>
                                       <span>
                                           {% if current_page.has_previous %}
-                                              <a href="?d={{ dept }}&page={{ current_page.previous_page_number }}#allemployees">{% trans 'Previous' %}</a>
+                                              <a href="?page={{ current_page.previous_page_number }}#allemployees"><i class="fas fa-arrow-circle-left"></i></a>
                                           {% endif %}
-
+                                          &nbsp;
                                           <span>
-                                              {% trans 'Page' %} {{ current_page.number }} {% trans 'of' %} {{ current_page.paginator.num_pages }}.
+                                              {% trans 'Page' %} {{ current_page.number }} {% trans '/' %} {{ current_page.paginator.num_pages }}
                                           </span>
-
+                                          &nbsp;
                                           {% if current_page.has_next %}
-                                              <a href="?d={{ dept }}&page={{ current_page.next_page_number }}#allemployees">{% trans 'Next' %}</a>
+                                              <a href="?page={{ current_page.next_page_number }}#allemployees"><i class="fas fa-arrow-circle-right"></i></a>
                                           {% endif %}
                                       </span>
                                   </div>

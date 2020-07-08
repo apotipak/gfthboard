@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-07 16:24+0700\n"
+"POT-Creation-Date: 2020-07-08 17:37+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1342,7 +1342,7 @@ msgstr "เมนูหลัก"
 
 #: .\leave\templates\leave\employeeinstance_approve.html:40
 #: .\leave\templates\leave\employeeinstance_reject.html:41
-#: .\page\templates\page\staff_profile.html:228
+#: .\page\templates\page\staff_profile.html:245
 #: .\templates\registration\login.html:59
 msgid "Employee ID"
 msgstr "รหัสพนักงาน"
@@ -1359,7 +1359,7 @@ msgstr "รหัสพนักงาน"
 #: .\leave\templates\leave\employeeinstance_approve.html:42
 #: .\leave\templates\leave\employeeinstance_reject.html:43
 #: .\leave\templates\leave\leave_pending_approve_list.html:272
-#: .\page\templates\page\staff_profile.html:371
+#: .\page\templates\page\staff_profile.html:392
 #: .\page\templates\page_daterange.html:114
 msgid "Leave Type"
 msgstr "ลาประเภท"
@@ -1396,10 +1396,10 @@ msgstr ""
 #: .\leave\templates\leave\leave_rejected_list.html:90
 #: .\leave\templates\leave\leave_timeline.html:105
 #: .\leave\templates\leave\m1247_form.html:292
-#: .\page\templates\page\staff_profile.html:393
-#: .\page\templates\page\staff_profile.html:398
-#: .\page\templates\page\staff_profile.html:411
-#: .\page\templates\page\staff_profile.html:424
+#: .\page\templates\page\staff_profile.html:414
+#: .\page\templates\page\staff_profile.html:419
+#: .\page\templates\page\staff_profile.html:432
+#: .\page\templates\page\staff_profile.html:445
 msgid "Day"
 msgstr "วัน"
 
@@ -1424,9 +1424,9 @@ msgstr "วัน"
 #: .\leave\templates\leave\leave_rejected_list.html:95
 #: .\leave\templates\leave\leave_timeline.html:109
 #: .\leave\templates\leave\m1247_form.html:297
-#: .\page\templates\page\staff_profile.html:401
-#: .\page\templates\page\staff_profile.html:414
-#: .\page\templates\page\staff_profile.html:427
+#: .\page\templates\page\staff_profile.html:422
+#: .\page\templates\page\staff_profile.html:435
+#: .\page\templates\page\staff_profile.html:448
 msgid "Hour"
 msgstr "ช.ม."
 
@@ -1517,7 +1517,7 @@ msgstr "อนุมัติ"
 
 #: .\leave\templates\leave\employeeinstance_list.html:90
 #: .\leave\templates\leave\leave_pending_approve_list.html:275
-#: .\page\templates\page\staff_profile.html:374
+#: .\page\templates\page\staff_profile.html:395
 msgid "Waiting"
 msgstr "รออนุมัติ"
 
@@ -1576,7 +1576,7 @@ msgstr "เหตุผลไม่อนุมัติ"
 #: .\leave\templates\leave\leave_pending_approve_list.html:168
 #: .\leave\templates\leave\leave_rejected_list.html:135
 #: .\leave\templates\leave\leave_rejected_list.html:156
-#: .\page\templates\page\staff_profile.html:323
+#: .\page\templates\page\staff_profile.html:344
 msgid "Close"
 msgstr "ปิด"
 
@@ -1659,7 +1659,8 @@ msgstr "ยังไม่มีรายการ"
 #: .\leave\templates\leave\leave_approved_list.html:160
 #: .\leave\templates\leave\leave_pending_approve_list.html:193
 #: .\leave\templates\leave\leave_rejected_list.html:181
-#: .\page\templates\page\staff_profile.html:220
+#: .\page\templates\page\staff_profile.html:225
+#: .\page\templates\page\staff_profile.html:233
 #: .\page\templates\page\view_all_staff.html:63
 #: .\page\templates\page_daterange.html:105
 msgid "Search"
@@ -1668,7 +1669,7 @@ msgstr "ค้นหา"
 #: .\leave\templates\leave\leave_approval_list.html:174
 #: .\leave\templates\leave\leave_approved_list.html:168
 #: .\leave\templates\leave\leave_pending_approve_list.html:201
-#: .\leave\templates\leave\leave_rejected_list.html:189
+#: .\leave\templates\leave\leave_rejected_list.html:189 .\page\forms.py:85
 msgid "Employee Name"
 msgstr "ชื่อพนักงาน"
 
@@ -1686,7 +1687,7 @@ msgstr "รายการไม่อนุมัติ"
 
 #: .\leave\templates\leave\leave_approved_list.html:60
 #: .\leave\templates\leave\leave_rejected_list.html:60
-#: .\page\templates\page\staff_profile.html:229
+#: .\page\templates\page\staff_profile.html:246
 msgid "Fullname"
 msgstr "ชื่อพนักงาน"
 
@@ -1711,7 +1712,7 @@ msgid "There is no approved item."
 msgstr "ยังไม่มีรายการ"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:159
-#: .\page\templates\page\staff_profile.html:314
+#: .\page\templates\page\staff_profile.html:335
 #, fuzzy
 #| msgid "Remaining"
 msgid "Entitlement Remaining"
@@ -1719,14 +1720,14 @@ msgstr "คงเหลือ"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:273
 #: .\leave\templates\leave\leave_policy.html:44
-#: .\page\templates\page\staff_profile.html:372
+#: .\page\templates\page\staff_profile.html:393
 msgid "Remaining"
 msgstr "คงเหลือ"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:274
 #: .\leave\templates\leave\leave_policy.html:45
 #: .\leave\templates\leave\leave_policy.html:46
-#: .\page\templates\page\staff_profile.html:373
+#: .\page\templates\page\staff_profile.html:394
 msgid "Used"
 msgstr "ใช้ไป"
 
@@ -1735,12 +1736,12 @@ msgstr "ใช้ไป"
 #: .\leave\templates\leave\leave_policy.html:18
 #: .\leave\templates\leave\leave_policy.html:24
 #: .\page\templates\left_menu.html:96 .\page\templates\left_menu.html:227
-#: .\page\templates\page\staff_profile.html:440
+#: .\page\templates\page\staff_profile.html:461
 msgid "Leave Entitlement"
 msgstr "สิทธิ์การลา"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:346
-#: .\page\templates\page\staff_profile.html:445
+#: .\page\templates\page\staff_profile.html:466
 #, fuzzy
 #| msgid "There is no leave request item."
 msgid "There is no data."
@@ -1844,6 +1845,15 @@ msgstr "เลือกแสดงภาษา"
 #: .\page\forms.py:86
 msgid "Select department"
 msgstr "เลือกแผนก"
+
+#: .\page\forms.py:99 .\page\views.py:220 .\page\views.py:363
+#: .\page\views.py:397
+msgid "All departments"
+msgstr "ทุกแผนก"
+
+#: .\page\forms.py:100
+msgid "Enter employee name"
+msgstr "ป้อนชื่อพนักงาน"
 
 #: .\page\templates\index.html:17
 msgid "Leave request system"
@@ -1950,8 +1960,9 @@ msgid "My Team"
 msgstr "พนักงานในแผนก"
 
 #: .\page\templates\page\staff_profile.html:104
-msgid "All Departments"
-msgstr "แผนกทั้งหมด"
+#: .\page\templates\page\staff_profile.html:236 .\page\views.py:273
+msgid "All Employees"
+msgstr "พนักงานทั้งหมด"
 
 #: .\page\templates\page\staff_profile.html:123
 #: .\page\templates\page\staff_profile.html:171
@@ -1960,7 +1971,7 @@ msgstr "ชื่อ-สกุล"
 
 #: .\page\templates\page\staff_profile.html:125
 #: .\page\templates\page\staff_profile.html:172
-#: .\page\templates\page\staff_profile.html:230
+#: .\page\templates\page\staff_profile.html:247
 msgid "Position"
 msgstr "ตำแหน่ง"
 
@@ -1968,54 +1979,38 @@ msgstr "ตำแหน่ง"
 msgid "There is no information. Please contact HR officer."
 msgstr "ไม่พบข้อมูลในระบบ กรุณาสอบถามข้อมูลเพิ่มเติมจากเจ้าหน้าที่ฝ่ายบุคคล"
 
-#: .\page\templates\page\staff_profile.html:264
-msgid "Previous"
-msgstr "หน้าก่อน"
+#: .\page\templates\page\staff_profile.html:224
+msgid "Reset"
+msgstr ""
 
-#: .\page\templates\page\staff_profile.html:268
+#: .\page\templates\page\staff_profile.html:240
+msgid "in department"
+msgstr "ในแผนก"
+
+#: .\page\templates\page\staff_profile.html:278
+msgid "Not found"
+msgstr "ไม่พบข้อมูล"
+
+#: .\page\templates\page\staff_profile.html:293
 msgid "Page"
 msgstr "หน้า"
 
-#: .\page\templates\page\staff_profile.html:268
+#: .\page\templates\page\staff_profile.html:293
 msgid "of"
 msgstr "จาก"
 
-#: .\page\templates\page\staff_profile.html:272
-msgid "Next"
-msgstr "หน้าถัดไป"
-
 #: .\page\templates\page\view_all_staff.html:7
 msgid "View All Staff"
-msgstr ""
+msgstr "ดูพนักงานทั้งหมด"
 
 #: .\page\views.py:166
 msgid "ตั้งค่าใหม่สำเร็จ"
 msgstr "A new language has been set."
 
+#: .\page\views.py:272
+msgid "All Departments"
+msgstr "ทุกแผนก"
+
 #: .\templates\registration\login.html:68
-#, fuzzy
-#| msgid "Change Password"
 msgid "Password"
 msgstr "เปลี่ยนรหัสผ่าน"
-
-#, fuzzy
-#~| msgid "Day"
-#~ msgid "day"
-#~ msgstr "วัน"
-
-#~ msgid "hour"
-#~ msgstr "ช.ม."
-
-#, fuzzy
-#~| msgid "Leave Entitlement"
-#~ msgid "Leave ntitlement"
-#~ msgstr "สิทธิ์การลา"
-
-#~ msgid "Welcome"
-#~ msgstr "Welcome"
-
-#~ msgid "Start Date"
-#~ msgstr "วันเริ่มงาน"
-
-#~ msgid "เลือกประเภทการลา"
-#~ msgstr "Select Leave Type"
