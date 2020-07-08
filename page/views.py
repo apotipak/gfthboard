@@ -285,19 +285,16 @@ def StaffProfile(request):
         else:
             first_name = ""
 
-
         if department_id == "" and first_name == "":
             employee = LeaveEmployee.objects.all().order_by('emp_id')
-        elif 'search_department' in request.session and not 'search_first_name' in request.session:            
+        elif department_id != "" and first_name == "":
             employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
-        elif 'search_first_name' in request.session and not 'search_department' in request.session:            
-            print("aa")
+        elif first_name != "" and department_id == "":
             if user_language == "th":
                 employee = LeaveEmployee.objects.filter(emp_fname_th__startswith=first_name)
             else:
                 employee = LeaveEmployee.objects.filter(emp_fname_en__startswith=first_name)
         else:
-            print("bb : " + department_id + " | " + first_name)
             if user_language == "th":
                 employee = LeaveEmployee.objects.filter(emp_fname_th__startswith=first_name)
             else:
