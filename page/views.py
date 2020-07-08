@@ -215,7 +215,7 @@ def StaffProfile(request):
         department_id = request.POST.get('department_list')
         first_name = request.POST.get('first_name')
         request.session['search_department'] = department_id
-        request.session['first_name'] = first_name
+        request.session['search_first_name'] = first_name
 
         department_name_en = _("All departments")
 
@@ -265,8 +265,24 @@ def StaffProfile(request):
     else:
         form = ViewAllStaffForm(user=request.user)
         
-        department_name_en = _("All Departments")
-        first_name = _("All Employees")
+        if 'search_department' in request.session:
+            if request.session['search_department'] != "":
+                department_id = request.session['search_department']
+                department_name_en = ComDivision.objects.filter(div_id=department_id).values_list('div_en', flat=True).get()
+            else:
+                department_id = ""
+                department_name_en = _("All Departments")
+        else:
+            department_id = ""
+            department_name_en = _("All Departments")
+
+        if 'search_first_name' in request.session:
+            if request.session['search_first_name'] != "":
+                first_name = request.session['search_first_name']
+            else:
+                first_name = ""
+        else:
+            first_name = ""
 
         '''
         if 'search_department' in request.session:
@@ -279,14 +295,23 @@ def StaffProfile(request):
         else:
             employee = LeaveEmployee.objects.all().order_by('emp_id')
         '''
-        if not 'search_department' in request.session and not 'search_first_name' in request.session:
+        if department_id == "" and first_name == "":
             employee = LeaveEmployee.objects.all().order_by('emp_id')
-        elif 'search_department' in request.session and not 'search_first_name' in request.session:
-            first_name = "All Employees"
-            department_name_en = ComDivision.objects.filter(div_id=request.session['search_department']).values_list('div_en', flat=True).get()
-            employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')            
+        elif 'search_department' in request.session and not 'search_first_name' in request.session:            
+            employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
+        elif 'search_first_name' in request.session and not 'search_department' in request.session:            
+            print("aa")
+            if user_language == "th":
+                employee = LeaveEmployee.objects.filter(emp_fname_th__startswith=first_name)
+            else:
+                employee = LeaveEmployee.objects.filter(emp_fname_en__startswith=first_name)
         else:
-            employee = LeaveEmployee.objects.all().order_by('emp_id')
+            print("bb : " + department_id + " | " + first_name)
+            if user_language == "th":
+                employee = LeaveEmployee.objects.filter(emp_fname_th__startswith=first_name)
+            else:
+                employee = LeaveEmployee.objects.filter(emp_fname_en__startswith=first_name)
+
 
         '''
         department_id = request.session['search_department']
