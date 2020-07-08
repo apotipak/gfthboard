@@ -217,7 +217,7 @@ def StaffProfile(request):
         request.session['search_department'] = department_id
         request.session['search_first_name'] = first_name
 
-        department_name_en = _("All departments")
+        department_name_en = _("All Departments")
 
         if not department_id and not first_name:
             employee = LeaveEmployee.objects.all()            
@@ -360,7 +360,7 @@ def viewallstaff(request):
 
         if len(department_id) == 0:
             employee = LeaveEmployee.objects.all()
-            department_name_en = _("All departments")
+            department_name_en = _("All Departments")
         else:
             department_name_en = ComDivision.objects.filter(div_id=department_id).values_list('div_en', flat=True).get()
             employee = LeaveEmployee.objects.filter(div_en=department_name_en).order_by('emp_id')
@@ -394,7 +394,7 @@ def viewallstaff(request):
         # print("debug: " + request.session['search'])
         # department_id = request.session['search']
         department_id = request.POST.get('department_list')
-        department_name_en = _("All departments")
+        department_name_en = _("All Departments")
 
         if 'search_department' in request.session:
             if len(request.session['search_department']) <= 0:
