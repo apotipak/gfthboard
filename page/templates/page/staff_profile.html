@@ -95,7 +95,7 @@
 
               <div class="card-header p-2">
                 <ul class="nav nav-pills" id="profiletab">
-                  <li class="nav-item"><a class="nav-link active" href="#mymanager" data-toggle="tab">{% trans 'My Manager' %}</a></li>
+                  <li class="nav-item"><a class="nav-link active" href="#mymanager" data-toggle="tab"><span style="">{% trans 'My Manager' %}</span></a></li>
                   {% if able_to_approve_leave_request %}
                   <li class="nav-item"><a class="nav-link" href="#myteam" data-toggle="tab">{% trans 'My Team' %}</a></li>
                   {% endif %}
@@ -200,32 +200,42 @@
                     </div>
                   </div>
                   {% endif %}
+
                   
                   {% if perms.page.can_view_all_employees %}
                   <div class="tab-pane" id="allemployees">
+
                     <div>
+
+
+
+
                       <div>
 
-                        <div class="col-md-12">
+                        <div class="col-lg-12">
 
-                          <form action="?page=1#allemployees" method="post" autocomplete="off" class="form-inline">
-                            {% csrf_token %}
-                            <div class="form-row align-items-center">
-                              <div class="col-auto">
-                                <label class="sr-only" for="inlineFormInputGroup">Username</label>
-                                <div class="input-group">
-                                  {{form.first_name}}
-                                </div>
-                              </div>
-                              <div class="col-auto">
-                                {{form.department_list}}
-                              </div>                              
-                              <div class="col-auto">
-                                <!--<button type="reset" class="btn btn-secondary btn-sm">{% trans 'Reset' %}</button>-->
-                                <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-search"></i>&nbsp;&nbsp;{% trans 'Search' %}</button>
-                              </div>
-                            </div>  
-                          </form>
+
+<form role="form" action="?page=1#allemployees" method="post" autocomplete="off">
+  {% csrf_token %}
+  <div class="row">
+    <div class="form-group col-lg-12">
+        {{form.first_name}}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-lg-12">
+        {{form.department_list}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-lg-12 text-right">
+      <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-search"></i>&nbsp;&nbsp;{% trans 'Search' %}</button>
+    </div>
+  </div>
+</form>
+
+
 
 
                                 <div class="form-group pt-3">

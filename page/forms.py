@@ -94,7 +94,7 @@ class ViewAllStaffForm(ModelForm):
 		self.user = kwargs.pop('user')		
 		super(ViewAllStaffForm, self).__init__(*args, **kwargs)
 		self.fields['first_name'].widget.attrs={'class': 'form-control form-control-sm'}
-		self.fields['department_list'].queryset=ComDivision.objects.filter(com_id=1).filter(div_id__in=(department_id_included)).order_by('div_en')
+		self.fields['department_list'].queryset=ComDivision.objects.filter(com_id=1).filter(div_id__in=(department_id_included)).order_by('div_en')		
 		self.fields['department_list'].widget.attrs={'class': 'form-control form-control-sm'}
 		self.fields['department_list'].empty_label = _("All departments")
 		self.fields['first_name'].widget.attrs['placeholder'] = _("Enter employee name")
