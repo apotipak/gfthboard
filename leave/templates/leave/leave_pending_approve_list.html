@@ -58,7 +58,7 @@
             <table id="leave_list_table" class="table table-hover table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">{% trans 'Employee' %}</th>
+                        <th scope="col">{% trans 'Fullname' %}</th>
                         <th scope="col">{% trans 'Type' %}</th>
                         <th scope="col">{% trans 'Leave Date' %}</th>
                         <th scope="col">{% trans 'Requested Date' %}</th>
@@ -74,15 +74,17 @@
                         </td>
 
                         <td>
-                          {{leave.leave_type}}
-
+                          <!-- {{leave.leave_type}}
+                         <a href="#" data-url="{% url 'get_employee_leave_history_approved' leave.emp_id %}" class=" text-danger get_employee_leave_history_approved">{{leave.leave_type}}</a>
+                          -->
+                         <a href="#" data-url="{% url 'get_employee_leave_history_approved' leave.emp_id %}" class=" get_employee_leave_history_approved">{{leave.leave_type}}</a>
                           {% if leave.leave_reason %}
                             <span class="badge badge-pill badge-light"><a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason"><i class="far fa-comment-alt fa-sm text-secondary"></i></a></span>
                           {% endif %}
 
                           {% if leave.document %}
                             <span class="badge badge-pill badge-light"><a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-sm text-secondary" aria-hidden="true"></i></a></span>
-                          {% endif %}                          
+                          {% endif %}
                         </td>
                         <td>
                           {{leave.start_date|date:"d N y H:i"}} - {{leave.end_date|date:"d N y H:i"}} |
@@ -96,7 +98,7 @@
                               {{leave.lve_act_hr}} {% trans 'Hour' %}
                           {% endif %}
                           </strong>
-                        </td>                      
+                        </td>
                         <td><small>{{ leave.created_date|naturaltime }}</small></td>
                         <td class="text-right py-0 align-middle">
                           <div class="btn-group btn-group-sm">
@@ -107,24 +109,24 @@
                                 &nbsp;
                              {% endif %}
                           </div>
-                        </td>                        
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
-                        
+
             {% else %}
             <div class="col-lg-12">
               <div class="alert alert-success" role="alert">
                   <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{% trans 'There is no leave request item.' %}</a>
-              </div>           
+              </div>
             </div>
             {% endif %}
           </div>
 
       </div><!-- /.container-fluid -->
     </section>
-    <!-- /.content -->    
+    <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
 
@@ -132,7 +134,7 @@
   <div class="modal fade" id="leaveReasonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-        
+
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">{% trans 'Leave Reason' %}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -188,7 +190,7 @@
       "lengthMenu": [[10, 20, 25, 50, -1], [10, 20, 25, 50, "All"]],
       "search": {
           "caseInsensitive": true
-      },      
+      },
       "oLanguage": {
          "sSearch": "{% trans 'Search' %}"
        },
@@ -206,60 +208,60 @@
       },
       "columnDefs": [
         //{ "orderable": false, "targets": 4 }
-      ]           
+      ]
     });
   });
 
-  $(document).ready(function(){    
+  $(document).ready(function(){
 
     $("body").on("click", "a.get_leave_reason", function(event){
       console.log("test");
-      var obj = $(this);  
+      var obj = $(this);
       $.ajax({
           url: obj.attr("data-url"),
-          type: 'get',          
+          type: 'get',
           dataType: 'json',
           beforeSend: function () {
             $("#leaveReasonModal").modal("show");
           },
-          success: function (data) {              
+          success: function (data) {
             $("#leaveReasonModal .modal-body").html(data.leave_reason);
           }
       });
     });
 
     $('.dropdown-menu a').click(function () {
-      
+
       var filterid = $(this).attr('id');
 
       if(filterid == "filterpending") {
         var url = "{% url 'leave_approve_pending_list' %}";
-        window.location.href = url;            
+        window.location.href = url;
       }
-      
+
       if(filterid == "filterapproved") {
         var url = "{% url 'leave_approved_list' %}";
-        window.location.href = url;      
+        window.location.href = url;
       }
-      
+
       if(filterid == "filterrejected") {
         var url = "{% url 'leave_rejected_list' %}";
-        window.location.href = url;      
-      }  
+        window.location.href = url;
+      }
     });
 
     $("body").on("click", "a.get_employee_leave_history", function(event){
-      var obj = $(this);  
+      var obj = $(this);
       $.ajax({
           url: obj.attr("data-url"),
-          type: 'get',          
+          type: 'get',
           dataType: 'json',
           beforeSend: function () {
             $("#employeeLeaveEntitlementModal").modal("show");
           },
           success: function (data) {
             //console.log(data.results);
-            
+
             var result = ""
             var count = data.results.length;
             var fullname = data.results[0]["fullname"];
@@ -276,7 +278,7 @@
             result += "       </tr>";
             result += " </thead>";
             result += " <tbody>";
-           
+
             for(var i=0; i<count; i++) {
               var leave_name = data.results[i]["leave_name"];
               var leave_plan = data.results[i]["leave_plan"];
@@ -315,7 +317,7 @@
                 result += "&nbsp;<small>" + parseFloat(total_hour_used).toFixed() + "&nbsp;{% trans 'Hour' %}</small>";
               }
               if(total_day_used == 0 && parseFloat(total_hour_used).toFixed() == 0) {
-                result += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>0</small>"; 
+                result += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>0</small>";
               }
               result += "</td>";
 
@@ -328,11 +330,11 @@
                 result += "&nbsp;<small>" + parseFloat(total_hour_pending).toFixed() + "&nbsp;{% trans 'Hour' %}</small>";
               }
               if(total_day_pending == 0 && parseFloat(total_hour_pending).toFixed() == 0) {
-                result += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>0</small>"; 
-              }              
+                result += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>0</small>";
+              }
               result += "</td>";
 
-              result += "</tr>";              
+              result += "</tr>";
             }
 
             result += " </tbody>";
@@ -345,9 +347,67 @@
           error: function(data){
             $("#employeeLeaveEntitlementModal .modal-body").html("{% trans 'There is no data.' %}");
           }
-      });      
+      });
     });
 
-  });  
+
+    $("body").on("click", "a.get_employee_leave_history_approved", function(event){
+      var obj = $(this);
+      $.ajax({
+          url: obj.attr("data-url"),
+          type: 'get',
+          dataType: 'json',
+          beforeSend: function () {
+            $("#employeeLeaveEntitlementModal").modal("show");
+          },
+          success: function (data) {
+            //console.log(data.results);
+
+            var result = "";
+            var count = data.results.length;
+            var fullname = data.results[0]["fullname"];
+            var entitlement_year = data.results[0]["entitlement_year"];
+
+            result += "<div class='col-12 text-center pb-2'><h5>" + fullname + "</h5></div>";
+            //result += "<table class='table table-hover table-sm'>";
+
+            result += "<table class='table table-hover'>";
+            result += " <thead class='thead-dark'>";
+            result += "   <tr>";
+            result += "     <th scope='col'>{% trans 'ประเภทลา' %}</th>";
+            result += "     <th scope='col'>{% trans 'เริ่มลา  ' %}</th>";
+            result += "     <th scope='col'>{% trans 'สิ้นสุดลา ' %}</th>";
+            result += "     <th scope='col'>{% trans 'วัน    ' %}</th>";
+            result += "     <th scope='col'>{% trans 'ชั่วโมง  ' %}</th>";
+            result += "   </tr>";
+            result += " </thead>";
+            result += " <tbody>";
+
+            for(var i=0; i<count; i++) {
+              var leave_name = data.results[i]["leave_name"];
+              var start_date = data.results[i]["start_date"];
+              var end_date = data.results[i]["end_date"];
+              var lve_act = data.results[i]["lve_act"];
+              var lve_act_hr = data.results[i]["lve_act_hr"];
+              var entitlement_year = data.results[i]["entitlement_year"];
+              // Type + Entitlement
+              result += "<tr>";
+              result += "<td><small><strong>" + leave_name + "</strong>&nbsp</td>";
+              result += "<td><small><strong>" + start_date + "</strong>&nbsp</td>";
+              result += "<td><small><strong>" + end_date + "</strong>&nbsp</td>";
+              result += "<td><small><strong>" + lve_act + "</strong>&nbsp</td>";
+              result += "<td><small><strong>" + lve_act_hr + "</strong>&nbsp</td>";
+              result += "</tr>";
+            } //  Data to row()
+            $("#employeeLeaveEntitlementModal .modal-title").html("<h5><i class='fa fa-tasks text-secondary fa-xs'></i>&nbsp;&nbsp;{% trans 'Leave History' %}&nbsp;&nbsp;" + entitlement_year + "</h5>");
+            $("#employeeLeaveEntitlementModal .modal-body").html(result);
+            },
+          error: function(data){
+            $("#employeeLeaveEntitlementModal .modal-body").html("{% trans 'There is no data.' %}");
+          }
+      });
+    });
+
+  });
 </script>
 {% endblock %}

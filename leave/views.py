@@ -959,6 +959,55 @@ def GetEmployeeEntitlementRemaining(request, check_employee_id):
         policy.total_hour_remaining = total_hour_remaining
     
     return leave_policy
+#---------------------------------------------------------------------------------------
+
+@login_required(login_url='/accounts/login/')
+def get_employee_leave_history_approved (request, emp_id):
+    print("debug" + emp_id )
+    employee = LeaveEmployee.objects.filter(emp_id=emp_id).get() or None
+    now = datetime.now()
+    LeaveYear = str(now.year)
+    pickup_records = []
+    #print("debug")
+    employee_leave_plan = EmployeeInstance.objects.raw(
+        "Select ei.id , ei.emp_id, lve_th,lve_id,start_date,end_date,lve_act,lve_act_hr from leave_employeeinstance Ei inner join leave_type lt on ei.leave_type_id=lt.lve_id  where Ei.emp_id = " +emp_id+ "  and  year(start_date) = "+ LeaveYear
+        +"and status in ( 'C' )   order by start_date Desc"
+        )
+
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+    #print("Debug 111 "+ employee.emp_fname_th)
+    fullname = employee.emp_fname_th + " " + employee.emp_lname_th
+
+
+    pickup_dict = {}
+    pickup_records = []
+
+    if employee_leave_plan:
+        for l in employee_leave_plan:
+            record = {
+                    "emp_id": l.emp_id,
+                    "fullname": fullname,  # ชื่อพนักงาน  lve_en,lve_id,start_date,end_date,lve_act,lve_act_hr
+                    "leave_name": l.lve_th,  # ชื่อประเภทวันลา
+                    "start_date": l.start_date.strftime("%d-%b-%Y %H:%M"),  # จำนวนวัน
+                    "end_date": l.end_date.strftime("%d-%b-%Y %H:%M"),  # จำนวนชั่วโมงที
+                    "lve_act": l.lve_act,  # จำนวนวัน
+                    "lve_act_hr": l.lve_act_hr,  # จำนวนชั่วโมงที
+                    "entitlement_year": LeaveYear,
+            }
+            pickup_records.append(record)
+        response = JsonResponse(data={"success": True, "results": list(pickup_records)})
+        response.status_code = 200
+
+        return response
+    else:
+        response = JsonResponse({"error": "there was an error"})
+        response.status_code = 403
+        return response
+
+    return JsonResponse(data={"success": False, "results": ""})
+#--------------------------------------------------------------------------------------
+
 
 
 @login_required(login_url='/accounts/login/')
