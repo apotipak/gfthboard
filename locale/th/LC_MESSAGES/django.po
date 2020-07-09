@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-09 09:12+0700\n"
+"POT-Creation-Date: 2020-07-09 13:36+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1201,6 +1201,22 @@ msgstr ""
 msgid "\"%(value)s\" value must be valid JSON."
 msgstr ""
 
+#: .\gfthboard\custom_validators.py:16 .\page\custom_validations.py:16
+#, python-format
+msgid ""
+"This password is too short. It must contain at least %(min_length)d "
+"character."
+msgid_plural ""
+"This password is too short. It must contain at least %(min_length)d "
+"characters."
+msgstr[0] ""
+
+#: .\gfthboard\custom_validators.py:26 .\page\custom_validations.py:26
+#, python-format
+msgid "Your password must contain at least %(min_length)d character."
+msgid_plural "Your password must contain at least %(min_length)d characters."
+msgstr[0] ""
+
 #: .\leave\form_m1247.py:31
 msgid "Select Leave Type"
 msgstr "เลือกประเภทการลา"
@@ -1319,7 +1335,7 @@ msgstr "อนุมัติ"
 #: .\leave\templates\leave\employeeinstance_approve.html:22
 #: .\leave\templates\leave\employeeinstance_approve.html:56
 #: .\leave\templates\leave\leave_approval_list.html:100
-#: .\leave\templates\leave\leave_pending_approve_list.html:104
+#: .\leave\templates\leave\leave_pending_approve_list.html:106
 msgid "Approve"
 msgstr "อนุมัติ"
 
@@ -1350,7 +1366,6 @@ msgstr "รหัสพนักงาน"
 #: .\leave\templates\leave\employeeinstance_approve.html:41
 #: .\leave\templates\leave\employeeinstance_reject.html:42
 #: .\leave\templates\leave\leave_approval_list.html:60
-#: .\leave\templates\leave\leave_pending_approve_list.html:61
 #, fuzzy
 #| msgid "Employee ID"
 msgid "Employee"
@@ -1358,7 +1373,7 @@ msgstr "รหัสพนักงาน"
 
 #: .\leave\templates\leave\employeeinstance_approve.html:42
 #: .\leave\templates\leave\employeeinstance_reject.html:43
-#: .\leave\templates\leave\leave_pending_approve_list.html:272
+#: .\leave\templates\leave\leave_pending_approve_list.html:274
 #: .\page\templates\page\staff_profile.html:391
 #: .\page\templates\page_daterange.html:114
 msgid "Leave Type"
@@ -1382,11 +1397,11 @@ msgstr ""
 #: .\leave\templates\leave\employeeinstance_reject.html:49
 #: .\leave\templates\leave\leave_approval_list.html:88
 #: .\leave\templates\leave\leave_approved_list.html:86
-#: .\leave\templates\leave\leave_pending_approve_list.html:91
-#: .\leave\templates\leave\leave_pending_approve_list.html:294
-#: .\leave\templates\leave\leave_pending_approve_list.html:299
-#: .\leave\templates\leave\leave_pending_approve_list.html:312
-#: .\leave\templates\leave\leave_pending_approve_list.html:325
+#: .\leave\templates\leave\leave_pending_approve_list.html:93
+#: .\leave\templates\leave\leave_pending_approve_list.html:296
+#: .\leave\templates\leave\leave_pending_approve_list.html:301
+#: .\leave\templates\leave\leave_pending_approve_list.html:314
+#: .\leave\templates\leave\leave_pending_approve_list.html:327
 #: .\leave\templates\leave\leave_policy.html:56
 #: .\leave\templates\leave\leave_policy.html:58
 #: .\leave\templates\leave\leave_policy.html:65
@@ -1413,11 +1428,11 @@ msgstr "วัน"
 #: .\leave\templates\leave\leave_approval_list.html:93
 #: .\leave\templates\leave\leave_approved_list.html:88
 #: .\leave\templates\leave\leave_approved_list.html:91
-#: .\leave\templates\leave\leave_pending_approve_list.html:93
-#: .\leave\templates\leave\leave_pending_approve_list.html:96
-#: .\leave\templates\leave\leave_pending_approve_list.html:302
-#: .\leave\templates\leave\leave_pending_approve_list.html:315
-#: .\leave\templates\leave\leave_pending_approve_list.html:328
+#: .\leave\templates\leave\leave_pending_approve_list.html:95
+#: .\leave\templates\leave\leave_pending_approve_list.html:98
+#: .\leave\templates\leave\leave_pending_approve_list.html:304
+#: .\leave\templates\leave\leave_pending_approve_list.html:317
+#: .\leave\templates\leave\leave_pending_approve_list.html:330
 #: .\leave\templates\leave\leave_policy.html:69
 #: .\leave\templates\leave\leave_policy.html:89
 #: .\leave\templates\leave\leave_policy.html:104
@@ -1442,7 +1457,7 @@ msgstr "กรุณาตรวจสอบข้อมูลให้แน่
 #: .\leave\templates\leave\employeeinstance_reject.html:60
 #: .\leave\templates\leave\leave_approval_list.html:170
 #: .\leave\templates\leave\leave_approved_list.html:164
-#: .\leave\templates\leave\leave_pending_approve_list.html:197
+#: .\leave\templates\leave\leave_pending_approve_list.html:199
 #: .\leave\templates\leave\leave_rejected_list.html:185
 msgid "Back"
 msgstr "ย้อนกลับ"
@@ -1461,6 +1476,7 @@ msgstr "ยืนยันการยกเลิกรายการ"
 #: .\leave\templates\leave\employeeinstance_list.html:20
 #: .\leave\templates\leave\employeeinstance_list.html:26
 #: .\leave\templates\leave\employeeinstance_reject.html:22
+#: .\leave\templates\leave\leave_pending_approve_list.html:402
 #: .\page\templates\left_menu.html:107 .\page\templates\left_menu.html:207
 msgid "Leave History"
 msgstr "ประวัติการลา"
@@ -1518,7 +1534,7 @@ msgid "Approved"
 msgstr "อนุมัติ"
 
 #: .\leave\templates\leave\employeeinstance_list.html:90
-#: .\leave\templates\leave\leave_pending_approve_list.html:275
+#: .\leave\templates\leave\leave_pending_approve_list.html:277
 #: .\page\templates\page\staff_profile.html:394
 msgid "Waiting"
 msgstr "รออนุมัติ"
@@ -1574,8 +1590,8 @@ msgstr "เหตุผลไม่อนุมัติ"
 #: .\leave\templates\leave\employeeinstance_list.html:231
 #: .\leave\templates\leave\leave_approval_list.html:141
 #: .\leave\templates\leave\leave_approved_list.html:135
-#: .\leave\templates\leave\leave_pending_approve_list.html:147
-#: .\leave\templates\leave\leave_pending_approve_list.html:168
+#: .\leave\templates\leave\leave_pending_approve_list.html:149
+#: .\leave\templates\leave\leave_pending_approve_list.html:170
 #: .\leave\templates\leave\leave_rejected_list.html:135
 #: .\leave\templates\leave\leave_rejected_list.html:156
 #: .\page\templates\page\staff_profile.html:343
@@ -1585,7 +1601,7 @@ msgstr "ปิด"
 #: .\leave\templates\leave\employeeinstance_list.html:222
 #: .\leave\templates\leave\leave_approval_list.html:132
 #: .\leave\templates\leave\leave_approved_list.html:126
-#: .\leave\templates\leave\leave_pending_approve_list.html:137
+#: .\leave\templates\leave\leave_pending_approve_list.html:139
 #: .\leave\templates\leave\leave_rejected_list.html:126
 msgid "Leave Reason"
 msgstr "เหตุผลการลา"
@@ -1594,7 +1610,7 @@ msgstr "เหตุผลการลา"
 #: .\leave\templates\leave\employeeinstance_reject.html:16
 #: .\leave\templates\leave\employeeinstance_reject.html:61
 #: .\leave\templates\leave\leave_approval_list.html:101
-#: .\leave\templates\leave\leave_pending_approve_list.html:105
+#: .\leave\templates\leave\leave_pending_approve_list.html:107
 msgid "Reject"
 msgstr "ไม่อนุมัติ"
 
@@ -1653,13 +1669,13 @@ msgid "Created"
 msgstr ""
 
 #: .\leave\templates\leave\leave_approval_list.html:115
-#: .\leave\templates\leave\leave_pending_approve_list.html:119
+#: .\leave\templates\leave\leave_pending_approve_list.html:121
 msgid "There is no leave request item."
 msgstr "ยังไม่มีรายการ"
 
 #: .\leave\templates\leave\leave_approval_list.html:166
 #: .\leave\templates\leave\leave_approved_list.html:160
-#: .\leave\templates\leave\leave_pending_approve_list.html:193
+#: .\leave\templates\leave\leave_pending_approve_list.html:195
 #: .\leave\templates\leave\leave_rejected_list.html:181
 #: .\page\templates\page\staff_profile.html:226
 #: .\page\templates\page\staff_profile.html:235
@@ -1670,7 +1686,7 @@ msgstr "ค้นหา"
 
 #: .\leave\templates\leave\leave_approval_list.html:174
 #: .\leave\templates\leave\leave_approved_list.html:168
-#: .\leave\templates\leave\leave_pending_approve_list.html:201
+#: .\leave\templates\leave\leave_pending_approve_list.html:203
 #: .\leave\templates\leave\leave_rejected_list.html:189 .\page\forms.py:85
 msgid "Employee Name"
 msgstr "ชื่อพนักงาน"
@@ -1688,6 +1704,7 @@ msgid "Rejected List"
 msgstr "รายการไม่อนุมัติ"
 
 #: .\leave\templates\leave\leave_approved_list.html:60
+#: .\leave\templates\leave\leave_pending_approve_list.html:61
 #: .\leave\templates\leave\leave_rejected_list.html:60
 #: .\page\templates\page\staff_profile.html:250
 msgid "Fullname"
@@ -1713,27 +1730,27 @@ msgstr "อนุมัติวันที่"
 msgid "There is no approved item."
 msgstr "ยังไม่มีรายการ"
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:159
+#: .\leave\templates\leave\leave_pending_approve_list.html:161
 #: .\page\templates\page\staff_profile.html:334
 #, fuzzy
 #| msgid "Remaining"
 msgid "Entitlement Remaining"
 msgstr "คงเหลือ"
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:273
+#: .\leave\templates\leave\leave_pending_approve_list.html:275
 #: .\leave\templates\leave\leave_policy.html:44
 #: .\page\templates\page\staff_profile.html:392
 msgid "Remaining"
 msgstr "คงเหลือ"
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:274
+#: .\leave\templates\leave\leave_pending_approve_list.html:276
 #: .\leave\templates\leave\leave_policy.html:45
 #: .\leave\templates\leave\leave_policy.html:46
 #: .\page\templates\page\staff_profile.html:393
 msgid "Used"
 msgstr "ใช้ไป"
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:341
+#: .\leave\templates\leave\leave_pending_approve_list.html:343
 #: .\leave\templates\leave\leave_policy.html:7
 #: .\leave\templates\leave\leave_policy.html:18
 #: .\leave\templates\leave\leave_policy.html:24
@@ -1742,12 +1759,33 @@ msgstr "ใช้ไป"
 msgid "Leave Entitlement"
 msgstr "สิทธิ์การลา"
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:346
+#: .\leave\templates\leave\leave_pending_approve_list.html:348
+#: .\leave\templates\leave\leave_pending_approve_list.html:406
 #: .\page\templates\page\staff_profile.html:465
 #, fuzzy
 #| msgid "There is no leave request item."
 msgid "There is no data."
 msgstr "ยังไม่มีรายการ"
+
+#: .\leave\templates\leave\leave_pending_approve_list.html:377
+msgid "ประเภทลา"
+msgstr ""
+
+#: .\leave\templates\leave\leave_pending_approve_list.html:378
+msgid "เริ่มลา  "
+msgstr ""
+
+#: .\leave\templates\leave\leave_pending_approve_list.html:379
+msgid "สิ้นสุดลา "
+msgstr ""
+
+#: .\leave\templates\leave\leave_pending_approve_list.html:380
+msgid "วัน    "
+msgstr ""
+
+#: .\leave\templates\leave\leave_pending_approve_list.html:381
+msgid "ชั่วโมง  "
+msgstr ""
 
 #: .\leave\templates\leave\leave_policy.html:47
 msgid "Pending"
@@ -1925,7 +1963,7 @@ msgstr ""
 
 #: .\page\templates\page\staff_language.html:89
 #: .\page\templates\page\staff_password_form.html:106
-#: .\templates\registration\password_reset_confirm.html:61
+#: .\templates\registration\password_reset_confirm.html:73
 #: .\templates\registration\password_reset_form.html:50
 msgid "OK"
 msgstr "ตกลง"
@@ -2036,6 +2074,7 @@ msgid "Sign in"
 msgstr "ออกจากระบบ"
 
 #: .\templates\registration\login.html:87
+#: .\templates\registration\password_reset_confirm.html:80
 msgid "Forgot password"
 msgstr "ลืมรหัสผ่าน"
 
@@ -2049,11 +2088,11 @@ msgstr "ลืมรหัสผ่าน"
 
 #: .\templates\registration\password_reset_complete.html:37
 msgid "Congratulation! Your new password has been created."
-msgstr "ยินดีด้วย! ระบบได้ทำการตั้งค่ารหัสผ่านใหม่ให้ท่านแล้ว"
+msgstr "ยินดีด้วย! ระบบได้ทำการตั้งค่ารหัสผ่านใหม่สำเร็จแล้ว"
 
 #: .\templates\registration\password_reset_complete.html:37
 msgid "Please try to"
-msgstr "กรุณาลอง"
+msgstr "ตอนนี้สามารถลอง"
 
 #: .\templates\registration\password_reset_complete.html:37
 #: .\templates\registration\password_reset_done.html:40
@@ -2061,8 +2100,8 @@ msgid "login"
 msgstr "เข้าสู่ระบบ"
 
 #: .\templates\registration\password_reset_complete.html:37
-msgid "again."
-msgstr "อีกครั้ง"
+msgid "with your new password again."
+msgstr "ด้วยรหัสผ่านใหม่ได้เลย"
 
 #: .\templates\registration\password_reset_confirm.html:5
 msgid "Reset password"
@@ -2070,17 +2109,29 @@ msgstr "ลืมรหัสผ่าน"
 
 #: .\templates\registration\password_reset_confirm.html:35
 msgid "Please create your new password"
-msgstr "กรุณาตั้งค่ารหัสผ่านใหม่"
+msgstr "กรุณาตั้งค่ารหัสผ่านใหม่ที่ต้องการ"
 
-#: .\templates\registration\password_reset_confirm.html:44
+#: .\templates\registration\password_reset_confirm.html:56
 msgid "Enter new passowrd"
 msgstr "ป้อนรหัสผ่านใหม่"
 
-#: .\templates\registration\password_reset_confirm.html:52
+#: .\templates\registration\password_reset_confirm.html:64
 msgid "Enter new password again"
 msgstr "ป้อนรหัสผ่านใหม่อีกครั้ง"
 
-#: .\templates\registration\password_reset_confirm.html:73
+#: .\templates\registration\password_reset_confirm.html:79
+msgid "Sorry, password reset failed"
+msgstr "ไม่สามารถรีเซ็ทรหัสผ่านใหม่ได้"
+
+#: .\templates\registration\password_reset_confirm.html:80
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used. If you really want to reset your password, please click"
+msgstr ""
+"ท่านใช้ลิงค์แก้รหัสผ่านใหม่ที่หมดอายุหรือถูกใช้งานไปแล้ว หากต้องการที่จะเปลี่ยนรหัสผ่านใหม่อีกครั้ง "
+"กรุณาคลิก"
+
+#: .\templates\registration\password_reset_confirm.html:85
 #: .\templates\registration\password_reset_form.html:58
 msgid "Try to login again"
 msgstr "ลองเข้าระบบใหม่อีกครั้ง"
@@ -2107,6 +2158,15 @@ msgstr "กรุณาป้อนอีเมล์ที่บริษัท
 #: .\templates\registration\password_reset_form.html:41
 msgid "Enter your company email"
 msgstr "ป้อนอีเมล์ที่บริษัทกำหนดให้"
+
+#: .\templates\registration\password_reset_subject.txt:3
+#, fuzzy
+#| msgid "Reset password"
+msgid "GFTH Board - Reset Password"
+msgstr "ลืมรหัสผ่าน"
+
+#~ msgid "again."
+#~ msgstr "อีกครั้ง"
 
 #, fuzzy
 #~| msgid "Forgot password"
