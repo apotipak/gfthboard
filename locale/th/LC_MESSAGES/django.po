@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-09 15:23+0700\n"
+"POT-Creation-Date: 2020-07-09 16:50+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2068,10 +2068,9 @@ msgid "Password"
 msgstr "เปลี่ยนรหัสผ่าน"
 
 #: .\templates\registration\login.html:80
-#, fuzzy
-#| msgid "Sign Out"
+#: .\templates\registration\password_reset_form.html:57
 msgid "Sign in"
-msgstr "ออกจากระบบ"
+msgstr "เข้าสู่ระบบ"
 
 #: .\templates\registration\login.html:87
 #: .\templates\registration\password_reset_confirm.html:80
@@ -2096,7 +2095,6 @@ msgstr "ตอนนี้สามารถลอง"
 
 #: .\templates\registration\password_reset_complete.html:37
 #: .\templates\registration\password_reset_done.html:40
-#: .\templates\registration\password_reset_form.html:57
 msgid "login"
 msgstr "เข้าสู่ระบบ"
 
@@ -2143,12 +2141,14 @@ msgid ""
 msgstr "ระบบได้ส่งลิงค์การเปลี่ยนรหัสผ่านใหม่ให้กับท่านแล้ว กรุณาตรวจสอบอีเมล์ในอินบอกซ์อีกครั้ง"
 
 #: .\templates\registration\password_reset_done.html:40
+#: .\templates\registration\password_reset_form.html:57
 msgid "Back to"
-msgstr "กลับไป"
+msgstr "กลับไปหน้า"
 
 #: .\templates\registration\password_reset_done.html:40
+#: .\templates\registration\password_reset_form.html:57
 msgid "page"
-msgstr "หน้า"
+msgstr "&nbsp;"
 
 #: .\templates\registration\password_reset_form.html:36
 msgid ""
@@ -2159,15 +2159,14 @@ msgstr "กรุณาป้อนอีเมล์ที่บริษัท
 msgid "Enter your company email"
 msgstr "ป้อนอีเมล์ที่บริษัทกำหนดให้"
 
-#: .\templates\registration\password_reset_form.html:57
-msgid "Back to page"
-msgstr "กลับไปหน้า"
-
 #: .\templates\registration\password_reset_subject.txt:3
 #, fuzzy
 #| msgid "Reset password"
 msgid "GFTH Board - Reset Password"
 msgstr "ลืมรหัสผ่าน"
+
+#~ msgid "Back to page"
+#~ msgstr "กลับไปหน้า"
 
 #~ msgid "again."
 #~ msgstr "อีกครั้ง"
