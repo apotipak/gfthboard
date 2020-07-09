@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>HRMS | เข้าสู่ระบบ</title>  
+  {% load i18n %}
+  <title>GFTH Board | {% trans 'Login' %}</title>  
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {% load static %}
-  {% load i18n %}
+  {% load static %}  
   <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
   
   <!-- Font Awesome -->
@@ -33,7 +33,7 @@
   </div>
 
   <div>
-    <p class="login-box-msg">Sign in to GFTH Board</p>
+    <p class="login-box-msg">{% trans 'Sign in to GFTH Board' %}</p>
   </div>
 
   <div>
@@ -77,21 +77,20 @@
           <div class="col-12">
             <!--<input type="submit" class="btn btn-success btn-block" value="Sign in" />-->
             <button type="submit" class="btn btn-success btn-block">
-              <strong>Sign in</strong>&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i>
+              <strong>{% trans 'Sign in' %}</strong>&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i>
             </button>                        
             <input type="hidden" name="next" value="{{ next }}" />
           </div>
           
-          <!--
           <div class="col-8">
             <div class="icheck-primary">
-              <a href="{% url 'password_reset' %}">ลืมรหัสผ่าน</a>
+              <a href="{% url 'password_reset' %}">{% trans 'Forgot password' %}?</a>
               <label for="remember">
                 &nbsp;                
               </label>
             </div>
           </div>
-          -->
+
         </div>
       </form>
 
