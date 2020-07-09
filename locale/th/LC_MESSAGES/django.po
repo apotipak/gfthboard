@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-08 17:37+0700\n"
+"POT-Creation-Date: 2020-07-09 09:12+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1342,7 +1342,7 @@ msgstr "เมนูหลัก"
 
 #: .\leave\templates\leave\employeeinstance_approve.html:40
 #: .\leave\templates\leave\employeeinstance_reject.html:41
-#: .\page\templates\page\staff_profile.html:245
+#: .\page\templates\page\staff_profile.html:249
 #: .\templates\registration\login.html:59
 msgid "Employee ID"
 msgstr "รหัสพนักงาน"
@@ -1359,7 +1359,7 @@ msgstr "รหัสพนักงาน"
 #: .\leave\templates\leave\employeeinstance_approve.html:42
 #: .\leave\templates\leave\employeeinstance_reject.html:43
 #: .\leave\templates\leave\leave_pending_approve_list.html:272
-#: .\page\templates\page\staff_profile.html:392
+#: .\page\templates\page\staff_profile.html:391
 #: .\page\templates\page_daterange.html:114
 msgid "Leave Type"
 msgstr "ลาประเภท"
@@ -1390,16 +1390,18 @@ msgstr ""
 #: .\leave\templates\leave\leave_policy.html:56
 #: .\leave\templates\leave\leave_policy.html:58
 #: .\leave\templates\leave\leave_policy.html:65
+#: .\leave\templates\leave\leave_policy.html:73
 #: .\leave\templates\leave\leave_policy.html:85
 #: .\leave\templates\leave\leave_policy.html:100
 #: .\leave\templates\leave\leave_policy.html:115
 #: .\leave\templates\leave\leave_rejected_list.html:90
 #: .\leave\templates\leave\leave_timeline.html:105
 #: .\leave\templates\leave\m1247_form.html:292
-#: .\page\templates\page\staff_profile.html:414
-#: .\page\templates\page\staff_profile.html:419
-#: .\page\templates\page\staff_profile.html:432
-#: .\page\templates\page\staff_profile.html:445
+#: .\page\templates\page\staff_profile.html:413
+#: .\page\templates\page\staff_profile.html:418
+#: .\page\templates\page\staff_profile.html:424
+#: .\page\templates\page\staff_profile.html:431
+#: .\page\templates\page\staff_profile.html:444
 msgid "Day"
 msgstr "วัน"
 
@@ -1424,9 +1426,9 @@ msgstr "วัน"
 #: .\leave\templates\leave\leave_rejected_list.html:95
 #: .\leave\templates\leave\leave_timeline.html:109
 #: .\leave\templates\leave\m1247_form.html:297
-#: .\page\templates\page\staff_profile.html:422
-#: .\page\templates\page\staff_profile.html:435
-#: .\page\templates\page\staff_profile.html:448
+#: .\page\templates\page\staff_profile.html:421
+#: .\page\templates\page\staff_profile.html:434
+#: .\page\templates\page\staff_profile.html:447
 msgid "Hour"
 msgstr "ช.ม."
 
@@ -1517,7 +1519,7 @@ msgstr "อนุมัติ"
 
 #: .\leave\templates\leave\employeeinstance_list.html:90
 #: .\leave\templates\leave\leave_pending_approve_list.html:275
-#: .\page\templates\page\staff_profile.html:395
+#: .\page\templates\page\staff_profile.html:394
 msgid "Waiting"
 msgstr "รออนุมัติ"
 
@@ -1576,7 +1578,7 @@ msgstr "เหตุผลไม่อนุมัติ"
 #: .\leave\templates\leave\leave_pending_approve_list.html:168
 #: .\leave\templates\leave\leave_rejected_list.html:135
 #: .\leave\templates\leave\leave_rejected_list.html:156
-#: .\page\templates\page\staff_profile.html:344
+#: .\page\templates\page\staff_profile.html:343
 msgid "Close"
 msgstr "ปิด"
 
@@ -1659,8 +1661,8 @@ msgstr "ยังไม่มีรายการ"
 #: .\leave\templates\leave\leave_approved_list.html:160
 #: .\leave\templates\leave\leave_pending_approve_list.html:193
 #: .\leave\templates\leave\leave_rejected_list.html:181
-#: .\page\templates\page\staff_profile.html:225
-#: .\page\templates\page\staff_profile.html:233
+#: .\page\templates\page\staff_profile.html:226
+#: .\page\templates\page\staff_profile.html:235
 #: .\page\templates\page\view_all_staff.html:63
 #: .\page\templates\page_daterange.html:105
 msgid "Search"
@@ -1687,7 +1689,7 @@ msgstr "รายการไม่อนุมัติ"
 
 #: .\leave\templates\leave\leave_approved_list.html:60
 #: .\leave\templates\leave\leave_rejected_list.html:60
-#: .\page\templates\page\staff_profile.html:246
+#: .\page\templates\page\staff_profile.html:250
 msgid "Fullname"
 msgstr "ชื่อพนักงาน"
 
@@ -1712,7 +1714,7 @@ msgid "There is no approved item."
 msgstr "ยังไม่มีรายการ"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:159
-#: .\page\templates\page\staff_profile.html:335
+#: .\page\templates\page\staff_profile.html:334
 #, fuzzy
 #| msgid "Remaining"
 msgid "Entitlement Remaining"
@@ -1720,14 +1722,14 @@ msgstr "คงเหลือ"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:273
 #: .\leave\templates\leave\leave_policy.html:44
-#: .\page\templates\page\staff_profile.html:393
+#: .\page\templates\page\staff_profile.html:392
 msgid "Remaining"
 msgstr "คงเหลือ"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:274
 #: .\leave\templates\leave\leave_policy.html:45
 #: .\leave\templates\leave\leave_policy.html:46
-#: .\page\templates\page\staff_profile.html:394
+#: .\page\templates\page\staff_profile.html:393
 msgid "Used"
 msgstr "ใช้ไป"
 
@@ -1736,12 +1738,12 @@ msgstr "ใช้ไป"
 #: .\leave\templates\leave\leave_policy.html:18
 #: .\leave\templates\leave\leave_policy.html:24
 #: .\page\templates\left_menu.html:96 .\page\templates\left_menu.html:227
-#: .\page\templates\page\staff_profile.html:461
+#: .\page\templates\page\staff_profile.html:460
 msgid "Leave Entitlement"
 msgstr "สิทธิ์การลา"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:346
-#: .\page\templates\page\staff_profile.html:466
+#: .\page\templates\page\staff_profile.html:465
 #, fuzzy
 #| msgid "There is no leave request item."
 msgid "There is no data."
@@ -1846,8 +1848,7 @@ msgstr "เลือกแสดงภาษา"
 msgid "Select department"
 msgstr "เลือกแผนก"
 
-#: .\page\forms.py:99 .\page\views.py:220 .\page\views.py:363
-#: .\page\views.py:397
+#: .\page\forms.py:99
 msgid "All departments"
 msgstr "ทุกแผนก"
 
@@ -1924,6 +1925,8 @@ msgstr ""
 
 #: .\page\templates\page\staff_language.html:89
 #: .\page\templates\page\staff_password_form.html:106
+#: .\templates\registration\password_reset_confirm.html:61
+#: .\templates\registration\password_reset_form.html:50
 msgid "OK"
 msgstr "ตกลง"
 
@@ -1960,7 +1963,7 @@ msgid "My Team"
 msgstr "พนักงานในแผนก"
 
 #: .\page\templates\page\staff_profile.html:104
-#: .\page\templates\page\staff_profile.html:236 .\page\views.py:273
+#: .\page\templates\page\staff_profile.html:239
 msgid "All Employees"
 msgstr "พนักงานทั้งหมด"
 
@@ -1971,7 +1974,7 @@ msgstr "ชื่อ-สกุล"
 
 #: .\page\templates\page\staff_profile.html:125
 #: .\page\templates\page\staff_profile.html:172
-#: .\page\templates\page\staff_profile.html:247
+#: .\page\templates\page\staff_profile.html:251
 msgid "Position"
 msgstr "ตำแหน่ง"
 
@@ -1979,25 +1982,25 @@ msgstr "ตำแหน่ง"
 msgid "There is no information. Please contact HR officer."
 msgstr "ไม่พบข้อมูลในระบบ กรุณาสอบถามข้อมูลเพิ่มเติมจากเจ้าหน้าที่ฝ่ายบุคคล"
 
-#: .\page\templates\page\staff_profile.html:224
-msgid "Reset"
-msgstr ""
-
-#: .\page\templates\page\staff_profile.html:240
+#: .\page\templates\page\staff_profile.html:243
 msgid "in department"
 msgstr "ในแผนก"
 
-#: .\page\templates\page\staff_profile.html:278
+#: .\page\templates\page\staff_profile.html:282
 msgid "Not found"
 msgstr "ไม่พบข้อมูล"
 
-#: .\page\templates\page\staff_profile.html:293
+#: .\page\templates\page\staff_profile.html:297
 msgid "Page"
 msgstr "หน้า"
 
-#: .\page\templates\page\staff_profile.html:293
-msgid "of"
-msgstr "จาก"
+#: .\page\templates\page\staff_profile.html:297
+msgid "/"
+msgstr ""
+
+#: .\page\templates\page\staff_profile.html:340
+msgid "Loading"
+msgstr ""
 
 #: .\page\templates\page\view_all_staff.html:7
 msgid "View All Staff"
@@ -2007,10 +2010,105 @@ msgstr "ดูพนักงานทั้งหมด"
 msgid "ตั้งค่าใหม่สำเร็จ"
 msgstr "A new language has been set."
 
-#: .\page\views.py:272
+#: .\page\views.py:220 .\page\views.py:275 .\page\views.py:278
+#: .\page\views.py:360 .\page\views.py:394
 msgid "All Departments"
 msgstr "ทุกแผนก"
+
+#: .\templates\registration\login.html:5
+#, fuzzy
+#| msgid "login"
+msgid "Login"
+msgstr "เข้าสู่ระบบ"
+
+#: .\templates\registration\login.html:36
+msgid "Sign in to GFTH Board"
+msgstr ""
 
 #: .\templates\registration\login.html:68
 msgid "Password"
 msgstr "เปลี่ยนรหัสผ่าน"
+
+#: .\templates\registration\login.html:80
+#, fuzzy
+#| msgid "Sign Out"
+msgid "Sign in"
+msgstr "ออกจากระบบ"
+
+#: .\templates\registration\login.html:87
+msgid "Forgot password"
+msgstr "ลืมรหัสผ่าน"
+
+#: .\templates\registration\password_reset_complete.html:5
+#: .\templates\registration\password_reset_done.html:5
+#: .\templates\registration\password_reset_form.html:5
+#, fuzzy
+#| msgid "Reset password"
+msgid "Reset Password"
+msgstr "ลืมรหัสผ่าน"
+
+#: .\templates\registration\password_reset_complete.html:37
+msgid "Congratulation! Your new password has been created."
+msgstr "ยินดีด้วย! ระบบได้ทำการตั้งค่ารหัสผ่านใหม่ให้ท่านแล้ว"
+
+#: .\templates\registration\password_reset_complete.html:37
+msgid "Please try to"
+msgstr "กรุณาลอง"
+
+#: .\templates\registration\password_reset_complete.html:37
+#: .\templates\registration\password_reset_done.html:40
+msgid "login"
+msgstr "เข้าสู่ระบบ"
+
+#: .\templates\registration\password_reset_complete.html:37
+msgid "again."
+msgstr "อีกครั้ง"
+
+#: .\templates\registration\password_reset_confirm.html:5
+msgid "Reset password"
+msgstr "ลืมรหัสผ่าน"
+
+#: .\templates\registration\password_reset_confirm.html:35
+msgid "Please create your new password"
+msgstr "กรุณาตั้งค่ารหัสผ่านใหม่"
+
+#: .\templates\registration\password_reset_confirm.html:44
+msgid "Enter new passowrd"
+msgstr "ป้อนรหัสผ่านใหม่"
+
+#: .\templates\registration\password_reset_confirm.html:52
+msgid "Enter new password again"
+msgstr "ป้อนรหัสผ่านใหม่อีกครั้ง"
+
+#: .\templates\registration\password_reset_confirm.html:73
+#: .\templates\registration\password_reset_form.html:58
+msgid "Try to login again"
+msgstr "ลองเข้าระบบใหม่อีกครั้ง"
+
+#: .\templates\registration\password_reset_done.html:38
+msgid ""
+"System has just sent you a reset password link to your provided email. "
+"Please check your inbox again."
+msgstr "ระบบได้ส่งลิงค์การเปลี่ยนรหัสผ่านใหม่ให้กับท่านแล้ว กรุณาตรวจสอบอีเมล์ในอินบอกซ์อีกครั้ง"
+
+#: .\templates\registration\password_reset_done.html:40
+msgid "Back to"
+msgstr "กลับไป"
+
+#: .\templates\registration\password_reset_done.html:40
+msgid "page"
+msgstr "หน้า"
+
+#: .\templates\registration\password_reset_form.html:36
+msgid ""
+"Enter your company email address and we will send you a password reset link."
+msgstr "กรุณาป้อนอีเมล์ที่บริษัทกำหนดให้ท่านใช้งานเพื่อรับลิงค์ขอเปลี่ยนรหัสผ่านใหม่"
+
+#: .\templates\registration\password_reset_form.html:41
+msgid "Enter your company email"
+msgstr "ป้อนอีเมล์ที่บริษัทกำหนดให้"
+
+#, fuzzy
+#~| msgid "Forgot password"
+#~ msgid "Forgot Password"
+#~ msgstr "ลืมรหัสผ่าน"
