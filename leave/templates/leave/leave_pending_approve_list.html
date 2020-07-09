@@ -79,7 +79,7 @@
                           -->
                          <a href="#" data-url="{% url 'get_employee_leave_history_approved' leave.emp_id %}" class=" get_employee_leave_history_approved">{{leave.leave_type}}</a>
                           {% if leave.leave_reason %}
-                            <span class="badge badge-pill badge-light"><a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason"><i class="far fa-comment-alt fa-sm text-secondary"></i></a></span>
+                            "test" <span class="badge badge-pill badge-light"><a href="#" data-url="{% url 'get_leave_reason' leave.id %}" class="get_leave_reason"><i class="far fa-comment-alt fa-sm text-secondary"></i></a></span>
                           {% endif %}
 
                           {% if leave.document %}
