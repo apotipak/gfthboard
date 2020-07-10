@@ -178,10 +178,10 @@
                                     <tr>
                                         <td>{{member.emp_id}}</td>
                                         {% if user_language == "th" %}
-                                        <td><a href="#" data-url="{% url 'get_employee_leave_history' member.emp_id %}" class="get_employee_leave_history">{{member.emp_fname_th}} {{member.emp_lname_th}}</a></td>
+                                        <td><a href="javascript:void(0);" data-url="{% url 'get_employee_leave_history' member.emp_id %}" class="get_employee_leave_history">{{member.emp_fname_th}} {{member.emp_lname_th}}</a></td>
                                         <td>{{member.pos_th}}</td>
                                         {% else %}
-                                        <td><a href="#" data-url="{% url 'get_employee_leave_history' member.emp_id %}" class="get_employee_leave_history">{{member.emp_fname_en}} {{member.emp_lname_en}}</a></td>
+                                        <td><a href="javascript:void(0);" data-url="{% url 'get_employee_leave_history' member.emp_id %}" class="get_employee_leave_history">{{member.emp_fname_en}} {{member.emp_lname_en}}</a></td>
                                         <td>{{member.pos_en}}</td>
                                         {% endif %}
                                     </tr>
@@ -350,7 +350,23 @@
 {% endblock %}
 
 {% block javascript %}
-  <script>
+<script>
+
+  function formatDate(date) {
+    console.log(date);
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    var dateString = moment(d).format('DD MMMM YYYY HH:MM');
+    return dateString;
+  }
 
   $(window).on("popstate", function() {
       var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
@@ -376,9 +392,7 @@
           beforeSend: function () {
             $("#employeeLeaveEntitlementModal").modal("show");
           },
-          success: function (data) {
-            //console.log(data.results);
-            
+          success: function (data) {            
             var result = ""
             var count = data.results.length;
             var fullname = data.results[0]["fullname"];
@@ -397,6 +411,7 @@
             result += " <tbody>";
            
             for(var i=0; i<count; i++) {
+              
               var leave_name = data.results[i]["leave_name"];
               var leave_plan = data.results[i]["leave_plan"];
               var total_day_remaining = data.results[i]["total_day_remaining"];
@@ -450,9 +465,70 @@
                 result += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>0</small>"; 
               }              
               result += "</td>";
-
               result += "</tr>";              
             }
+            result += "<tr><td colspan='4'>";
+              
+            result += "<a class='btn btn-primary btn-xs' data-toggle='collapse' href='#collapsetimeline' role='button' aria-expanded='false' aria-controls='collapsetimeline'><i class='fas fa-clock bg-gray fa-xs'></i>&nbsp;&nbsp;{% trans 'Leave Timeline' %}&nbsp;<i class='fas fa-caret-down fa-xs'></i></a>";
+            result += "<div class='collapse pt-2' id='collapsetimeline'>";
+            result += "  <div class='card card-body'>";
+            result += "<div class='table-wrapper-scroll-y my-custom-scrollbar'>";
+            var timeline = JSON.parse(data.results[0]["timeline"]);
+            var leave_type_list = JSON.parse(data.results[0]["leave_type_list"]);
+
+            if(timeline.length > 0) {
+              result += "<table class='table table-sm'>";
+              result += "  <thead>";
+              result += "    <tr>";
+              result += "      <th><small>{% trans 'Leave Type' %}</small></th>";
+              result += "      <th><small>{% trans 'Leave Date' %}</small></th>";
+              result += "      <th><small>{% trans 'Amount' %}</small></th>";
+              result += "    </tr>";
+              result += "  </thead>";
+              result += "  <tbody>";
+
+              for(var i=0; i<timeline.length; i++) {
+                leave_type_id = timeline[i]["fields"]["leave_type"];
+
+                for(var j=0; j<leave_type_list.length; j++) {
+                  lve_id = leave_type_list[j]["pk"];
+                  lve_th = leave_type_list[j]["fields"]["lve_th"];
+                  if (leave_type_id == lve_id) {
+                    leave_type_name = lve_th;
+                    break;
+                  } else {
+                    leave_type_name = "Not found";
+                  }
+                }
+
+                start_date = new Date(timeline[i]["fields"]["start_date"]);
+                start_date = moment(start_date).format("DD MMMM YYYY HH:mm");
+                end_date = new Date(timeline[i]["fields"]["end_date"]);
+                end_date = moment(end_date).format("DD MMMM YYYY HH:mm");
+                lve_act = timeline[i]["fields"]["lve_act"];
+                lve_act_hr = timeline[i]["fields"]["lve_act_hr"];
+
+                result += "    <tr>";                
+                result += "      <td><small>" + leave_type_name + "</small></td>";
+                result += "      <td><small>" + start_date + " - " + end_date + "</small></td>";
+                if(lve_act > 0) {
+                  result += "      <td><small>" + lve_act + " {% trans 'Day' %}</small></td>";
+                }
+                if(lve_act_hr > 0) {
+                  result += "      <td><small>" + lve_act_hr + " {% trans 'Hour' %}</small></td>";
+                }
+
+                result += "    </tr>";
+              }
+
+              result += "  </tbody>";
+              result += "</table>";
+              result += "</div>";
+            }
+            else {
+              result += "<small>{% trans 'No timeline information is available.' %}</small>";
+            }
+
 
             result += " </tbody>";
             result += "</table>";
