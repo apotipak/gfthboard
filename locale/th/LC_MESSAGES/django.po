@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-10 16:36+0700\n"
+"POT-Creation-Date: 2020-07-10 17:17+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1374,8 +1374,8 @@ msgstr "รหัสพนักงาน"
 #: .\leave\templates\leave\employeeinstance_approve.html:42
 #: .\leave\templates\leave\employeeinstance_reject.html:43
 #: .\leave\templates\leave\leave_pending_approve_list.html:274
-#: .\page\templates\page\staff_profile.html:407
-#: .\page\templates\page\staff_profile.html:485
+#: .\page\templates\page\staff_profile.html:405
+#: .\page\templates\page\staff_profile.html:483
 #: .\page\templates\page_daterange.html:114
 msgid "Leave Type"
 msgstr "ลาประเภท"
@@ -1389,7 +1389,7 @@ msgstr ""
 #: .\leave\templates\leave\employeeinstance_approve.html:44
 #: .\leave\templates\leave\employeeinstance_reject.html:45
 #: .\leave\templates\leave\leave_approval_list.html:63
-#: .\page\templates\page\staff_profile.html:487
+#: .\page\templates\page\staff_profile.html:485
 msgid "Amount"
 msgstr "จำนวน"
 
@@ -1414,12 +1414,12 @@ msgstr "จำนวน"
 #: .\leave\templates\leave\leave_rejected_list.html:90
 #: .\leave\templates\leave\leave_timeline.html:105
 #: .\leave\templates\leave\m1247_form.html:292
-#: .\page\templates\page\staff_profile.html:430
-#: .\page\templates\page\staff_profile.html:435
-#: .\page\templates\page\staff_profile.html:441
-#: .\page\templates\page\staff_profile.html:448
-#: .\page\templates\page\staff_profile.html:461
-#: .\page\templates\page\staff_profile.html:519
+#: .\page\templates\page\staff_profile.html:428
+#: .\page\templates\page\staff_profile.html:433
+#: .\page\templates\page\staff_profile.html:439
+#: .\page\templates\page\staff_profile.html:446
+#: .\page\templates\page\staff_profile.html:459
+#: .\page\templates\page\staff_profile.html:515
 msgid "Day"
 msgstr "วัน"
 
@@ -1444,10 +1444,10 @@ msgstr "วัน"
 #: .\leave\templates\leave\leave_rejected_list.html:95
 #: .\leave\templates\leave\leave_timeline.html:109
 #: .\leave\templates\leave\m1247_form.html:297
-#: .\page\templates\page\staff_profile.html:438
-#: .\page\templates\page\staff_profile.html:451
-#: .\page\templates\page\staff_profile.html:464
-#: .\page\templates\page\staff_profile.html:522
+#: .\page\templates\page\staff_profile.html:436
+#: .\page\templates\page\staff_profile.html:449
+#: .\page\templates\page\staff_profile.html:462
+#: .\page\templates\page\staff_profile.html:518
 msgid "Hour"
 msgstr "ช.ม."
 
@@ -1539,7 +1539,7 @@ msgstr "อนุมัติ"
 
 #: .\leave\templates\leave\employeeinstance_list.html:90
 #: .\leave\templates\leave\leave_pending_approve_list.html:277
-#: .\page\templates\page\staff_profile.html:410
+#: .\page\templates\page\staff_profile.html:408
 msgid "Waiting"
 msgstr "รออนุมัติ"
 
@@ -1717,7 +1717,7 @@ msgstr "ชื่อพนักงาน"
 #: .\leave\templates\leave\leave_approved_list.html:62
 #: .\leave\templates\leave\leave_pending_approve_list.html:63
 #: .\leave\templates\leave\leave_rejected_list.html:62
-#: .\page\templates\page\staff_profile.html:486
+#: .\page\templates\page\staff_profile.html:484
 msgid "Leave Date"
 msgstr "ลาวันที่"
 
@@ -1744,14 +1744,14 @@ msgstr "คงเหลือ"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:275
 #: .\leave\templates\leave\leave_policy.html:44
-#: .\page\templates\page\staff_profile.html:408
+#: .\page\templates\page\staff_profile.html:406
 msgid "Remaining"
 msgstr "คงเหลือ"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:276
 #: .\leave\templates\leave\leave_policy.html:45
 #: .\leave\templates\leave\leave_policy.html:46
-#: .\page\templates\page\staff_profile.html:409
+#: .\page\templates\page\staff_profile.html:407
 msgid "Used"
 msgstr "ใช้ไป"
 
@@ -1760,13 +1760,13 @@ msgstr "ใช้ไป"
 #: .\leave\templates\leave\leave_policy.html:18
 #: .\leave\templates\leave\leave_policy.html:24
 #: .\page\templates\left_menu.html:96 .\page\templates\left_menu.html:227
-#: .\page\templates\page\staff_profile.html:539
+#: .\page\templates\page\staff_profile.html:536
 msgid "Leave Entitlement"
 msgstr "สิทธิ์การลา"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:348
 #: .\leave\templates\leave\leave_pending_approve_list.html:406
-#: .\page\templates\page\staff_profile.html:544
+#: .\page\templates\page\staff_profile.html:541
 #, fuzzy
 #| msgid "There is no leave request item."
 msgid "There is no data."
@@ -2045,15 +2045,21 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#: .\page\templates\page\staff_profile.html:474
+#: .\page\templates\page\staff_profile.html:472
 #, fuzzy
 #| msgid "Timeline"
 msgid "Leave Timeline"
 msgstr "ไทม์ไลน์"
 
-#: .\page\templates\page\staff_profile.html:532
+#: .\page\templates\page\staff_profile.html:529
 msgid "No timeline information is available."
 msgstr "ยังไม่มีรายการวันลา"
+
+#: .\page\templates\page\staff_profile.html:529
+msgid ""
+"(System will display only the leave request which has been approved in E-"
+"Leave system)."
+msgstr "ระบบจะแสดงรายการเฉพาะวันลาที่ได้รับการอนุมัติผ่านระบบ E-Leave เท่านั้น"
 
 #: .\page\templates\page\view_all_staff.html:7
 msgid "View All Staff"
