@@ -209,7 +209,6 @@ def StaffProfile(request):
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
-
     if request.method == "POST":
         form = ViewAllStaffForm(request.POST, user=request.user)
         department_id = request.POST.get('department_list')
