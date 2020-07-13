@@ -158,7 +158,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">a{% trans 'Entitlement Remaining' %}</h5>
+          <h5 class="modal-title">{% trans 'Entitlement Remaining' %}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -369,10 +369,9 @@
             var entitlement_year = data.results[0]["entitlement_year"];
 
             result += "<div class='col-12 text-center pb-2'><h5>" + fullname + "</h5></div>";
-            //result += "<table class='table table-hover table-sm'>";
-
+            result += "<p><small>{% trans 'All leave items history in this table have been approved via E-Leave system only.' %}</small></p>";
             result += "<table class='table table-hover'>";
-            result += " <thead class='thead-dark'>";
+            result += " <thead class='thead-light'>";
             result += "   <tr>";
             result += "     <th scope='col'>{% trans 'ประเภทลา' %}</th>";
             result += "     <th scope='col'>{% trans 'เริ่มลา  ' %}</th>";
