@@ -57,9 +57,6 @@ def m1817_check_leave_request_day(request):
     start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:00")
     end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:00")
 
-    # print("debug 1 : " + str(start_date))
-    # print("debug 2 : " + str(end_date))
-
     found_m1817_error = checkM1817TotalHours('M1817', start_date, end_date, leave_type_id)
     if found_m1817_error[0]:
         result = {
@@ -75,7 +72,6 @@ def m1817_check_leave_request_day(request):
             'error': "",
         }        
 
-    #print("debug 3 : " + str(found_m1817_error[1]))
     return JsonResponse(result)
 
 
@@ -964,12 +960,10 @@ def GetEmployeeEntitlementRemaining(request, check_employee_id):
 
 @login_required(login_url='/accounts/login/')
 def get_employee_leave_history_approved (request, emp_id):
-    print("debug" + emp_id )
     employee = LeaveEmployee.objects.filter(emp_id=emp_id).get() or None
     now = datetime.now()
     LeaveYear = str(now.year)
     pickup_records = []
-    #print("debug")
     employee_leave_plan = EmployeeInstance.objects.raw(
         "Select ei.id , ei.emp_id, lve_th,lve_id,start_date,end_date,lve_act,lve_act_hr from leave_employeeinstance Ei inner join leave_type lt on ei.leave_type_id=lt.lve_id  where Ei.emp_id = " +emp_id+ "  and  year(start_date) = "+ LeaveYear
         +"and status in ( 'C' )   order by start_date Desc"
@@ -977,7 +971,6 @@ def get_employee_leave_history_approved (request, emp_id):
 
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
-    #print("Debug 111 "+ employee.emp_fname_th)
     fullname = employee.emp_fname_th + " " + employee.emp_lname_th
 
 
@@ -1104,52 +1097,6 @@ def get_employee_leave_history(request, emp_id):
 
     return JsonResponse(data={"success": False, "results": ""})
 
-
-    '''
-    print("debug: " + emp_id)
-
-    employee = LeaveEmployee.objects.filter(emp_id=emp_id).values() or None
-    employee_leave = EmployeeInstance.objects.filter(emp_id=emp_id, status__in=('a','C','F')).values() or None
-
-    objemp = LeaveEmployee.objects.filter(emp_id=emp_id) or None
-    objleave = EmployeeInstance.objects.filter(emp_id=emp_id, status__in=('a','C','F')) or None
-
-    if employee_leave:
-        data = list()
-        data = [
-            {
-                'emp_id': '1',
-                'leave_type_id': 2,
-                'leave_reason': 'test 1 2 3',
-                'leave_status': 'a'
-            },
-            {
-                'emp_id': '2',
-                'leave_type_id': 3,
-                'leave_reason': 'test 4 5 6',
-                'leave_status': 'a'
-            }
-        ]
-
-        pickup_dict = {}
-        pickup_records=[]
-
-        for e in objemp:            
-            for l in objleave:
-                record = {"emp_id":e.emp_id, "fullname": e.emp_fname_en + " " + e.emp_lname_en,"status": l.status}
-                pickup_records.append(record)
-
-        response = JsonResponse(data={"success": True, "results": list(pickup_records)})
-        response.status_code = 200
-        return response
-
-    else:
-        response = JsonResponse({"error": "there was an error"})
-        response.status_code = 403
-        return response
-
-    return JsonResponse(data={"success": False, "results": ""})
-    '''
 
 @login_required(login_url='/accounts/login/')
 def LeaveTimeline(request):

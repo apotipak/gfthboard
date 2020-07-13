@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-10 17:17+0700\n"
+"POT-Creation-Date: 2020-07-13 08:32+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1480,7 +1480,7 @@ msgstr "ยืนยันการยกเลิกรายการ"
 #: .\leave\templates\leave\employeeinstance_list.html:20
 #: .\leave\templates\leave\employeeinstance_list.html:26
 #: .\leave\templates\leave\employeeinstance_reject.html:22
-#: .\leave\templates\leave\leave_pending_approve_list.html:402
+#: .\leave\templates\leave\leave_pending_approve_list.html:401
 #: .\page\templates\left_menu.html:107 .\page\templates\left_menu.html:207
 msgid "Leave History"
 msgstr "ประวัติการลา"
@@ -1765,30 +1765,36 @@ msgid "Leave Entitlement"
 msgstr "สิทธิ์การลา"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:348
-#: .\leave\templates\leave\leave_pending_approve_list.html:406
+#: .\leave\templates\leave\leave_pending_approve_list.html:405
 #: .\page\templates\page\staff_profile.html:541
 #, fuzzy
 #| msgid "There is no leave request item."
 msgid "There is no data."
 msgstr "ยังไม่มีรายการ"
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:377
+#: .\leave\templates\leave\leave_pending_approve_list.html:372
+msgid ""
+"All leave items history in this table have been approved via E-Leave system "
+"only."
+msgstr "ประวัติการลาที่แสดงในตารางนี้เป็นรายการที่ได้รับการอนุมัติผ่านระบบ E-Leave เท่านั้น"
+
+#: .\leave\templates\leave\leave_pending_approve_list.html:376
 msgid "ประเภทลา"
 msgstr ""
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:378
+#: .\leave\templates\leave\leave_pending_approve_list.html:377
 msgid "เริ่มลา  "
 msgstr ""
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:379
+#: .\leave\templates\leave\leave_pending_approve_list.html:378
 msgid "สิ้นสุดลา "
 msgstr ""
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:380
+#: .\leave\templates\leave\leave_pending_approve_list.html:379
 msgid "วัน    "
 msgstr ""
 
-#: .\leave\templates\leave\leave_pending_approve_list.html:381
+#: .\leave\templates\leave\leave_pending_approve_list.html:380
 msgid "ชั่วโมง  "
 msgstr ""
 
@@ -1814,6 +1820,7 @@ msgstr "ยังไม่มีรายการ"
 #: .\leave\templates\leave\leave_timeline.html:18
 #: .\leave\templates\leave\leave_timeline.html:24
 #: .\page\templates\left_menu.html:117
+#: .\page\templates\page\staff_profile.html:472
 msgid "Timeline"
 msgstr "ไทม์ไลน์"
 
@@ -2045,12 +2052,6 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#: .\page\templates\page\staff_profile.html:472
-#, fuzzy
-#| msgid "Timeline"
-msgid "Leave Timeline"
-msgstr "ไทม์ไลน์"
-
 #: .\page\templates\page\staff_profile.html:529
 msgid "No timeline information is available."
 msgstr "ยังไม่มีรายการวันลา"
@@ -2185,6 +2186,11 @@ msgstr "ป้อนอีเมล์ที่บริษัทกำหนด
 #| msgid "Reset password"
 msgid "GFTH Board - Reset Password"
 msgstr "ลืมรหัสผ่าน"
+
+#, fuzzy
+#~| msgid "Timeline"
+#~ msgid "Leave Timeline"
+#~ msgstr "ไทม์ไลน์"
 
 #~ msgid "Back to page"
 #~ msgstr "กลับไปหน้า"
