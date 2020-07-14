@@ -406,7 +406,7 @@
             result += "     <th scope='col'>{% trans 'Remaining' %}</th>";
             result += "     <th scope='col'>{% trans 'Used' %}</th>";
             result += "     <th scope='col'>{% trans 'Waiting' %}</th>";
-            result += "       </tr>";
+            result += "   </tr>";
             result += " </thead>";
             result += " <tbody>";
            
@@ -511,13 +511,14 @@
                 result += "    <tr>";                
                 result += "      <td><small>" + leave_type_name + "</small></td>";
                 result += "      <td><small>" + start_date + " - " + end_date + "</small></td>";
+                result += "      <td>";
                 if(lve_act > 0) {
-                  result += "      <td><small>" + lve_act + " {% trans 'Day' %}</small></td>";
+                  result += "      <small>" + lve_act + " {% trans 'Day' %}</small>";
                 }
                 if(lve_act_hr > 0) {
-                  result += "      <td><small>" + lve_act_hr + " {% trans 'Hour' %}</small></td>";
+                  result += "      <small>" + lve_act_hr + " {% trans 'Hour' %}</small>";
                 }
-
+                result += "      </td>";
                 result += "    </tr>";
               }
 
