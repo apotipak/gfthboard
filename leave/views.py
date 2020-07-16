@@ -1057,7 +1057,10 @@ def get_employee_leave_history(request, emp_id):
                 # จำนวนวันที่ใช้สุทธิ (รวมวันจากระบบ HRMS และ E-Leave)
                 total_day_used = (grand_total_lve_hrms // 8) + total_approved_lve_act_eleave
                 total_hour_used = (grand_total_lve_hrms % 8) + total_approved_lve_act_hr_eleave
-                
+                combined_day_hour = (total_day_used * 8) + total_hour_used
+                total_day_used = combined_day_hour // 8
+                total_hour_used = combined_day_hour % 8
+
                 # Timeline
                 # leave_approved_items = EmployeeInstance.objects.annotate(mycolumn=Value('xxx', output_field=CharField())).filter(emp_id__exact=emp_id).filter(status__in=('a','C','F')).only("start_date","end_date","leave_type","lve_act","lve_act_hr").order_by('-start_date') or None
                 leave_approved_items = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(status__in=('a','C','F')).order_by('-start_date') or None
