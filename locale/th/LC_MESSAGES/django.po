@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-13 08:32+0700\n"
+"POT-Creation-Date: 2020-07-16 11:13+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1320,15 +1320,10 @@ msgid "ช่วงวันลามีเศษครึ่งชั่วโ�
 msgstr ""
 
 #: .\leave\templates\leave\employeeinstance_approve.html:7
-#: .\leave\templates\leave\leave_approval_list.html:7
-#: .\leave\templates\leave\leave_approval_list.html:25
-#: .\leave\templates\leave\leave_approved_list.html:7
-#: .\leave\templates\leave\leave_approved_list.html:25
 #: .\leave\templates\leave\leave_pending_approve_list.html:7
-#: .\leave\templates\leave\leave_pending_approve_list.html:27
-#: .\leave\templates\leave\leave_rejected_list.html:7
-#: .\leave\templates\leave\leave_rejected_list.html:25
-msgid "Approval"
+#, fuzzy
+#| msgid "Approval"
+msgid "Leave Approval"
 msgstr "อนุมัติ"
 
 #: .\leave\templates\leave\employeeinstance_approve.html:16
@@ -1419,7 +1414,7 @@ msgstr "จำนวน"
 #: .\page\templates\page\staff_profile.html:439
 #: .\page\templates\page\staff_profile.html:446
 #: .\page\templates\page\staff_profile.html:459
-#: .\page\templates\page\staff_profile.html:515
+#: .\page\templates\page\staff_profile.html:516
 msgid "Day"
 msgstr "วัน"
 
@@ -1447,7 +1442,7 @@ msgstr "วัน"
 #: .\page\templates\page\staff_profile.html:436
 #: .\page\templates\page\staff_profile.html:449
 #: .\page\templates\page\staff_profile.html:462
-#: .\page\templates\page\staff_profile.html:518
+#: .\page\templates\page\staff_profile.html:519
 msgid "Hour"
 msgstr "ช.ม."
 
@@ -1477,6 +1472,7 @@ msgid "Do you want to cancel this request?"
 msgstr "ยืนยันการยกเลิกรายการ"
 
 #: .\leave\templates\leave\employeeinstance_confirm_delete.html:22
+#: .\leave\templates\leave\employeeinstance_list.html:7
 #: .\leave\templates\leave\employeeinstance_list.html:20
 #: .\leave\templates\leave\employeeinstance_list.html:26
 #: .\leave\templates\leave\employeeinstance_reject.html:22
@@ -1505,12 +1501,6 @@ msgstr "กรุณาตรวจสอบข้อมูลให้แน่
 #: .\leave\templates\leave\employeeinstance_list.html:187
 msgid "Confirm"
 msgstr "ยืนยัน"
-
-#: .\leave\templates\leave\employeeinstance_list.html:7
-#, fuzzy
-#| msgid "Leave History"
-msgid "Leave Histr"
-msgstr "ประวัติการลา"
 
 #: .\leave\templates\leave\employeeinstance_list.html:46
 #: .\leave\templates\leave\leave_approval_list.html:61
@@ -1626,6 +1616,16 @@ msgstr "เหตุผล"
 #: .\leave\templates\leave\employeeinstance_reject.html:59
 msgid "Please check data carefully again before reject this request."
 msgstr "กรุณาตรวจสอบข้อมูลให้แน่ใจก่อนทำรายการ"
+
+#: .\leave\templates\leave\leave_approval_list.html:7
+#: .\leave\templates\leave\leave_approval_list.html:25
+#: .\leave\templates\leave\leave_approved_list.html:7
+#: .\leave\templates\leave\leave_approved_list.html:25
+#: .\leave\templates\leave\leave_pending_approve_list.html:27
+#: .\leave\templates\leave\leave_rejected_list.html:7
+#: .\leave\templates\leave\leave_rejected_list.html:25
+msgid "Approval"
+msgstr "อนุมัติ"
 
 #: .\leave\templates\leave\leave_approval_list.html:18
 #: .\leave\templates\leave\leave_approval_list.html:207
@@ -1760,13 +1760,13 @@ msgstr "ใช้ไป"
 #: .\leave\templates\leave\leave_policy.html:18
 #: .\leave\templates\leave\leave_policy.html:24
 #: .\page\templates\left_menu.html:96 .\page\templates\left_menu.html:227
-#: .\page\templates\page\staff_profile.html:536
+#: .\page\templates\page\staff_profile.html:537
 msgid "Leave Entitlement"
 msgstr "สิทธิ์การลา"
 
 #: .\leave\templates\leave\leave_pending_approve_list.html:348
 #: .\leave\templates\leave\leave_pending_approve_list.html:405
-#: .\page\templates\page\staff_profile.html:541
+#: .\page\templates\page\staff_profile.html:542
 #, fuzzy
 #| msgid "There is no leave request item."
 msgid "There is no data."
@@ -1804,9 +1804,9 @@ msgstr "รออนุมัติ"
 
 #: .\leave\templates\leave\leave_policy.html:134
 msgid ""
-"Your leave entitlement is not defined yet. Please contact HR officer for "
-"more detais"
-msgstr "สิทธิ์วันลาของคุณยังไม่ได้สร้างไว้ในระบบ กรุณาติดต่อขอข้อมูลเพิ่มเติมจากฝ่ายบุคคล"
+"Your leave entitlement is being updated. Please refresh this page again in 5 "
+"minutes"
+msgstr "ระบบกำลังปรับปรุงข้อมูลสิทธิ์วันลา กรุณารีเฟรชหน้าจอนี้อีกครั้งใน 5 นาที"
 
 #: .\leave\templates\leave\leave_rejected_list.html:64
 msgid "Rejected Date"
@@ -1863,7 +1863,7 @@ msgid ""
 "system will deduct 1 hour for lunch time automatcally."
 msgstr "หากจำนวนชั่วโมงที่เลือกเกิน 4 หรือ 8 ชั่วโมงต่อวัน ระบบจะหักเวลาพักหนึ่งชั่วโมงให้อัตโนมัติ"
 
-#: .\leave\views.py:234
+#: .\leave\views.py:230
 msgid "There is no reason provided."
 msgstr "ไม่ได้ระบุเหตุผลการลา"
 
@@ -2052,11 +2052,11 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#: .\page\templates\page\staff_profile.html:529
+#: .\page\templates\page\staff_profile.html:530
 msgid "No timeline information is available."
 msgstr "ยังไม่มีรายการวันลา"
 
-#: .\page\templates\page\staff_profile.html:529
+#: .\page\templates\page\staff_profile.html:530
 msgid ""
 "(System will display only the leave request which has been approved in E-"
 "Leave system)."
@@ -2186,6 +2186,16 @@ msgstr "ป้อนอีเมล์ที่บริษัทกำหนด
 #| msgid "Reset password"
 msgid "GFTH Board - Reset Password"
 msgstr "ลืมรหัสผ่าน"
+
+#, fuzzy
+#~| msgid "Leave History"
+#~ msgid "Leave Histr"
+#~ msgstr "ประวัติการลา"
+
+#~ msgid ""
+#~ "Your leave entitlement is not defined yet. Please contact HR officer for "
+#~ "more detais"
+#~ msgstr "สิทธิ์วันลาของคุณยังไม่ได้สร้างไว้ในระบบ กรุณาติดต่อขอข้อมูลเพิ่มเติมจากฝ่ายบุคคล"
 
 #, fuzzy
 #~| msgid "Timeline"
