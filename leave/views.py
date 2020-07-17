@@ -1110,8 +1110,8 @@ def LeaveTimeline(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    # today_date = settings.TODAY_DATE
-    today_date = getDateFormatDisplay(user_language)
+    today_date = settings.TODAY_DATE.strftime("%Y-%m-%d")
+    #today_date = getDateFormatDisplay(user_language)
     leave_policy = LeavePlan.EmployeeLeavePolicy(request)
 
     # Check number of waiting leave request
