@@ -626,7 +626,7 @@ class LeaveApprovedListView(PermissionRequiredMixin, generic.ListView):
     template_name = 'leave/leave_approved_list.html'
     permission_required = ('leave.approve_leaveplan')
     model = EmployeeInstance
-    paginate_by = 20
+    #paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super(LeaveApprovedListView, self).get_context_data(**kwargs)
@@ -673,7 +673,7 @@ class LeaveRejectedListView(PermissionRequiredMixin, generic.ListView):
     template_name = 'leave/leave_rejected_list.html'
     permission_required = ('leave.approve_leaveplan')
     model = EmployeeInstance
-    paginate_by = 20
+    #paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super(LeaveRejectedListView, self).get_context_data(**kwargs)
