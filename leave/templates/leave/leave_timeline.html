@@ -36,7 +36,16 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
           <div class="col-lg-12">
-            <div class="pb-2"><small>* {% trans 'All displayed items below have been approved via E-Leave system only.' %}</small></div>
+            <div class="pb-2"><small>* {% trans 'All displayed items below have been approved via E-Leave system only.' %}</small><br>
+              <small><b>{% trans 'SYMBOLS' %}</b> : </small>
+              <button type="button" class="btn btn-xs text-light" style="background-color: #adb5bd;">
+                ผ่านมาแล้ว
+              </button>
+              <button type="button" class="btn btn-xs text-light" style="background-color: #2E8B57;">
+                ถึงกำหนด + ลาไว้ล่วงหน้า
+              </button>              
+            </div>
+            <br>
             <!-- The time line -->
             {% if leave_approved_items %}              
             <div class="timeline">
