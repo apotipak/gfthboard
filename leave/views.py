@@ -339,7 +339,8 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='d').order_by('-created_date')
+        # return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='d').order_by('-created_date')        
+        return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).filter(end_date__year='2021').exclude(status__exact='d').order_by('-created_date')
         #return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).order_by('-created_date')
 
 
@@ -1119,7 +1120,7 @@ def LeaveTimeline(request):
 
     username = request.user.username
 
-    leave_approved_items = EmployeeInstance.objects.filter(emp_id__exact=username).filter(status__in=('a','C','F')).order_by('-start_date') or None
+    leave_approved_items = EmployeeInstance.objects.filter(emp_id__exact=username).filter(status__in=('a','C','F')).filter(end_date__year='2021').order_by('-start_date') or None
 
     # Check leave approval right    
     if checkLeaveRequestApproval(request.user.username):
