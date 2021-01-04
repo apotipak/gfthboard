@@ -43,3 +43,14 @@ overflow: auto;
 .table-wrapper-scroll-y {
 display: block;
 }
+
+.ui-datepicker-today  {
+     background: #28a745 !important;
+     border:  #fff !important; 
+}  
+.ui-datepicker-today  a {
+     border:  #fff !important;
+     color:  #fff !important;
+     font-weight: bold !important;
+     background: #28a745 !important; 
+}
