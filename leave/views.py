@@ -495,18 +495,24 @@ def LeavePolicy(request):
 
 
         # จำนวน วัน/ช.ม. ที่รออนุมัติใน E-Leave
-        total_pending_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
-        total_pending_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
+        total_pending_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+        total_pending_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
         grand_total_pending_eleave = total_pending_lve_act_hr_eleave + (total_pending_lve_act_eleave * 8)
         policy.total_pending_lve_act_eleave = grand_total_pending_eleave // 8
         policy.total_pending_lve_act_hr_eleave = grand_total_pending_eleave % 8  
 
         # จำนวน วัน/ช.ม. ที่อนุมัติแล้ว E-Leave
-        total_approved_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
-        total_approved_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+        # total_approved_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+        total_approved_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
+
+        # total_approved_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+        total_approved_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+
         grand_total_approved_eleave = total_approved_lve_act_hr_eleave + (total_approved_lve_act_eleave * 8)
         policy.total_approved_lve_act_eleave = grand_total_approved_eleave // 8
         policy.total_approved_lve_act_hr_eleave = grand_total_approved_eleave % 8
+
+        print("total_approved_lve_act_eleave", total_approved_lve_act_eleave)
 
         # จำนวนวันคงเหลือสุทธิ
         result = leave_plan_hour - (grand_total_lve_hrms + grand_total_approved_eleave + grand_total_pending_eleave)        
@@ -936,15 +942,15 @@ def GetEmployeeEntitlementRemaining(request, check_employee_id):
 
 
         # จำนวน วัน/ช.ม. ที่รออนุมัติใน E-Leave
-        total_pending_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
-        total_pending_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
+        total_pending_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+        total_pending_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
         grand_total_pending_eleave = total_pending_lve_act_hr_eleave + (total_pending_lve_act_eleave * 8)
         policy.total_pending_lve_act_eleave = grand_total_pending_eleave // 8
         policy.total_pending_lve_act_hr_eleave = grand_total_pending_eleave % 8  
 
         # จำนวน วัน/ช.ม. ที่อนุมัติแล้ว E-Leave
-        total_approved_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
-        total_approved_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+        total_approved_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
+        total_approved_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=username).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
         grand_total_approved_eleave = total_approved_lve_act_hr_eleave + (total_approved_lve_act_eleave * 8)
         policy.total_approved_lve_act_eleave = grand_total_approved_eleave // 8
         policy.total_approved_lve_act_hr_eleave = grand_total_approved_eleave % 8
@@ -1037,15 +1043,15 @@ def get_employee_leave_history(request, emp_id):
                 grand_total_lve_hrms = total_lve_hrms_hr + (total_lve_hrms * 8)
 
                 # จำนวน วัน/ช.ม. ที่อนุมัติแล้ว E-Leave
-                total_approved_lve_act_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
-                total_approved_lve_act_hr_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+                total_approved_lve_act_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
+                total_approved_lve_act_hr_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
                 grand_total_approved_eleave = total_approved_lve_act_hr_eleave_obj + (total_approved_lve_act_eleave_obj * 8)
                 total_approved_lve_act_eleave = grand_total_approved_eleave // 8
                 total_approved_lve_act_hr_eleave = grand_total_approved_eleave % 8
 
                 # จำนวน วัน/ช.ม. ที่รออนุมัติใน E-Leave
-                total_pending_lve_act_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
-                total_pending_lve_act_hr_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
+                total_pending_lve_act_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+                total_pending_lve_act_hr_eleave_obj = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=l.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0        
                 grand_total_pending_eleave = total_pending_lve_act_hr_eleave_obj + (total_pending_lve_act_eleave_obj * 8)
                 total_pending_lve_act_eleave = grand_total_pending_eleave // 8
                 total_pending_lve_act_hr_eleave = grand_total_pending_eleave % 8  
@@ -1064,7 +1070,7 @@ def get_employee_leave_history(request, emp_id):
 
                 # Timeline
                 # leave_approved_items = EmployeeInstance.objects.annotate(mycolumn=Value('xxx', output_field=CharField())).filter(emp_id__exact=emp_id).filter(status__in=('a','C','F')).only("start_date","end_date","leave_type","lve_act","lve_act_hr").order_by('-start_date') or None
-                leave_approved_items = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(status__in=('a','C','F')).order_by('-start_date') or None
+                leave_approved_items = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(end_date__year='2021').filter(status__in=('a','C','F')).order_by('-start_date') or None
                 leave_type_list = serializers.serialize('json', LeaveType.objects.all())
 
                 if leave_approved_items:
