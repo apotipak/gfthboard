@@ -91,12 +91,15 @@ class EmployeeM1247Form(forms.ModelForm):
         
         document = self.cleaned_data.get('document')
         if document is not None:
-            document_type = document.content_type.split('/')[0]
+            document_type = document.content_type.split('/')[1]
+            print("type:",  document_type)
             if document_type in settings.CONTENT_TYPES:
                 if document.size > settings.MAX_UPLOAD_SIZE:
                     raise forms.ValidationError(_('ไฟล์แนบมีขนาดเกิน 5 เมกะไบท์'))
             else:
                 raise forms.ValidationError(_('แนบไฟล์รูปภาพได้เท่านั้น'))
+
+        raise forms.ValidationError(_('Test'))
 
         username = self.user.username
         employee_type = 'M1'
