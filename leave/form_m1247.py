@@ -97,9 +97,9 @@ class EmployeeM1247Form(forms.ModelForm):
                 if document.size > settings.MAX_UPLOAD_SIZE:
                     raise forms.ValidationError(_('ไฟล์แนบมีขนาดเกิน 5 เมกะไบท์'))
             else:
-                raise forms.ValidationError(_('แนบไฟล์รูปภาพได้เท่านั้น'))
+                raise forms.ValidationError(_('ระบบสามารถแนบไฟล์ (png, jpg, jpeg, pdf) ได้เท่านั้น'))
 
-        raise forms.ValidationError(_('Test'))
+        # raise forms.ValidationError(_('Test'))
 
         username = self.user.username
         employee_type = 'M1'
