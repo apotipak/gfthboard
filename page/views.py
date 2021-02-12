@@ -20,6 +20,7 @@ from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from django.core import serializers
 import json
+import os
 
 
 @login_required(login_url='/accounts/login/')
@@ -593,3 +594,16 @@ def news(request):
         'db_server': db_server, 'today_date': today_date,
         'username_display' : username_display,
     })
+
+
+# For Testing
+# START
+def openCarFormPage(request):    
+    return render(request, 'page/open_car_form_page.html') 
+
+def openCarForm(request):
+    os.startfile("C:\CARFORM\Carform.exe")
+    return render(request, 'page/open_car_form_page.html') 
+# END
+
+
