@@ -14,3 +14,11 @@ urlpatterns = [
     path('help-eleave', views.HelpEleave, name='help-eleave'),
 
 ]
+
+# For Testing
+# START
+urlpatterns += [
+    path('open-car-form-page', views.openCarFormPage, name='open-car-form-page'),    
+    path('open-car-form', views.openCarForm, name='open-car-form'),
+]
+# END
