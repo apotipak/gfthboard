@@ -12,7 +12,7 @@ class Command(BaseCommand):
 		CAR_FORM_DUMMY_EMAIL = getattr(settings, "CAR_FORM_DUMMY_EMAIL", None)
 
 		email_list = None
-		sql = "select * from post_office_email_win where status=2;"        
+		sql = "select * from post_office_email_win where status=2;"
 		try:
 			with connection.cursor() as cursor:     
 				cursor.execute(sql)
@@ -42,12 +42,25 @@ class Command(BaseCommand):
 					if (send_to is not None or send_to != ""):
 						if TURN_CAR_FORM_DUMMY_EMAIL_ON:
 							send_mail(subject, html_message, 'support.gfth@guardforce.co.th', [CAR_FORM_DUMMY_EMAIL], fail_silently=False)
+							sql = "update post_office_email_win set status=0 where id=" + str(send_id)
+							try:
+								with connection.cursor() as cursor:
+									cursor.execute(sql)
+							except db.OperationalError as e:
+								is_pass = False
+								message = "<b>Please send this error to IT team or try again.</b><br>" + str(e)
+							except db.Error as e:
+								is_pass = False
+								message = "<b>Please send this error to IT team or try again.</b><br>" + str(e)
 						else:					
 							send_mail(subject, html_message, 'support.gfth@guardforce.co.th', [send_to], fail_silently=False)
 					else:
 						error_message = "Item number" + str(send_id) + " cannot be sent."
 				print("Send mail completed")
 			else:
-				print("CAR Form send mail is turn off.")
-		
+				print("CAR Form send mail is turn off.")		
+
+
+
+
 
