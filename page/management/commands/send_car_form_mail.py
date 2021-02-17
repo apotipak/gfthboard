@@ -42,7 +42,7 @@ class Command(BaseCommand):
 					if (send_to is not None or send_to != ""):
 						if TURN_CAR_FORM_DUMMY_EMAIL_ON:
 							send_mail(subject, html_message, 'support.gfth@guardforce.co.th', [CAR_FORM_DUMMY_EMAIL], fail_silently=False)
-							sql = "update post_office_email_win set status=1 where id=" + str(send_id)
+							sql = "update post_office_email_win set status=0 where id=" + str(send_id)
 							try:
 								with connection.cursor() as cursor:
 									cursor.execute(sql)
