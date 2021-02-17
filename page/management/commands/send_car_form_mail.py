@@ -58,8 +58,8 @@ class Command(BaseCommand):
 						error_message = "Item number" + str(send_id) + " cannot be sent."
 				print("Send mail completed")
 			else:
-				print("CAR Form send mail is turn off.")
-		
+				print("CAR Form send mail is turn off.")		
+
 
 
 
