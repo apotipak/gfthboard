@@ -108,6 +108,7 @@ class Command(BaseCommand):
 							send_car_form_mail(subject, CAR_FORM_DUMMY_EMAIL, html_message, send_id)
 						else:
 							print("sent to owner email")
+							send_car_form_mail(subject, send_to, html_message, send_id)
 							# send_mail(subject, html_message, 'support.gfth@guardforce.co.th', [send_to], fail_silently=False)
 					else:
 						error_message = "Item number" + str(send_id) + " cannot be sent."						
