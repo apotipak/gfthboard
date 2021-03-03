@@ -37,8 +37,14 @@ def ViewM1Report(request):
 	print("end_date:", end_date)
 
 	leave_request_pending_object = None	
-	sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
-	sql += "and start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
+	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
+
+	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date "
+	sql += "from leave_employeeinstance l "
+	sql += "left join leave_employee e on l.emp_id=e.emp_id "
+	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
+	sql += "where year(start_date)=year(getdate()) and status='p' "
+	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
 	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') "
 	sql += "order by created_date desc;"
 	print("SQL:", sql)
@@ -65,10 +71,15 @@ def ViewM1Report(request):
 			record = {
 				"row_count": row_count,
 				"emp_id": item[0],
-				"leave_type_id": item[1],				
-				"start_date": item[2],
-				"end_date": item[3],
-				"created_date": item[4],
+				'emp_fname_th': item[1],
+				'emp_lname_th': item[2],
+				'pos_th': item[3],
+				'div_th': item[4],
+				"leave_type_id": item[5],
+				"leave_type_th": item[6],
+				"start_date": item[7],
+				"end_date": item[8],
+				"created_date": item[9],
 
 			}
 			leave_request_pending_list.append(record)

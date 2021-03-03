@@ -81,6 +81,8 @@
 					    <tr>
 					      <th scope="col">#</th>
 					      <th scope="col">รหัส</th>
+					      <th scope="col">ชื่อพนักงาน</th>
+					      <th scope="col">แผนก</th>					      
 					      <th scope="col">ลาประเภท</th>
 					      <th scope="col">ลาวันที่</th>
 					      <th scope="col">ถึงวันที่</th>
@@ -92,10 +94,15 @@
 					    <tr>
 					      <th scope="row">{{ item.row_count }}</th>			      
 					      <td>{{ item.emp_id }}</td>
-					      <td>{{ item.leave_type_id}}</td>
+					      <td>{{item.emp_fname_th}} {{item.emp_lname_th}}</td>
+					      <td>{{ item.div_th }}</td>
+					      <td>{{ item.leave_type_id}} | {{item.leave_type_th}}</td>
 					      <td>{{ item.start_date|date:"d/n/Y H:i" }}</td>
 					      <td>{{ item.end_date|date:"d/n/Y H:i" }}</td>
-					      <td>{{ item.created_date|date:"d/n/Y H:i"}}</td>
+
+					      <!--<td>{{ item.created_date|date:"d/n/Y H:i"}}</td>-->
+					      <td>{{ item.created_date|naturaltime}}</td>
+					      
 					    </tr>
 					    {% endfor %}
 					  </tbody>
