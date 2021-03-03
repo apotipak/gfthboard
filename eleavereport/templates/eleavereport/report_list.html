@@ -1,0 +1,199 @@
+{% extends "page_daterange.html" %}
+
+{% load static %}
+{% load humanize %}
+{% load i18n %}
+
+{% block title %} {% trans 'E-Leave Report' %} {% endblock %}
+
+{% block content %}
+
+ 
+  <div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">{% trans 'Report' %}<small><small>&nbsp;&nbsp;|&nbsp;&nbsp;ข้อมูลวันลาสถานะรอการอนุมัติ</small></small></h1>
+          </div>
+          <div class="col-sm-6">
+            <!--
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
+              <li class="breadcrumb-item active">{% trans 'New Request' %}</li>
+            </ol>
+            -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+
+    <!-- Main content -->
+    <section class="content">
+
+      <div class="container-fluid">
+
+      	<div class="col-8 offset-2">
+          <form action="" method="post" autocomplete="off" id="search_form">
+            {% csrf_token %}
+            <div class="card-body" style="padding: 0;">   
+              <div class="form-group">                                    
+                <div class="input-group col-12">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:120px;"><i class="far fa-calendar"></i>&nbsp;&nbsp;{% trans 'START DATE' %}</span>
+                  </div>
+                  <input type="text" name="start_date" class="form-control datepicker border-bottom-1 border-left-0 rounded-0 bg-white" placeholder="dd-mm-yyyy" required="" value="{{start_date}}" id="id_start_date" readonly="readonly">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:120px;"><i class="far fa-calendar"></i>&nbsp;&nbsp;{% trans 'END DATE&nbsp;' %}</span>
+                  </div>
+                  <input type="text" name="end_date" class="form-control datepicker border-bottom-1 border-left-0 rounded-0 bg-white" placeholder="dd-mm-yyyy" required="" id="id_end_date" value="{{end_date}}" readonly="readonly">
+
+                  <div class="input-group-prepend">
+                  	<button type="submit" class="btn btn-success submitBtn"><i class="fas fa-search fa-md"></i>&nbsp;&nbsp;{% trans 'SEARCH' %}</button>
+              	  </div>
+                </div>
+              </div>
+            </div>
+
+          </form>                 
+    	</div>
+
+    	{% if leave_request_pending_list is not None %}
+    	<div class="row">
+
+			<div class="form-inline col-12">
+				<div class="input-group col-12">
+				  <input type="text" class="form-control form-control-xs border-info" placeholder="Filter Data" id="employee_search_text" autocomplete="off">
+				  <div class="input-group-append">
+				    <button class="btn btn-info btn-xs" type="button"  id="employee_search_clear_button">&nbsp;&nbsp;&nbsp;CLEAR FILTER&nbsp;&nbsp;&nbsp;</button>
+				  </div>
+				</div>
+			</div>
+
+	    	<div class="table-responsive table-striped">
+				<font size='2em;'>
+					<table class="table table-sm" id="employee_list_table">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">รหัส</th>
+					      <th scope="col">ลาประเภท</th>
+					      <th scope="col">ลาวันที่</th>
+					      <th scope="col">ถึงวันที่</th>
+					      <th scope="col">วันที่สร้าง</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					  {% for item in leave_request_pending_list %}
+					    <tr>
+					      <th scope="row">{{ item.row_count }}</th>			      
+					      <td>{{ item.emp_id }}</td>
+					      <td>{{ item.leave_type_id}}</td>
+					      <td>{{ item.start_date|date:"d/n/Y H:i" }}</td>
+					      <td>{{ item.end_date|date:"d/n/Y H:i" }}</td>
+					      <td>{{ item.created_date|date:"d/n/Y H:i"}}</td>
+					    </tr>
+					    {% endfor %}
+					  </tbody>
+					</table>
+				</font>
+			</div>
+    	</div>
+    	{% endif %}
+
+      </div>
+    </section>
+    
+  </div>
+  
+
+{% endblock %}
+
+{% block javascript %}
+  <script>
+  $(document).ready(function () {
+
+	var today = new Date();
+	var lastDate = new Date(today.getFullYear() + 0, 11, 31);
+
+	$("#id_start_date").datepicker({
+	  //dateFormat: "yy-mm-dd",
+	  dateFormat: "dd-mm-yy",
+	  minDate: -45,
+	  maxDate: lastDate,
+	  onSelect: function () {
+	      var dt2 = $('#id_end_date');
+	      var startDate = $(this).datepicker('getDate');
+	      //add 30 days to selected date
+	      startDate.setDate(startDate.getDate() + 120);            
+	      var minDate = $(this).datepicker('getDate');
+
+	      var dt2Date = dt2.datepicker('getDate');
+
+	      //difference in days. 86400 seconds in day, 1000 ms in second
+	      var dateDiff = (dt2Date - minDate)/(86400 * 1000);
+
+	      //dt2 not set or dt1 date is greater than dt2 date
+	      if (dt2Date == null || dateDiff < 0) {
+	              dt2.datepicker('setDate', minDate);
+	      }
+	      //dt1 date is 30 days under dt2 date
+	      else if (dateDiff > 30){
+	              dt2.datepicker('setDate', startDate);
+	      }
+	      //sets dt2 maxDate to the last day of 30 days window
+	      dt2.datepicker('option', 'maxDate', startDate);
+	      //first day which can be selected in dt2 is selected date in dt1
+	      dt2.datepicker('option', 'minDate', minDate);
+	  }
+	}).attr('readonly', 'readonly');
+
+	$('#id_end_date').datepicker({
+	  //dateFormat: "yy-mm-dd",
+	  dateFormat: "dd-mm-yy",
+	  minDate: 0,
+	  maxDate: lastDate
+	}).attr('readonly', 'readonly');
+
+
+	$(function () {
+
+	    var table = $('#employee_list_table').DataTable({
+	      "paging": false,
+	      //"scrollY": "500px",
+	      //"scrollCollapse": true,
+	      //"lengthChange": false,
+	      "searching": true,
+	      "ordering": false,
+	      "info": false,
+	      //"autoWidth": false,
+	      "dom": '<"top"i>rt<"bottom"><"clear">', "search": "_INPUT_",
+	      //"searchPlaceholder": "Filter Data...",
+	      "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+		  //"targets": 'no-sort',
+		  //"bSort": false,
+		  //"order": [1] 
+	    });
+
+		$('#employee_search_button').on( 'keyup click', function () {
+			table.search($('#employee_search_text').val()).draw();
+		});
+
+		$('#employee_search_text').on( 'keyup click', function () {
+			table.search($('#employee_search_text').val()).draw();
+		});  		
+
+		$('#employee_search_clear_button').on( 'click', function () {
+			$('#employee_search_text').val("");
+			table.search($('#employee_search_text').val()).draw();
+		});
+			
+	});
+  });
+
+  </script>
+{% endblock %}      
