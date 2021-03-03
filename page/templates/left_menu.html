@@ -145,9 +145,116 @@
               </li>
               {% endif %}
 
+              {% if perms.eleavereport.can_view_m1_report %}
+              <li class="nav-item">
+                {% if request.path == "/eleave-report/" %}
+                <a href="{% url 'view_m1_report' %}" class="nav-link active">
+                {% else %}
+                <a href="{% url 'view_m1_report' %}" class="nav-link">
+                {% endif %}
+                  &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>{% trans 'Reports' %}</p>
+                </a>
+              </li>
+              {% endif %}
+
             </ul>
           </li>
           {% endif %}
+
+
+
+          <!-- E-Leave Reports -->
+          {% if request.path|slice:":15" == '/eleave-report/' %}
+          <li class="nav-item has-treeview active menu-open">
+            {% if request.path|slice:":6" == '/leave' %}
+            <a href="#" class="nav-link active">
+            {% else %}
+            <a href="#" class="nav-link">
+            {% endif %}
+            
+              <i class="nav-icon fa fa-laptop-medical"></i>
+              <p>
+                E-Leave
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">              
+              <li class="nav-item">
+                {% if request.path == "/leave/leave-policy/" %}
+                <a href="{% url 'leave_policy' %}" class="nav-link active">
+                {%else %}
+                <a href="{% url 'leave_policy' %}" class="nav-link">
+                    {% endif %}
+                  &nbsp;&nbsp;<i class="fas fa-tasks"></i>
+                  &nbsp;&nbsp;&nbsp;<p>{% trans 'Leave Entitlement' %}</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                {% if request.path == "/leave/leave-history/" %}
+                <a href="{% url 'leave_history' %}" class="nav-link active">
+                {% else %}
+                <a href="{% url 'leave_history' %}" class="nav-link">
+                {% endif %}
+                  &nbsp;&nbsp;<i class="fas fa-history"></i>
+                  &nbsp;&nbsp;&nbsp;<p>{% trans 'Leave History' %}</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                {% if request.path == "/leave/leave-timeline/" %}
+                <a href="{% url 'leave_timeline' %}" class="nav-link active">
+                {% else %}
+                <a href="{% url 'leave_timeline' %}" class="nav-link">
+                {% endif %}
+                  &nbsp;&nbsp;<i class="fas fa-bars"></i>
+                  &nbsp;&nbsp;&nbsp;<p>{% trans 'Timeline' %}</p>
+                </a>
+              </li>                            
+              <li class="nav-item">
+                {% if request.path == "/leave/employee/create/" %}
+                <a href="{% url 'employee_create' %}" class="nav-link active">
+                {% else %}
+                <a href="{% url 'employee_create' %}" class="nav-link">
+                {% endif %}
+                  &nbsp;&nbsp;<i class="far fa-edit"></i>
+                  &nbsp;&nbsp;&nbsp;<p>{% trans 'New Request' %}</p>
+                </a>
+              </li>
+
+              {% if able_to_approve_leave_request %}
+              <li class="nav-item">
+                {% if request.path == "/leave/leave-approve-pending-list/" or request.path == "/leave/leave-approved-list/" or request.path == "/leave/leave-rejected-list/" %}
+                <a href="{% url 'leave_approve_pending_list' %}" class="nav-link active">
+                {% else %}
+                <a href="{% url 'leave_approve_pending_list' %}" class="nav-link">
+                {% endif %}
+                  &nbsp;<i class="fa fa-check nav-icon"></i>
+                  <p>{% trans 'Leave Request List' %}
+                    {% if waiting_for_approval_item  > 0 %}
+                    <span class="badge badge-success right">{{ waiting_for_approval_item }}</span>
+                    {% endif %}                  
+                  </p>
+                </a>
+              </li>
+              {% endif %}
+
+
+              {% if perms.eleavereport.can_view_m1_report %}
+              <li class="nav-item">
+                {% if request.path == "/eleave-report/" %}
+                <a href="{% url 'view_m1_report' %}" class="nav-link active">
+                {% else %}
+                <a href="{% url 'view_m1_report' %}" class="nav-link">
+                {% endif %}
+                  &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>{% trans 'Reports' %}</p>
+                </a>
+              </li>
+              {% endif %}
+
+            </ul>
+          </li>
+          {% endif %}
+
 
           <!-- Contract -->
           {% if request.path|slice:":10" == '/contract/' %}
