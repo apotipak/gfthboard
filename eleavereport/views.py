@@ -13,6 +13,7 @@ import django.db as db
 from django.db import connection
 from page.rules import *
 from django.utils import timezone
+from leave.models import LeaveEmployee
 
 
 @permission_required('eleavereport.can_view_m1_report', login_url='/accounts/login/')
@@ -83,7 +84,12 @@ def ViewM1Report(request):
 
 			}
 			leave_request_pending_list.append(record)
-			row_count = row_count + 1
+			row_count = row_count + 1	
+
+	if user_language == "th":
+		username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+	else:
+		username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
 	return render(request, 'eleavereport/report_list.html', {
 	    'page_title': settings.PROJECT_NAME,
@@ -94,6 +100,7 @@ def ViewM1Report(request):
 	    'leave_request_pending_list': list(leave_request_pending_list),
 	    'start_date': start_date,
 	    'end_date': end_date,
+	    'username_display': username_display,
 	})
 
 
