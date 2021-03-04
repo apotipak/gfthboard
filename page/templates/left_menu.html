@@ -145,15 +145,35 @@
               </li>
               {% endif %}
 
+
               {% if perms.eleavereport.can_view_m1_report %}
-              <li class="nav-item">
-                {% if request.path == "/eleave-report/" %}
-                <a href="{% url 'view_m1_report' %}" class="nav-link active">
-                {% else %}
-                <a href="{% url 'view_m1_report' %}" class="nav-link">
-                {% endif %}
-                  &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>{% trans 'Reports' %}</p>
+              <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-chart-pie"></i>
+                  <p>Reports<i class="right fas fa-angle-left"></i></p>
                 </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'view_m1_report' %}" class="nav-link">
+                      <i class="fas fa-poll-h"></i>
+                      <p>วันลาสถานะรอนุมัติ</p>
+                    </a>
+                  </li>
+                  <!--
+                  <li class="nav-item">
+                    <a href="pages/charts/flot.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Flot</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="pages/charts/inline.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Inline</p>
+                    </a>
+                  </li>
+                  -->
+                </ul>
               </li>
               {% endif %}
 
@@ -240,14 +260,33 @@
 
 
               {% if perms.eleavereport.can_view_m1_report %}
-              <li class="nav-item">
-                {% if request.path == "/eleave-report/" %}
-                <a href="{% url 'view_m1_report' %}" class="nav-link active">
-                {% else %}
-                <a href="{% url 'view_m1_report' %}" class="nav-link">
-                {% endif %}
-                  &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>{% trans 'Reports' %}</p>
+              <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-chart-pie"></i>
+                  <p>Reports<i class="right fas fa-angle-left"></i></p>
                 </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'view_m1_report' %}" class="nav-link">
+                      <i class="fas fa-poll-h"></i>
+                      <p>วันลาสถานะรอนุมัติ</p>
+                    </a>
+                  </li>
+                  <!--
+                  <li class="nav-item">
+                    <a href="pages/charts/flot.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Flot</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="pages/charts/inline.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Inline</p>
+                    </a>
+                  </li>
+                  -->
+                </ul>
               </li>
               {% endif %}
 
