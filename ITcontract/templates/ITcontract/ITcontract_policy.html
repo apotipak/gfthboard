@@ -1,0 +1,104 @@
+{% extends "page_base_generic.html" %}
+
+{% load humanize %}
+
+{% load i18n %}
+
+{% block title %} {% trans 'Leave Entitlement' %} {% endblock %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">{% trans 'IT Contract Entitlement' %} </h1>
+          </div>
+          <div class="col-sm-6">
+            <!--
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
+              <li class="breadcrumb-item active">{% trans 'ITcontract Entitlement' %}</li>
+            </ol>
+            -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-12">
+                {% if ITcontractPolicy %}
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">{% trans 'Dept' %}</th>
+                      <th scope="col" style="text-align: left">{% trans 'Vendor' %}</th>
+                      <th scope="col" style="text-align: left">{% trans 'Description' %}&nbsp;</th>
+                      <th scope="col" style="text-align: left">{% trans 'StartDate' %}&nbsp;</th>
+                      <th scope="col">{% trans 'Enddate' %}</th>
+                    </tr>
+                  </thead>
+                  <tbody>   
+                  {% for policy in ITcontractPolicy %}
+                <tr>                  
+                  <!-- IT Contract  -->
+                  <td>
+                    {% if user_language == "th" %}
+                    <h6><b>{{ policy.dept }}</b></h6>
+                    {% else %}
+                    <h6><b>{{ policy.dept }}</b></h6>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {{policy.vendor}}
+                  </td>
+                  <td>
+                    {{policy.description}}
+                  </td>
+                  <td>
+                    {{policy.startdate}}
+                  </td>
+                  <td>
+                    {{policy.enddate}}
+                  </td>
+                   <!--
+                    {% if policy.total_hour_remaining > 0 %}
+                      {{ policy.total_hour_remaining|stringformat:"1.0f" }} <small>{% trans 'Hour' %}</small>
+                    {% endif %}
+
+                    {% if policy.total_day_remaining == 0 and policy.total_hour_remaining == 0 %}
+                      <span class="text-danger"><strong>0</strong></span>&nbsp;{% trans 'Day' %}
+                    {% endif %}             
+                    -->
+                </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+
+                {% else %}
+                <div class="alert alert-success" role="alert">
+                  <i class="fa fa-info-circle"></i>&nbsp;&nbsp;ระบบกำลังทำการปรับปรุงข้อมูล
+                    <!--
+                    <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{% trans 'Your leave entitlement is being updated. Please refresh this page again in 5 minutes' %}
+                    -->
+
+                </div>                                     
+                {% endif %}           
+          </div>
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+{% endblock %}

@@ -326,7 +326,38 @@
             {% endif %}
           {% endif %}
 
+          <!-- IT Contract -->
 
+          {% if request.path|slice:":12" == '/ITcontract/' %}
+            {% if perms.ITcontract.view_itcontractdb_m  %}
+            <li class="nav-item has-treeview active menu-open">
+              {% if request.path|slice:":12" == '/ITcontract/' %}
+              <a href="#" class="nav-link active">
+              {% else %}
+              <a href="#" class="nav-link">
+              {% endif %}
+                <i class="nav-icon fas fa-user-clock"></i>
+                <p>
+                  IT Dept Contract
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  {% if request.path == "/ITcontract/ITcontract-policy/" %}
+                  <a href="{% url 'ITcontract_policy' %}" class="nav-link active">
+                  {% else %}
+                  <a href="{% url 'ITcontract_policy' %}" class="nav-link">
+                  {% endif %}
+                    &nbsp;&nbsp;<i class="far fa-calendar-check"></i>
+                    <p>รายการสัญญา IT</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% endif %}
+          {% endif %}
+          <!--End  IT Contract -->
 
           {% if request.path|slice:":10" == '/employee/' %}
           <li class="nav-item has-treeview active menu-open">

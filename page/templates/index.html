@@ -37,7 +37,7 @@
                     <span class="info-box-number"><small>{% trans 'Check clock-in time system' %}</small>
                       <br>
                       <br>                      
-                      <a href="contract/contract-list" type="button" class="btn btn-outline-primary float-right">{% trans 'Open' %}</a>
+                      <a href="contract/contract-list-Sum" type="button" class="btn btn-outline-primary float-right">{% trans 'Open' %}</a>
                     </span>
                   </div>
                 </div>
@@ -47,24 +47,22 @@
           {% endif %}
 
 
-          {% if perms.employee.view_tclcontractqty %}
-          <!--
+          {% if perms.ITcontract.view_itcontractdb_m %}
           <div class="col-12 col-sm-6 col-md-6">
             <div class="info-box mb-4">
               <span class="info-box-icon" style="background-color:#ff3300 !important"><i class="fas fa-user-alt text-white"></i></span>
               <div class="info-box-content">
                 <div class="col-12">
-                  <h4><span class="info-box-text">Employee</span></h4>
+                  <h4><span class="info-box-text">ITcontract</span></h4>
                   <div>
-                    <span class="info-box-number"><small>ข้อมูลพนักงาน</small>
-                      <a href="contract/contract-list" type="button" class="btn btn-outline-primary float-right">ใช้งาน</a>
+                    <span class="info-box-number"><small>ข้อมูลสัญญา</small>
+                      <a href="{% url 'ITcontract_policy' %}" type="button" class="btn btn-outline-primary float-right">ใช้งาน</a>
                     </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        -->
           {% endif %}
 
           <!-- fix for small devices only -->
