@@ -1,0 +1,87 @@
+{% extends "page_base_generic.html" %}
+
+{% load humanize %}
+
+{% load i18n %}
+
+{% block title %} {% trans 'Leave Entitlement' %} {% endblock %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">{% trans 'PRPO' %} </h1>
+          </div>
+          <div class="col-sm-6">
+            <!--
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
+              <li class="breadcrumb-item active">{% trans 'PRPO Company' %}</li>
+            </ol>
+            -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-12">
+                {% if  v_prpo_company %}
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col" style="text-align: left">{% trans 'CPID' %}</th>
+                      <th scope="col" style="text-align: left">{% trans 'Company Name EN' %}&nbsp;</th>
+                      <th scope="col" style="text-align: left">{% trans 'Company Name TH' %}&nbsp;</th>
+                      <th scope="col">{% trans 'Short Name' %}</th>
+                    </tr>
+                  </thead>
+                  <tbody>   
+                  {% for policy in v_prpo_company %}
+                <tr>                  
+                  <!-- PRPO Company -->
+                  <td>
+                    "Test"{{policy[0]}}
+                  </td>
+                  <td>
+                    {{policy.cpname}}
+                  </td>
+                  <td>
+                    {{policy.cpaltername}}
+                  </td>
+                  <td>
+                    {{policy.cpshortcut}}
+                  </td>
+                </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+
+                {% else %}
+                <div class="alert alert-success" role="alert">
+                  <i class="fa fa-info-circle"></i>&nbsp;&nbsp;ระบบกำลังทำการปรับปรุงข้อมูล
+                    <!--
+                    <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{% trans 'Your leave entitlement is being updated. Please refresh this page again in 5 minutes' %}
+                    -->
+
+                </div>                                     
+                {% endif %}           
+          </div>
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+{% endblock %}

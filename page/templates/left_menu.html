@@ -358,6 +358,38 @@
             {% endif %}
           {% endif %}
           <!--End  IT Contract -->
+          <!-- PRPO -->
+
+          {% if request.path|slice:":6" == '/PRPO/' %}
+            {% if perms.prpo.add_prpoactions %}
+            <li class="nav-item has-treeview active menu-open">
+              {% if request.path|slice:":6" == '/PRPO/' %}
+              <a href="#" class="nav-link active">
+              {% else %}
+              <a href="#" class="nav-link">
+              {% endif %}
+                <i class="nav-icon fas fa-user-clock"></i>
+                <p>
+                  PRPO
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  {% if request.path == "/PRPO/prpo-company/" %}
+                  <a href="{% url 'prpo-company' %}" class="nav-link active">
+                  {% else %}
+                  <a href="{% url 'prpo-company' %}" class="nav-link">
+                  {% endif %}
+                    &nbsp;&nbsp;<i class="far fa-calendar-check"></i>
+                    <p>Company</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% endif %}
+          {% endif %}
+          <!--End PRPO -->
 
           {% if request.path|slice:":10" == '/employee/' %}
           <li class="nav-item has-treeview active menu-open">
