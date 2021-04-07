@@ -9,7 +9,7 @@ from django import forms
 from django.urls import reverse
 import uuid
 
-class ITcontractDB_M(models.Model):
+class ITcontractDB(models.Model):
     id = models.CharField(primary_key=True, max_length=13)
     dept = models.CharField(max_length=100, blank=True, null=True)
     vendor = models.CharField(max_length=100, blank=True, null=True)
@@ -46,14 +46,5 @@ class ITcontractDB_M(models.Model):
 
 
     def ITcontractPolicy(request):
-        #UserName = request.user.username
-        #now = datetime.datetime.now()
-        #LeaveYear = str(now.year)
-
-        #if UserName == 'superadmin':
-        #    ITcontractPolicyInstance = ""
-        #else:
-
-        print("DEBUG")
-        ITcontractPolicyInstance = ITcontractDB_M.objects.raw("Select id, dept,vendor,description,startdate,enddate from ITcontractDB order by enddate desc ")
+        ITcontractPolicyInstance = ITcontractDB.objects.raw("Select id, dept,vendor,description,start_date,end_date from ITcontractDB order by end_date desc ")
         return ITcontractPolicyInstance

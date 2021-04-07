@@ -47,7 +47,7 @@
           {% endif %}
 
 
-          {% if perms.ITcontract.view_itcontractdb_m %}
+          {% if perms.ITcontract.view_itcontractdb %}
           <div class="col-12 col-sm-6 col-md-6">
             <div class="info-box mb-4">
               <span class="info-box-icon" style="background-color:#ff3300 !important"><i class="fas fa-user-alt text-white"></i></span>
@@ -58,7 +58,7 @@
                     <span class="info-box-number"><small>ข้อมูลสัญญา<br>
                       <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a><br>
                       <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a></small>
-                      <a href="{% url 'ITcontract_policy' %}" type="button" class="btn btn-outline-primary float-right">Open</a>
+                      <a href="{% url 'ITcontract' %}" type="button" class="btn btn-outline-primary float-right">Open</a>
                     </span>
                   </div>
                 </div>

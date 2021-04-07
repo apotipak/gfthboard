@@ -4,7 +4,7 @@
 
 {% load i18n %}
 
-{% block title %} {% trans 'Leave Entitlement' %} {% endblock %}
+{% block title %} {% trans 'IT Contract' %} {% endblock %}
 
 {% block content %}
 
@@ -15,7 +15,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">{% trans 'IT Contract Entitlement' %} </h1>
+            <h1 class="m-0 text-dark">{% trans 'IT Contract' %} </h1>
           </div>
           <div class="col-sm-6">
             <!--
@@ -37,7 +37,7 @@
         <div class="row">
           <div class="col-lg-12">
                 {% if ITcontractPolicy %}
-                <table class="table table-striped">
+                <table class="table table-striped table-sm" id="contract_list_table">
                   <thead>
                     <tr>
                       <th scope="col">{% trans 'Dept' %}</th>
@@ -45,40 +45,36 @@
                       <th scope="col" style="text-align: left">{% trans 'Description' %}&nbsp;</th>
                       <th scope="col" style="text-align: left">{% trans 'StartDate' %}&nbsp;</th>
                       <th scope="col">{% trans 'Enddate' %}</th>
+                      <th scope="col">&nbsp;</th>
                     </tr>
                   </thead>
                   <tbody>   
-                  {% for policy in ITcontractPolicy %}
+                  {% for item in ITcontractPolicy %}
                 <tr>                  
                   <!-- IT Contract  -->
                   <td>
                     {% if user_language == "th" %}
-                    <h6><b>{{ policy.dept }}</b></h6>
+                    <h6><b>{{ item.dept }}</b></h6>
                     {% else %}
-                    <h6><b>{{ policy.dept }}</b></h6>
+                    <h6><b>{{ item.dept }}</b></h6>
                     {% endif %}
                   </td>
                   <td>
-                    {{policy.vendor}}
+                    {{item.vendor}}
                   </td>
                   <td>
-                    {{policy.description}}
+                    {{item.description}}
                   </td>
                   <td>
-                    {{policy.startdate}}
+                    {{item.start_date|date:"d/m/Y"}}
                   </td>
                   <td>
-                    {{policy.enddate}}
+                    {{item.end_date|date:"d/m/Y"}}
                   </td>
-                   <!--
-                    {% if policy.total_hour_remaining > 0 %}
-                      {{ policy.total_hour_remaining|stringformat:"1.0f" }} <small>{% trans 'Hour' %}</small>
-                    {% endif %}
-
-                    {% if policy.total_day_remaining == 0 and policy.total_hour_remaining == 0 %}
-                      <span class="text-danger"><strong>0</strong></span>&nbsp;{% trans 'Day' %}
-                    {% endif %}             
-                    -->
+                  <td class='text-right'>
+                    <button type='button' onclick='update_item("{{item.id}}")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>
+                    <button type='button' onclick='delete_item("{{item.id}}")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button>
+                  </td>
                 </tr>
                   {% endfor %}
                   </tbody>
@@ -87,10 +83,6 @@
                 {% else %}
                 <div class="alert alert-success" role="alert">
                   <i class="fa fa-info-circle"></i>&nbsp;&nbsp;ระบบกำลังทำการปรับปรุงข้อมูล
-                    <!--
-                    <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{% trans 'Your leave entitlement is being updated. Please refresh this page again in 5 minutes' %}
-                    -->
-
                 </div>                                     
                 {% endif %}           
           </div>
@@ -101,4 +93,144 @@
   </div>
   <!-- /.content-wrapper -->
 
+
+<!-- Adjust Rate modal -->
+<div class="modal fade" id="update_modal" tabindex="-1" role="dialog">
+
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-header bg-info text-white" style="padding:7px;">
+        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-pen fa-xs text-white"></i>&nbsp;&nbsp;<strong>{% trans 'Edit' %}</strong></h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;&nbsp;</span>
+        </button>
+      </div>
+
+            
+      <div class="modal-body" style="padding:5px 5px 2px 5px;">        
+
+        <div class="col-12 p-0 pt-2 pb-3">
+
+          <form method="post" autocomplete="off" name="contract_list_form">
+            {% csrf_token %}
+            
+            <div class="card-body p-0 pt-2">              
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Department</b>&nbsp;&nbsp;</span>
+                <input type="text" name="dept" class="form-control rounded-0" id="id_dept">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Vendor</b>&nbsp;&nbsp;</span>
+                <input type="text" name="vendor" class="form-control rounded-0" id="id_vendor">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Description</b>&nbsp;&nbsp;</span>
+                <input type="text" name="description" class="form-control rounded-0" id="id_description">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Start Date</b>&nbsp;&nbsp;</span>
+                <input type="text" name="start_date" class="form-control rounded-0" id="id_start_date">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>End Date</b>&nbsp;&nbsp;</span>
+                <input type="text" name="end_date" class="form-control rounded-0" id="id_end_date">
+              </div>                              
+            </div>
+
+          </form> 
+
+        </div>
+      </div>
+
+      <div class="modal-footer" style="padding:5px 5px 5px 0;">
+        <button type="button" class="btn btn-secondary btn-md" data-dismiss="modal">&nbsp;&nbsp;{% trans 'Cancel' %}&nbsp;&nbsp;</button>
+        <button onclick="adjust_new_price_save()" type="button" class="btn btn-primary btn-md">&nbsp;&nbsp;&nbsp;&nbsp;{% trans 'OK' %}&nbsp;&nbsp;&nbsp;&nbsp;</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+
+function update_item(id) {  
+  $.ajax({
+    url: '{% url "ajax_get_it_contract_item" %}',
+    type: 'post',          
+    dataType: 'json',
+    data: {
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      id: id,
+    },
+    success: function (data) {
+      if(data.is_error) {
+        alert(data.error_message);
+      } else {
+        it_contract_id = data.it_contract_id;
+        dept = data.dept;
+        vendor = data.vendor;
+        description = data.description;
+        start_date = data.start_date;
+        end_date = data.end_date;
+
+        $("#id_dept").val(dept);
+        $("#id_vendor").val(vendor);
+        $("#id_description").val(description);
+        $("#id_start_date").val(start_date);
+        $("#id_end_date").val(end_date);
+      }      
+    }
+  });  
+  
+  $("#update_modal").modal("show");
+}
+
+function delete_item(id) {
+  //alert(id);  
+}
+
+$(document).ready( function () {
+  $(function () {
+
+      var table = $('#contract_list_table').DataTable({
+        "paging": true,
+        "scrollY": "200px",
+        "scrollCollapse": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "autoWidth": true,
+        "language": {
+          search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+          searchPlaceholder: 'กรองข้อมูล'
+        },
+        "columnDefs": [{
+          "targets": 5,
+          "orderable": false
+        }]          
+      });  
+  });
+
+});
+
+</script>
 {% endblock %}

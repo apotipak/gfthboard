@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from leave.models import LeavePlan, LeaveHoliday, LeaveEmployee, LeaveType
-from .models import ITcontractDB_M
+from .models import ITcontractDB
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
@@ -24,11 +24,7 @@ from django.db.models import Sum
 from django.utils.dateparse import parse_datetime
 from django.http import JsonResponse
 from post_office import mail
-#from .rules import *
 from page.rules import *
-#from .forms import EmployeeForm
-#from .form_m1817 import EmployeeM1817Form
-#from .form_m1247 import EmployeeM1247Form
 from django.core.files.storage import FileSystemStorage
 from django.utils import translation
 from django.core import serializers
@@ -39,53 +35,24 @@ from django.utils.translation import ugettext as _
 from django.db.models import CharField, Value
 
 
-# excluded_username = {'900590','580816','900630'}
-excluded_username = {}
 current_year = datetime.now().year
-
 
 @login_required(login_url='/accounts/login/')
 def ITcontractPolicy(request):
-
+    username = request.user.username
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
-
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
-    project_version = settings.PROJECT_VERSION
-    # today_date = settings.TODAY_DATE
+    project_version = settings.PROJECT_VERSION    
     today_date = getDateFormatDisplay(user_language)
-    #leave_policy = LeavePlan.EmployeeLeavePolicy(request)
-    ITcontractPolicy = ITcontractDB_M.ITcontractPolicy(request)
-
-    username = request.user.username
-
-    for item in ITcontractPolicy:
-        dept = item.dept
-        vendor = item.vendor
-        description = item.description
-        startdate = item.startdate
-        enddate = item.enddate
-        print(dept)
-
-    ''' 
-    # Check number of waiting leave request
-    #waiting_for_approval_item = len(EmployeeInstance.objects.raw(
-    #    "select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))
-
-    # Check leave approval right
-    if checkLeaveRequestApproval(request.user.username):
-        able_to_approve_leave_request = True
-    else:
-        able_to_approve_leave_request = False
-    '''
+    
+    ITcontractPolicy = ITcontractDB.ITcontractPolicy(request)        
     if user_language == "th":
-        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th',
-                                                                                                  flat=True).get()
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
-        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en',
-                                                                                                  flat=True).get()
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
     return render(request,
         'ITcontract/ITcontract_policy.html', {
@@ -94,15 +61,52 @@ def ITcontractPolicy(request):
         'project_version': settings.PROJECT_VERSION,
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,
-        '''
-        'leave_policy': leave_policy,
-        'waiting_for_approval_item': waiting_for_approval_item,
-        'able_to_approve_leave_request': able_to_approve_leave_request,
-        '''
         'user_language': user_language,
         'username_display': username_display,
         'ITcontractPolicy':  ITcontractPolicy,
-
     })
 
 
+@permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
+def ajax_get_it_contract_item(request):
+    it_contract_id = request.POST.get("id")    
+    record = {}
+    itcontract_list = []
+    is_error = True
+    error_message = ""
+    dept = ""
+    vendor = ""
+    description = ""
+    start_date = ""
+    end_date = ""
+
+    if it_contract_id is not None:
+        itcontract = ITcontractDB.objects.filter(pk=it_contract_id).get()
+        if itcontract is not None:
+            error_message = ""
+            dept = itcontract.dept
+            vendor = itcontract.vendor
+            description = itcontract.description
+            start_date = itcontract.start_date.strftime("%d/%m/%Y")
+            end_date = itcontract.end_date.strftime("%d/%m/%Y")
+            is_error = False
+            error_message = "TODO"
+        else:
+            error_message = "Not found"
+    else:
+        error_message = "Not found"
+
+    response = JsonResponse(data={
+        "success": True,
+        "is_error": is_error,
+        "message": error_message,
+        "it_contract_id": it_contract_id,
+        "dept": dept,
+        "vendor": vendor,
+        "description": description,
+        "start_date": start_date,
+        "end_date": end_date,        
+    })
+
+    response.status_code = 200
+    return response
