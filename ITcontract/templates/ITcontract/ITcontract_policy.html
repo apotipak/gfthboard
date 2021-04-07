@@ -4,7 +4,7 @@
 
 {% load i18n %}
 
-{% block title %} {% trans 'IT Contract' %} {% endblock %}
+{% block title %} {% trans 'Manage IT Contract' %} {% endblock %}
 
 {% block content %}
 
@@ -157,7 +157,7 @@
 
       <div class="modal-footer" style="padding:5px 5px 5px 0;">
         <button type="button" class="btn btn-secondary btn-md" data-dismiss="modal">&nbsp;&nbsp;{% trans 'Cancel' %}&nbsp;&nbsp;</button>
-        <button onclick="adjust_new_price_save()" type="button" class="btn btn-primary btn-md">&nbsp;&nbsp;&nbsp;&nbsp;{% trans 'OK' %}&nbsp;&nbsp;&nbsp;&nbsp;</button>
+        <button onclick="save_item()" type="button" class="btn btn-primary btn-md">&nbsp;&nbsp;&nbsp;&nbsp;{% trans 'OK' %}&nbsp;&nbsp;&nbsp;&nbsp;</button>
       </div>
 
     </div>
@@ -170,6 +170,30 @@
 
 {% block javascript %}
 <script>
+
+$(document).ready( function () {
+  $(function () {
+
+      var table = $('#contract_list_table').DataTable({
+        "paging": true,
+        "scrollY": "200px",
+        "scrollCollapse": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "autoWidth": true,
+        "language": {
+          search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+          searchPlaceholder: 'กรองข้อมูล'
+        },
+        "columnDefs": [{
+          "targets": 5,
+          "orderable": false
+        }] 
+      });  
+  });
+});
 
 function update_item(id) {  
   $.ajax({
@@ -204,33 +228,13 @@ function update_item(id) {
 }
 
 function delete_item(id) {
-  //alert(id);  
+  alert("TODO");
 }
 
-$(document).ready( function () {
-  $(function () {
+function save_item(id) {
 
-      var table = $('#contract_list_table').DataTable({
-        "paging": true,
-        "scrollY": "200px",
-        "scrollCollapse": true,
-        "lengthChange": false,
-        "searching": true,
-        "ordering": true,
-        "info": false,
-        "autoWidth": true,
-        "language": {
-          search: '<i class="fa fa-filter" aria-hidden="true"></i>',
-          searchPlaceholder: 'กรองข้อมูล'
-        },
-        "columnDefs": [{
-          "targets": 5,
-          "orderable": false
-        }]          
-      });  
-  });
+}
 
-});
 
 </script>
 {% endblock %}

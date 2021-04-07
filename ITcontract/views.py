@@ -90,7 +90,7 @@ def ajax_get_it_contract_item(request):
             start_date = itcontract.start_date.strftime("%d/%m/%Y")
             end_date = itcontract.end_date.strftime("%d/%m/%Y")
             is_error = False
-            error_message = "TODO"
+            error_message = ""
         else:
             error_message = "Not found"
     else:
