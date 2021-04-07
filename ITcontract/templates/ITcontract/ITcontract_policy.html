@@ -150,6 +150,8 @@
               </div>                              
             </div>
 
+            <input type="hidden" name="it_contract_id" id="id_it_contract_id" value="">
+
           </form> 
 
         </div>
@@ -174,26 +176,38 @@
 $(document).ready( function () {
   $(function () {
 
-      var table = $('#contract_list_table').DataTable({
-        "paging": true,
-        "scrollY": "200px",
-        "scrollCollapse": true,
-        "lengthChange": false,
-        "searching": true,
-        "ordering": true,
-        "info": false,
-        "autoWidth": true,
-        "language": {
-          search: '<i class="fa fa-filter" aria-hidden="true"></i>',
-          searchPlaceholder: 'กรองข้อมูล'
-        },
-        "columnDefs": [{
-          "targets": 5,
-          "orderable": false
-        }] 
-      });  
   });
 });
+
+var table = $('#contract_list_table').DataTable({
+  "paging": true,
+  "scrollY": "200px",
+  "scrollCollapse": true,
+  "lengthChange": false,
+  "searching": true,
+  "ordering": true,
+  "info": false,
+  "autoWidth": true,
+  "language": {
+    search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+    searchPlaceholder: 'กรองข้อมูล'
+  },
+  "columnDefs": [{
+    "targets": 5,
+    "orderable": false
+  }] 
+});  
+
+
+function showLoading() {
+  $.LoadingOverlaySetup({
+      background      : "rgba(0, 0, 0, 0.5)",
+      image           : "/static/img/logo-small.png",        
+      imageAnimation  : "1.5s fadein",
+      imageColor      : "#ffcc00"
+  });
+  $.LoadingOverlay("show"); 
+}
 
 function update_item(id) {  
   $.ajax({
@@ -215,6 +229,7 @@ function update_item(id) {
         start_date = data.start_date;
         end_date = data.end_date;
 
+        $("#id_it_contract_id").val(it_contract_id);
         $("#id_dept").val(dept);
         $("#id_vendor").val(vendor);
         $("#id_description").val(description);
@@ -232,7 +247,70 @@ function delete_item(id) {
 }
 
 function save_item(id) {
+  it_contract_id = $("#id_it_contract_id").val();
+  dept = $("#id_dept").val();
+  vendor = $("#id_vendor").val();
+  description = $("#id_description").val();
+  start_date = $("#id_start_date").val();
+  end_date = $("#id_end_date").val();
 
+  //alert(it_contract_id + " | " + dept);
+
+  //showLoading();
+
+  $.ajax({
+    url: '{% url "ajax_save_it_contract_item" %}',
+    type: 'post',          
+    dataType: 'json',
+    data: {
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      it_contract_id: it_contract_id,
+      dept: dept,
+      vendor: vendor,
+      description: description,
+      start_date: start_date,
+      end_date: end_date,
+    },
+    success: function (data) {
+      if(data.is_error) {
+        alert(data.message);
+      } else {
+        //alert(data.message);
+        $(document).Toasts('create', {
+          class: "bg-success", 
+          title: "{% trans 'Success' %}",
+          subtitle: '',
+          autohide: true,
+          delay: 2000,
+          body: data.message,
+          autoDismiss: true,
+          close: true,
+          autoremove: true,
+        });
+
+        //var datatable = $('#contract_list_table').dataTable();
+        //datatable.fnPageChange("first",1);
+
+        //datatable.clear();
+        //datatable.draw();
+        //datatable.ajax.reload();
+        //datatable.fnDraw();
+         
+         
+         
+         //$('#contract_list_table').dataTable().fnDraw();
+
+      }
+
+        var datatable = $('#contract_list_table').dataTable().api();
+        //datatable.clear();
+        datatable.draw();
+
+      //$.LoadingOverlay("hide");
+    }
+  });  
+
+  $("#update_modal").modal("hide");
 }
 
 

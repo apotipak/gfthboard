@@ -69,7 +69,7 @@ def ITcontractPolicy(request):
 
 @permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
 def ajax_get_it_contract_item(request):
-    it_contract_id = request.POST.get("id")    
+    it_contract_id = request.POST.get("id")   
     record = {}
     itcontract_list = []
     is_error = True
@@ -99,13 +99,54 @@ def ajax_get_it_contract_item(request):
     response = JsonResponse(data={
         "success": True,
         "is_error": is_error,
-        "message": error_message,
+        "error_message": error_message,
         "it_contract_id": it_contract_id,
         "dept": dept,
         "vendor": vendor,
         "description": description,
         "start_date": start_date,
         "end_date": end_date,        
+    })
+
+    response.status_code = 200
+    return response
+
+
+
+@permission_required('ITcontract.change_itcontractdb', login_url='/accounts/login/')
+def ajax_save_it_contract_item(request):
+    
+    is_error = True
+    message = ""
+
+    it_contract_id = request.POST.get("it_contract_id")
+    dept = request.POST.get("dept")
+    vendor = request.POST.get("vendor")
+    description = request.POST.get("description")
+    start_date = request.POST.get("start_date")
+    end_date = request.POST.get("end_date")
+
+    print(it_contract_id, dept, vendor, description, start_date, end_date)
+
+    if it_contract_id is not None:
+        itcontract = ITcontractDB.objects.filter(pk=it_contract_id).get()
+        if itcontract is not None:
+            
+            print("update")            
+            itcontract.dept = dept
+            itcontract.save()
+
+            is_error = False;
+            message = "ทำรายการสำเร็จ"
+        else:
+            message = "Error"
+    else:
+        message = "Error"
+
+    response = JsonResponse(data={
+        "success": True,
+        "is_error": is_error,
+        "message": message,
     })
 
     response.status_code = 200
