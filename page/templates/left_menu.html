@@ -329,7 +329,7 @@
           <!-- IT Contract -->
 
           {% if request.path|slice:":12" == '/ITcontract/' %}
-            {% if perms.ITcontract.view_itcontractdb_m  %}
+            {% if perms.ITcontract.view_itcontractdb %}
             <li class="nav-item has-treeview active menu-open">
               {% if request.path|slice:":12" == '/ITcontract/' %}
               <a href="#" class="nav-link active">
@@ -344,10 +344,10 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  {% if request.path == "/ITcontract/ITcontract-policy/" %}
-                  <a href="{% url 'ITcontract_policy' %}" class="nav-link active">
+                  {% if request.path == "/ITcontract/" %}
+                  <a href="{% url 'ITcontract' %}" class="nav-link active">
                   {% else %}
-                  <a href="{% url 'ITcontract_policy' %}" class="nav-link">
+                  <a href="{% url 'ITcontract' %}" class="nav-link">
                   {% endif %}
                     &nbsp;&nbsp;<i class="far fa-calendar-check"></i>
                     <p>รายการสัญญา IT</p>
