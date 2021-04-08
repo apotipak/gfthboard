@@ -139,56 +139,56 @@
             
             <div class="card-body p-0 pt-2">              
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Department</b>&nbsp;&nbsp;</span>
-                <input type="text" name="dept_add" class="form-control rounded-0" id="id_dept_add">
+                <span class="pt-1" style="width: 120px;"><b>Department</b>&nbsp;&nbsp;</span>
+                <input type="text" name="dept_add" class="form-control rounded-0" id="id_dept_add" value="IT Department" readonly="">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Vendor</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Vendor</b>&nbsp;&nbsp;</span>
                 <input type="text" name="vendor_add" class="form-control rounded-0" id="id_vendor_add">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Description</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Description</b>&nbsp;&nbsp;</span>
                 <input type="text" name="description_add" class="form-control rounded-0" id="id_description_add">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Person</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Person</b>&nbsp;&nbsp;</span>
                 <input type="text" name="person_add" class="form-control rounded-0" id="id_person_add">
               </div>                              
             </div>
 
-            <div class="card-body p-0 pt-2">                           
+            <div class="card-body p-0 pt-2">    
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Tel</b>&nbsp;&nbsp;</span>
-                <input type="text" name="tel_add" class="form-control rounded-0" id="id_tel_add">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Price</b>&nbsp;&nbsp;</span>
-                <input type="number" name="price_add" class="form-control rounded-0" id="id_price_add" value="0">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Email</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Email</b>&nbsp;&nbsp;</span>
                 <input type="text" name="e_mail_add" class="form-control rounded-0" id="id_e_mail_add">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Remark</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Tel</b>&nbsp;&nbsp;</span>
+                <input type="text" name="tel_add" class="form-control rounded-0" id="id_tel_add">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 120px;"><b>Price</b>&nbsp;&nbsp;</span>
+                <input type="number" name="price_add" class="form-control rounded-0" id="id_price_add" value="0">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 120px;"><b>Remark</b>&nbsp;&nbsp;</span>
                 <input type="text" name="remark_add" class="form-control rounded-0" id="id_remark_add">
               </div>                              
             </div>
@@ -196,17 +196,25 @@
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Start Date</b>&nbsp;&nbsp;</span>                              
+                <span class="pt-1" style="width: 120px;"><b>Start Date</b>&nbsp;&nbsp;</span>                              
                 <input type="text" name="start_date_add" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{start_date}}" id="id_start_date_add" readonly="readonly">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>End Date</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>End Date</b>&nbsp;&nbsp;</span>
                 <input type="text" name="end_date_add" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{end_date}}" id="id_end_date_add" readonly="readonly">
               </div>                              
             </div>
+
+            <div class="card-body p-0 pt-2">    
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 120px;"><b>Alert Email</b>&nbsp;&nbsp;</span>
+                <input type="text" name="ae_mail_add" class="form-control rounded-0" id="id_ae_mail_add" value="itsupport@guardforce.co.th" readonly="">
+              </div>                              
+            </div>
+
         </div>
       </div>
 
@@ -247,71 +255,78 @@
             
             <div class="card-body p-0 pt-2">              
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Department</b>&nbsp;&nbsp;</span>
-                <input type="text" name="dept_edit" class="form-control rounded-0" id="id_dept_edit">
+                <span class="pt-1" style="width: 120px;"><b>Department</b>&nbsp;&nbsp;</span>
+                <input type="text" name="dept_edit" class="form-control rounded-0" id="id_dept_edit" value="IT Department" readonly="">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Vendor</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Vendor</b>&nbsp;&nbsp;</span>
                 <input type="text" name="vendor_edit" class="form-control rounded-0" id="id_vendor_edit">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Description</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Description</b>&nbsp;&nbsp;</span>
                 <input type="text" name="description_edit" class="form-control rounded-0" id="id_description_edit">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Person</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Person</b>&nbsp;&nbsp;</span>
                 <input type="text" name="person_edit" class="form-control rounded-0" id="id_person_edit">
               </div>                              
             </div>
 
-            <div class="card-body p-0 pt-2">                           
+            <div class="card-body p-0 pt-2">                      
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Tel</b>&nbsp;&nbsp;</span>
-                <input type="text" name="tel_edit" class="form-control rounded-0" id="id_tel_edit">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Price</b>&nbsp;&nbsp;</span>
-                <input type="number" name="price_edit" class="form-control rounded-0" id="id_price_edit" value="0">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Email</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Email</b>&nbsp;&nbsp;</span>
                 <input type="text" name="e_mail_edit" class="form-control rounded-0" id="id_e_mail_edit">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Remark</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Tel</b>&nbsp;&nbsp;</span>
+                <input type="text" name="tel_edit" class="form-control rounded-0" id="id_tel_edit">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 120px;"><b>Price</b>&nbsp;&nbsp;</span>
+                <input type="number" name="price_edit" class="form-control rounded-0" id="id_price_edit" value="0">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 120px;"><b>Remark</b>&nbsp;&nbsp;</span>
                 <input type="text" name="remark_edit" class="form-control rounded-0" id="id_remark_edit">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Start Date</b>&nbsp;&nbsp;</span>                              
+                <span class="pt-1" style="width: 120px;"><b>Start Date</b>&nbsp;&nbsp;</span>                              
                 <input type="text" name="start_date_edit" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{start_date}}" id="id_start_date_edit" readonly="readonly">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>End Date</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>End Date</b>&nbsp;&nbsp;</span>
                 <input type="text" name="end_date_edit" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{end_date}}" id="id_end_date_edit" readonly="readonly">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                      
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 120px;"><b>Alert Email</b>&nbsp;&nbsp;</span>
+                <input type="text" name="ae_mail_edit" class="form-control rounded-0" id="id_ae_mail_edit" value="itsupport@guardforce.co.th" readonly="">
               </div>                              
             </div>
 
@@ -374,7 +389,9 @@ $(document).ready( function () {
       day = "0" + day;
     var default_date = day + "/" + month + "/" + year;
 
-    $("#id_dept_add").val("");
+    $("#id_dept_add").val("IT Department");
+    $("#id_ae_mail_add").val("itsupport@guardforce.co.th");
+
     $("#id_vendor_add").val("");
     $("#id_description_add").val("");
     
