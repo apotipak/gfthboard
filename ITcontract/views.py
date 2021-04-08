@@ -130,7 +130,7 @@ def ajax_save_it_contract_item(request):
     start_date = datetime.strptime(request.POST.get("start_date"), "%d/%m/%Y").date()
     end_date = datetime.strptime(request.POST.get("end_date"), "%d/%m/%Y").date()
 
-    # print("START_DATE : ", datetime.strptime(start_date, "%d/%m/%Y").date())
+    print("START_DATE1 : ", start_date)
 
     record = {}
     refresh_it_contract_list = []    
@@ -142,11 +142,12 @@ def ajax_save_it_contract_item(request):
             
             itcontract.dept = dept
             itcontract.vendor = vendor
-            itcontract.description = description
-            
+            itcontract.description = description            
             itcontract.start_date = start_date
-            itcontract.start_date = end_date
-            
+            itcontract.end_date = end_date
+                        
+            # itcontract.save()
+
             try:
                 itcontract.save()
                 is_error = False
