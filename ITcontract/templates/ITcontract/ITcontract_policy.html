@@ -36,7 +36,7 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
           <div class="col-lg-12">
-                {% if ITcontractPolicy %}
+                {% if ITcontractList %}
                 <table class="table table-striped table-sm" id="contract_list_table">
                   <thead>
                     <tr>
@@ -49,9 +49,8 @@
                     </tr>
                   </thead>
                   <tbody>   
-                  {% for item in ITcontractPolicy %}
+                  {% for item in ITcontractList %}
                 <tr>                  
-                  <!-- IT Contract  -->
                   <td>
                     {% if user_language == "th" %}
                     <h6><b>{{ item.dept }}</b></h6>
@@ -59,22 +58,16 @@
                     <h6><b>{{ item.dept }}</b></h6>
                     {% endif %}
                   </td>
-                  <td>
-                    {{item.vendor}}
-                  </td>
-                  <td>
-                    {{item.description}}
-                  </td>
-                  <td>
-                    {{item.start_date|date:"d/m/Y"}}
-                  </td>
-                  <td>
-                    {{item.end_date|date:"d/m/Y"}}
-                  </td>
+                  <td>{{item.vendor}}</td>
+                  <td>{{item.description}}</td>
+                  <td>{{item.start_date|date:"d/m/Y"}}</td>
+                  <td>{{item.end_date|date:"d/m/Y"}}</td>
+
                   <td class='text-right'>
                     <button type='button' onclick='update_item("{{item.id}}")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>
                     <button type='button' onclick='delete_item("{{item.id}}")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button>
                   </td>
+
                 </tr>
                   {% endfor %}
                   </tbody>
@@ -195,7 +188,7 @@ var table = $('#contract_list_table').DataTable({
   "scrollCollapse": true,
   "lengthChange": false,
   "searching": true,
-  "ordering": true,
+  "ordering": false,
   "info": false,
   "autoWidth": true,
   "language": {
@@ -317,10 +310,14 @@ function save_item(id) {
           result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
           result += "<td>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
           result += "<td>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
-          result += "<td class='text-right'>";
-          result += "<div class='modal-footer' style='padding:5px 5px 5px 0;'>";
-          result += " <button type='button' onclick='update_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>";
+
+
+          result += "<td class='text-right'>";          
+          result += " <button type='button' onclick='update_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
           result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
+
+
+
           result += "</tr>";          
         }
 

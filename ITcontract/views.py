@@ -51,7 +51,8 @@ def ITcontractPolicy(request):
     project_version = settings.PROJECT_VERSION    
     today_date = getDateFormatDisplay(user_language)
     
-    ITcontractPolicy = ITcontractDB.ITcontractPolicy(request)        
+    ITcontractList = ITcontractDB.objects.all()
+
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
@@ -66,7 +67,7 @@ def ITcontractPolicy(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
-        'ITcontractPolicy':  ITcontractPolicy,
+        'ITcontractList':  ITcontractList,
     })
 
 
