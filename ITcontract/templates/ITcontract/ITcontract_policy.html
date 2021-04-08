@@ -23,8 +23,21 @@
               <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
               <li class="breadcrumb-item active">{% trans 'ITcontract Entitlement' %}</li>
               -->
+              <li>
+                <button class="btn btn-outline-info btn-md dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-print fa-sm"></i>&nbsp;&nbsp;Print
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink"> 
+                  <span style="font-size: 14px;">
+                  <a class="dropdown-item" href="#" onclick="print_document();"><i class="fas fa-desktop text-secondary"></i>&nbsp;&nbsp;Display on screen</a>              
+                  <a class="dropdown-item" href="#" onclick="print_document();">&nbsp;<i class="far fa-file-excel text-secondary"></i>&nbsp;&nbsp;&nbsp;Export to Excel</a>
+                  </span>
+                </div>
+                &nbsp;&nbsp;
+              </li>
+
               <li class="breadcrumb-item">
-                <button type='button' onclick='open_add_item_modal();' class='btn btn-lg btn-success' data-toggle='modal'><b>&nbsp;<i class='fas fa-plus fa-xs'></i>&nbsp;New</b>&nbsp;</button>
+                <button type='button' onclick='open_add_item_modal();' class='btn btn-md btn-success' data-toggle='modal'><b>&nbsp;<i class='fas fa-plus fa-xs'></i>&nbsp;New</b>&nbsp;</button>
               </li>
               
             </ol>            
@@ -43,11 +56,12 @@
                 <table class="table table-striped table-sm" id="contract_list_table">
                   <thead>
                     <tr>
-                      <th scope="col">{% trans 'Dept' %}</th>
+                      <th scope="col">ID</th>
+                      <th scope="col">{% trans 'Deptartment' %}</th>
                       <th scope="col" style="text-align: left">{% trans 'Vendor' %}</th>
                       <th scope="col" style="text-align: left">{% trans 'Description' %}&nbsp;</th>
-                      <th scope="col" style="text-align: left">{% trans 'StartDate' %}&nbsp;</th>
-                      <th scope="col">{% trans 'Enddate' %}</th>
+                      <th scope="col" style="text-align: left">{% trans 'Start Date' %}&nbsp;</th>
+                      <th scope="col">{% trans 'End Date' %}</th>
                       <th scope="col">&nbsp;</th>
                     </tr>
                   </thead>
@@ -56,18 +70,12 @@
                   <tbody>  
                     {% for item in ITcontractList %}
                     <tr>                  
-                    <td>
-                      {% if user_language == "th" %}
-                      <h6><b>{{ item.dept }}</b></h6>
-                      {% else %}
-                      <h6><b>{{ item.dept }}</b></h6>
-                      {% endif %}
-                    </td>
+                    <td>{{item.id}}</td>
+                    <td>{{item.dept}}</td>
                     <td>{{item.vendor}}</td>
                     <td>{{item.description}}</td>
                     <td>{{item.start_date|date:"d/m/Y"}}</td>
                     <td>{{item.end_date|date:"d/m/Y"}}</td>
-
                     <td class='text-right'>
                       <button type='button' onclick='edit_item("{{item.id}}")' class='btn btn-info btn-xs' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>
                       <button type='button' onclick='delete_item("{{item.id}}")' class='btn btn-danger btn-xs' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button>
@@ -79,6 +87,7 @@
                   {% else %}
                   <tbody>                    
                     <tr>
+                      <td>&nbsp;</td>
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
@@ -187,12 +196,11 @@
     <div class="modal-content">
       
       <div class="modal-header bg-info text-white" style="padding:7px;">
-        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-pen fa-xs text-white"></i>&nbsp;&nbsp;<strong>{% trans 'Edit' %}</strong></h5>
+        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-pen fa-xs text-white"></i>&nbsp;&nbsp;<strong><span id="edit_item_title">Edit</span></strong></h5>
         <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;&nbsp;</span>
         </button>
       </div>
-
             
       <div class="modal-body" style="padding:5px 5px 2px 5px;">        
 
@@ -287,7 +295,6 @@ $(document).ready( function () {
     var month = today.getMonth()+1;
     var day = today.getDate();    
 
-    // TODO
     if(month.length==1)
       month = "0" + month;
     if(day.length==1)
@@ -305,8 +312,8 @@ $(document).ready( function () {
 
 var table = $('#contract_list_table').DataTable({
   "paging": true,
-  //"scrollY": "200px",
-  "pageLength": 25,
+  "scrollY": "400px",
+  "pageLength": 15,
   "scrollCollapse": true,
   "lengthChange": false,
   "searching": true,
@@ -359,6 +366,8 @@ function edit_item(id) {
         $("#id_description_edit").val(description.trim());
         $("#id_start_date_edit").val(start_date);
         $("#id_end_date_edit").val(end_date);
+
+        $("#edit_item_title").html("Edit #" + id);
       }      
     }
   });  
@@ -371,7 +380,6 @@ function open_add_item_modal() {
 }
 
 function add_item() {
-  // TODO
   dept = $("#id_dept_add").val();
   vendor = $("#id_vendor_add").val();
   description = $("#id_description_add").val();
@@ -404,8 +412,6 @@ function add_item() {
           autoremove: true,
         });
 
-        //
-
       } else {
         $(document).Toasts('create', {
           class: "bg-success", 
@@ -423,6 +429,7 @@ function add_item() {
         for(i=0;i<data.refresh_it_contract_list.length;i++) {
           it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
           result += "<tr>";
+          result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
           result += "<td><h6><b>" + data.refresh_it_contract_list[i]['dept'] + "</h6></b></td>";
           result += "<td>" + data.refresh_it_contract_list[i]['vendor'] + "</td>";
           result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
@@ -449,9 +456,6 @@ function save_item(id) {
   description = $("#id_description_edit").val();
   start_date = $("#id_start_date_edit").val();
   end_date = $("#id_end_date_edit").val();
-
-  // TODO
-  //showLoading();
 
   $.ajax({
     url: '{% url "ajax_save_it_contract_item" %}',
@@ -497,6 +501,7 @@ function save_item(id) {
         for(i=0;i<data.refresh_it_contract_list.length;i++) {
           it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
           result += "<tr>";
+          result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
           result += "<td><h6><b>" + data.refresh_it_contract_list[i]['dept'] + "</h6></b></td>";
           result += "<td>" + data.refresh_it_contract_list[i]['vendor'] + "</td>";
           result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
@@ -511,17 +516,97 @@ function save_item(id) {
         $('#contract_list_table tbody').html(result);
         $("#edit_modal").modal("hide");
       }
-
-      // TODO
-      //$.LoadingOverlay("hide");
     }
   });  
   
 }
 
 function delete_item(id) {
+
+  $.confirm({
+    title: 'Confirmation',
+    type: 'red',
+    content: 'ยืนยันการลบรายการสัญญาเลขที่ <b>#' + id + "</b>",
+    animation: 'zoom',
+    animationBounce: 1.5,
+    closeIcon: true,
+    boxWidth: '38%',
+    useBootstrap: false,        
+    buttons: {
+      confirm: {
+        text: 'ยืนยัน',
+        btnClass: 'btn-danger',
+          action: function () {                   
+            $.ajax({
+              url: '{% url "ajax_delete_it_contract_item" %}',
+              type: 'post',          
+              dataType: 'json',
+              data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                it_contract_id: id,
+              },
+              success: function (data) {
+                if(data.is_error) {        
+                  $(document).Toasts('create', {
+                    class: "bg-danger", 
+                    title: "{% trans 'Error' %}",
+                    subtitle: '',
+                    autohide: true,
+                    delay: 2000,
+                    body: data.message,
+                    autoDismiss: true,
+                    close: true,
+                    autoremove: true,
+                  });  
+                } else {
+
+                  $(document).Toasts('create', {
+                    class: "bg-success", 
+                    title: "{% trans 'Success' %}",
+                    subtitle: '',
+                    autohide: true,
+                    delay: 2000,
+                    body: data.message,
+                    autoDismiss: true,
+                    close: true,
+                    autoremove: true,
+                  });
+
+                  result = "";
+                  for(i=0;i<data.refresh_it_contract_list.length;i++) {
+                    it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
+                    result += "<tr>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
+                    result += "<td><h6><b>" + data.refresh_it_contract_list[i]['dept'] + "</h6></b></td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['vendor'] + "</td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
+                    result += "<td class='text-right'>";          
+                    result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
+                    result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
+                    result += "</tr>";          
+                  }
+
+                  $('#contract_list_table tbody').html(result);
+                  $("#edit_modal").modal("hide");
+                }    
+              }
+            });
+          }
+        },
+        cancel: {                   
+          action: function () {
+                    
+          }
+        }
+      }
+  });
+
+}
+
+function print_document() {
   alert("TODO");
-  // TODO  
 }
 
 </script>

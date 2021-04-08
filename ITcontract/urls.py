@@ -15,7 +15,7 @@ urlpatterns = [
     # Update
     url(r'^ajax_save_it_contract_item/$', views.ajax_save_it_contract_item, name='ajax_save_it_contract_item'),
     
-    # Delete
-    # TODO
+    # Delete   
+    url(r'^ajax_delete_it_contract_item/$', views.ajax_delete_it_contract_item, name='ajax_delete_it_contract_item'),
 
 ]

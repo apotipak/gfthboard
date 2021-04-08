@@ -262,3 +262,57 @@ def ajax_save_it_contract_item(request):
 
     response.status_code = 200
     return response
+
+
+@permission_required('ITcontract.delete_itcontractdb', login_url='/accounts/login/')
+def ajax_delete_it_contract_item(request):
+    it_contract_id = request.POST.get("it_contract_id")
+    
+    is_error = True
+    message = "Erorr"    
+    record = {}
+    refresh_it_contract_list = []    
+
+    if it_contract_id is not None:                
+        try:
+            ITcontractDB.objects.filter(id=it_contract_id).delete()
+            is_error = False
+            message = "ทำรายการสำเร็จ"
+        except db.OperationalError as e:
+            message = str(e)
+        except db.Error as e:
+            message = str(e)
+        except Exception as e:                
+            message = str(e)
+
+    if not is_error:
+        refresh_it_contract = ITcontractDB.objects.all()
+        for item in refresh_it_contract:
+            it_contract_id = item.id
+            dept = item.dept
+            vendor = item.vendor
+            description = item.description
+            start_date = item.start_date.strftime("%d/%m/%Y")
+            end_date = item.end_date.strftime("%d/%m/%Y")                
+            record = {
+                "it_contract_id": it_contract_id,
+                "dept": dept,
+                "vendor": vendor,
+                "description": description,
+                "start_date": start_date,
+                "end_date": end_date,
+            }
+            refresh_it_contract_list.append(record) 
+
+        is_error = False
+        message = "ทำรายการสำเร็จ"
+
+    response = JsonResponse(data={
+        "success": True,
+        "is_error": is_error,
+        "message": message,
+        "refresh_it_contract_list": refresh_it_contract_list,
+    })
+
+    response.status_code = 200
+    return response
