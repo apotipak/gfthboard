@@ -37,7 +37,6 @@ import django.db as db
 import collections
 
 
-
 current_year = datetime.now().year
 
 @login_required(login_url='/accounts/login/')
@@ -81,6 +80,11 @@ def ajax_get_it_contract_item(request):
     dept = ""
     vendor = ""
     description = ""
+    person = ""
+    tel = ""
+    price = 0
+    e_mail = ""
+    remark = ""
     start_date = ""
     end_date = ""
 
@@ -88,13 +92,17 @@ def ajax_get_it_contract_item(request):
         itcontract = ITcontractDB.objects.filter(pk=it_contract_id).get()
         if itcontract is not None:
             error_message = ""
-            dept = itcontract.dept
-            vendor = itcontract.vendor
-            description = itcontract.description
-
+            dept = "" if itcontract.dept is None else itcontract.dept
+            vendor = "" if itcontract.vendor is None else itcontract.vendor
+            description = "" if itcontract.description is None else itcontract.description
+            person = "" if itcontract.person is None else itcontract.person
+            tel = "" if itcontract.tel is None else itcontract.tel
+            price = 0 if itcontract.price is None else itcontract.price
+            e_mail = "" if itcontract.e_mail is None else itcontract.e_mail
+            remark = "" if itcontract.remark is None else itcontract.remark
             start_date = None if itcontract.start_date is None else itcontract.start_date.strftime("%d/%m/%Y")
             end_date = None if itcontract.end_date is None else itcontract.end_date.strftime("%d/%m/%Y")
-
+            
             is_error = False
             error_message = ""
         else:
@@ -110,6 +118,11 @@ def ajax_get_it_contract_item(request):
         "dept": dept,
         "vendor": vendor,
         "description": description,
+        "person": person,
+        "tel": tel,
+        "price": price,
+        "e_mail": e_mail,
+        "remark": remark,
         "start_date": start_date,
         "end_date": end_date,        
     })
@@ -125,12 +138,15 @@ def ajax_add_it_contract_item(request):
 
     dept = request.POST.get("dept")
     vendor = request.POST.get("vendor")
-    description = request.POST.get("description")    
+    description = request.POST.get("description")
+    person = request.POST.get("person")
+    tel = request.POST.get("tel")
+    price = request.POST.get("price")
+    e_mail = request.POST.get("e_mail")
+    remark = request.POST.get("remark")
     start_date = datetime.strptime(request.POST.get("start_date"), "%d/%m/%Y").date()
     end_date = datetime.strptime(request.POST.get("end_date"), "%d/%m/%Y").date()
-
-    print(dept, vendor, description, start_date, end_date)    
-
+    
     record = {}
     refresh_it_contract_list = []    
 
@@ -139,8 +155,16 @@ def ajax_add_it_contract_item(request):
             dept = dept,
             vendor = vendor,
             description = description,
+            person = person,
+            tel = tel,
+            price = price,
+            e_mail = e_mail,
+            remark = remark,
             start_date = start_date,
-            end_date = end_date
+            end_date = end_date,            
+            upd_date = datetime.now(),
+            upd_by = request.user.first_name,
+            upd_flag = 'A',
             )
         item.save()        
 
@@ -167,6 +191,11 @@ def ajax_add_it_contract_item(request):
                 "dept": dept,
                 "vendor": vendor,
                 "description": description,
+                "person": person,
+                "tel": tel,
+                "price": price,
+                "e_mail": e_mail,
+                "remark": remark,                
                 "start_date": start_date,
                 "end_date": end_date,
             }
@@ -196,11 +225,13 @@ def ajax_save_it_contract_item(request):
     dept = request.POST.get("dept")
     vendor = request.POST.get("vendor")
     description = request.POST.get("description")
-    
+    person = request.POST.get("person")
+    tel = request.POST.get("tel")
+    price = request.POST.get("price")
+    e_mail = request.POST.get("e_mail")
+    remark = request.POST.get("remark")    
     start_date = datetime.strptime(request.POST.get("start_date"), "%d/%m/%Y").date()
     end_date = datetime.strptime(request.POST.get("end_date"), "%d/%m/%Y").date()
-
-    print("START_DATE1 : ", start_date)
 
     record = {}
     refresh_it_contract_list = []    
@@ -213,9 +244,17 @@ def ajax_save_it_contract_item(request):
             itcontract.dept = dept
             itcontract.vendor = vendor
             itcontract.description = description            
+            itcontract.person = person
+            itcontract.tel = tel
+            itcontract.price = price
+            itcontract.e_mail = e_mail
+            itcontract.remark = remark
             itcontract.start_date = start_date
-            itcontract.end_date = end_date
-                        
+            itcontract.end_date = end_date            
+            itcontract.upd_date = datetime.now()
+            upd_by = request.user.first_name
+            upd_flag = 'E'
+
             try:
                 itcontract.save()
                 is_error = False
@@ -234,6 +273,11 @@ def ajax_save_it_contract_item(request):
                     dept = item.dept
                     vendor = item.vendor
                     description = item.description
+                    person = itcontract.person
+                    tel = itcontract.tel
+                    price = itcontract.price
+                    e_mail = itcontract.e_mail
+                    remark = itcontract.remark                    
                     start_date = item.start_date.strftime("%d/%m/%Y")
                     end_date = item.end_date.strftime("%d/%m/%Y")                
                     record = {
@@ -241,6 +285,11 @@ def ajax_save_it_contract_item(request):
                         "dept": dept,
                         "vendor": vendor,
                         "description": description,
+                        "person": person,
+                        "tel": tel,
+                        "price": price,
+                        "e_mail": e_mail,
+                        "remark": remark,                        
                         "start_date": start_date,
                         "end_date": end_date,
                     }
@@ -267,7 +316,7 @@ def ajax_save_it_contract_item(request):
 @permission_required('ITcontract.delete_itcontractdb', login_url='/accounts/login/')
 def ajax_delete_it_contract_item(request):
     it_contract_id = request.POST.get("it_contract_id")
-    
+
     is_error = True
     message = "Erorr"    
     record = {}
@@ -292,6 +341,11 @@ def ajax_delete_it_contract_item(request):
             dept = item.dept
             vendor = item.vendor
             description = item.description
+            person = itcontract.person
+            tel = itcontract.tel
+            price = itcontract.price
+            e_mail = itcontract.e_mail
+            remark = itcontract.remark            
             start_date = item.start_date.strftime("%d/%m/%Y")
             end_date = item.end_date.strftime("%d/%m/%Y")                
             record = {
@@ -299,6 +353,11 @@ def ajax_delete_it_contract_item(request):
                 "dept": dept,
                 "vendor": vendor,
                 "description": description,
+                "person": person,
+                "tel": tel,
+                "price": price,
+                "e_mail": e_mail,
+                "remark": remark,                
                 "start_date": start_date,
                 "end_date": end_date,
             }

@@ -160,6 +160,42 @@
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Person</b>&nbsp;&nbsp;</span>
+                <input type="text" name="person_add" class="form-control rounded-0" id="id_person_add">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Tel</b>&nbsp;&nbsp;</span>
+                <input type="text" name="tel_add" class="form-control rounded-0" id="id_tel_add">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Price</b>&nbsp;&nbsp;</span>
+                <input type="number" name="price_add" class="form-control rounded-0" id="id_price_add" value="0">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Email</b>&nbsp;&nbsp;</span>
+                <input type="text" name="e_mail_add" class="form-control rounded-0" id="id_e_mail_add">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Remark</b>&nbsp;&nbsp;</span>
+                <input type="text" name="remark_add" class="form-control rounded-0" id="id_remark_add">
+              </div>                              
+            </div>
+
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 100px;"><b>Start Date</b>&nbsp;&nbsp;</span>                              
                 <input type="text" name="start_date_add" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{start_date}}" id="id_start_date_add" readonly="readonly">
               </div>                              
@@ -232,6 +268,41 @@
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Person</b>&nbsp;&nbsp;</span>
+                <input type="text" name="person_edit" class="form-control rounded-0" id="id_person_edit">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Tel</b>&nbsp;&nbsp;</span>
+                <input type="text" name="tel_edit" class="form-control rounded-0" id="id_tel_edit">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Price</b>&nbsp;&nbsp;</span>
+                <input type="number" name="price_edit" class="form-control rounded-0" id="id_price_edit" value="0">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Email</b>&nbsp;&nbsp;</span>
+                <input type="text" name="e_mail_edit" class="form-control rounded-0" id="id_e_mail_edit">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 100px;"><b>Remark</b>&nbsp;&nbsp;</span>
+                <input type="text" name="remark_edit" class="form-control rounded-0" id="id_remark_edit">
+              </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">                           
+              <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 100px;"><b>Start Date</b>&nbsp;&nbsp;</span>                              
                 <input type="text" name="start_date_edit" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{start_date}}" id="id_start_date_edit" readonly="readonly">
               </div>                              
@@ -289,6 +360,8 @@ $(document).ready( function () {
     changeYear: true,
   }).attr('readonly', 'readonly');
 
+
+
   $('#add_modal').on('hide.bs.modal', function (e) {
     var today = new Date(); 
     var year = today.getFullYear();
@@ -304,6 +377,13 @@ $(document).ready( function () {
     $("#id_dept_add").val("");
     $("#id_vendor_add").val("");
     $("#id_description_add").val("");
+    
+    $("#id_person_add").val("");
+    $("#id_tel_add").val("");
+    $("#id_price_add").val("");
+    $("#id_email_add").val("");
+    $("#id_remark_add").val("");
+
     $("#id_start_date_add").val(default_date);
     $("#id_end_date_add").val(default_date);
   });            
@@ -357,6 +437,11 @@ function edit_item(id) {
         dept = data.dept;
         vendor = data.vendor;
         description = data.description;
+        person = data.person;
+        tel = data.tel;
+        price = data.price
+        e_mail = data.e_mail
+        remark = data.remark
         start_date = data.start_date;
         end_date = data.end_date;
 
@@ -364,6 +449,11 @@ function edit_item(id) {
         $("#id_dept_edit").val(dept.trim());
         $("#id_vendor_edit").val(vendor.trim());
         $("#id_description_edit").val(description.trim());
+        $("#id_person_edit").val(person.trim());
+        $("#id_tel_edit").val(tel.trim());
+        $("#id_price_edit").val(price);
+        $("#id_e_mail_edit").val(e_mail.trim());
+        $("#id_remark_edit").val(remark.trim());
         $("#id_start_date_edit").val(start_date);
         $("#id_end_date_edit").val(end_date);
 
@@ -383,6 +473,11 @@ function add_item() {
   dept = $("#id_dept_add").val();
   vendor = $("#id_vendor_add").val();
   description = $("#id_description_add").val();
+  person = $("#id_person_add").val();
+  tel = $("#id_tel_add").val();
+  price = $("#id_price_add").val();
+  e_mail = $("#id_e_mail_add").val();
+  remark = $("#id_remark_add").val();  
   start_date = $("#id_start_date_add").val();
   end_date = $("#id_end_date_add").val();
 
@@ -395,6 +490,11 @@ function add_item() {
       dept: dept,
       vendor: vendor,
       description: description,
+      person: person,
+      tel: tel,
+      price: price,
+      e_mail: e_mail,
+      remark: remark,      
       start_date: start_date,
       end_date: end_date,
     },
@@ -449,11 +549,16 @@ function add_item() {
   });  
 }
 
-function save_item(id) {
+function save_item(id) {  
   it_contract_id = $("#id_it_contract_id_edit").val();
   dept = $("#id_dept_edit").val();
   vendor = $("#id_vendor_edit").val();
   description = $("#id_description_edit").val();
+  person = $("#id_person_edit").val();
+  tel = $("#id_tel_edit").val();
+  price = $("#id_price_edit").val();
+  e_mail = $("#id_e_mail_edit").val();
+  remark = $("#id_remark_edit").val();
   start_date = $("#id_start_date_edit").val();
   end_date = $("#id_end_date_edit").val();
 
@@ -467,6 +572,11 @@ function save_item(id) {
       dept: dept,
       vendor: vendor,
       description: description,
+      person: person,
+      tel: tel,
+      price: price,
+      e_mail: e_mail,
+      remark: remark,
       start_date: start_date,
       end_date: end_date,
     },
