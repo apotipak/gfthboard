@@ -91,8 +91,10 @@ def ajax_get_it_contract_item(request):
             dept = itcontract.dept
             vendor = itcontract.vendor
             description = itcontract.description
-            start_date = itcontract.start_date.strftime("%d/%m/%Y")
-            end_date = itcontract.end_date.strftime("%d/%m/%Y")
+
+            start_date = None if itcontract.start_date is None else itcontract.start_date.strftime("%d/%m/%Y")
+            end_date = None if itcontract.end_date is None else itcontract.end_date.strftime("%d/%m/%Y")
+
             is_error = False
             error_message = ""
         else:
@@ -115,6 +117,49 @@ def ajax_get_it_contract_item(request):
     response.status_code = 200
     return response
 
+
+@permission_required('ITcontract.add_itcontractdb', login_url='/accounts/login/')
+def ajax_add_it_contract_item(request):    
+    is_error = True
+    message = ""
+
+    dept = request.POST.get("dept")
+    vendor = request.POST.get("vendor")
+    description = request.POST.get("description")    
+    start_date = datetime.strptime(request.POST.get("start_date"), "%d/%m/%Y").date()
+    end_date = datetime.strptime(request.POST.get("end_date"), "%d/%m/%Y").date()
+
+    print(dept, vendor, description, start_date, end_date)    
+
+    try:
+        item = ITcontractDB(
+            dept = dept,
+            vendor = vendor,
+            description = description,
+            start_date = start_date,
+            end_date = end_date
+            )
+        item.save()        
+
+        is_error = False
+        message = "ทำรายการสำเร็จ"
+    except db.OperationalError as e:
+        message = str(e)
+    except db.Error as e:
+        message = str(e)
+    except Exception as e:                
+        message = str(e)
+
+
+    response = JsonResponse(data={
+        "success": True,
+        "is_error": is_error,
+        "message": message,
+        # "refresh_it_contract_list": refresh_it_contract_list,
+    })
+
+    response.status_code = 200
+    return response
 
 
 @permission_required('ITcontract.change_itcontractdb', login_url='/accounts/login/')
@@ -147,8 +192,6 @@ def ajax_save_it_contract_item(request):
             itcontract.start_date = start_date
             itcontract.end_date = end_date
                         
-            # itcontract.save()
-
             try:
                 itcontract.save()
                 is_error = False
