@@ -131,6 +131,9 @@ def ajax_add_it_contract_item(request):
 
     print(dept, vendor, description, start_date, end_date)    
 
+    record = {}
+    refresh_it_contract_list = []    
+
     try:
         item = ITcontractDB(
             dept = dept,
@@ -150,12 +153,33 @@ def ajax_add_it_contract_item(request):
     except Exception as e:                
         message = str(e)
 
+    if not is_error:
+        refresh_it_contract = ITcontractDB.objects.all()
+        for item in refresh_it_contract:
+            it_contract_id = item.id
+            dept = item.dept
+            vendor = item.vendor
+            description = item.description
+            start_date = item.start_date.strftime("%d/%m/%Y")
+            end_date = item.end_date.strftime("%d/%m/%Y")                
+            record = {
+                "it_contract_id": it_contract_id,
+                "dept": dept,
+                "vendor": vendor,
+                "description": description,
+                "start_date": start_date,
+                "end_date": end_date,
+            }
+            refresh_it_contract_list.append(record) 
+
+        is_error = False
+        message = "ทำรายการสำเร็จ"
 
     response = JsonResponse(data={
         "success": True,
         "is_error": is_error,
         "message": message,
-        # "refresh_it_contract_list": refresh_it_contract_list,
+        "refresh_it_contract_list": refresh_it_contract_list,
     })
 
     response.status_code = 200

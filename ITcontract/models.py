@@ -10,8 +10,8 @@ from django.urls import reverse
 import uuid
 
 class ITcontractDB(models.Model):
-    id = models.CharField(primary_key=True, max_length=13)
-    # id = models.AutoField(primary_key=True, max_length=13)
+    # id = models.CharField(primary_key=True, max_length=13)
+    id = models.AutoField(primary_key=True)
     dept = models.CharField(max_length=100, blank=True, null=True)
     vendor = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
@@ -41,7 +41,7 @@ class ITcontractDB(models.Model):
     afile = models.BinaryField(max_length=200, blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         ordering = ('id',)
         db_table = 'ITcontractDB'
 
