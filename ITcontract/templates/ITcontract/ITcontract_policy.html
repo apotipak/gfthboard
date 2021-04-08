@@ -287,6 +287,11 @@ $(document).ready( function () {
     var month = today.getMonth()+1;
     var day = today.getDate();    
 
+    // TODO
+    if(month.length==1)
+      month = "0" + month;
+    if(day.length==1)
+      day = "0" + day;
     var default_date = day + "/" + month + "/" + year;
 
     $("#id_dept_add").val("");
@@ -347,10 +352,10 @@ function edit_item(id) {
         start_date = data.start_date;
         end_date = data.end_date;
 
-        $("#id_it_contract_id_edit").val(it_contract_id);
-        $("#id_dept_edit").val(dept);
-        $("#id_vendor_edit").val(vendor);
-        $("#id_description_edit").val(description);
+        $("#id_it_contract_id_edit").val(it_contract_id.trim());
+        $("#id_dept_edit").val(dept.trim());
+        $("#id_vendor_edit").val(vendor.trim());
+        $("#id_description_edit").val(description.trim());
         $("#id_start_date_edit").val(start_date);
         $("#id_end_date_edit").val(end_date);
       }      
