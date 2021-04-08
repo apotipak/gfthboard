@@ -1,4 +1,3 @@
-import sys
 from django.utils import timezone
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -28,11 +27,15 @@ from page.rules import *
 from django.core.files.storage import FileSystemStorage
 from django.utils import translation
 from django.core import serializers
-import collections
-from django.utils.timezone import now
-import json
 from django.utils.translation import ugettext as _
 from django.db.models import CharField, Value
+from django.utils.timezone import now
+from django.core.exceptions import ValidationError
+import sys
+import json
+import django.db as db
+import collections
+
 
 
 current_year = datetime.now().year
@@ -123,21 +126,59 @@ def ajax_save_it_contract_item(request):
     dept = request.POST.get("dept")
     vendor = request.POST.get("vendor")
     description = request.POST.get("description")
-    start_date = request.POST.get("start_date")
-    end_date = request.POST.get("end_date")
+    
+    start_date = datetime.strptime(request.POST.get("start_date"), "%d/%m/%Y").date()
+    end_date = datetime.strptime(request.POST.get("end_date"), "%d/%m/%Y").date()
 
-    print(it_contract_id, dept, vendor, description, start_date, end_date)
+    # print("START_DATE : ", datetime.strptime(start_date, "%d/%m/%Y").date())
+
+    record = {}
+    refresh_it_contract_list = []    
 
     if it_contract_id is not None:
         itcontract = ITcontractDB.objects.filter(pk=it_contract_id).get()
+
         if itcontract is not None:
             
-            print("update")            
             itcontract.dept = dept
-            itcontract.save()
+            itcontract.vendor = vendor
+            itcontract.description = description
+            
+            itcontract.start_date = start_date
+            itcontract.start_date = end_date
+            
+            try:
+                itcontract.save()
+                is_error = False
+                message = "ทำรายการสำเร็จ"
+            except db.OperationalError as e:
+                message = str(e)
+            except db.Error as e:
+                message = str(e)
+            except Exception as e:                
+                message = str(e)
 
-            is_error = False;
-            message = "ทำรายการสำเร็จ"
+            if not is_error:
+                refresh_it_contract = ITcontractDB.objects.all()
+                for item in refresh_it_contract:
+                    it_contract_id = item.id
+                    dept = item.dept
+                    vendor = item.vendor
+                    description = item.description
+                    start_date = item.start_date.strftime("%d/%m/%Y")
+                    end_date = item.end_date.strftime("%d/%m/%Y")                
+                    record = {
+                        "it_contract_id": it_contract_id,
+                        "dept": dept,
+                        "vendor": vendor,
+                        "description": description,
+                        "start_date": start_date,
+                        "end_date": end_date,
+                    }
+                    refresh_it_contract_list.append(record) 
+
+                is_error = False
+                message = "ทำรายการสำเร็จ"
         else:
             message = "Error"
     else:
@@ -147,6 +188,7 @@ def ajax_save_it_contract_item(request):
         "success": True,
         "is_error": is_error,
         "message": message,
+        "refresh_it_contract_list": refresh_it_contract_list,
     })
 
     response.status_code = 200

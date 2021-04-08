@@ -222,7 +222,7 @@ function update_item(id) {
       if(data.is_error) {
         alert(data.error_message);
       } else {
-        it_contract_id = data.it_contract_id;
+        it_contract_id = id;
         dept = data.dept;
         vendor = data.vendor;
         description = data.description;
@@ -244,6 +244,7 @@ function update_item(id) {
 
 function delete_item(id) {
   alert("TODO");
+  // TODO  
 }
 
 function save_item(id) {
@@ -254,8 +255,7 @@ function save_item(id) {
   start_date = $("#id_start_date").val();
   end_date = $("#id_end_date").val();
 
-  //alert(it_contract_id + " | " + dept);
-
+  // TODO
   //showLoading();
 
   $.ajax({
@@ -272,10 +272,20 @@ function save_item(id) {
       end_date: end_date,
     },
     success: function (data) {
-      if(data.is_error) {
-        alert(data.message);
+      if(data.is_error) {        
+        $(document).Toasts('create', {
+          class: "bg-danger", 
+          title: "{% trans 'Error' %}",
+          subtitle: '',
+          autohide: true,
+          delay: 2000,
+          body: data.message,
+          autoDismiss: true,
+          close: true,
+          autoremove: true,
+        });  
       } else {
-        //alert(data.message);
+
         $(document).Toasts('create', {
           class: "bg-success", 
           title: "{% trans 'Success' %}",
@@ -288,29 +298,30 @@ function save_item(id) {
           autoremove: true,
         });
 
-        //var datatable = $('#contract_list_table').dataTable();
-        //datatable.fnPageChange("first",1);
+        result = "";
+        for(i=0;i<data.refresh_it_contract_list.length;i++) {
+          it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
+          result += "<tr>";
+          result += "<td><h6><b>" + data.refresh_it_contract_list[i]['dept'] + "</h6></b></td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['vendor'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
+          result += "<td class='text-right'>";
+          result += " <button type='button' onclick='update_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>";
+          result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
+          result += "</tr>";          
+        }
 
-        //datatable.clear();
-        //datatable.draw();
-        //datatable.ajax.reload();
-        //datatable.fnDraw();
-         
-         
-         
-         //$('#contract_list_table').dataTable().fnDraw();
-
+        $('#contract_list_table tbody').html(result);
+        $("#update_modal").modal("hide");
       }
 
-        var datatable = $('#contract_list_table').dataTable().api();
-        //datatable.clear();
-        datatable.draw();
-
+      // TODO
       //$.LoadingOverlay("hide");
     }
   });  
-
-  $("#update_modal").modal("hide");
+  
 }
 
 
