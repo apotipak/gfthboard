@@ -1,4 +1,4 @@
-{% extends "page_base_generic.html" %}
+{% extends "page_itcontract.html" %}
 
 {% load humanize %}
 
@@ -138,15 +138,15 @@
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 100px;"><b>Start Date</b>&nbsp;&nbsp;</span>
-                <input type="text" name="start_date" class="form-control rounded-0" id="id_start_date">
+                <span class="pt-1" style="width: 100px;"><b>Start Date</b>&nbsp;&nbsp;</span>                              
+                <input type="text" name="start_date" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{start_date}}" id="id_start_date" readonly="readonly">
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 100px;"><b>End Date</b>&nbsp;&nbsp;</span>
-                <input type="text" name="end_date" class="form-control rounded-0" id="id_end_date">
+                <input type="text" name="end_date" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{end_date}}" id="id_end_date" readonly="readonly">
               </div>                              
             </div>
 
@@ -174,10 +174,18 @@
 <script>
 
 $(document).ready( function () {
-  $(function () {
+  
+  $("#id_start_date").datepicker({
+    dateFormat: "dd/mm/yy",
+  }).attr('readonly', 'readonly');
 
-  });
+  $("#id_end_date").datepicker({
+    dateFormat: "dd/mm/yy",
+  }).attr('readonly', 'readonly');
+
 });
+
+
 
 var table = $('#contract_list_table').DataTable({
   "paging": true,
@@ -308,6 +316,7 @@ function save_item(id) {
           result += "<td>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
           result += "<td>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
           result += "<td class='text-right'>";
+          result += "<div class='modal-footer' style='padding:5px 5px 5px 0;'>";
           result += " <button type='button' onclick='update_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>";
           result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
           result += "</tr>";          
