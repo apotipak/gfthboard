@@ -178,31 +178,9 @@ def ajax_add_it_contract_item(request):
         message = str(e)
 
     if not is_error:
-        refresh_it_contract = ITcontractDB.objects.exclude(upd_flag='D').all()
-        for item in refresh_it_contract:
-            it_contract_id = item.id
-            dept = item.dept
-            vendor = item.vendor
-            description = item.description
-            start_date = item.start_date.strftime("%d/%m/%Y")
-            end_date = item.end_date.strftime("%d/%m/%Y")                
-            record = {
-                "it_contract_id": it_contract_id,
-                "dept": dept,
-                "vendor": vendor,
-                "description": description,
-                "person": person,
-                "tel": tel,
-                "price": price,
-                "e_mail": e_mail,
-                "remark": remark,                
-                "start_date": start_date,
-                "end_date": end_date,
-            }
-            refresh_it_contract_list.append(record) 
-
+        refresh_it_contract_list = get_refresh_it_contract_list()
         is_error = False
-        message = "ทำรายการสำเร็จ"
+        message = "ทำรายการสำเร็จ"        
 
     response = JsonResponse(data={
         "success": True,
@@ -266,35 +244,8 @@ def ajax_save_it_contract_item(request):
             except Exception as e:                
                 message = str(e)
 
-            if not is_error:                
-                refresh_it_contract = ITcontractDB.objects.exclude(upd_flag='D').all()
-                for item in refresh_it_contract:
-                    it_contract_id = item.id
-                    dept = item.dept
-                    vendor = item.vendor
-                    description = item.description
-                    person = itcontract.person
-                    tel = itcontract.tel
-                    price = itcontract.price
-                    e_mail = itcontract.e_mail
-                    remark = itcontract.remark                    
-                    start_date = item.start_date.strftime("%d/%m/%Y")
-                    end_date = item.end_date.strftime("%d/%m/%Y")                
-                    record = {
-                        "it_contract_id": it_contract_id,
-                        "dept": dept,
-                        "vendor": vendor,
-                        "description": description,
-                        "person": person,
-                        "tel": tel,
-                        "price": price,
-                        "e_mail": e_mail,
-                        "remark": remark,                        
-                        "start_date": start_date,
-                        "end_date": end_date,
-                    }
-                    refresh_it_contract_list.append(record) 
-
+            if not is_error:
+                refresh_it_contract_list = get_refresh_it_contract_list()
                 is_error = False
                 message = "ทำรายการสำเร็จ"
         else:
@@ -322,53 +273,6 @@ def ajax_delete_it_contract_item(request):
     record = {}
     refresh_it_contract_list = []    
 
-    '''
-    if it_contract_id is not None:                
-
-        try:
-            ITcontractDB.objects.filter(id=it_contract_id).delete()
-            is_error = False
-            message = "ทำรายการสำเร็จ"
-        except db.OperationalError as e:
-            message = str(e)
-        except db.Error as e:
-            message = str(e)
-        except Exception as e:                
-            message = str(e)
-
-    if not is_error:
-        refresh_it_contract = ITcontractDB.objects.all()
-        for item in refresh_it_contract:
-            it_contract_id = item.id
-            dept = item.dept
-            vendor = item.vendor
-            description = item.description
-            person = itcontract.person
-            tel = itcontract.tel
-            price = itcontract.price
-            e_mail = itcontract.e_mail
-            remark = itcontract.remark            
-            start_date = item.start_date.strftime("%d/%m/%Y")
-            end_date = item.end_date.strftime("%d/%m/%Y")                
-            record = {
-                "it_contract_id": it_contract_id,
-                "dept": dept,
-                "vendor": vendor,
-                "description": description,
-                "person": person,
-                "tel": tel,
-                "price": price,
-                "e_mail": e_mail,
-                "remark": remark,                
-                "start_date": start_date,
-                "end_date": end_date,
-            }
-            refresh_it_contract_list.append(record) 
-
-        is_error = False
-        message = "ทำรายการสำเร็จ"            
-    '''
-
     if it_contract_id is not None:
         itcontract = ITcontractDB.objects.filter(pk=it_contract_id).get()
         if itcontract is not None:            
@@ -388,34 +292,7 @@ def ajax_delete_it_contract_item(request):
                 message = str(e)
 
             if not is_error:                
-                refresh_it_contract = ITcontractDB.objects.exclude(upd_flag='D').all()
-                for item in refresh_it_contract:
-                    it_contract_id = item.id
-                    dept = item.dept
-                    vendor = item.vendor
-                    description = item.description
-                    person = itcontract.person
-                    tel = itcontract.tel
-                    price = itcontract.price
-                    e_mail = itcontract.e_mail
-                    remark = itcontract.remark                    
-                    start_date = item.start_date.strftime("%d/%m/%Y")
-                    end_date = item.end_date.strftime("%d/%m/%Y")                
-                    record = {
-                        "it_contract_id": it_contract_id,
-                        "dept": dept,
-                        "vendor": vendor,
-                        "description": description,
-                        "person": person,
-                        "tel": tel,
-                        "price": price,
-                        "e_mail": e_mail,
-                        "remark": remark,                        
-                        "start_date": start_date,
-                        "end_date": end_date,
-                    }
-                    refresh_it_contract_list.append(record) 
-
+                refresh_it_contract_list = get_refresh_it_contract_list()
                 is_error = False
                 message = "ทำรายการสำเร็จ"
         else:
@@ -432,3 +309,39 @@ def ajax_delete_it_contract_item(request):
 
     response.status_code = 200
     return response
+
+
+def get_refresh_it_contract_list():
+    record = {}
+    refresh_it_contract_list = []    
+
+    refresh_it_contract = ITcontractDB.objects.exclude(upd_flag='D').all()
+
+    for item in refresh_it_contract:
+        it_contract_id = item.id
+        dept = item.dept
+        vendor = item.vendor
+        description = item.description
+        person = item.person
+        tel = item.tel
+        price = item.price
+        e_mail = item.e_mail
+        remark = item.remark                    
+        start_date = item.start_date.strftime("%d/%m/%Y")
+        end_date = item.end_date.strftime("%d/%m/%Y")                
+        record = {
+            "it_contract_id": it_contract_id,
+            "dept": dept,
+            "vendor": vendor,
+            "description": description,
+            "person": person,
+            "tel": tel,
+            "price": price,
+            "e_mail": e_mail,
+            "remark": remark,                        
+            "start_date": start_date,
+            "end_date": end_date,
+        }
+        refresh_it_contract_list.append(record)
+
+    return refresh_it_contract_list
