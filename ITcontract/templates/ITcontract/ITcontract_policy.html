@@ -146,7 +146,7 @@
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Vendor</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Vendor Name</b>&nbsp;&nbsp;</span>
                 <input type="text" name="vendor_add" class="form-control rounded-0" id="id_vendor_add">
               </div>                              
             </div>
@@ -160,7 +160,7 @@
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Person</b>&nbsp;&nbsp;</span>
+                <span class="pt-1" style="width: 120px;"><b>Contact Person</b>&nbsp;&nbsp;</span>
                 <input type="text" name="person_add" class="form-control rounded-0" id="id_person_add">
               </div>                              
             </div>
@@ -169,20 +169,15 @@
               <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 120px;"><b>Email</b>&nbsp;&nbsp;</span>
                 <input type="text" name="e_mail_add" class="form-control rounded-0" id="id_e_mail_add">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Tel</b>&nbsp;&nbsp;</span>
-                <input type="text" name="tel_add" class="form-control rounded-0" id="id_tel_add">
+                <span class="pt-1 pl-3" style="width: 120px;"><b>Phone</b>&nbsp;&nbsp;</span>
+                <input type="text" name="tel_add" class="form-control rounded-0" id="id_tel_add">                
               </div>                              
             </div>
 
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 120px;"><b>Price</b>&nbsp;&nbsp;</span>
-                <input type="number" name="price_add" class="form-control rounded-0" id="id_price_add" value="0">
+                <input type="number" name="price_add" class="form-control rounded-0" id="id_price_add" value="0.00">
               </div>                              
             </div>
 
@@ -197,22 +192,24 @@
             <div class="card-body p-0 pt-2">                           
               <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 120px;"><b>Start Date</b>&nbsp;&nbsp;</span>                              
-                <input type="text" name="start_date_add" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{start_date}}" id="id_start_date_add" readonly="readonly">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>End Date</b>&nbsp;&nbsp;</span>
+                <input type="text" name="start_date_add" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{start_date}}" id="id_start_date_add" readonly="readonly">                
+                <span class="pt-1 pl-3" style="width: 120px;"><b>End Date</b>&nbsp;&nbsp;</span>
                 <input type="text" name="end_date_add" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{end_date}}" id="id_end_date_add" readonly="readonly">
               </div>                              
             </div>
 
-            <div class="card-body p-0 pt-2">    
-              <div class="input-group col-12 p-0 pl-2">
+            <div class="card-body p-0 pt-2">
+              <div class="input-group col-12 p-0 pl-2">                
                 <span class="pt-1" style="width: 120px;"><b>Alert Email</b>&nbsp;&nbsp;</span>
                 <input type="text" name="ae_mail_add" class="form-control rounded-0" id="id_ae_mail_add" value="itsupport@guardforce.co.th" readonly="">
               </div>                              
+            </div>
+
+            <div class="card-body p-0 pt-2">
+              <div class="custom-file col-12 pl-20">
+                <b>Attached File</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="file" id="id_it_contract_document_add" name="it_contract_document_add">
+              </div>              
             </div>
 
         </div>
@@ -285,13 +282,9 @@
               <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 120px;"><b>Email</b>&nbsp;&nbsp;</span>
                 <input type="text" name="e_mail_edit" class="form-control rounded-0" id="id_e_mail_edit">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Tel</b>&nbsp;&nbsp;</span>
+                <span class="pt-1 pl-3" style="width: 120px;"><b>Phone</b>&nbsp;&nbsp;</span>
                 <input type="text" name="tel_edit" class="form-control rounded-0" id="id_tel_edit">
+
               </div>                              
             </div>
 
@@ -313,13 +306,9 @@
               <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 120px;"><b>Start Date</b>&nbsp;&nbsp;</span>                              
                 <input type="text" name="start_date_edit" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{start_date}}" id="id_start_date_edit" readonly="readonly">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>End Date</b>&nbsp;&nbsp;</span>
+                <span class="pt-1 pl-3" style="width: 120px;"><b>End Date</b>&nbsp;&nbsp;</span>
                 <input type="text" name="end_date_edit" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{end_date}}" id="id_end_date_edit" readonly="readonly">
+
               </div>                              
             </div>
 
@@ -329,6 +318,14 @@
                 <input type="text" name="ae_mail_edit" class="form-control rounded-0" id="id_ae_mail_edit" value="itsupport@guardforce.co.th" readonly="">
               </div>                              
             </div>
+
+            <div class="card-body p-0 pt-2">
+              <div class="custom-file col-12 pl-20">
+                <b>Attached File</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="file" id="id_it_contract_document_edit" name="it_contract_document_edit">
+              </div>              
+            </div>
+
 
             <input type="hidden" name="it_contract_id_edit" id="id_it_contract_id_edit" value="">
 
@@ -397,7 +394,7 @@ $(document).ready( function () {
     
     $("#id_person_add").val("");
     $("#id_tel_add").val("");
-    $("#id_price_add").val("");
+    $("#id_price_add").val(0.00);
     $("#id_email_add").val("");
     $("#id_remark_add").val("");
 
