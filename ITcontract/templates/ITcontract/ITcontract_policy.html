@@ -306,6 +306,7 @@ $(document).ready( function () {
 var table = $('#contract_list_table').DataTable({
   "paging": true,
   //"scrollY": "200px",
+  "pageLength": 25,
   "scrollCollapse": true,
   "lengthChange": false,
   "searching": true,
@@ -352,7 +353,7 @@ function edit_item(id) {
         start_date = data.start_date;
         end_date = data.end_date;
 
-        $("#id_it_contract_id_edit").val(it_contract_id.trim());
+        $("#id_it_contract_id_edit").val(it_contract_id);
         $("#id_dept_edit").val(dept.trim());
         $("#id_vendor_edit").val(vendor.trim());
         $("#id_description_edit").val(description.trim());
