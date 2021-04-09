@@ -31,6 +31,7 @@ from django.utils.translation import ugettext as _
 from django.db.models import CharField, Value
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
+from base64 import b64encode
 import sys
 import json
 import django.db as db
@@ -103,6 +104,14 @@ def ajax_get_it_contract_item(request):
             start_date = None if itcontract.start_date is None else itcontract.start_date.strftime("%d/%m/%Y")
             end_date = None if itcontract.end_date is None else itcontract.end_date.strftime("%d/%m/%Y")
             
+            if itcontract.afile is not None:
+                sample_file = b64encode(itcontract.afile).decode("utf-8")
+                # sample_file = "<img src = 'data: image/png; base64, {}' width='200' height='100'>".format(b64encode(itcontract.afile)).decode('utf8')
+            else:
+                sample_file = None
+            # afile = b64encode(itcontract.afile)
+            
+
             is_error = False
             error_message = ""
         else:
@@ -124,7 +133,8 @@ def ajax_get_it_contract_item(request):
         "e_mail": e_mail,
         "remark": remark,
         "start_date": start_date,
-        "end_date": end_date,        
+        "end_date": end_date,
+        "sample_file": sample_file,   
     })
 
     response.status_code = 200
@@ -194,11 +204,11 @@ def ajax_add_it_contract_item(request):
 
 
 @permission_required('ITcontract.change_itcontractdb', login_url='/accounts/login/')
-def ajax_save_it_contract_item(request):
-    
+def ajax_save_it_contract_item(request):    
     is_error = True
     message = ""
 
+    '''
     it_contract_id = request.POST.get("it_contract_id")
     dept = request.POST.get("dept")
     vendor = request.POST.get("vendor")
@@ -210,9 +220,28 @@ def ajax_save_it_contract_item(request):
     remark = request.POST.get("remark")    
     start_date = datetime.strptime(request.POST.get("start_date"), "%d/%m/%Y").date()
     end_date = datetime.strptime(request.POST.get("end_date"), "%d/%m/%Y").date()
+    '''
+
+    it_contract_id = request.POST['contract_id_edit']
+    dept = request.POST["dept_edit"]
+    vendor = request.POST["vendor_edit"]
+    description = request.POST["description_edit"]
+    person = request.POST["person_edit"]
+    tel = request.POST["tel_edit"]
+    price = request.POST["price_edit"]
+    e_mail = request.POST["e_mail_edit"]
+    remark = request.POST["remark_edit"]    
+    start_date = datetime.strptime(request.POST["start_date_edit"], "%d/%m/%Y").date()
+    end_date = datetime.strptime(request.POST["end_date_edit"], "%d/%m/%Y").date()
+
+    # 
+    #afile = request.FILES["id_it_contract_document_edit"]
+    test_string = "GFG is best"
+    res = bytes(test_string, 'utf-8')
 
     record = {}
     refresh_it_contract_list = []    
+    
 
     if it_contract_id is not None:
         itcontract = ITcontractDB.objects.filter(pk=it_contract_id).get()
@@ -232,6 +261,12 @@ def ajax_save_it_contract_item(request):
             itcontract.upd_date = datetime.now()
             itcontract.upd_by = request.user.first_name
             itcontract.upd_flag = 'E'
+            
+            if request.FILES is not None:
+                itcontract.afile = request.FILES
+            else:
+                itcontract.afile = None
+            
 
             try:
                 itcontract.save()

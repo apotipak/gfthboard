@@ -247,7 +247,8 @@
 
         <div class="col-12 p-0 pt-2 pb-3">
 
-          <form method="post" autocomplete="off" name="edit_contract_list_form">
+          <form action="/upload/" method="post" autocomplete="off" id="edit_contract_list_form" name="edit_contract_list_form" enctype="multipart/form-data">
+          <!--<form method="post" autocomplete="off" name="edit_contract_list_form">-->
             {% csrf_token %}
             
             <div class="card-body p-0 pt-2">              
@@ -326,8 +327,15 @@
               </div>              
             </div>
 
-
-            <input type="hidden" name="it_contract_id_edit" id="id_it_contract_id_edit" value="">
+            <!-- tanos -->
+            <div class="card-body p-0">                      
+              <div class="input-group col-12 p-0 pl-2">
+                <span class="pt-1" style="width: 120px;">&nbsp;</span>
+                <span id="view_attached_document">&nbsp;</span>
+              </div>              
+            </div>
+            
+            <input type="hidden" name="contract_id_edit" id="id_it_contract_id_edit" value="">
 
           </form> 
 
@@ -406,7 +414,7 @@ $(document).ready( function () {
 
 var table = $('#contract_list_table').DataTable({
   "paging": true,
-  "scrollY": "400px",
+  //"scrollY": "400px",
   "pageLength": 15,
   "scrollCollapse": true,
   "lengthChange": false,
@@ -470,14 +478,55 @@ function edit_item(id) {
         $("#id_remark_edit").val(remark.trim());
         $("#id_start_date_edit").val(start_date);
         $("#id_end_date_edit").val(end_date);
-
         $("#edit_item_title").html("Edit #" + id);
-      }      
+        
+        //$("#attached_file").html("<img src='data:image/png;base64," + data.afile + "' style='width:90px;'/>");
+        //$("#employeePhoto").html("<img src='data:image/png;base64," + data.employee_photo + "' style='width:90px;'/>");
+        //<img alt="Embedded Image" src="data:image/png;base64,{{ rslt }}" style="width:50px;height:50px;"/>
+
+
+        // tanos
+        if(data.sample_file!=null) {
+          $("#view_attached_document").html("<a href='#''>View attached document</a>");
+        } else {
+          $("#view_attached_document").html("");
+        }
+        
+        //$("#attached_file").html(blob);    
+        //$("#attached_file").html("<a href='"+ url + "'>Download</a>");
+
+        //var blob = base64ToBlob(data.afile.data, data.afile.mimetype);
+        //var url = window.URL.createObjectURL(blob);
+        //a.href = url;
+        //a.download = result.download.filename;
+        //a.click();
+      }
     }
   });  
   
   $("#edit_modal").modal("show");
 }
+
+function base64ToBlob(base64, mimetype, slicesize) {
+    if (!window.atob || !window.Uint8Array) {
+        // The current browser doesn't have the atob function. Cannot continue
+        return null;
+    }
+    mimetype = mimetype || '';
+    slicesize = slicesize || 512;
+    var bytechars = atob(base64);
+    var bytearrays = [];
+    for (var offset = 0; offset < bytechars.length; offset += slicesize) {
+        var slice = bytechars.slice(offset, offset + slicesize);
+        var bytenums = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            bytenums[i] = slice.charCodeAt(i);
+        }
+        var bytearray = new Uint8Array(bytenums);
+        bytearrays[bytearrays.length] = bytearray;
+    }
+    return new Blob(bytearrays, {type: mimetype});
+};
 
 function open_add_item_modal() {
   $("#add_modal").modal("show");
@@ -563,7 +612,13 @@ function add_item() {
   });  
 }
 
-function save_item(id) {  
+function save_item(id) {
+  event.preventDefault();
+  
+  //var form_data = $('#edit_contract_list_form').serialize();
+  var form_data = $('#edit_contract_list_form').serializeArray();
+  
+  /*
   it_contract_id = $("#id_it_contract_id_edit").val();
   dept = $("#id_dept_edit").val();
   vendor = $("#id_vendor_edit").val();
@@ -575,11 +630,14 @@ function save_item(id) {
   remark = $("#id_remark_edit").val();
   start_date = $("#id_start_date_edit").val();
   end_date = $("#id_end_date_edit").val();
+  afile = $('#id_it_contract_document_edit').val();
+  */
 
   $.ajax({
     url: '{% url "ajax_save_it_contract_item" %}',
     type: 'post',          
     dataType: 'json',
+    /*
     data: {
       csrfmiddlewaretoken: '{{ csrf_token }}',
       it_contract_id: it_contract_id,
@@ -594,6 +652,8 @@ function save_item(id) {
       start_date: start_date,
       end_date: end_date,
     },
+    */
+    data: form_data,
     success: function (data) {
       if(data.is_error) {        
         $(document).Toasts('create', {
