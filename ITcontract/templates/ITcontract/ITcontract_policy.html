@@ -63,6 +63,7 @@
                       <th scope="col" style="text-align: left">{% trans 'Start Date' %}&nbsp;</th>
                       <th scope="col">{% trans 'End Date' %}</th>
                       <th scope="col" class='text-left'>{% trans 'Attachment' %}</th>
+                      <th scope="col">{% trans 'Upd By' %}</th>
                       <th scope="col">&nbsp;</th>
                     </tr>
                   </thead>
@@ -83,6 +84,9 @@
                       {% else %}
                       <td class='text-left'><i class='fas fa-times fa-xs text-danger'></i>&nbsp;Not attached</td>
                       {% endif %}
+      
+                      <td>{{item.upd_by}}</td>
+
                       <td class='text-right'>
                         <button type='button' onclick='edit_item("{{item.id}}")' class='btn btn-info btn-xs' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>
                         <button type='button' onclick='delete_item("{{item.id}}")' class='btn btn-danger btn-xs' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button>
@@ -93,6 +97,7 @@
                   {% else %}
                   <tbody>                    
                     <tr>
+                      <td>&nbsp;</td>
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
@@ -435,6 +440,8 @@ function save_item(id) {
           else
             result += "<td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>";
 
+          result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";
+
           result += "<td class='text-right'>";          
           result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
           result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
@@ -522,6 +529,7 @@ function add_item() {
           else
             result += "<td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>";
 
+          result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";
           result += "<td class='text-right'>";          
           result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
           result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
@@ -764,6 +772,7 @@ function delete_item(id) {
                     else
                       result += "<td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>";
 
+                    result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";                    
                     result += "<td class='text-right'>";          
                     result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
                     result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";

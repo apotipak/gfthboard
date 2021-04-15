@@ -182,7 +182,7 @@ def EmployeeNew(request):
             employee.created_by = request.user.username
             employee.leave_reason = leave_reason
 
-            employee.document_data = request.FILES['document'].read()
+            # employee.document_data = request.FILES['document'].read()
 
             '''
             if request.user.groups.filter(name__in=['E-Leave Staff','E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
@@ -281,10 +281,23 @@ def EmployeeNew(request):
     else:
         able_to_approve_leave_request = False
 
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
     return render(request, render_template_name, {
         'form': form,
@@ -328,10 +341,24 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         else:
             able_to_approve_leave_request = False
 
+        '''
         if user_language == "th":
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
         else:
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
+        '''
+
+        if user_language == "th":
+            if self.request.user.username == "999999":
+                username_display = request.user.first_name
+            else:            
+                username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
+        else:
+            if self.request.user.username == "999999":
+                username_display = request.user.first_name
+            else:                    
+                username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
+
 
         # today_date = settings.TODAY_DATE
         today_date = getDateFormatDisplay(user_language)
@@ -388,10 +415,24 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
         user_language = getDefaultLanguage(self.request.user.username)
         translation.activate(user_language)
 
+        '''
         if user_language == "th":
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
         else:
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
+        '''
+
+        if user_language == "th":
+            if self.request.user.username == "999999":
+                username_display = self.request.user.first_name
+            else:            
+                username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
+        else:
+            if self.request.user.username == "999999":
+                username_display = self.request.user.first_name
+            else:                    
+                username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
+
 
         # today_date = settings.TODAY_DATE
         today_date = getDateFormatDisplay(user_language)
@@ -544,10 +585,24 @@ def LeavePolicy(request):
     else:
         able_to_approve_leave_request = False
 
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
 
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
@@ -618,10 +673,24 @@ class LeavePendingApproveListView(PermissionRequiredMixin, generic.ListView):
         else:
             able_to_approve_leave_request = False
 
+        '''
         if user_language == "th":
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
         else:
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
+        '''
+
+        if user_language == "th":
+            if request.user.username == "999999":
+                username_display = request.user.first_name
+            else:            
+                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+        else:
+            if request.user.username == "999999":
+                username_display = request.user.first_name
+            else:                    
+                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
 
         context.update({
             'page_title': settings.PROJECT_NAME,
@@ -668,10 +737,24 @@ class LeaveApprovedListView(PermissionRequiredMixin, generic.ListView):
         else:
             able_to_approve_leave_request = False
 
+        '''
         if user_language == "th":
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
         else:
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
+        '''
+
+        if user_language == "th":
+            if request.user.username == "999999":
+                username_display = request.user.first_name
+            else:            
+                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+        else:
+            if request.user.username == "999999":
+                username_display = request.user.first_name
+            else:                    
+                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
 
         context.update({
             'page_title': settings.PROJECT_NAME,
@@ -719,10 +802,24 @@ class LeaveRejectedListView(PermissionRequiredMixin, generic.ListView):
         else:
             able_to_approve_leave_request = False
 
+        '''
         if user_language == "th":
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
         else:
             username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
+        '''
+
+        if user_language == "th":
+            if request.user.username == "999999":
+                username_display = request.user.first_name
+            else:            
+                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+        else:
+            if request.user.username == "999999":
+                username_display = request.user.first_name
+            else:                    
+                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
 
         context.update({
             'page_title': settings.PROJECT_NAME,
@@ -809,11 +906,23 @@ def EmployeeInstanceApprove(request, pk):
     # waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))    
     waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p') and year(end_date)='2021'"))    
 
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
 
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
     context = {
         'leave_employee': leaveEmployee,
@@ -901,11 +1010,24 @@ def EmployeeInstanceReject(request, pk):
 
         return HttpResponseRedirect(reverse('leave_approve_pending_list'))
 
-
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
 
     leaveEmployee = LeaveEmployee.objects.get(emp_id=employee_leave_instance.emp_id)
     # waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))
@@ -1159,10 +1281,23 @@ def LeaveTimeline(request):
     else:
         able_to_approve_leave_request = False
 
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+    
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
     context = {
         'page_title': settings.PROJECT_NAME,
