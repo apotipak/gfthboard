@@ -337,7 +337,7 @@
               <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 120px;">&nbsp;</span>
                 <div id="is_attached">
-                  <button class='btn btn-info btn-sm' onclick="view_contract_document();"><i class="far fa-file-pdf"></i>&nbsp;&nbsp;View PDFa</button>
+                  <button class='btn btn-info btn-sm' onclick="view_contract_document();"><i class="far fa-file-pdf"></i>&nbsp;&nbsp;View PDF</button>
                 </div>
 
               </div>              
@@ -362,6 +362,15 @@
 
 {% block javascript %}
 <script>
+
+$('#edit_modal').on('hidden.bs.modal', function () {    
+  $("#id_it_contract_document_edit").val('');
+})
+
+$('#add_modal').on('hidden.bs.modal', function () {  
+  $("#id_it_contract_document_add").val('');  
+})
+
 
 function view_contract_document() {
     it_contract_id = $("#id_it_contract_id_edit").val();
