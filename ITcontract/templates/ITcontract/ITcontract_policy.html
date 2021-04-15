@@ -329,34 +329,28 @@
               </div>              
             </div>
 
-            <!-- tanos -->
+            <input type="hidden" name="contract_id_edit" id="id_it_contract_id_edit" value="">
+
+            </form> 
+
+            
             <div class="card-body p-0">                      
               <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 120px;">&nbsp;</span>
-
-                {% comment %}
-                <span id="view_attached_document"><a href="{% url 'view_contract_document' %}?it_contract_id=9" target='_blank'>View Document</a></span>
-                <span id="view_attached_document"><a href="{% url 'view_contract_document' %}?it_contract_id=9" target='_blank'>View Document</a></span>
-                <span id="view_attached_document"><a href="/ITcontract/view_contract_document/{{it_contract_id}}" target='_blank'>View Document</a></span>
-                {% endcomment %}
-
                 <div id="is_attached">
-                  <button class='btn btn-info btn-sm' id="view_contract_document_button"><i class="far fa-file-pdf"></i>&nbsp;&nbsp;View PDF</button>
+                  <button class='btn btn-info btn-sm' onclick="view_contract_document();"><i class="far fa-file-pdf"></i>&nbsp;&nbsp;View PDFa</button>
                 </div>
 
               </div>              
             </div>
-            
-            <input type="hidden" name="contract_id_edit" id="id_it_contract_id_edit" value="">
-
-          </form> 
+                      
 
         </div>
       </div>
 
       <div class="modal-footer" style="padding:5px 5px 5px 0;">
         <button type="button" class="btn btn-secondary btn-md" data-dismiss="modal">&nbsp;&nbsp;{% trans 'Cancel' %}&nbsp;&nbsp;</button>
-        <button onclick="save_item()" type="button" class="btn btn-primary btn-md">&nbsp;&nbsp;&nbsp;&nbsp;{% trans 'Save' %}&nbsp;&nbsp;&nbsp;&nbsp;</button>
+        <button onclick="save_item();" type="button" class="btn btn-primary btn-md">&nbsp;&nbsp;&nbsp;&nbsp;{% trans 'Save' %}&nbsp;&nbsp;&nbsp;&nbsp;</button>
       </div>
 
     </div>
@@ -390,15 +384,13 @@ $(function () {
     }
   });
   */
-
-  $("#view_contract_document_button").click(function () {
-    event.preventDefault();
-    it_contract_id = $("#id_it_contract_id_edit").val();
-    window.open("/ITcontract/view_contract_document/" + it_contract_id, "_blank");
-  });
-
   
 });
+
+function view_contract_document() {
+    it_contract_id = $("#id_it_contract_id_edit").val();
+    window.open("/ITcontract/view_contract_document/" + it_contract_id, "_blank");    
+}
 
 
 function save_item(id) {
@@ -709,7 +701,7 @@ function edit_item(id) {
         $("#edit_item_title").html("Edit #" + id);
         
         if(is_attached) {
-          $("#is_attached").html("<button class='btn btn-info btn-sm' id='view_contract_document_button'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;View PDF</button>");
+          $("#is_attached").html("<button class='btn btn-info btn-sm' onclick='view_contract_document();'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;View contract file</button>");
         } else {
           $("#is_attached").html("No attached file.");
         }
