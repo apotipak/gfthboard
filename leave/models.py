@@ -150,21 +150,16 @@ class EmployeeInstance(models.Model):
     created_date = models.DateTimeField(default=now, editable=False)
     created_by = models.DecimalField(max_digits=7, decimal_places=0, null=True)
     leave_type = models.DecimalField(max_digits=3, decimal_places=0)
-    leave_type = models.ForeignKey(LeaveType, on_delete=models.SET_NULL, null=True, blank=True)
-    
+    leave_type = models.ForeignKey(LeaveType, on_delete=models.SET_NULL, null=True, blank=True)    
     lve_act = models.IntegerField(blank=True, null=True)
     lve_act_hr = models.IntegerField(blank=True, null=True)
-
     updated_date = models.DateTimeField(null=True, blank=True)
-    updated_by = models.DecimalField(max_digits=7, decimal_places=0, blank=True, null=True)
-    
+    updated_by = models.DecimalField(max_digits=7, decimal_places=0, blank=True, null=True)    
     comment = models.TextField(blank=True, null=True)
-
     document = models.FileField(upload_to='documents/', null=True)
+    document_data = models.BinaryField(null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, null=True)
-
     leave_reason = models.TextField(blank=True, null=True, max_length=200)
-
     LEAVE_STATUS = (
         ('a', 'Approved'),
         ('p', 'Pending'),
@@ -179,7 +174,7 @@ class EmployeeInstance(models.Model):
         blank=True,
         default='p',
         help_text='Leave Request Status')
-
+    
     class Meta:
         #ordering = ['-created_date', '-start_date']
         ordering = ['-created_date']

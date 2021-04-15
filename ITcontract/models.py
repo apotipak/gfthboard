@@ -9,8 +9,8 @@ from django import forms
 from django.urls import reverse
 import uuid
 
+
 class ITcontractDB(models.Model):
-    # id = models.CharField(primary_key=True, max_length=13)
     id = models.AutoField(primary_key=True)
     dept = models.CharField(max_length=100, blank=True, null=True)
     vendor = models.CharField(max_length=100, blank=True, null=True)
@@ -23,28 +23,26 @@ class ITcontractDB(models.Model):
     remark = models.CharField(max_length=100, blank=True, null=True)
     ae_mail = models.CharField(max_length=100, blank=True, null=True)
     ae_mail1 = models.CharField(max_length=100, blank=True, null=True)
-
-    start_date = models.DateTimeField()  # models.DateTimeField(db_column='UPD_Date')  Field name made lowercase.
-    end_date = models.DateTimeField()  # Field name made lowercase.
-    upd_date = models.DateTimeField()  # Field name made lowercase.
+    start_date = models.DateTimeField(null=True)  # models.DateTimeField(db_column='UPD_Date')  Field name made lowercase.
+    end_date = models.DateTimeField(null=True)  # Field name made lowercase.
+    upd_date = models.DateTimeField(null=True)  # Field name made lowercase.
     upd_by = models.CharField(max_length=50, blank=True, null=True)
     upd_flag = models.CharField(max_length=1, blank=True, null=True)
-    opd1 = models.DateTimeField()
-    opd2 = models.DateTimeField()
+    opd1 = models.DateTimeField(null=True)
+    opd2 = models.DateTimeField(null=True)
     op1 = models.CharField(max_length=100, blank=True, null=True)
     op2 = models.CharField(max_length=100, blank=True, null=True)
-    op3 = models.CharField(max_length=200, blank=True, null=True)
-
+    op3 = models.CharField(max_length=200, blank=True, null=True)    
     opn1 = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
     opn2 = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
     opn3 = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    afile = models.BinaryField(max_length=200, blank=True, null=True)
+    afile = models.FileField(upload_to='documents/', null=True)
+    afile_data = models.BinaryField(null=True)    
 
     class Meta:
-        managed = False
+        managed = True
         ordering = ('id',)
         db_table = 'ITcontractDB'
-
 
     def ITcontractPolicy(request):
         ITcontractPolicyInstance = ITcontractDB.objects.raw("Select id, dept,vendor,description,start_date,end_date from ITcontractDB order by end_date desc ")

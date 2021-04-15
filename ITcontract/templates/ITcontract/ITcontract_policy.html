@@ -132,7 +132,7 @@
             
       <div class="modal-body" style="padding:5px 5px 2px 5px;">        
 
-        <form method="post" autocomplete="off" name="add_contract_list_form">
+        <form method="post" autocomplete="off" name="add_contract_list_form" id="add_contract_list_form" autocomplete="off" enctype="multipart/form-data">        
         {% csrf_token %}
 
         <div class="col-12 p-0 pt-2 pb-3">
@@ -247,8 +247,8 @@
 
         <div class="col-12 p-0 pt-2 pb-3">
 
-          <form action="/upload/" method="post" autocomplete="off" id="edit_contract_list_form" name="edit_contract_list_form" enctype="multipart/form-data">
-          <!--<form method="post" autocomplete="off" name="edit_contract_list_form">-->
+          <!--<form action="/upload/" method="post" autocomplete="off" id="edit_contract_list_form" name="edit_contract_list_form" enctype="multipart/form-data">-->
+          <form method="post" autocomplete="off" name="edit_contract_list_form">
             {% csrf_token %}
             
             <div class="card-body p-0 pt-2">              
@@ -324,6 +324,8 @@
               <div class="custom-file col-12 pl-20">
                 <b>Attached File</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <input type="file" id="id_it_contract_document_edit" name="it_contract_document_edit">
+                <input id="fileupload" type="file" name="file" multiple style="display: none;" data-url="{% url 'ajax_save_it_contract_item' %}" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+
               </div>              
             </div>
 
@@ -331,7 +333,17 @@
             <div class="card-body p-0">                      
               <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 120px;">&nbsp;</span>
-                <span id="view_attached_document">&nbsp;</span>
+
+                {% comment %}
+                <span id="view_attached_document"><a href="{% url 'view_contract_document' %}?it_contract_id=9" target='_blank'>View Document</a></span>
+                <span id="view_attached_document"><a href="{% url 'view_contract_document' %}?it_contract_id=9" target='_blank'>View Document</a></span>
+                <span id="view_attached_document"><a href="/ITcontract/view_contract_document/{{it_contract_id}}" target='_blank'>View Document</a></span>
+                {% endcomment %}
+
+                <div id="is_attached">
+                  <button class='btn btn-info btn-sm' id="view_contract_document_button"><i class="far fa-file-pdf"></i>&nbsp;&nbsp;View PDF</button>
+                </div>
+
               </div>              
             </div>
             
@@ -357,6 +369,220 @@
 
 {% block javascript %}
 <script>
+
+
+$(function () {
+  
+  /*
+  $(".js-upload-photos").click(function () {
+    $("#fileupload").click();
+  });
+
+  
+  $("#fileupload").fileupload({
+    dataType: 'json',
+    done: function (e, data) {
+      if (data.result.is_valid) {
+        $("#gallery tbody").prepend(
+          "<tr><td><a href='" + data.result.url + "'>" + data.result.name + "</a></td></tr>"
+        )
+      }
+    }
+  });
+  */
+
+  $("#view_contract_document_button").click(function () {
+    event.preventDefault();
+    it_contract_id = $("#id_it_contract_id_edit").val();
+    window.open("/ITcontract/view_contract_document/" + it_contract_id, "_blank");
+  });
+
+  
+});
+
+
+function save_item(id) {
+  event.preventDefault();
+  
+  //alert("todo");
+  //return false;
+
+  //var form_data = $('#edit_contract_list_form').serialize();
+  //var form_data = $('#edit_contract_list_form').serializeArray();
+  
+  it_contract_id = $("#id_it_contract_id_edit").val();
+  dept = $("#id_dept_edit").val();
+  vendor = $("#id_vendor_edit").val();
+  description = $("#id_description_edit").val();
+  person = $("#id_person_edit").val();
+  tel = $("#id_tel_edit").val();
+  price = $("#id_price_edit").val();
+  e_mail = $("#id_e_mail_edit").val();
+  remark = $("#id_remark_edit").val();
+  start_date = $("#id_start_date_edit").val();
+  end_date = $("#id_end_date_edit").val();
+  
+  // afile = $('#id_it_contract_document_edit').val();
+  // afile = new FormData($('#id_it_contract_document_edit')[0]);
+
+
+  //var fileSize = ($('#id_it_contract_document_edit')[0].files[0].size/1024);
+  //var fileName = $('#id_it_contract_document_edit')[0].files[0].name;
+  //var realSize = sizeConverter(fileSize);
+  //var fileData = new FormData($('#id_it_contract_document_edit')[0]);  
+
+
+  $.ajax({
+    url: '{% url "ajax_save_it_contract_item" %}',
+    type: 'post',          
+    dataType: 'json',
+    data: {
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      it_contract_id: it_contract_id,
+      dept: dept,
+      vendor: vendor,
+      description: description,
+      person: person,
+      tel: tel,
+      price: price,
+      e_mail: e_mail,
+      remark: remark,
+      start_date: start_date,
+      end_date: end_date,
+      //afile: afile,
+      //fileData: fileData,
+      //fileSize: realSize,      
+    },
+    //data: form_data,
+    //enctype: 'multipart/form-data',    
+    success: function (data) {
+      if(data.is_error) {        
+        $(document).Toasts('create', {
+          class: "bg-danger", 
+          title: "{% trans 'Error' %}",
+          subtitle: '',
+          autohide: true,
+          delay: 2000,
+          body: data.message,
+          autoDismiss: true,
+          close: true,
+          autoremove: true,
+        });  
+      } else {
+
+        $(document).Toasts('create', {
+          class: "bg-success", 
+          title: "{% trans 'Success' %}",
+          subtitle: '',
+          autohide: true,
+          delay: 2000,
+          body: data.message,
+          autoDismiss: true,
+          close: true,
+          autoremove: true,
+        });
+
+        result = "";
+        for(i=0;i<data.refresh_it_contract_list.length;i++) {
+          it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
+          result += "<tr>";
+          result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['vendor'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
+          result += "<td class='text-right'>";          
+          result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
+          result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
+          result += "</tr>";          
+        }
+
+        $('#contract_list_table tbody').html(result);
+        $("#edit_modal").modal("hide");
+      }
+    }
+  });  
+  
+}
+
+function add_item() {
+  dept = $("#id_dept_add").val();
+  vendor = $("#id_vendor_add").val();
+  description = $("#id_description_add").val();
+  person = $("#id_person_add").val();
+  tel = $("#id_tel_add").val();
+  price = $("#id_price_add").val();
+  e_mail = $("#id_e_mail_add").val();
+  remark = $("#id_remark_add").val();  
+  start_date = $("#id_start_date_add").val();
+  end_date = $("#id_end_date_add").val();
+
+  if($('#id_it_contract_document_add')[0].files[0] != null) {
+    file_name = $('#id_it_contract_document_add')[0].files[0].name;      
+  }
+
+  formData = new FormData();  
+  data = new FormData($('#add_contract_list_form').get(0));
+
+  $.ajax({
+    url: '{% url "ajax_add_it_contract_item" %}',
+    type: 'post', 
+    dataType: 'json',
+    data: data,
+    cache: false,
+    processData: false,
+    contentType: false,    
+    success: function (data) {
+      if(data.is_error) {        
+        $(document).Toasts('create', {
+          class: "bg-danger", 
+          title: "{% trans 'Error' %}",
+          subtitle: '',
+          autohide: true,
+          delay: 2000,
+          body: data.message,
+          autoDismiss: true,
+          close: true,
+          autoremove: true,
+        });
+
+      } else {
+        $(document).Toasts('create', {
+          class: "bg-success", 
+          title: "{% trans 'Success' %}",
+          subtitle: '',
+          autohide: true,
+          delay: 2000,
+          body: data.message,
+          autoDismiss: true,
+          close: true,
+          autoremove: true,
+        });
+
+        result = "";
+        for(i=0;i<data.refresh_it_contract_list.length;i++) {
+          it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
+          result += "<tr>";
+          result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['vendor'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
+          result += "<td class='text-right'>";          
+          result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
+          result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
+          result += "</tr>";          
+        }
+
+        $('#contract_list_table tbody').html(result);              
+      
+        $("#add_modal").modal("hide");
+      }      
+    }
+  });  
+}
 
 $(document).ready( function () {
 
@@ -427,7 +653,7 @@ var table = $('#contract_list_table').DataTable({
     searchPlaceholder: 'กรองข้อมูล'
   },
   "columnDefs": [{
-    "targets": 5,
+    "targets": 6,
     "orderable": false
   }] 
 });  
@@ -466,6 +692,8 @@ function edit_item(id) {
         remark = data.remark
         start_date = data.start_date;
         end_date = data.end_date;
+        is_attached = data.attacehed_file;
+        //alert(data.attacehed_file);
 
         $("#id_it_contract_id_edit").val(it_contract_id);
         $("#id_dept_edit").val(dept.trim());
@@ -480,26 +708,11 @@ function edit_item(id) {
         $("#id_end_date_edit").val(end_date);
         $("#edit_item_title").html("Edit #" + id);
         
-        //$("#attached_file").html("<img src='data:image/png;base64," + data.afile + "' style='width:90px;'/>");
-        //$("#employeePhoto").html("<img src='data:image/png;base64," + data.employee_photo + "' style='width:90px;'/>");
-        //<img alt="Embedded Image" src="data:image/png;base64,{{ rslt }}" style="width:50px;height:50px;"/>
-
-
-        // tanos
-        if(data.sample_file!=null) {
-          $("#view_attached_document").html("<a href='#''>View attached document</a>");
+        if(is_attached) {
+          $("#is_attached").html("<button class='btn btn-info btn-sm' id='view_contract_document_button'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;View PDF</button>");
         } else {
-          $("#view_attached_document").html("");
+          $("#is_attached").html("No attached file.");
         }
-        
-        //$("#attached_file").html(blob);    
-        //$("#attached_file").html("<a href='"+ url + "'>Download</a>");
-
-        //var blob = base64ToBlob(data.afile.data, data.afile.mimetype);
-        //var url = window.URL.createObjectURL(blob);
-        //a.href = url;
-        //a.download = result.download.filename;
-        //a.click();
       }
     }
   });  
@@ -532,178 +745,6 @@ function open_add_item_modal() {
   $("#add_modal").modal("show");
 }
 
-function add_item() {
-  dept = $("#id_dept_add").val();
-  vendor = $("#id_vendor_add").val();
-  description = $("#id_description_add").val();
-  person = $("#id_person_add").val();
-  tel = $("#id_tel_add").val();
-  price = $("#id_price_add").val();
-  e_mail = $("#id_e_mail_add").val();
-  remark = $("#id_remark_add").val();  
-  start_date = $("#id_start_date_add").val();
-  end_date = $("#id_end_date_add").val();
-
-  $.ajax({
-    url: '{% url "ajax_add_it_contract_item" %}',
-    type: 'post', 
-    dataType: 'json',
-    data: {
-      csrfmiddlewaretoken: '{{ csrf_token }}',
-      dept: dept,
-      vendor: vendor,
-      description: description,
-      person: person,
-      tel: tel,
-      price: price,
-      e_mail: e_mail,
-      remark: remark,      
-      start_date: start_date,
-      end_date: end_date,
-    },
-    success: function (data) {
-      if(data.is_error) {        
-        $(document).Toasts('create', {
-          class: "bg-danger", 
-          title: "{% trans 'Error' %}",
-          subtitle: '',
-          autohide: true,
-          delay: 2000,
-          body: data.message,
-          autoDismiss: true,
-          close: true,
-          autoremove: true,
-        });
-
-      } else {
-        $(document).Toasts('create', {
-          class: "bg-success", 
-          title: "{% trans 'Success' %}",
-          subtitle: '',
-          autohide: true,
-          delay: 2000,
-          body: data.message,
-          autoDismiss: true,
-          close: true,
-          autoremove: true,
-        });
-
-        result = "";
-        for(i=0;i<data.refresh_it_contract_list.length;i++) {
-          it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
-          result += "<tr>";
-          result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['vendor'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
-          result += "<td class='text-right'>";          
-          result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
-          result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
-          result += "</tr>";          
-        }
-
-        $('#contract_list_table tbody').html(result);              
-      
-        $("#add_modal").modal("hide");
-      }      
-    }
-  });  
-}
-
-function save_item(id) {
-  event.preventDefault();
-  
-  //var form_data = $('#edit_contract_list_form').serialize();
-  var form_data = $('#edit_contract_list_form').serializeArray();
-  
-  /*
-  it_contract_id = $("#id_it_contract_id_edit").val();
-  dept = $("#id_dept_edit").val();
-  vendor = $("#id_vendor_edit").val();
-  description = $("#id_description_edit").val();
-  person = $("#id_person_edit").val();
-  tel = $("#id_tel_edit").val();
-  price = $("#id_price_edit").val();
-  e_mail = $("#id_e_mail_edit").val();
-  remark = $("#id_remark_edit").val();
-  start_date = $("#id_start_date_edit").val();
-  end_date = $("#id_end_date_edit").val();
-  afile = $('#id_it_contract_document_edit').val();
-  */
-
-  $.ajax({
-    url: '{% url "ajax_save_it_contract_item" %}',
-    type: 'post',          
-    dataType: 'json',
-    /*
-    data: {
-      csrfmiddlewaretoken: '{{ csrf_token }}',
-      it_contract_id: it_contract_id,
-      dept: dept,
-      vendor: vendor,
-      description: description,
-      person: person,
-      tel: tel,
-      price: price,
-      e_mail: e_mail,
-      remark: remark,
-      start_date: start_date,
-      end_date: end_date,
-    },
-    */
-    data: form_data,
-    success: function (data) {
-      if(data.is_error) {        
-        $(document).Toasts('create', {
-          class: "bg-danger", 
-          title: "{% trans 'Error' %}",
-          subtitle: '',
-          autohide: true,
-          delay: 2000,
-          body: data.message,
-          autoDismiss: true,
-          close: true,
-          autoremove: true,
-        });  
-      } else {
-
-        $(document).Toasts('create', {
-          class: "bg-success", 
-          title: "{% trans 'Success' %}",
-          subtitle: '',
-          autohide: true,
-          delay: 2000,
-          body: data.message,
-          autoDismiss: true,
-          close: true,
-          autoremove: true,
-        });
-
-        result = "";
-        for(i=0;i<data.refresh_it_contract_list.length;i++) {
-          it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
-          result += "<tr>";
-          result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['vendor'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
-          result += "<td class='text-right'>";          
-          result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
-          result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
-          result += "</tr>";          
-        }
-
-        $('#contract_list_table tbody').html(result);
-        $("#edit_modal").modal("hide");
-      }
-    }
-  });  
-  
-}
 
 function delete_item(id) {
 

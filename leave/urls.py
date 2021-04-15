@@ -33,6 +33,9 @@ urlpatterns += [
     url(r'^ajax/get_employee_leave_history_approved/(?P<emp_id>[^/]+)/$', views.get_employee_leave_history_approved,name='get_employee_leave_history_approved'),
     url(r'^ajax/m1817_check_leave_request_day/$', views.m1817_check_leave_request_day, name='m1817_check_leave_request_day'),
     url(r'^ajax/m1247_check_leave_request_day/$', views.m1247_check_leave_request_day, name='m1247_check_leave_request_day'),    
+
+    # url(r'^get_pdf_file/$', views.get_pdf_file, name='get_pdf_file'),
+    url(r'^get_pdf_file/(?P<pk>[^/]+)/$', views.get_pdf_file, name='get_pdf_file'),
 ]
 
 

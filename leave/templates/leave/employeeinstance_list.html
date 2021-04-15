@@ -68,6 +68,8 @@
 
                           {% if leave.document %}
                           <span class="badge badge-pill badge-light"><a href="{{ MEDIA_URL }}/media/{{leave.document }}" target="_blank"><i class="fa fa-paperclip fa-sm text-primary" aria-hidden="true"></i></a></span>
+
+                          <span><a href="{% url 'get_pdf_file' leave.id %}" target='_blank'>PDF</a></span>
                           {% endif %}
                         </td>
                         <td>

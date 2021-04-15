@@ -32,9 +32,12 @@ from django.db.models import CharField, Value
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
 from base64 import b64encode
+from django.db import connection
+from .forms import ITcontractDBForm
+from django.http import FileResponse
+import django.db as db
 import sys
 import json
-import django.db as db
 import collections
 
 
@@ -74,6 +77,7 @@ def ITcontractPolicy(request):
 @permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
 def ajax_get_it_contract_item(request):
     it_contract_id = request.POST.get("id")   
+    # print("it_contract_id : ", it_contract_id)
     record = {}
     itcontract_list = []
     is_error = True
@@ -88,6 +92,7 @@ def ajax_get_it_contract_item(request):
     remark = ""
     start_date = ""
     end_date = ""
+    is_attacehed = False
 
     if it_contract_id is not None:
         itcontract = ITcontractDB.objects.filter(pk=it_contract_id).get()
@@ -104,13 +109,11 @@ def ajax_get_it_contract_item(request):
             start_date = None if itcontract.start_date is None else itcontract.start_date.strftime("%d/%m/%Y")
             end_date = None if itcontract.end_date is None else itcontract.end_date.strftime("%d/%m/%Y")
             
-            if itcontract.afile is not None:
-                sample_file = b64encode(itcontract.afile).decode("utf-8")
-                # sample_file = "<img src = 'data: image/png; base64, {}' width='200' height='100'>".format(b64encode(itcontract.afile)).decode('utf8')
+            if itcontract.afile != "":
+                if itcontract.afile_data is not None:
+                    attacehed_file = True
             else:
-                sample_file = None
-            # afile = b64encode(itcontract.afile)
-            
+                attacehed_file = False
 
             is_error = False
             error_message = ""
@@ -118,6 +121,9 @@ def ajax_get_it_contract_item(request):
             error_message = "Not found"
     else:
         error_message = "Not found"
+
+    # print("vendor : ", vendor)
+    # print("attacehed_file : ", 1)
 
     response = JsonResponse(data={
         "success": True,
@@ -134,7 +140,7 @@ def ajax_get_it_contract_item(request):
         "remark": remark,
         "start_date": start_date,
         "end_date": end_date,
-        "sample_file": sample_file,   
+        "attacehed_file": attacehed_file,
     })
 
     response.status_code = 200
@@ -142,21 +148,27 @@ def ajax_get_it_contract_item(request):
 
 
 @permission_required('ITcontract.add_itcontractdb', login_url='/accounts/login/')
-def ajax_add_it_contract_item(request):    
+def ajax_add_it_contract_item(request):
     is_error = True
     message = ""
-
-    dept = request.POST.get("dept")
-    vendor = request.POST.get("vendor")
-    description = request.POST.get("description")
-    person = request.POST.get("person")
-    tel = request.POST.get("tel")
-    price = request.POST.get("price")
-    e_mail = request.POST.get("e_mail")
-    remark = request.POST.get("remark")
-    start_date = datetime.strptime(request.POST.get("start_date"), "%d/%m/%Y").date()
-    end_date = datetime.strptime(request.POST.get("end_date"), "%d/%m/%Y").date()
+    dept = request.POST.get("dept_add")
+    vendor = request.POST.get("vendor_add")
+    description = request.POST.get("description_add")
+    person = request.POST.get("person_add")
+    tel = request.POST.get("tel_add")
+    price = request.POST.get("price_add")
+    e_mail = request.POST.get("e_mail_add")
+    remark = request.POST.get("remark_add")
+    start_date = datetime.strptime(request.POST.get("start_date_add"), "%d/%m/%Y").date()
+    end_date = datetime.strptime(request.POST.get("end_date_add"), "%d/%m/%Y").date()
     
+    if request.FILES:
+        afile = request.FILES["it_contract_document_add"].name    
+        afile_data = request.FILES['it_contract_document_add'].read()
+    else:
+        afile = ""
+        afile_data = None
+
     record = {}
     refresh_it_contract_list = []    
 
@@ -175,6 +187,8 @@ def ajax_add_it_contract_item(request):
             upd_date = datetime.now(),
             upd_by = request.user.first_name,
             upd_flag = 'A',
+            afile = afile,
+            afile_data = afile_data,
             )
         item.save()        
 
@@ -186,7 +200,7 @@ def ajax_add_it_contract_item(request):
         message = str(e)
     except Exception as e:                
         message = str(e)
-
+    
     if not is_error:
         refresh_it_contract_list = get_refresh_it_contract_list()
         is_error = False
@@ -207,8 +221,9 @@ def ajax_add_it_contract_item(request):
 def ajax_save_it_contract_item(request):    
     is_error = True
     message = ""
+    
+    # form = ITcontractDBForm(request.POST, request.FILES)
 
-    '''
     it_contract_id = request.POST.get("it_contract_id")
     dept = request.POST.get("dept")
     vendor = request.POST.get("vendor")
@@ -220,29 +235,14 @@ def ajax_save_it_contract_item(request):
     remark = request.POST.get("remark")    
     start_date = datetime.strptime(request.POST.get("start_date"), "%d/%m/%Y").date()
     end_date = datetime.strptime(request.POST.get("end_date"), "%d/%m/%Y").date()
-    '''
 
-    it_contract_id = request.POST['contract_id_edit']
-    dept = request.POST["dept_edit"]
-    vendor = request.POST["vendor_edit"]
-    description = request.POST["description_edit"]
-    person = request.POST["person_edit"]
-    tel = request.POST["tel_edit"]
-    price = request.POST["price_edit"]
-    e_mail = request.POST["e_mail_edit"]
-    remark = request.POST["remark_edit"]    
-    start_date = datetime.strptime(request.POST["start_date_edit"], "%d/%m/%Y").date()
-    end_date = datetime.strptime(request.POST["end_date_edit"], "%d/%m/%Y").date()
-
-    # 
-    #afile = request.FILES["id_it_contract_document_edit"]
-    test_string = "GFG is best"
-    res = bytes(test_string, 'utf-8')
+    # afile = request.FILES["afile"]
+    # fileSize = request.POST.get('fileSize')
+    # fileData = request.FILES['fileData']
 
     record = {}
     refresh_it_contract_list = []    
     
-
     if it_contract_id is not None:
         itcontract = ITcontractDB.objects.filter(pk=it_contract_id).get()
 
@@ -261,12 +261,13 @@ def ajax_save_it_contract_item(request):
             itcontract.upd_date = datetime.now()
             itcontract.upd_by = request.user.first_name
             itcontract.upd_flag = 'E'
-            
+    
+            '''            
             if request.FILES is not None:
-                itcontract.afile = request.FILES
+                itcontract.afile = afile
             else:
                 itcontract.afile = None
-            
+            '''
 
             try:
                 itcontract.save()
@@ -287,7 +288,7 @@ def ajax_save_it_contract_item(request):
             message = "Error"
     else:
         message = "Error"
-
+    
     response = JsonResponse(data={
         "success": True,
         "is_error": is_error,
@@ -380,3 +381,63 @@ def get_refresh_it_contract_list():
         refresh_it_contract_list.append(record)
 
     return refresh_it_contract_list
+
+
+@permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
+def view_contract_document(request, it_contract_id):
+    result = {}
+    total_day = 0
+    total_hour = 0
+
+    # it_contract_id = 9
+
+    # sql = "select afile, afile_data from itcontractdb where id='%s';" % (it_contract_id)
+    document_obj = ITcontractDB.objects.filter(id__exact=it_contract_id).get()
+    # print(document_obj.document)
+
+    write_document_data = open('media/' + str(document_obj.afile), 'wb').write(document_obj.afile_data)
+    document_data = open('media/' + str(document_obj.afile), 'rb')    
+    
+    response = FileResponse(document_data)
+    return response
+
+
+@permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
+def view_contract_document_bk(request):
+    result = {}
+    total_day = 0
+    total_hour = 0
+
+    it_contract_id = request.POST.get("it_contract_id")
+
+    # print(request.POST.get("it_contract_id"))
+    # print("TODO")
+
+    # sql = "select afile, afile_data from itcontractdb where id='%s';" % (it_contract_id)
+    document_obj = ITcontractDB.objects.filter(id__exact=it_contract_id).get()
+    # print(document_obj.document)
+
+    write_document_data = open('media/' + str(document_obj.afile), 'wb').write(document_obj.afile_data)
+    document_data = open('media/' + str(document_obj.afile), 'rb')    
+    
+    # response = HttpResponse(write_document_data, content_type='application/pdf')
+    return response
+
+
+'''
+@permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
+def ajax_download_file(request):
+    it_contract_id = 50
+    c = connection.cursor()
+    c.execute("select afile from itcontractdb where id=%s", (it_contract_id,))
+    file = c.fetchone()[0]
+    c.close()
+
+    #response = HttpResponse(file, content_type='application/pdf')
+    #response['Content-Disposition'] = 'inline; filename="report.pdf"'
+
+    response = HttpResponse(file, content_type='application/image')
+    response['Content-Disposition'] = 'inline; filename="file.png"'
+
+    return response
+'''
