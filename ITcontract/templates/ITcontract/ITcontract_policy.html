@@ -62,7 +62,7 @@
                       <th scope="col" style="text-align: left">{% trans 'Description' %}&nbsp;</th>
                       <th scope="col" style="text-align: left">{% trans 'Start Date' %}&nbsp;</th>
                       <th scope="col">{% trans 'End Date' %}</th>
-                      <th scope="col" class='text-center'>{% trans 'Attachment' %}</th>
+                      <th scope="col" class='text-left'>{% trans 'Attachment' %}</th>
                       <th scope="col">&nbsp;</th>
                     </tr>
                   </thead>
@@ -79,9 +79,9 @@
                       <td>{{item.end_date|date:"d/m/Y"}}</td>
 
                       {% if item.afile != "" %}
-                      <td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>
+                      <td class='text-left'><i class='fas fa-check fa-xs text-success'></i>&nbsp;{{ item.afile }}</td>
                       {% else %}
-                      <td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>
+                      <td class='text-left'><i class='fas fa-times fa-xs text-danger'></i>&nbsp;Not attached</td>
                       {% endif %}
                       <td class='text-right'>
                         <button type='button' onclick='edit_item("{{item.id}}")' class='btn btn-info btn-xs' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>
@@ -380,20 +380,6 @@ function view_contract_document() {
 
 function save_item(id) {
   event.preventDefault();
-  
-  /*
-  it_contract_id = $("#id_it_contract_id_edit").val();
-  dept = $("#id_dept_edit").val();
-  vendor = $("#id_vendor_edit").val();
-  description = $("#id_description_edit").val();
-  person = $("#id_person_edit").val();
-  tel = $("#id_tel_edit").val();
-  price = $("#id_price_edit").val();
-  e_mail = $("#id_e_mail_edit").val();
-  remark = $("#id_remark_edit").val();
-  start_date = $("#id_start_date_edit").val();
-  end_date = $("#id_end_date_edit").val();
-  */
 
   formData = new FormData();  
   data = new FormData($('#edit_contract_list_form').get(0));
@@ -464,6 +450,8 @@ function save_item(id) {
 }
 
 function add_item() {
+
+  /*
   dept = $("#id_dept_add").val();
   vendor = $("#id_vendor_add").val();
   description = $("#id_description_add").val();
@@ -474,10 +462,11 @@ function add_item() {
   remark = $("#id_remark_add").val();  
   start_date = $("#id_start_date_add").val();
   end_date = $("#id_end_date_add").val();
-
+  
   if($('#id_it_contract_document_add')[0].files[0] != null) {
     file_name = $('#id_it_contract_document_add')[0].files[0].name;      
   }
+  */
 
   formData = new FormData();  
   data = new FormData($('#add_contract_list_form').get(0));
@@ -656,7 +645,6 @@ function edit_item(id) {
         start_date = data.start_date;
         end_date = data.end_date;
         is_attached = data.attacehed_file;
-        //alert(data.attacehed_file);
 
         $("#id_it_contract_id_edit").val(it_contract_id);
         $("#id_dept_edit").val(dept.trim());
