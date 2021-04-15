@@ -106,6 +106,7 @@ def ajax_get_it_contract_item(request):
     start_date = ""
     end_date = ""
     is_attacehed = False
+    attached_file_name = ""
 
     if it_contract_id is not None:
         itcontract = ITcontractDB.objects.filter(pk=it_contract_id).get()
@@ -121,10 +122,12 @@ def ajax_get_it_contract_item(request):
             remark = "" if itcontract.remark is None else itcontract.remark
             start_date = None if itcontract.start_date is None else itcontract.start_date.strftime("%d/%m/%Y")
             end_date = None if itcontract.end_date is None else itcontract.end_date.strftime("%d/%m/%Y")
-            
+                        
+
             if itcontract.afile != "":
                 if itcontract.afile_data is not None:
                     attacehed_file = True
+                    attached_file_name = str(itcontract.afile)
             else:
                 attacehed_file = False
 
@@ -154,6 +157,7 @@ def ajax_get_it_contract_item(request):
         "start_date": start_date,
         "end_date": end_date,
         "attacehed_file": attacehed_file,
+        "attached_file_name": attached_file_name,
     })
 
     response.status_code = 200

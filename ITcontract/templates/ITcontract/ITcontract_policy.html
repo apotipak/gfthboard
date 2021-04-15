@@ -653,6 +653,7 @@ function edit_item(id) {
         start_date = data.start_date;
         end_date = data.end_date;
         is_attached = data.attacehed_file;
+        attached_file_name = data.attached_file_name;
 
         $("#id_it_contract_id_edit").val(it_contract_id);
         $("#id_dept_edit").val(dept.trim());
@@ -668,7 +669,9 @@ function edit_item(id) {
         $("#edit_item_title").html("Edit #" + id);
         
         if(is_attached) {
-          $("#is_attached").html("<button class='btn btn-info btn-sm' onclick='view_contract_document();'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;View contract file</button>");
+          $("#is_attached").html("<button class='btn btn-success btn-sm' onclick='view_contract_document();'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;View contract file</button>");
+          $("#is_attached").html("<button class='btn btn-success btn-sm' onclick='view_contract_document();'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;" + attached_file_name + "</button>");
+          
         } else {
           $("#is_attached").html("No attached file.");
         }
