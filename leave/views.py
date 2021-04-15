@@ -34,9 +34,16 @@ from django.utils import translation
 from django.core import serializers
 import collections
 from django.utils.timezone import now
-import json
+from base64 import decodestring
+from django.core.files import File
 from django.utils.translation import ugettext as _
 from django.db.models import CharField, Value
+import json
+import re, io
+import django.db as db
+from django.db import connection
+from django.http import FileResponse
+from base64 import b64encode
 
 
 # excluded_username = {'900590','580816','900630'}
@@ -175,6 +182,8 @@ def EmployeeNew(request):
             employee.created_by = request.user.username
             employee.leave_reason = leave_reason
 
+            employee.document_data = request.FILES['document'].read()
+
             '''
             if request.user.groups.filter(name__in=['E-Leave Staff','E-Leave Manager', 'E-Leave-M1817-Staff', 'E-Leave-M1817-Manager']).exists():
                 grand_total_hours = checkM1817BusinessRules('M1817', start_date, end_date, leave_type_id)
@@ -199,8 +208,7 @@ def EmployeeNew(request):
 
             employee.lve_act = grand_total_hours // 8
             employee.lve_act_hr = grand_total_hours % 8
-
-
+        
             employee.save()
             ref = employee.id 
 
@@ -1170,3 +1178,38 @@ def LeaveTimeline(request):
     }
 
     return render(request, 'leave/leave_timeline.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def get_pdf_file(request, pk):
+    result = {}
+    total_day = 0
+    total_hour = 0
+
+    print(pk)
+
+    sql = "select document, document_data from leave_employeeinstance where id='%s';" % (pk)
+
+    document_obj = EmployeeInstance.objects.filter(id__exact=pk).get()
+    print(document_obj.document)
+
+    write_document_data = open('media/' + str(document_obj.document), 'wb').write(document_obj.document_data)
+    document_data = open('media/' + str(document_obj.document), 'rb')    
+    
+
+    '''    
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            document_obj = cursor.fetchone()
+        
+    finally:
+        cursor.close()
+
+    write_document_data = open('media/' + document_obj[0], 'wb').write(document_obj[1])
+    document_data = open('media/' + document_obj[0], 'rb')
+    '''
+
+    response = FileResponse(document_data)
+    return response
+

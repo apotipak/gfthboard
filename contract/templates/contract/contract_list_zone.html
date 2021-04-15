@@ -1,0 +1,83 @@
+{% extends "page_default.html" %}
+
+{% block title %}รายการสัญญา{% endblock %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">รายการสัญญา</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">เมนูหลัก</a></li>
+              <li class="breadcrumb-item active">รายการสัญญา</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-12">
+
+		        {% if tclcontractsum_list %}
+              <table id="contract_list_table" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th scope="col">โซน</th>
+                  <th scope="col">กลางวัน</th>
+                  <th scope="col">กลางคืน</th>
+                  <th scope="col">รวม</th>
+                  <th scope="col">แจ้งกลางวัน</th>
+                  <th scope="col">แจ้งกลางคืน</th>
+                  <th scope="col">ขาดกลางวัน</th>
+                  <th scope="col">ขาดกลางตืน</th>
+                  <!--<td scope="col">&nbsp;</td>-->
+                </tr>
+                </thead>
+                <tbody>
+                {% for contract in tclcontractsum_list %}
+                    <tr>
+                        <td><a href="{% url 'contract-list' %}" target="_blank">{{contract.zone_en}}</a></td>
+                        <td>{{contract.SD}}</td>
+                        <td>{{contract.SN}}</td>
+                        <td>{{contract.CQTY}}</td>
+                        <td>{{contract.DLY_SD}}</td>
+                        <td>{{contract.DLY_SN}}</td>
+                        <td>{{contract.DLY_STD}}</td>
+                        <td>{{contract.DLY_STN}}</td>
+                     </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+            {% else %}
+              <div class="col-lg-12">
+                <div class="alert alert-success" role="alert">
+                    <i class="fa fa-info-circle"></i>&nbsp;&nbsp;ยังไม่มีรายการอยู่ในระบบ
+                </div>           
+              </div>
+            {% endif %}
+
+            <br>
+          </div>
+
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+{% endblock %}

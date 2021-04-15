@@ -34,10 +34,10 @@
                 <div class="col-12">
                   <h4><span class="info-box-text">Daily Guard Info</span></h4>
                   <div>
-                    <span class="info-box-number"><small>{% trans 'Check clock-in time system' %}</small>
-                      <br>
-                      <br>                      
-                      <a href="contract/contract-list" type="button" class="btn btn-outline-primary float-right">{% trans 'Open' %}</a>
+                    <span class="info-box-number"><small>{% trans 'Check clock-in time system' %}<br>
+                      <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a><br>
+                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a></small>
+                      <a href="contract/contract-list-Sum" type="button" class="btn btn-outline-primary float-right">{% trans 'Open' %}</a>
                     </span>
                   </div>
                 </div>
@@ -47,47 +47,48 @@
           {% endif %}
 
 
-          {% if perms.employee.view_tclcontractqty %}
-          <!--
+          {% if perms.ITcontract.view_itcontractdb %}
           <div class="col-12 col-sm-6 col-md-6">
             <div class="info-box mb-4">
               <span class="info-box-icon" style="background-color:#ff3300 !important"><i class="fas fa-user-alt text-white"></i></span>
               <div class="info-box-content">
                 <div class="col-12">
-                  <h4><span class="info-box-text">Employee</span></h4>
+                  <h4><span class="info-box-text">ITcontract</span></h4>
                   <div>
-                    <span class="info-box-number"><small>ข้อมูลพนักงาน</small>
-                      <a href="contract/contract-list" type="button" class="btn btn-outline-primary float-right">ใช้งาน</a>
+                    <span class="info-box-number"><small>ข้อมูลสัญญา<br>
+                      <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a><br>
+                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a></small>
+                      <a href="{% url 'ITcontract' %}" type="button" class="btn btn-outline-primary float-right">Open</a>
                     </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        -->
           {% endif %}
 
           <!-- fix for small devices only -->
           <div class="clearfix hidden-md-up"></div>
 
-          <!--
+          {% if perms.prpo.add_prpoactions %}
           <div class="col-12 col-sm-6 col-md-6">
             <div class="info-box mb-4">
               <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-wrench"></i></span>
               <div class="info-box-content">
                 <div class="col-12">
-                  <h4><span class="info-box-text">ระบบทดสอบ 1</span></h4>
+                  <h4><span class="info-box-text">PRPO</span></h4>
                   <div>
-                    <span class="info-box-number"><small>คำอธิบายระบบ</small>
-                      <a href="๒" type="button" class="btn btn-outline-primary float-right disabled">ใช้งาน</a>
+                    <span class="info-box-number"><small>ระบบขอสั่งซื้อ<br>
+                      <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a><br>
+                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a></small>
+                      <a href="{% url 'prpo_company' %}" type="button" class="btn btn-outline-primary float-right ">Open</a>
                     </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          -->
-
+          {% endif %}
           <!--
           <div class="col-12 col-sm-6 col-md-6">
             <div class="info-box mb-4">
