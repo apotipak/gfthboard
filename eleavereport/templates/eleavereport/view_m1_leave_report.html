@@ -16,7 +16,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">{% trans 'Reports' %}<small><small>&nbsp;&nbsp;|&nbsp;&nbsp;วันลาสถานะอนุมัติ</small></small></h1>
+            <h1 class="m-0 text-dark">{% trans 'Reports' %}<small><small>&nbsp;&nbsp;|&nbsp;&nbsp;รายงานพนักงานลาหยุด</small></small></h1>            
           </div>
           <div class="col-sm-6">
             <!--
@@ -103,8 +103,12 @@
 
 					      <!--<td>{{ item.created_date|date:"d/n/Y H:i"}}</td>-->
 					      <td>{{ item.created_date|date:"d/n/Y"}}</td>
+
+					      {% if item.updated_date is not None %}
 					      <td>{{ item.updated_date|date:"d/n/Y"}}</td>
-					      
+					      {% else %}
+					      <td>รออนุมัติ</td>
+					      {% endif %}
 					    </tr>
 					    {% endfor %}
 					  </tbody>
