@@ -104,8 +104,8 @@ def ViewM1Report(request):
 	})
 
 
-@permission_required('eleavereport.can_view_m1_approved_leave_request_report', login_url='/accounts/login/')
-def ViewM1ApprovedLeaveRequestReport(request):
+@permission_required('eleavereport.can_view_m1_leave_report', login_url='/accounts/login/')
+def ViewM1LeaveReport(request):
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)	
 	page_title = settings.PROJECT_NAME
@@ -132,7 +132,7 @@ def ViewM1ApprovedLeaveRequestReport(request):
 	sql += "from leave_employeeinstance l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
-	sql += "where year(start_date)=year(getdate()) and status='C' "
+	sql += "where year(start_date)=year(getdate()) and status in ('C','p') "
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
 	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') "
 	sql += "order by created_date desc;"
@@ -187,7 +187,7 @@ def ViewM1ApprovedLeaveRequestReport(request):
 	    else:                    
 	        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
-	return render(request, 'eleavereport/view_m1_approved_leave_request_report.html', {
+	return render(request, 'eleavereport/view_m1_leave_report.html', {
 	    'page_title': settings.PROJECT_NAME,
 	    'today_date': today_date,
 	    'project_version': settings.PROJECT_VERSION,

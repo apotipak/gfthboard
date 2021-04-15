@@ -16,8 +16,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">{% trans 'Reports' %}<small><small>&nbsp;&nbsp;|&nbsp;&nbsp;วันลาสถานะรออนุมัติ</small></small></h1>
-            <h4 class="m-0 text-dark"><small><small>ใช้สำหรับดูข้อมูลพนักงานที่ลาวันนี้เแต่ยังไม่อนุมัติ</small></small></h4>
+            <h1 class="m-0 text-dark">{% trans 'Reports' %}<small><small>&nbsp;&nbsp;|&nbsp;&nbsp;รายงานพนักงานลาหยุด</small></small></h1>            
           </div>
           <div class="col-sm-6">
             <!--
@@ -63,7 +62,7 @@
           </form>                 
     	</div>
 
-    	{% if leave_request_pending_list is not None %}
+    	{% if leave_request_approved_list is not None %}
     	<div class="row">
 
 			<div class="form-inline col-12">
@@ -88,10 +87,11 @@
 					      <th scope="col">ลาวันที่</th>
 					      <th scope="col">ถึงวันที่</th>
 					      <th scope="col">วันสร้าง</th>
+					      <th scope="col">วันอนุมัติ</th>
 					    </tr>
 					  </thead>
 					  <tbody>
-					  {% for item in leave_request_pending_list %}
+					  {% for item in leave_request_approved_list %}
 					    <tr>
 					      <th scope="row">{{ item.row_count }}</th>			      
 					      <td>{{ item.emp_id }}</td>
@@ -100,9 +100,15 @@
 					      <td>{{ item.leave_type_id}} | {{item.leave_type_th}}</td>
 					      <td>{{ item.start_date|date:"d/n/Y H:i" }}</td>
 					      <td>{{ item.end_date|date:"d/n/Y H:i" }}</td>
+
+					      <!--<td>{{ item.created_date|date:"d/n/Y H:i"}}</td>-->
 					      <td>{{ item.created_date|date:"d/n/Y"}}</td>
-					      <!--<td>{{ item.created_date|naturaltime}}</td>-->
-					      
+
+					      {% if item.updated_date is not None %}
+					      <td>{{ item.updated_date|date:"d/n/Y"}}</td>
+					      {% else %}
+					      <td>รออนุมัติ</td>
+					      {% endif %}
 					    </tr>
 					    {% endfor %}
 					  </tbody>
