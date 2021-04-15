@@ -259,9 +259,10 @@ def ajax_save_it_contract_item(request):
             if request.FILES:
                 itcontract.afile = request.FILES["it_contract_document_edit"].name    
                 itcontract.afile_data = request.FILES['it_contract_document_edit'].read()
-            else:
-                itcontract.afile = ""
-                itcontract.afile_data = None
+            else:            
+                # itcontract.afile = ""
+                # itcontract.afile_data = None
+                print("do nothing")
     
             try:
                 itcontract.save()
@@ -358,7 +359,14 @@ def get_refresh_it_contract_list():
         e_mail = item.e_mail
         remark = item.remark                    
         start_date = item.start_date.strftime("%d/%m/%Y")
-        end_date = item.end_date.strftime("%d/%m/%Y")                
+        end_date = item.end_date.strftime("%d/%m/%Y")
+
+        afile = item.afile
+        if(afile != ""):
+            is_file_attached = True
+        else:
+            is_file_attached = False
+
         record = {
             "it_contract_id": it_contract_id,
             "dept": dept,
@@ -371,6 +379,7 @@ def get_refresh_it_contract_list():
             "remark": remark,                        
             "start_date": start_date,
             "end_date": end_date,
+            "is_file_attached": is_file_attached,
         }
         refresh_it_contract_list.append(record)
 
