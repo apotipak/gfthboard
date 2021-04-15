@@ -56,10 +56,23 @@ def ITcontractPolicy(request):
     
     ITcontractList = ITcontractDB.objects.exclude(upd_flag='D').all()
 
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+    
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
     return render(request,
         'ITcontract/ITcontract_policy.html', {
@@ -360,6 +373,7 @@ def get_refresh_it_contract_list():
         remark = item.remark                    
         start_date = item.start_date.strftime("%d/%m/%Y")
         end_date = item.end_date.strftime("%d/%m/%Y")
+        upd_by = item.upd_by
 
         afile = item.afile
         if(afile != ""):
@@ -380,6 +394,7 @@ def get_refresh_it_contract_list():
             "start_date": start_date,
             "end_date": end_date,
             "is_file_attached": is_file_attached,
+            "upd_by": upd_by,
         }
         refresh_it_contract_list.append(record)
 

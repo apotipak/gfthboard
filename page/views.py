@@ -32,9 +32,15 @@ def index(request):
     ANNOUNCEMENT_MESSAGE = settings.ANNOUNCEMENT_MESSAGE
 
     if user_language == "th":
-        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
-        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
     page_title = settings.PROJECT_NAME    
     db_server = settings.DATABASES['default']['HOST']
@@ -76,10 +82,23 @@ def StaffProfile11(request):
     else:
         able_to_approve_leave_request = False
 
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
 
     return render(request, 'page/staff_profile.html', {
@@ -119,11 +138,25 @@ def StaffPassword(request):
             return HttpResponseRedirect('/staff-profile')
     else:
         form = UserForm(user=request.user)    
-    
+
+    '''    
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
 
     return render(request, 'page/staff_password_form.html', {
         'form': form,
@@ -169,11 +202,23 @@ def StaffLanguage(request):
     else:
         form = LanguageForm(user=request.user)    
 
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
 
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
     return render(request, 'page/staff_language.html', {
         'form': form,
         'page_title': page_title, 
@@ -196,7 +241,12 @@ def StaffProfile(request):
     project_version = settings.PROJECT_VERSION
     today_date = getDateFormatDisplay(user_language)
     EmployeeInstance = LeaveEmployee.EmployeeInstance(request)
-    SuperVisorInstance = LeaveEmployee.SuperVisorInstance(request)
+
+    if request.user.username == "999999":
+        SuperVisorInstance = None
+    else:
+        SuperVisorInstance = LeaveEmployee.SuperVisorInstance(request)
+
     TeamMemberList = LeaveEmployee.TeamMemberList(request)
 
     # Check leave approval right
@@ -205,10 +255,23 @@ def StaffProfile(request):
     else:
         able_to_approve_leave_request = False
 
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
     if request.method == "POST":
         form = ViewAllStaffForm(request.POST, user=request.user)
@@ -336,10 +399,26 @@ def viewallstaff(request):
     item_per_page = 20  
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
+
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+
     page_title = settings.PROJECT_NAME
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
@@ -532,10 +611,24 @@ def HelpEleave(request):
     project_version = settings.PROJECT_VERSION
     today_date = getDateFormatDisplay(user_language) 
 
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
 
     return render(request, 'page/help_eleave.html', {
         'page_title': page_title, 
@@ -557,10 +650,24 @@ def faq(request):
     project_version = settings.PROJECT_VERSION
     today_date = getDateFormatDisplay(user_language) 
 
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
 
     return render(request, 'page/faq.html', {
         'page_title': page_title, 
@@ -582,10 +689,24 @@ def news(request):
     project_version = settings.PROJECT_VERSION
     today_date = getDateFormatDisplay(user_language) 
 
+    '''
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    '''
+    
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
 
     return render(request, 'page/news.html', {
         'page_title': page_title, 
