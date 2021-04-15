@@ -248,7 +248,7 @@
         <div class="col-12 p-0 pt-2 pb-3">
 
           <!--<form action="/upload/" method="post" autocomplete="off" id="edit_contract_list_form" name="edit_contract_list_form" enctype="multipart/form-data">-->
-          <form method="post" autocomplete="off" name="edit_contract_list_form">
+          <form method="post" autocomplete="off" name="edit_contract_list_form" id="edit_contract_list_form" autocomplete="off" enctype="multipart/form-data">
             {% csrf_token %}
             
             <div class="card-body p-0 pt-2">              
@@ -324,8 +324,6 @@
               <div class="custom-file col-12 pl-20">
                 <b>Attached File</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <input type="file" id="id_it_contract_document_edit" name="it_contract_document_edit">
-                <input id="fileupload" type="file" name="file" multiple style="display: none;" data-url="{% url 'ajax_save_it_contract_item' %}" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
-
               </div>              
             </div>
 
@@ -423,11 +421,14 @@ function save_item(id) {
   //var realSize = sizeConverter(fileSize);
   //var fileData = new FormData($('#id_it_contract_document_edit')[0]);  
 
+  formData = new FormData();  
+  data = new FormData($('#edit_contract_list_form').get(0));
 
   $.ajax({
     url: '{% url "ajax_save_it_contract_item" %}',
     type: 'post',          
     dataType: 'json',
+    /*
     data: {
       csrfmiddlewaretoken: '{{ csrf_token }}',
       it_contract_id: it_contract_id,
@@ -441,12 +442,11 @@ function save_item(id) {
       remark: remark,
       start_date: start_date,
       end_date: end_date,
-      //afile: afile,
-      //fileData: fileData,
-      //fileSize: realSize,      
-    },
-    //data: form_data,
-    //enctype: 'multipart/form-data',    
+    },*/
+    data: data,
+    cache: false,
+    processData: false,
+    contentType: false,    
     success: function (data) {
       if(data.is_error) {        
         $(document).Toasts('create', {

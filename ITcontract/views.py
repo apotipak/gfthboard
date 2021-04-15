@@ -222,23 +222,17 @@ def ajax_save_it_contract_item(request):
     is_error = True
     message = ""
     
-    # form = ITcontractDBForm(request.POST, request.FILES)
-
-    it_contract_id = request.POST.get("it_contract_id")
-    dept = request.POST.get("dept")
-    vendor = request.POST.get("vendor")
-    description = request.POST.get("description")
-    person = request.POST.get("person")
-    tel = request.POST.get("tel")
-    price = request.POST.get("price")
-    e_mail = request.POST.get("e_mail")
-    remark = request.POST.get("remark")    
-    start_date = datetime.strptime(request.POST.get("start_date"), "%d/%m/%Y").date()
-    end_date = datetime.strptime(request.POST.get("end_date"), "%d/%m/%Y").date()
-
-    # afile = request.FILES["afile"]
-    # fileSize = request.POST.get('fileSize')
-    # fileData = request.FILES['fileData']
+    it_contract_id = request.POST.get("contract_id_edit")
+    dept = request.POST.get("dept_edit")
+    vendor = request.POST.get("vendor_edit")
+    description = request.POST.get("description_edit")
+    person = request.POST.get("person_edit")
+    tel = request.POST.get("tel_edit")
+    price = request.POST.get("price_edit")
+    e_mail = request.POST.get("e_mail_edit")
+    remark = request.POST.get("remark_edit")
+    start_date = datetime.strptime(request.POST.get("start_date_edit"), "%d/%m/%Y").date()
+    end_date = datetime.strptime(request.POST.get("end_date_edit"), "%d/%m/%Y").date()
 
     record = {}
     refresh_it_contract_list = []    
@@ -262,13 +256,13 @@ def ajax_save_it_contract_item(request):
             itcontract.upd_by = request.user.first_name
             itcontract.upd_flag = 'E'
     
-            '''            
-            if request.FILES is not None:
-                itcontract.afile = afile
+            if request.FILES:
+                itcontract.afile = request.FILES["it_contract_document_edit"].name    
+                itcontract.afile_data = request.FILES['it_contract_document_edit'].read()
             else:
-                itcontract.afile = None
-            '''
-
+                itcontract.afile = ""
+                itcontract.afile_data = None
+    
             try:
                 itcontract.save()
                 is_error = False
