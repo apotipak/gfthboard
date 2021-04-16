@@ -619,9 +619,31 @@ function add_item() {
           result += "</tr>";          
         }
 
-        $('#contract_list_table tbody').html(result);              
+        //$('#contract_list_table tbody').html(result);                    
+        
+        table.destroy();
+        $('#contract_list_table tbody').empty().append(result);        
+        table = $('#contract_list_table').DataTable({
+          "paging": true,
+          "pageLength": 15,
+          "scrollCollapse": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": false,
+          "autoWidth": true,
+          "language": {
+            search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+            searchPlaceholder: 'กรองข้อมูล'
+          },
+          "columnDefs": [{
+            "targets": 8,
+            "orderable": false
+          }] 
+        }); 
       
         $("#add_modal").modal("hide");
+
       }      
     }
   });  
