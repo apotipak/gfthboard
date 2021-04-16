@@ -76,6 +76,9 @@ def ITcontractPolicy(request):
     ITcontractList = ITcontractDB.objects.exclude(upd_flag='D').all()
 
     if ITcontractList is not None:
+        str_today_date = datetime.now().strftime("%Y-%m-%d")
+        today_date = datetime.strptime(str_today_date, '%Y-%m-%d').date()
+        
         for item in ITcontractList:
             it_contract_id = item.id
             department = item.dept
@@ -88,7 +91,16 @@ def ITcontractPolicy(request):
             end_date = item.end_date
             price = item.price
             remark = item.remark
-            upd_by = item.upd_by
+            upd_by = item.upd_by            
+
+            if (end_date.date() > today_date):
+                is_contract_expired = False
+            else:
+                print("Expired")
+                is_contract_expired = True
+
+            remaining_day = end_date - start_date            
+            print(remaining_day.days)
 
             record = {
                 "id": it_contract_id,
@@ -103,6 +115,8 @@ def ITcontractPolicy(request):
                 "price": price,
                 "remark": remark,
                 "upd_by": upd_by,
+                "is_contract_expired": is_contract_expired,
+                "remaining_day": remaining_day.days,
             }
 
             it_contract_list.append(record)
