@@ -66,6 +66,7 @@
                       <th scope="col" style="text-align: left">{% trans 'Description' %}&nbsp;</th>
                       <th scope="col" style="text-align: left" nowrap>{% trans 'Start Date' %}&nbsp;</th>
                       <th scope="col" nowrap>{% trans 'End Date' %}</th>
+                      <th scope="col" nowrap>Status</th>
                       <th scope="col" class='text-center'>{% trans 'Attachment' %}</th>
                       <th scope="col" nowrap>{% trans 'Upd By' %}</th>
                       <th scope="col">&nbsp;</th>
@@ -82,6 +83,12 @@
                       <td>{{item.description}}</td>                      
                       <td>{{item.start_date|date:"d/m/Y"}}</td>
                       <td>{{item.end_date|date:"d/m/Y"}}</td>
+
+                      {% if item.is_contract_expired %}
+                      <td><span class='text-danger'>expired</span></td>
+                      {% else %}
+                      <td><span class='text-success'>{{item.remaining_day}}</span>&nbsp; days left</td>
+                      {% endif %}
 
                       {% if item.afile != "" %}
                       <td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>
@@ -101,6 +108,7 @@
                   {% else %}
                   <tbody>                    
                     <tr>
+                      <td>&nbsp;</td>
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
