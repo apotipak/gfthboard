@@ -59,8 +59,6 @@ def ITcontractPolicy(request):
     project_version = settings.PROJECT_VERSION    
     today_date = getDateFormatDisplay(user_language)
     
-    ITcontractList = ITcontractDB.objects.exclude(upd_flag='D').all()
-    
     if user_language == "th":
         if request.user.username == "999999":
             username_display = request.user.first_name
@@ -72,6 +70,43 @@ def ITcontractPolicy(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    it_contract_list = []
+    record = {}
+
+    ITcontractList = ITcontractDB.objects.exclude(upd_flag='D').all()
+
+    if ITcontractList is not None:
+        for item in ITcontractList:
+            it_contract_id = item.id
+            department = item.dept
+            vendor = item.vendor
+            description = item.description
+            contact = item.person
+            phone = item.tel
+            email = item.e_mail
+            start_date = item.start_date
+            end_date = item.end_date
+            price = item.price
+            remark = item.remark
+            upd_by = item.upd_by
+
+            record = {
+                "id": it_contract_id,
+                "dept": department,
+                "vendor": vendor,
+                "description": description,
+                "contact": contact,
+                "phone": phone,
+                "email": email,
+                "start_date": start_date,
+                "end_date": end_date,
+                "price": price,
+                "remark": remark,
+                "upd_by": upd_by,
+            }
+
+            it_contract_list.append(record)
+
     return render(request,
         'ITcontract/ITcontract_policy.html', {
         'page_title': settings.PROJECT_NAME,
@@ -81,7 +116,7 @@ def ITcontractPolicy(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
-        'ITcontractList':  ITcontractList,
+        'ITcontractList':  it_contract_list,
     })
 
 

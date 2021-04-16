@@ -350,12 +350,12 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
 
         if user_language == "th":
             if self.request.user.username == "999999":
-                username_display = request.user.first_name
+                username_display = self.request.user.first_name
             else:            
                 username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
         else:
             if self.request.user.username == "999999":
-                username_display = request.user.first_name
+                username_display = self.request.user.first_name
             else:                    
                 username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
@@ -681,15 +681,15 @@ class LeavePendingApproveListView(PermissionRequiredMixin, generic.ListView):
         '''
 
         if user_language == "th":
-            if request.user.username == "999999":
-                username_display = request.user.first_name
+            if self.request.user.username == "999999":
+                username_display = self.request.user.first_name
             else:            
-                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+                username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
         else:
-            if request.user.username == "999999":
-                username_display = request.user.first_name
+            if self.request.user.username == "999999":
+                username_display = self.request.user.first_name
             else:                    
-                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+                username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
 
         context.update({
@@ -745,15 +745,15 @@ class LeaveApprovedListView(PermissionRequiredMixin, generic.ListView):
         '''
 
         if user_language == "th":
-            if request.user.username == "999999":
-                username_display = request.user.first_name
+            if self.request.user.username == "999999":
+                username_display = self.request.user.first_name
             else:            
-                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+                username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
         else:
-            if request.user.username == "999999":
-                username_display = request.user.first_name
+            if self.request.user.username == "999999":
+                username_display = self.request.user.first_name
             else:                    
-                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+                username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
 
         context.update({
@@ -810,15 +810,15 @@ class LeaveRejectedListView(PermissionRequiredMixin, generic.ListView):
         '''
 
         if user_language == "th":
-            if request.user.username == "999999":
-                username_display = request.user.first_name
+            if self.request.user.username == "999999":
+                username_display = self.request.user.first_name
             else:            
-                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+                username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_th', flat=True).get()
         else:
-            if request.user.username == "999999":
-                username_display = request.user.first_name
+            if self.request.user.username == "999999":
+                username_display = self.request.user.first_name
             else:                    
-                username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+                username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
 
         context.update({
