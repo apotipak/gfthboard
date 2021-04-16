@@ -60,10 +60,10 @@
                       <th scope="col">{% trans 'Deptartment' %}</th>
                       <th scope="col" style="text-align: left">{% trans 'Vendor' %}</th>
                       <th scope="col" style="text-align: left">{% trans 'Description' %}&nbsp;</th>
-                      <th scope="col" style="text-align: left">{% trans 'Start Date' %}&nbsp;</th>
-                      <th scope="col">{% trans 'End Date' %}</th>
-                      <th scope="col" class='text-left'>{% trans 'Attachment' %}</th>
-                      <th scope="col">{% trans 'Upd By' %}</th>
+                      <th scope="col" style="text-align: left" nowrap>{% trans 'Start Date' %}&nbsp;</th>
+                      <th scope="col" nowrap>{% trans 'End Date' %}</th>
+                      <th scope="col" class='text-center'>{% trans 'Attachment' %}</th>
+                      <th scope="col" nowrap>{% trans 'Upd By' %}</th>
                       <th scope="col">&nbsp;</th>
                     </tr>
                   </thead>
@@ -72,22 +72,22 @@
                   <tbody>  
                     {% for item in ITcontractList %}
                     <tr>                  
-                      <td>{{item.id}}</td>
+                      <td>{{item.id}}</td>                      
                       <td>{{item.dept}}</td>
-                      <td>{{item.vendor}}</td>
+                      <td><a href="#" onclick='edit_item("{{item.id}}")'>{{item.vendor}}</a></td>
                       <td>{{item.description}}</td>                      
                       <td>{{item.start_date|date:"d/m/Y"}}</td>
                       <td>{{item.end_date|date:"d/m/Y"}}</td>
 
                       {% if item.afile != "" %}
-                      <td class='text-left'><i class='fas fa-check fa-xs text-success'></i>&nbsp;{{ item.afile }}</td>
+                      <td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>
                       {% else %}
-                      <td class='text-left'><i class='fas fa-times fa-xs text-danger'></i>&nbsp;Not attached</td>
+                      <td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>
                       {% endif %}
       
                       <td>{{item.upd_by}}</td>
 
-                      <td class='text-right'>
+                      <td class='text-right' nowrap>
                         <button type='button' onclick='edit_item("{{item.id}}")' class='btn btn-info btn-xs' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>
                         <button type='button' onclick='delete_item("{{item.id}}")' class='btn btn-danger btn-xs' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button>
                       </td>
@@ -429,11 +429,11 @@ function save_item(id) {
           it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
           result += "<tr>";
           result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['vendor'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";          
+          result += "<td><a href='#' onclick='edit_item(" + it_contract_id + ");'>" + data.refresh_it_contract_list[i]['vendor'] + "</a></td>";
           result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
+          result += "<td nowrap>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
+          result += "<td nowrap>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
 
           if(data.refresh_it_contract_list[i]['is_file_attached'])
             result += "<td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>";
@@ -442,7 +442,7 @@ function save_item(id) {
 
           result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";
 
-          result += "<td class='text-right'>";          
+          result += "<td class='text-right' nowrap>";
           result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
           result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
           result += "</tr>";          
@@ -457,23 +457,6 @@ function save_item(id) {
 }
 
 function add_item() {
-
-  /*
-  dept = $("#id_dept_add").val();
-  vendor = $("#id_vendor_add").val();
-  description = $("#id_description_add").val();
-  person = $("#id_person_add").val();
-  tel = $("#id_tel_add").val();
-  price = $("#id_price_add").val();
-  e_mail = $("#id_e_mail_add").val();
-  remark = $("#id_remark_add").val();  
-  start_date = $("#id_start_date_add").val();
-  end_date = $("#id_end_date_add").val();
-  
-  if($('#id_it_contract_document_add')[0].files[0] != null) {
-    file_name = $('#id_it_contract_document_add')[0].files[0].name;      
-  }
-  */
 
   formData = new FormData();  
   data = new FormData($('#add_contract_list_form').get(0));
@@ -519,10 +502,12 @@ function add_item() {
           result += "<tr>";
           result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
           result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['vendor'] + "</td>";
+          
+          result += "<td><a href='#' onclick='edit_item(" + it_contract_id + ");'>" + data.refresh_it_contract_list[i]['vendor'] + "</a></td>";
+          
           result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
-          result += "<td>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
+          result += "<td nowrap>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
+          result += "<td nowrap>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
           
           if(data.refresh_it_contract_list[i]['is_file_attached'])
             result += "<td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>";
@@ -530,7 +515,7 @@ function add_item() {
             result += "<td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>";
 
           result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";
-          result += "<td class='text-right'>";          
+          result += "<td class='text-right' nowrap>";
           result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
           result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
           result += "</tr>";          
@@ -613,7 +598,7 @@ var table = $('#contract_list_table').DataTable({
     searchPlaceholder: 'กรองข้อมูล'
   },
   "columnDefs": [{
-    "targets": 6,
+    "targets": 8,
     "orderable": false
   }] 
 });  
@@ -765,10 +750,12 @@ function delete_item(id) {
                     result += "<tr>";
                     result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
                     result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";
-                    result += "<td>" + data.refresh_it_contract_list[i]['vendor'] + "</td>";
+                    
+                    result += "<td><a href='#' onclick='edit_item(" + it_contract_id + ");'>" + data.refresh_it_contract_list[i]['vendor'] + "</a></td>";
+
                     result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
-                    result += "<td>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
-                    result += "<td>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
+                    result += "<td nowrap>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
+                    result += "<td nowrap>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
 
                     if(data.refresh_it_contract_list[i]['is_file_attached'])
                       result += "<td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>";
@@ -776,7 +763,7 @@ function delete_item(id) {
                       result += "<td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>";
 
                     result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";                    
-                    result += "<td class='text-right'>";          
+                    result += "<td class='text-right' nowrap>";          
                     result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
                     result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
                     result += "</tr>";          
