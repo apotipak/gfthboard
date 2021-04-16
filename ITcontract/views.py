@@ -35,6 +35,10 @@ from base64 import b64encode
 from django.db import connection
 from .forms import ITcontractDBForm
 from django.http import FileResponse
+from gfthboard.settings import MEDIA_ROOT
+from docxtpl import DocxTemplate
+from docx2pdf import convert
+from os import path
 import django.db as db
 import sys
 import json
@@ -55,13 +59,6 @@ def ITcontractPolicy(request):
     today_date = getDateFormatDisplay(user_language)
     
     ITcontractList = ITcontractDB.objects.exclude(upd_flag='D').all()
-
-    '''
-    if user_language == "th":
-        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
-    else:
-        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
-    '''
     
     if user_language == "th":
         if request.user.username == "999999":
@@ -89,8 +86,7 @@ def ITcontractPolicy(request):
 
 @permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
 def ajax_get_it_contract_item(request):
-    it_contract_id = request.POST.get("id")   
-    # print("it_contract_id : ", it_contract_id)
+    it_contract_id = request.POST.get("id")
     record = {}
     itcontract_list = []
     is_error = True
@@ -137,9 +133,6 @@ def ajax_get_it_contract_item(request):
             error_message = "Not found"
     else:
         error_message = "Not found"
-
-    # print("vendor : ", vendor)
-    # print("attacehed_file : ", 1)
 
     response = JsonResponse(data={
         "success": True,
@@ -277,8 +270,6 @@ def ajax_save_it_contract_item(request):
                 itcontract.afile = request.FILES["it_contract_document_edit"].name    
                 itcontract.afile_data = request.FILES['it_contract_document_edit'].read()
             else:            
-                # itcontract.afile = ""
-                # itcontract.afile_data = None
                 print("do nothing")
     
             try:
@@ -410,56 +401,63 @@ def view_contract_document(request, it_contract_id):
     result = {}
     total_day = 0
     total_hour = 0
-
-    # it_contract_id = 9
-
-    # sql = "select afile, afile_data from itcontractdb where id='%s';" % (it_contract_id)
     document_obj = ITcontractDB.objects.filter(id__exact=it_contract_id).get()
-    # print(document_obj.document)
-
     write_document_data = open('media/' + str(document_obj.afile), 'wb').write(document_obj.afile_data)
-    document_data = open('media/' + str(document_obj.afile), 'rb')    
-    
+    document_data = open('media/' + str(document_obj.afile), 'rb')
     response = FileResponse(document_data)
     return response
 
 
 @permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
-def view_contract_document_bk(request):
-    result = {}
-    total_day = 0
-    total_hour = 0
+def ajax_print_it_contract_report(request):
 
-    it_contract_id = request.POST.get("it_contract_id")
+    base_url = MEDIA_ROOT + '/itcontract/template/'
+    template_name = base_url + 'it_contract_list.docx'
+    file_name = "IT_Contract_List"
 
-    # print(request.POST.get("it_contract_id"))
-    # print("TODO")
+    it_contract_obj = ITcontractDB.objects.exclude(upd_flag='D').all()
+    print_datetime = datetime.now().strftime("%d/%m/%Y %H:%M")
 
-    # sql = "select afile, afile_data from itcontractdb where id='%s';" % (it_contract_id)
-    document_obj = ITcontractDB.objects.filter(id__exact=it_contract_id).get()
-    # print(document_obj.document)
+    it_contract_list = []
+    record = {}
 
-    write_document_data = open('media/' + str(document_obj.afile), 'wb').write(document_obj.afile_data)
-    document_data = open('media/' + str(document_obj.afile), 'rb')    
-    
-    # response = HttpResponse(write_document_data, content_type='application/pdf')
-    return response
+    if it_contract_obj is not None:
+        for item in it_contract_obj:
+            it_contract_id = item.id
+            vendor = item.vendor
+            description = item.description
+            contact = item.person
+            phone = item.tel
+            email = item.e_mail
+            start_date = item.start_date.strftime("%d/%m/%Y")
+            end_date = item.end_date.strftime("%d/%m/%Y")
+            price = item.price
+            remark = item.remark
 
+            record = {
+                "it_contract_id": it_contract_id,
+                "vendor": vendor,
+                "description": description,
+                "contact": contact,
+                "phone": phone,
+                "email": email,
+                "start_date": start_date,
+                "end_date": end_date,
+                "price": price,
+                "remark": remark,
+            }
 
-'''
-@permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
-def ajax_download_file(request):
-    it_contract_id = 50
-    c = connection.cursor()
-    c.execute("select afile from itcontractdb where id=%s", (it_contract_id,))
-    file = c.fetchone()[0]
-    c.close()
+            it_contract_list.append(record)
 
-    #response = HttpResponse(file, content_type='application/pdf')
-    #response['Content-Disposition'] = 'inline; filename="report.pdf"'
+    context = {'it_contract_list': list(it_contract_list), 'print_datetime': print_datetime}
 
-    response = HttpResponse(file, content_type='application/image')
-    response['Content-Disposition'] = 'inline; filename="file.png"'
+    tpl = DocxTemplate(template_name)
+    tpl.render(context)
+    tpl.save(MEDIA_ROOT + '/itcontract/download/' + file_name + ".docx")
 
-    return response
-'''
+    docx_file = path.abspath("media\\itcontract\\download\\" + file_name + ".docx")
+    pdf_file = path.abspath("media\\itcontract\\download\\" + file_name + ".pdf")    
+    convert(docx_file, pdf_file)
+
+    return FileResponse(open(pdf_file, 'rb'), content_type='application/pdf')
+

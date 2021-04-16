@@ -19,8 +19,9 @@ urlpatterns = [
     url(r'^ajax_delete_it_contract_item/$', views.ajax_delete_it_contract_item, name='ajax_delete_it_contract_item'),
 
     # Download
-	# url(r'^ajax_download_file/$', views.ajax_download_file, name='ajax_download_file'),    
     url(r'^view_contract_document/(?P<it_contract_id>[^/]+)/$', views.view_contract_document, name='view_contract_document'),
-    # url(r'^view_contract_document/$', views.view_contract_document, name='view_contract_document'),
+
+    # Print
+    url(r'^print-it-contract-report/$', views.ajax_print_it_contract_report, name='print-it-contract-report'),
 
 ]
