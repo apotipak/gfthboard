@@ -96,11 +96,10 @@ def ITcontractPolicy(request):
             if (end_date.date() >= today_date):
                 is_contract_expired = False
             else:
-                print("Expired")
                 is_contract_expired = True
 
-            remaining_day = end_date - start_date            
-            print(remaining_day.days)
+            # remaining_day = end_date - start_date
+            remaining_day = end_date.date() - today_date
 
             record = {
                 "id": it_contract_id,
@@ -406,6 +405,9 @@ def get_refresh_it_contract_list():
 
     refresh_it_contract = ITcontractDB.objects.exclude(upd_flag='D').all()
 
+    str_today_date = datetime.now().strftime("%Y-%m-%d")
+    today_date = datetime.strptime(str_today_date, '%Y-%m-%d').date()
+
     for item in refresh_it_contract:
         it_contract_id = item.id
         dept = item.dept
@@ -416,9 +418,17 @@ def get_refresh_it_contract_list():
         price = item.price
         e_mail = item.e_mail
         remark = item.remark                    
-        start_date = item.start_date.strftime("%d/%m/%Y")
-        end_date = item.end_date.strftime("%d/%m/%Y")
+        start_date = item.start_date
+        end_date = item.end_date
         upd_by = item.upd_by
+
+        if (end_date.date() >= today_date):
+            is_contract_expired = False
+        else:
+            is_contract_expired = True
+
+        # remaining_day = today_date - end_date
+        remaining_day = end_date.date() - today_date
 
         afile = item.afile
         if(afile != ""):
@@ -436,11 +446,14 @@ def get_refresh_it_contract_list():
             "price": price,
             "e_mail": e_mail,
             "remark": remark,                        
-            "start_date": start_date,
-            "end_date": end_date,
+            "start_date": start_date.strftime("%d/%m/%Y"),
+            "end_date": end_date.strftime("%d/%m/%Y"),
             "is_file_attached": is_file_attached,
             "upd_by": upd_by,
+            "is_contract_expired": is_contract_expired,
+            "remaining_day": remaining_day.days,
         }
+
         refresh_it_contract_list.append(record)
 
     return refresh_it_contract_list
