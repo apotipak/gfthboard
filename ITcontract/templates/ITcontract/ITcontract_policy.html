@@ -87,7 +87,7 @@
                       {% if item.is_contract_expired %}
                       <td><span class='text-danger'>expired</span></td>
                       {% else %}
-                      <td><span class='text-success'>{{item.remaining_day}}</span>&nbsp; days left</td>
+                      <td nowrap><span class='text-success'><b>{{item.remaining_day}}</b></span>&nbsp;days</td>
                       {% endif %}
 
                       {% if item.afile != "" %}

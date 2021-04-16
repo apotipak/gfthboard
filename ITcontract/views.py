@@ -93,7 +93,7 @@ def ITcontractPolicy(request):
             remark = item.remark
             upd_by = item.upd_by            
 
-            if (end_date.date() > today_date):
+            if (end_date.date() >= today_date):
                 is_contract_expired = False
             else:
                 print("Expired")
