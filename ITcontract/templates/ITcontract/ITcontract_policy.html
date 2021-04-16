@@ -56,8 +56,8 @@
                       <th scope="col" style="text-align: left">{% trans 'Description' %}&nbsp;</th>
                       <th scope="col" style="text-align: left" nowrap>{% trans 'Start Date' %}&nbsp;</th>
                       <th scope="col" nowrap>{% trans 'End Date' %}</th>
-                      <th scope="col" nowrap>Status</th>
-                      <th scope="col" class='text-center'>{% trans 'Attachment' %}</th>
+                      <th scope="col" nowrap>Expired</th>
+                      <th scope="col" class='text-center'>{% trans 'Attached' %}</th>
                       <th scope="col" nowrap>{% trans 'Upd By' %}</th>
                       <th scope="col">&nbsp;</th>
                     </tr>
@@ -436,17 +436,33 @@ var table = $('#contract_list_table').DataTable({
   "autoWidth": true,
   "language": {
     search: '<i class="fa fa-filter" aria-hidden="true"></i>',
-    searchPlaceholder: 'กรองข้อมูล'
+    searchPlaceholder: 'Filter data'
   },
   "columnDefs": [{
     "targets": 8,
     "orderable": false
   }],  
   "dom": 'Bfrtip',
+  /*
   buttons: [
     'print',
     'excelHtml5',
     'pdfHtml5',
+  ]
+  */
+  buttons: [
+    {
+        extend: 'print',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+        }
+    },
+    {
+        extend: 'excelHtml5',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+        }
+    },
   ]
 }); 
 
@@ -633,7 +649,7 @@ function add_item() {
           "autoWidth": true,
           "language": {
             search: '<i class="fa fa-filter" aria-hidden="true"></i>',
-            searchPlaceholder: 'กรองข้อมูล'
+            searchPlaceholder: 'Filter data'
           },
           "columnDefs": [{
             "targets": 8,

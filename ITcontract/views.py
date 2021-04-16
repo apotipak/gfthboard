@@ -129,7 +129,8 @@ def ITcontractPolicy(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
-        'ITcontractList':  it_contract_list,
+        'ITcontractList': it_contract_list,
+        'today_date': today_date,
     })
 
 
