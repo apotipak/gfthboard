@@ -24,4 +24,7 @@ urlpatterns = [
     # Print
     url(r'^print-it-contract-report/$', views.ajax_print_it_contract_report, name='print-it-contract-report'),
 
+    # Export
+    url(r'^export-it-contract-to-excel/$', views.export_it_contract_to_excel, name='export_it_contract_to_excel'), 
+
 ]

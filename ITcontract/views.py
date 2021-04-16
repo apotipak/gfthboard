@@ -39,6 +39,7 @@ from gfthboard.settings import MEDIA_ROOT
 from docxtpl import DocxTemplate
 from docx2pdf import convert
 from os import path
+import xlwt
 import django.db as db
 import sys
 import json
@@ -461,3 +462,82 @@ def ajax_print_it_contract_report(request):
 
     return FileResponse(open(pdf_file, 'rb'), content_type='application/pdf')
 
+
+@permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
+def export_it_contract_to_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="IT_Contract_List.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('IT_Contract_List')
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    font_style = xlwt.easyxf('font: bold 1,height 280;')
+    ws.write(0, 5, "IT Contract List", font_style)
+
+    # font_style = xlwt.XFStyle()
+    font_style = xlwt.easyxf('font: height 180;')        
+    ws.col(1).width = int(13*260)
+    ws.col(2).width = int(13*260)
+    ws.col(3).width = int(13*260)
+    ws.col(4).width = int(13*260)
+    ws.col(5).width = int(13*260)
+    ws.col(6).width = int(13*260)
+    ws.col(7).width = int(13*260)
+    ws.col(8).width = int(13*260)
+    ws.col(9).width = int(20*260)
+
+    columns = ['ID', 'Vendor', 'Description', 'Contact', 'Phone', 'Email', 'Start Date', 'End Date', 'Price', 'Remark']
+    for col_num in range(len(columns)):
+        ws.write(2, col_num, columns[col_num], font_style)
+    
+    font_style = xlwt.XFStyle()
+    font_style = xlwt.easyxf('font: height 180;')
+
+    row_num = 3
+    counter = 1
+
+    it_contract_obj = ITcontractDB.objects.exclude(upd_flag='D').all()
+    print(len(it_contract_obj))
+    
+    if it_contract_obj is not None:        
+        for row in it_contract_obj:
+            it_contract_id = row.id
+            vendor = row.vendor
+            description = row.description
+            contact = row.person
+            phone = row.tel
+            email = row.e_mail
+            start_date = row.start_date.strftime("%d/%m/%Y")
+            end_date = row.end_date.strftime("%d/%m/%Y")
+            price = row.price
+            remark = row.remark
+
+            for col_num in range(len(columns)):
+                if(col_num==0):
+                    ws.write(row_num, 0, it_contract_id, font_style)
+                elif(col_num==1):
+                    ws.write(row_num, 1, vendor, font_style)
+                elif(col_num==2):
+                    ws.write(row_num, 2, description, font_style)
+                elif(col_num==3):
+                    ws.write(row_num, 3, contact, font_style)
+                elif(col_num==4):
+                    ws.write(row_num, 4, phone, font_style)
+                elif(col_num==5):
+                    ws.write(row_num, 5, email, font_style)
+                elif(col_num==6):
+                    ws.write(row_num, 6, start_date, font_style)
+                elif(col_num==7):
+                    ws.write(row_num, 7, end_date, font_style)
+                elif(col_num==8):
+                    ws.write(row_num, 8, price, font_style)                    
+                else:
+                    ws.write(row_num, 9, remark, font_style)
+
+            row_num += 1
+            counter += 1
+
+    wb.save(response)
+    return response

@@ -30,7 +30,11 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink"> 
                   <span style="font-size: 14px;">
                   <a class="dropdown-item" href="#" onclick="print_document();"><i class="fas fa-desktop text-secondary"></i>&nbsp;&nbsp;Display on screen</a>              
-                  <a class="dropdown-item" href="#" onclick="print_document();">&nbsp;<i class="far fa-file-excel text-secondary"></i>&nbsp;&nbsp;&nbsp;Export to Excel</a>
+                  
+                  
+                  <a class="dropdown-item" href="{% url 'export_it_contract_to_excel' %}">&nbsp;<i class="far fa-file-excel text-secondary"></i>&nbsp;&nbsp;&nbsp;Export to Excel</a>
+
+
                   </span>
                 </div>
                 &nbsp;&nbsp;
