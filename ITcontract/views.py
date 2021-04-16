@@ -73,12 +73,54 @@ def ITcontractPolicy(request):
     it_contract_list = []
     record = {}
 
-    ITcontractList = ITcontractDB.objects.exclude(upd_flag='D').all()
+    ITcontractList = ITcontractDB.objects.exclude(upd_flag='D').all().values_list('id','dept','vendor','description','person','tel','e_mail','start_date','end_date','price','remark','upd_by')
 
     if ITcontractList is not None:
         str_today_date = datetime.now().strftime("%Y-%m-%d")
         today_date = datetime.strptime(str_today_date, '%Y-%m-%d').date()
         
+        for item in ITcontractList:
+            it_contract_id = item[0]
+            department = item[1]
+            vendor = item[2]
+            description = item[3]
+            contact = item[4]
+            phone = item[5]
+            email = item[6]
+            start_date = item[7]
+            end_date = item[8]
+            price = item[9]
+            remark = item[10]
+            upd_by = item[11]
+
+            if (end_date.date() >= today_date):
+                is_contract_expired = False
+            else:
+                is_contract_expired = True
+
+            # remaining_day = end_date - start_date
+            remaining_day = end_date.date() - today_date
+
+            record = {
+                "id": it_contract_id,
+                "dept": department,
+                "vendor": vendor,
+                "description": description,
+                "contact": contact,
+                "phone": phone,
+                "email": email,
+                "start_date": start_date,
+                "end_date": end_date,
+                "price": price,
+                "remark": remark,
+                "upd_by": upd_by,
+                "is_contract_expired": is_contract_expired,
+                "remaining_day": remaining_day.days,
+            }
+            
+            it_contract_list.append(record)
+
+        '''
         for item in ITcontractList:
             it_contract_id = item.id
             department = item.dept
@@ -117,8 +159,11 @@ def ITcontractPolicy(request):
                 "is_contract_expired": is_contract_expired,
                 "remaining_day": remaining_day.days,
             }
-
+            
             it_contract_list.append(record)
+        '''
+
+    # it_contract_list = []
 
     return render(request,
         'ITcontract/ITcontract_policy.html', {
@@ -404,12 +449,14 @@ def get_refresh_it_contract_list():
     record = {}
     refresh_it_contract_list = []    
 
-    refresh_it_contract = ITcontractDB.objects.exclude(upd_flag='D').all()
+    # refresh_it_contract = ITcontractDB.objects.exclude(upd_flag='D').all()    
+    refresh_it_contract = ITcontractDB.objects.exclude(upd_flag='D').all().values_list('id','dept','vendor','description','person','tel','e_mail','start_date','end_date','price','remark','upd_by','afile')
 
     str_today_date = datetime.now().strftime("%Y-%m-%d")
     today_date = datetime.strptime(str_today_date, '%Y-%m-%d').date()
 
     for item in refresh_it_contract:
+        '''
         it_contract_id = item.id
         dept = item.dept
         vendor = item.vendor
@@ -422,6 +469,20 @@ def get_refresh_it_contract_list():
         start_date = item.start_date
         end_date = item.end_date
         upd_by = item.upd_by
+        '''
+        it_contract_id = item[0]
+        dept = item[1]
+        vendor = item[2]
+        description = item[3]
+        person = item[4]
+        tel = item[5]
+        e_mail = item[6]
+        start_date = item[7]
+        end_date = item[8]
+        price = item[9]
+        remark = item[10]
+        upd_by = item[11]
+        afile = item[12]
 
         if (end_date.date() >= today_date):
             is_contract_expired = False
@@ -430,8 +491,7 @@ def get_refresh_it_contract_list():
 
         # remaining_day = today_date - end_date
         remaining_day = end_date.date() - today_date
-
-        afile = item.afile
+        
         if(afile != ""):
             is_file_attached = True
         else:
@@ -479,7 +539,8 @@ def ajax_print_it_contract_report(request):
     template_name = base_url + 'it_contract_list.docx'
     file_name = "IT_Contract_List"
 
-    it_contract_obj = ITcontractDB.objects.exclude(upd_flag='D').all()
+    # it_contract_obj = ITcontractDB.objects.exclude(upd_flag='D').all()
+    it_contract_obj = ITcontractDB.objects.exclude(upd_flag='D').all().values_list('id','dept','vendor','description','person','tel','e_mail','start_date','end_date','price','remark','upd_by')
     print_datetime = datetime.now().strftime("%d/%m/%Y %H:%M")
 
     it_contract_list = []
@@ -487,6 +548,7 @@ def ajax_print_it_contract_report(request):
 
     if it_contract_obj is not None:
         for item in it_contract_obj:
+            '''
             it_contract_id = item.id
             vendor = item.vendor
             description = item.description
@@ -497,6 +559,20 @@ def ajax_print_it_contract_report(request):
             end_date = item.end_date.strftime("%d/%m/%Y")
             price = item.price
             remark = item.remark
+            '''
+
+            it_contract_id = item[0]
+            department = item[1]
+            vendor = item[2]
+            description = item[3]
+            contact = item[4]
+            phone = item[5]
+            email = item[6]
+            start_date = item[7].strftime("%d/%m/%Y")
+            end_date = item[8].strftime("%d/%m/%Y")
+            price = item[9]
+            remark = item[10]
+            upd_by = item[11]
 
             record = {
                 "it_contract_id": it_contract_id,
@@ -561,11 +637,13 @@ def export_it_contract_to_excel(request):
     row_num = 3
     counter = 1
 
-    it_contract_obj = ITcontractDB.objects.exclude(upd_flag='D').all()
-    print(len(it_contract_obj))
+    # it_contract_obj = ITcontractDB.objects.exclude(upd_flag='D').all()
+    it_contract_obj = ITcontractDB.objects.exclude(upd_flag='D').all().values_list('id','dept','vendor','description','person','tel','e_mail','start_date','end_date','price','remark','upd_by')
+    # print(len(it_contract_obj))
     
     if it_contract_obj is not None:        
         for row in it_contract_obj:
+            '''
             it_contract_id = row.id
             vendor = row.vendor
             description = row.description
@@ -576,6 +654,20 @@ def export_it_contract_to_excel(request):
             end_date = row.end_date.strftime("%d/%m/%Y")
             price = row.price
             remark = row.remark
+            '''
+
+            it_contract_id = item[0]
+            department = item[1]
+            vendor = item[2]
+            description = item[3]
+            contact = item[4]
+            phone = item[5]
+            email = item[6]
+            start_date = item[7].strftime("%d/%m/%Y")
+            end_date = item[8].strftime("%d/%m/%Y")
+            price = item[9]
+            remark = item[10]
+            upd_by = item[11]
 
             for col_num in range(len(columns)):
                 if(col_num==0):
