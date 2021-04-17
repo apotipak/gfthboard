@@ -53,12 +53,20 @@
                       <th scope="col">ID</th>
                       <th scope="col">{% trans 'Deptartment' %}</th>
                       <th scope="col" style="text-align: left">{% trans 'Vendor' %}</th>
-                      <th scope="col" style="text-align: left">{% trans 'Description' %}&nbsp;</th>
-                      <th scope="col" style="text-align: left" nowrap>{% trans 'Start Date' %}&nbsp;</th>
-                      <th scope="col" nowrap>{% trans 'End Date' %}</th>
-                      <th scope="col" nowrap>Expired</th>
-                      <th scope="col" class='text-center'>{% trans 'Attached' %}</th>
-                      <th scope="col" nowrap>{% trans 'Upd By' %}</th>
+                      <th scope="col" style="text-align: left">{% trans 'Description' %}</th>
+                      
+                      <th scope="col" style="text-align: left">{% trans 'Contact' %}</th>
+                      <th scope="col" style="text-align: left">{% trans 'Phone' %}</th>
+                      <th scope="col" style="text-align: left">Email&nbsp;</th>
+
+                      <th scope="col" style="text-align: left; white-space:nowrap;">{% trans 'Start Date' %}</th>
+                      <th scope="col" style="text-align: left; white-space:nowrap;">{% trans 'End Date' %}</th>
+                      <th scope="col">Expired</th>
+                      <!--<th scope="col" class='text-center'>{% trans 'Attached' %}</th>-->
+
+                      <th scope="col">Remark</th>
+
+                      <th scope="col" style="text-align: center; white-space:nowrap;">{% trans 'Upd By' %}</th>
                       <th scope="col">&nbsp;</th>
                     </tr>
                   </thead>
@@ -71,7 +79,12 @@
                       <td>{{item.id}}</td>                      
                       <td>{{item.dept}}</td>
                       <td><a href="#" onclick='edit_item("{{item.id}}")'>{{item.vendor}}</a></td>
-                      <td>{{item.description}}</td>                      
+                      <td>{{item.description}}</td>
+
+                      <td>{{item.contact}}</td>
+                      <td>{{item.phone}}</td>
+                      <td>{{item.email}}</td>
+
                       <td>{{item.start_date|date:"d/m/Y"}}</td>
                       <td>{{item.end_date|date:"d/m/Y"}}</td>
 
@@ -81,12 +94,15 @@
                       <td nowrap><span class='text-success'><b>{{item.remaining_day}}</b></span>&nbsp;days</td>
                       {% endif %}
 
+                      {% comment %}
                       {% if item.afile != "" %}
-                      <td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>
+                      <td style="text-align: center;"><i class='fas fa-check fa-xs text-success'></i></td>
                       {% else %}
-                      <td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>
+                      <td style="text-align: center;"><i class='fas fa-times fa-xs text-danger'></i></td>
                       {% endif %}
-      
+                      {% endcomment %}
+                      
+                      <td>{{item.remark}}</td>
                       <td>{{item.upd_by}}</td>
 
                       <td class='text-right' nowrap>
@@ -105,6 +121,9 @@
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>                      
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
@@ -393,8 +412,6 @@ $(document).ready( function () {
     changeYear: true,
   }).attr('readonly', 'readonly');
 
-
-
   $('#add_modal').on('hide.bs.modal', function (e) {
     var today = new Date(); 
     var year = today.getFullYear();
@@ -438,30 +455,29 @@ var table = $('#contract_list_table').DataTable({
     search: '<i class="fa fa-filter" aria-hidden="true"></i>',
     searchPlaceholder: 'Filter data'
   },
-  "columnDefs": [{
-    "targets": 8,
-    "orderable": false
-  }],  
+  "columnDefs": [
+    {
+      "targets": [12],
+      "orderable": false
+    },
+    {
+        "targets": [10],
+        "visible": false
+    }    
+  ],  
   "dom": 'Bfrtip',
-  /*
-  buttons: [
-    'print',
-    'excelHtml5',
-    'pdfHtml5',
-  ]
-  */
   buttons: [
     {
         extend: 'print',
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         }
     },
     {
-        extend: 'excelHtml5',
-        header: false,
+        extend: 'excelHtml5',        
+        title: '',
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         }
     },
   ]
@@ -535,6 +551,11 @@ function save_item(id) {
           result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";          
           result += "<td><a href='#' onclick='edit_item(" + it_contract_id + ");'>" + data.refresh_it_contract_list[i]['vendor'] + "</a></td>";
           result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
+
+          result += "<td>" + data.refresh_it_contract_list[i]['person'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['tel'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['e_mail'] + "</td>";
+
           result += "<td nowrap>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
           result += "<td nowrap>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
 
@@ -544,11 +565,14 @@ function save_item(id) {
             result += "<td nowrap><span class='text-success'><b>" + data.refresh_it_contract_list[i]['remaining_day'] + "</b></span>&nbsp;days</td>";
           }
           
+          /*
           if(data.refresh_it_contract_list[i]['is_file_attached'])
             result += "<td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>";
           else
             result += "<td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>";
+          */
 
+          result += "<td>" + data.refresh_it_contract_list[i]['remark'] + "</td>";
           result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";
 
           result += "<td class='text-right' nowrap>";
@@ -557,7 +581,57 @@ function save_item(id) {
           result += "</tr>";          
         }
 
-        $('#contract_list_table tbody').html(result);
+        // $('#contract_list_table tbody').html(result);
+
+        table.destroy();
+
+        $('#contract_list_table tbody').empty().append(result);        
+
+        table = $('#contract_list_table').DataTable({
+          "paging": true,
+          "pageLength": 15,
+          "scrollCollapse": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": false,
+          "autoWidth": true,
+          "language": {
+            search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+            searchPlaceholder: 'Filter data'
+          },
+          "columnDefs": [
+            {
+              "targets": [12],
+              "orderable": false
+            },
+            {
+                "targets": [10],
+                "visible": false
+            }    
+          ],
+          "dom": 'Bfrtip',
+          buttons: [
+            {
+                extend: 'print',
+                exportOptions: {
+                  columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                }
+            },
+            {
+                extend: 'excelHtml5',        
+                title: '',
+                exportOptions: {
+                  columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                }
+            },
+          ]          
+        }); 
+
+        table.buttons('.buttons-print').nodes().css("display", "none");
+        table.buttons('.buttons-excel').nodes().css("display", "none");
+        table.buttons('.buttons-pdf').nodes().css("display", "none");
+
         $("#edit_modal").modal("hide");
       }
     }
@@ -612,6 +686,11 @@ function add_item() {
           result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";          
           result += "<td><a href='#' onclick='edit_item(" + it_contract_id + ");'>" + data.refresh_it_contract_list[i]['vendor'] + "</a></td>";          
           result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
+
+          result += "<td>" + data.refresh_it_contract_list[i]['person'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['tel'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['e_mail'] + "</td>";
+
           result += "<td nowrap>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
           result += "<td nowrap>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
           
@@ -621,19 +700,21 @@ function add_item() {
             result += "<td nowrap><span class='text-success'><b>" + data.refresh_it_contract_list[i]['remaining_day'] + "</b></span>&nbsp;days</td>";
           }
 
+          /*
           if(data.refresh_it_contract_list[i]['is_file_attached'])
             result += "<td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>";
           else
             result += "<td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>";
+          */
 
+          result += "<td>" + data.refresh_it_contract_list[i]['remark'] + "</td>";
           result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";
+
           result += "<td class='text-right' nowrap>";
           result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
           result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
           result += "</tr>";          
         }
-
-        //$('#contract_list_table tbody').html(result);                    
         
         table.destroy();
 
@@ -652,16 +733,32 @@ function add_item() {
             search: '<i class="fa fa-filter" aria-hidden="true"></i>',
             searchPlaceholder: 'Filter data'
           },
-          "columnDefs": [{
-            "targets": 8,
-            "orderable": false
-          }],  
+          "columnDefs": [
+            {
+              "targets": [12],
+              "orderable": false
+            },
+            {
+                "targets": [10],
+                "visible": false
+            }    
+          ],
           "dom": 'Bfrtip',
           buttons: [
-            'print',
-            'excelHtml5',
-            'pdfHtml5',
-          ]
+            {
+                extend: 'print',
+                exportOptions: {
+                  columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                }
+            },
+            {
+                extend: 'excelHtml5',        
+                title: '',
+                exportOptions: {
+                  columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                }
+            },
+          ]          
         }); 
 
         table.buttons('.buttons-print').nodes().css("display", "none");
@@ -789,6 +886,11 @@ function delete_item(id) {
                     result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";                    
                     result += "<td><a href='#' onclick='edit_item(" + it_contract_id + ");'>" + data.refresh_it_contract_list[i]['vendor'] + "</a></td>";
                     result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
+
+                    result += "<td>" + data.refresh_it_contract_list[i]['person'] + "</td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['tel'] + "</td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['e_mail'] + "</td>";
+
                     result += "<td nowrap>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
                     result += "<td nowrap>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
 
@@ -797,19 +899,74 @@ function delete_item(id) {
                     } else {
                       result += "<td nowrap><span class='text-success'><b>" + data.refresh_it_contract_list[i]['remaining_day'] + "</b></span>&nbsp;days</td>";
                     }
+
+                    /*
                     if(data.refresh_it_contract_list[i]['is_file_attached'])
                       result += "<td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>";
                     else
                       result += "<td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>";
+                    */
 
-                    result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";                    
+                    result += "<td>" + data.refresh_it_contract_list[i]['remark'] + "</td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";
+
                     result += "<td class='text-right' nowrap>";          
                     result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
                     result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
                     result += "</tr>";          
                   }
 
-                  $('#contract_list_table tbody').html(result);
+                  //$('#contract_list_table tbody').html(result);
+
+                  table.destroy();
+
+                  $('#contract_list_table tbody').empty().append(result);        
+
+                  table = $('#contract_list_table').DataTable({
+                    "paging": true,
+                    "pageLength": 15,
+                    "scrollCollapse": true,
+                    "lengthChange": false,
+                    "searching": true,
+                    "ordering": true,
+                    "info": false,
+                    "autoWidth": true,
+                    "language": {
+                      search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+                      searchPlaceholder: 'Filter data'
+                    },
+                    "columnDefs": [
+                      {
+                        "targets": [12],
+                        "orderable": false
+                      },
+                      {
+                          "targets": [10],
+                          "visible": false
+                      }    
+                    ],
+                    "dom": 'Bfrtip',
+                    buttons: [
+                      {
+                          extend: 'print',
+                          exportOptions: {
+                            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          }
+                      },
+                      {
+                          extend: 'excelHtml5',        
+                          title: '',
+                          exportOptions: {
+                            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          }
+                      },
+                    ]          
+                  }); 
+
+                  table.buttons('.buttons-print').nodes().css("display", "none");
+                  table.buttons('.buttons-excel').nodes().css("display", "none");
+                  table.buttons('.buttons-pdf').nodes().css("display", "none");
+
                   $("#edit_modal").modal("hide");
                 }    
               }
