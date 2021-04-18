@@ -204,26 +204,28 @@
 	$(function () {
 
 	    var table = $('#employee_list_table').DataTable({
-	      "paging": false,
-	      //"scrollY": "500px",
-	      //"scrollCollapse": true,
-	      //"lengthChange": false,
-	      "searching": true,
-	      "ordering": false,
-	      "info": false,
-	      //"autoWidth": false,
-	      "dom": '<"top"i>rt<"bottom"><"clear">', "search": "_INPUT_",
-	      //"searchPlaceholder": "Filter Data...",
-	      "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-		  //"targets": 'no-sort',
-		  //"bSort": false,
-		  //"order": [1] 
+			"paging": false,
+			"searching": true,
+			"ordering": false,
+			"info": false,
+			"dom": 'Brtip',
+			buttons: [
+			  {
+			      extend: 'print',
+			      title: '',
+			      exportOptions: {
+			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+			      }
+			  },
+			  {
+			      extend: 'excelHtml5',        
+			      title: '',
+			      exportOptions: {
+			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+			      }
+			  },
+			]          	      
 	    });
-
-
-
-
-
 
 
 		$('#employee_search_button').on( 'keyup click', function () {
@@ -238,9 +240,21 @@
 			$('#employee_search_text').val("");
 			table.search($('#employee_search_text').val()).draw();
 		});
-			
+
+		table.buttons('.buttons-print').nodes().css("display", "none");
+		table.buttons('.buttons-excel').nodes().css("display", "none");
+		table.buttons('.bFilter').nodes().css("display", "none");
+		
 	});
   });
+
+	function print_document() {
+	  	$(".buttons-print").trigger("click");
+	}
+
+	function export_to_excel() {
+	  	$(".buttons-excel").trigger("click");  
+	}
 
   </script>
 {% endblock %}      
