@@ -58,7 +58,7 @@ def ITcontractPolicy(request):
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION    
     today_date = getDateFormatDisplay(user_language)
-    
+
     if user_language == "th":
         if request.user.username == "999999":
             username_display = request.user.first_name
@@ -164,6 +164,8 @@ def ITcontractPolicy(request):
         '''
 
     # it_contract_list = []
+
+    today_date = getDateFormatDisplay(user_language)
 
     return render(request,
         'ITcontract/ITcontract_policy.html', {

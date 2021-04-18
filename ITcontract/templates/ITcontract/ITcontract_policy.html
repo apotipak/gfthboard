@@ -469,6 +469,7 @@ var table = $('#contract_list_table').DataTable({
   buttons: [
     {
         extend: 'print',
+        title: '',
         exportOptions: {
           columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         }
@@ -614,6 +615,7 @@ function save_item(id) {
           buttons: [
             {
                 extend: 'print',
+                title: '',
                 exportOptions: {
                   columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
                 }
@@ -747,6 +749,7 @@ function add_item() {
           buttons: [
             {
                 extend: 'print',
+                title: '',
                 exportOptions: {
                   columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
                 }
@@ -949,6 +952,7 @@ function delete_item(id) {
                     buttons: [
                       {
                           extend: 'print',
+                          title: '',
                           exportOptions: {
                             columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
                           }

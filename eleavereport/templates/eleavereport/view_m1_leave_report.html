@@ -65,13 +65,37 @@
     	{% if leave_request_approved_list is not None %}
     	<div class="row">
 
-			<div class="form-inline col-12">
-				<div class="input-group col-12">
+			<div class="content-header form-inline col-12">
+
+				<div class="input-group col-4 float-left">
 				  <input type="text" class="form-control form-control-xs border-info" placeholder="Filter Data" id="employee_search_text" autocomplete="off">
 				  <div class="input-group-append">
 				    <button class="btn btn-info btn-xs" type="button"  id="employee_search_clear_button">&nbsp;&nbsp;&nbsp;CLEAR FILTER&nbsp;&nbsp;&nbsp;</button>
 				  </div>
 				</div>
+
+				<div class="col-8 float-right p-0">
+				  
+					<ol class="breadcrumb float-right">
+					  <li class='p-0'>
+
+					    <button class="btn btn-outline-info btn-md dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown">
+					      <i class="fas fa-print fa-sm"></i>&nbsp;&nbsp;Print
+					    </button>
+
+					    <div class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="dropdownMenuLink"> 
+					      <span style="font-size: 14px;">
+					      <a class="dropdown-item" href="#" onclick="print_document();"><i class="fas fa-desktop text-secondary"></i>&nbsp;&nbsp;Display on screen</a>                  
+					      <a class="dropdown-item" href="#" onclick="export_to_excel();"><i class="far fa-file-excel text-secondary"></i>&nbsp;&nbsp;Export to Excel</a>
+					      </span>
+					    </div>
+
+					  </li>					  
+					</ol>            
+
+				  
+				</div>
+
 			</div>
 
 	    	<div class="table-responsive table-striped">
@@ -180,21 +204,29 @@
 	$(function () {
 
 	    var table = $('#employee_list_table').DataTable({
-	      "paging": false,
-	      //"scrollY": "500px",
-	      //"scrollCollapse": true,
-	      //"lengthChange": false,
-	      "searching": true,
-	      "ordering": false,
-	      "info": false,
-	      //"autoWidth": false,
-	      "dom": '<"top"i>rt<"bottom"><"clear">', "search": "_INPUT_",
-	      //"searchPlaceholder": "Filter Data...",
-	      "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-		  //"targets": 'no-sort',
-		  //"bSort": false,
-		  //"order": [1] 
+			"paging": false,
+			"searching": true,
+			"ordering": false,
+			"info": false,
+			"dom": 'Brtip',
+			buttons: [
+			  {
+			      extend: 'print',
+			      title: '',
+			      exportOptions: {
+			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+			      }
+			  },
+			  {
+			      extend: 'excelHtml5',        
+			      title: '',
+			      exportOptions: {
+			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+			      }
+			  },
+			]          	      
 	    });
+
 
 		$('#employee_search_button').on( 'keyup click', function () {
 			table.search($('#employee_search_text').val()).draw();
@@ -208,9 +240,21 @@
 			$('#employee_search_text').val("");
 			table.search($('#employee_search_text').val()).draw();
 		});
-			
+
+		table.buttons('.buttons-print').nodes().css("display", "none");
+		table.buttons('.buttons-excel').nodes().css("display", "none");
+		table.buttons('.bFilter').nodes().css("display", "none");
+		
 	});
   });
+
+	function print_document() {
+	  	$(".buttons-print").trigger("click");
+	}
+
+	function export_to_excel() {
+	  	$(".buttons-excel").trigger("click");  
+	}
 
   </script>
 {% endblock %}      
