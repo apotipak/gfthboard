@@ -173,12 +173,14 @@ def ajax_search_employee(request):
 	message = "Not found"
 	employee_information = ""
 	search_employee_object = None
+	leave_type_object = None
+	leave_type_list = {}
 	search_emp_id = ""
 	search_emp_fname = ""
 	search_emp_lname = ""
 	search_emp_pos_th = ""
 	search_emp_div_th = ""
-	
+
 	emp_id = None if request.POST.get('emp_id') == "" else request.POST.get('emp_id')
 	# emp_fname = None if request.POST.get('emp_fname') == "" else request.POST.get('emp_fname')
 	# emp_lname = None if request.POST.get('emp_lname') == "" else request.POST.get('emp_lname')
@@ -210,7 +212,7 @@ def ajax_search_employee(request):
 			search_emp_id = search_employee_object[0]
 			search_emp_fname = search_employee_object[1]
 			search_emp_lname = search_employee_object[2]
-			search_emp_pos_th = search_employee_object[3]
+			search_emp_pos_th = search_employee_object[3]			
 			search_emp_div_th = search_employee_object[4]
 		else:
 			message = "ไม่พบข้อมูลพนักงานในระบบ"
@@ -224,6 +226,27 @@ def ajax_search_employee(request):
 	finally:
 		cursor.close()
 
+
+	# Generate Leave Type
+	if search_employee_object is not None:
+		sql = "select lp.lve_id,lt.lve_th from leave_plan lp ";
+		sql += "left join leave_type lt on lp.lve_id=lt.lve_id ";
+		sql += "where lp.emp_id='900662' and lp.lve_year='2021' ";
+		sql += "order by lp.lve_id;"
+
+		try:				
+			cursor = connection.cursor()
+			cursor.execute(sql)
+			leave_type_object = cursor.fetchall()			
+		except db.OperationalError as e:
+			is_found = False
+			message = "<b>Error: please send this error to IT team</b><br>" + str(e)		
+		except db.Error as e:
+			is_found = False
+			message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+		finally:
+			cursor.close()		
+
 	response = JsonResponse(data={
 	    "success": True,
 	    "is_found": is_found,
@@ -232,7 +255,8 @@ def ajax_search_employee(request):
 		"search_emp_fname": search_emp_fname,
 		"search_emp_lname": search_emp_lname,
 		"search_emp_pos_th": search_emp_pos_th,
-		"search_emp_div_th": search_emp_div_th
+		"search_emp_div_th": search_emp_div_th,
+		"leave_type_list": list(leave_type_object),
 	})
 	
 	response.status_code = 200
