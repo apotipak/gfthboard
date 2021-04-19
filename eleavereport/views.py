@@ -13,6 +13,7 @@ from django.db import connection
 from page.rules import *
 from django.utils import timezone
 from leave.models import LeaveEmployee
+from page.rules import *
 
 
 @permission_required('eleavereport.can_view_m1_report', login_url='/accounts/login/')
@@ -89,6 +90,8 @@ def ViewM1Report(request):
 		username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
 	else:
 		username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+	today_date = getDateFormatDisplay(user_language)
 
 	return render(request, 'eleavereport/report_list.html', {
 	    'page_title': settings.PROJECT_NAME,
@@ -186,6 +189,8 @@ def ViewM1LeaveReport(request):
 	    else:                    
 	        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+	today_date = getDateFormatDisplay(user_language)
+	
 	return render(request, 'eleavereport/view_m1_leave_report.html', {
 	    'page_title': settings.PROJECT_NAME,
 	    'today_date': today_date,
