@@ -16,7 +16,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">{% trans 'Reports' %}<small><small>&nbsp;&nbsp;|&nbsp;&nbsp;รายงานพนักงานลาหยุด</small></small></h1>            
+            <h1 class="m-0 text-dark"><small>ข้อมูลพนักงานลาหยุด M1</small></h1>
           </div>
           <div class="col-sm-6">
             <!--
@@ -44,11 +44,11 @@
               <div class="form-group">                                    
                 <div class="input-group col-12">
                   <div class="input-group-prepend">
-                    <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:120px;"><i class="far fa-calendar"></i>&nbsp;&nbsp;{% trans 'START DATE' %}</span>
+                    <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:125px;"><i class="far fa-calendar"></i>&nbsp;&nbsp;<b>{% trans 'START DATE' %}</b></span>
                   </div>
                   <input type="text" name="start_date" class="form-control datepicker border-bottom-1 border-left-0 rounded-0 bg-white" placeholder="dd-mm-yyyy" required="" value="{{start_date}}" id="id_start_date" readonly="readonly">
                   <div class="input-group-prepend">
-                    <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:120px;"><i class="far fa-calendar"></i>&nbsp;&nbsp;{% trans 'END DATE&nbsp;' %}</span>
+                    <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:114px;"><i class="far fa-calendar"></i>&nbsp;&nbsp;<b>{% trans 'END DATE&nbsp;' %}</b></span>
                   </div>
                   <input type="text" name="end_date" class="form-control datepicker border-bottom-1 border-left-0 rounded-0 bg-white" placeholder="dd-mm-yyyy" required="" id="id_end_date" value="{{end_date}}" readonly="readonly">
 
@@ -63,14 +63,14 @@
     	</div>
 
     	{% if leave_request_approved_list is not None %}
-    	<div class="row">
+    	<div class="row p-0">
 
-			<div class="content-header form-inline col-12">
+			<div class="content-header form-inline col-12 p-0">
 
 				<div class="input-group col-4 float-left">
 				  <input type="text" class="form-control form-control-xs border-info" placeholder="Filter Data" id="employee_search_text" autocomplete="off">
 				  <div class="input-group-append">
-				    <button class="btn btn-info btn-xs" type="button"  id="employee_search_clear_button">&nbsp;&nbsp;&nbsp;CLEAR FILTER&nbsp;&nbsp;&nbsp;</button>
+				    <button class="btn btn-info btn-xs" type="button"  id="employee_search_clear_button">&nbsp;&nbsp;&nbsp;CLEAR&nbsp;&nbsp;&nbsp;</button>
 				  </div>
 				</div>
 
