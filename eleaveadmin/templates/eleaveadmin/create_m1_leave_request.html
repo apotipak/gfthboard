@@ -1,1 +1,320 @@
-TODO
+{% extends "page_daterange.html" %}
+
+{% load static %}
+{% load i18n %}
+{% block title %}{%trans 'New Request'%}{% endblock %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">เขียนใบลาแทน M1</h1>
+          </div>
+          <div class="col-sm-6">
+            <!--
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
+              <li class="breadcrumb-item active">{% trans 'New Request' %}</li>
+            </ol>
+            -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+
+
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card card-primary">
+
+              <form action="" method="post" autocomplete="off" enctype="multipart/form-data" id="leaveform">
+                {% csrf_token %}
+
+                <div class="card-body">      
+
+                  <div class="form-group">                    
+                    <label for="{{ form.leave_type.id_for_label }}">{{ form.leave_type.label }}</label>
+                    {{ form.leave_type.errors }}
+                    {% if user_language == "th" %}
+                      {{form.leave_type}} 
+                    {% else %}
+                      
+                    <select name="leave_type" class="form-control" required="" id="id_leave_type">
+                      <option value="" selected="">---------</option>
+                    {% for choice in form.leave_type.field.queryset %}
+                        <option value="{{ choice.pk }}">
+                        {% if user_language == 'th' %}
+                          {{ choice.lve_th}}
+                        {% else %}
+                          {{ choice.lve_en}}
+                        {% endif %}
+                        </option>
+                      
+                    {% endfor %}
+                    </select>                      
+                    {% endif %}                                    
+
+                  </div>
+
+                  <div class="form-group">                                        
+
+                    <div class="input-group col-xs-12">                      
+                      <div class="input-group-prepend">
+                        <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:120px;" ><i class="far fa-calendar"></i>&nbsp;&nbsp;{% trans 'Start' %}</span>
+                      </div>
+                      {{ form.start_date }}                      
+                    </div>     
+                    <div class="input-group mb-3 col-xs-12">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text border-top-0 rounded-0" style="background-color: #d2d4d6; width:119px;"><i class="far fa-clock"></i>&nbsp;&nbsp;{% trans 'Time' %}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      </div>
+                      {{ form.start_hour }}
+                      {{ form.start_minute }}
+                    </div>
+                    
+
+                    <div class="input-group col-xs-12">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:120px;"><i class="far fa-calendar"></i>&nbsp;&nbsp;{% trans 'End' %}</span>
+                      </div>
+                      {{ form.end_date }}
+                    </div>
+                    <div class="input-group mb-3 col-xs-12">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text border-top-0 rounded-0" style="background-color: #d2d4d6; width:119px;"><i class="far fa-clock"></i>&nbsp;&nbsp;{% trans 'Time' %}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      </div>
+                      {{ form.end_hour }}
+                      {{ form.end_minute }}                      
+                    </div>
+
+                    <div class="input-group mb-3 col-xs-12">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text rounded-0" style="background-color: #d2d4d6; width:120px;"><i class="far fa-comment-alt" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Reason' %}</span>
+                      </div>                      
+                      {{ form.leave_reason }}
+                    </div>
+                    
+                    <div class="custom-file col-12">
+                      <input type="file" class="custom-file-input" id="id_document" name="document">
+                      <label class="custom-file-label" for="id_document">{% trans 'Choose file' %}...</label>
+                      <small>สามารถแนบไฟล์ประเภท JPG, PNG, PDF</small>
+                    </div>
+
+                    <!--                                        
+                    <div class="input-group col-xs-12 .hidden-md-down text-left">
+                      <span id='button'>แนบไฟล์&nbsp;&nbsp;<i class="fa fa-paperclip" aria-hidden="true"></i></span>&nbsp;&nbsp;
+                      <input id="id_document" name="document" type='file' accept='image/png, image/jpeg'>
+                    </div>
+                    -->
+
+                    <!--
+                    <div class="input-group col-xs-12 .hidden-md-down text-left">
+                      <input id="id_document" name="document" type="file" class="custom-file-input">
+                      <label class="custom-file-label text-truncate"><small>เลือกไฟล์...</small></label>
+                    </div>
+                    -->
+
+                    <div class="text-danger">{{ form.end_date.errors }}</div>
+
+                  </div>                
+
+                  <div class="container-fluid mb-12" id="show-error">
+                  {% if form.errors %}
+                      <!--
+                      {% for field in form %}
+                          {% for error in field.errors %}
+                              <div class="alert alert-danger">
+                                  <strong><i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}</strong>
+                              </div>
+                          {% endfor %}
+                      {% endfor %}
+                      -->
+
+                      {% for error in form.non_field_errors %}
+                          <div class="alert alert-danger">
+                              <i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}
+                          </div>
+                      {% endfor %}
+                      
+                  {% endif %}
+                  </div> 
+
+                </div>
+
+                <div class="card-footer clearfix bg-light">
+                  <div class="float-right text-right col-md-12">
+                    <button type="button" id="check-request-date" name="check-request-date" data-url="{% url 'm1247_check_leave_request_day' %}" class="btn btn-info">{% trans 'Preview' %}</button>
+
+                    <button type="submit" class="btn btn-success submitBtn">{% trans 'Submit Request' %}</button>
+                  </div>
+                </div>
+              </form>
+
+
+            </div>
+          </div>
+          
+        </div>
+        <!-- /.row -->
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock %}
+
+{% block javascript %}
+  <script>
+  $(document).ready(function () {
+      $("#leaveform").submit(function(e){
+
+        alert("todo");
+        return false;
+        
+        if ($(".submitBtn").attr('attempted') == 'true' ) {
+          e.preventDefault();
+        } else {
+          $(".submitBtn").html("<i class='fa fa-hourglass-half' aria-hidden='true'></i>&nbsp;&nbsp;Processing...");
+          $(".submitBtn").attr("disabled", true);
+          $(".submitBtn").attr("attempted", 'true');          
+        }
+      });
+
+      $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+      });
+
+      $('#button').click(function () {
+          $("input[type='file']").trigger('click');
+      })
+      $("input[type='file']").change(function () {
+          $('#val').text(this.value.replace(/C:\\fakepath\\/i, ''))
+      })
+
+      var today = new Date();
+      var lastDate = new Date(today.getFullYear() + 0, 11, 31);
+
+      $("#id_start_date").datepicker({
+          dateFormat: "yy-mm-dd",
+          minDate: -45,
+          maxDate: lastDate,
+          onSelect: function () {
+              var dt2 = $('#id_end_date');
+              var startDate = $(this).datepicker('getDate');
+              //add 30 days to selected date
+              startDate.setDate(startDate.getDate() + 120);            
+              var minDate = $(this).datepicker('getDate');
+
+              var dt2Date = dt2.datepicker('getDate');
+
+              //difference in days. 86400 seconds in day, 1000 ms in second
+              var dateDiff = (dt2Date - minDate)/(86400 * 1000);
+
+              //dt2 not set or dt1 date is greater than dt2 date
+              if (dt2Date == null || dateDiff < 0) {
+                      dt2.datepicker('setDate', minDate);
+              }
+              //dt1 date is 30 days under dt2 date
+              else if (dateDiff > 30){
+                      dt2.datepicker('setDate', startDate);
+              }
+              //sets dt2 maxDate to the last day of 30 days window
+              dt2.datepicker('option', 'maxDate', startDate);
+              //first day which can be selected in dt2 is selected date in dt1
+              dt2.datepicker('option', 'minDate', minDate);
+          }
+      }).attr('readonly', 'readonly');
+      
+      $('#id_end_date').datepicker({
+          dateFormat: "yy-mm-dd",
+          minDate: 0,
+          maxDate: lastDate
+      }).attr('readonly', 'readonly');
+  });
+
+  $('#check-request-date').click(function(){
+    var obj = $(this);
+    var leave_type_id = $('#id_leave_type').children("option:selected").val();
+    var leave_type_value = $('#id_leave_type').children("option:selected").text();  
+    var start_date = $('#id_start_date').datepicker('getDate');
+    var start_hour = $('#id_start_hour').val();
+    var start_minute = $('#id_start_minute').val();
+    var end_date = $('#id_end_date').datepicker('getDate');    
+    var end_hour = $('#id_end_hour').val();
+    var end_minute = $('#id_end_minute').val();
+
+    if(leave_type_id == "") {
+      $('#show-error').html("<div class='alert alert-warning' role='alert'><i class='fas fa-exclamation'></i>&nbsp;&nbsp;{% trans 'Please select Leave Type' %}</div>");
+
+    } else {
+      $.ajax({
+        type:"GET",
+        dataType: 'json',
+        url: obj.attr("data-url"),
+        data:{
+          leave_type_id: leave_type_id,
+          start_date: moment(start_date).format("YYYY-MM-DD " + start_hour + ":" + start_minute + ":00"),
+          end_date: moment(end_date).format("YYYY-MM-DD " + end_hour + ":" + end_minute + ":00"),
+        },
+        beforeSend: function () {
+          $('#show-error').html("<div class='alert alert-warning' role='alert'>Loading...</strong></div>");
+        },        
+        success: function( data ) 
+        {
+          result = "";
+
+          if (data.error.length == 0) {  
+            total_day = data.total_day;
+            total_hour = data.total_hour;
+
+            if (start_minute == 0)
+              start_minute = '00';
+            
+            if (end_minute == 0)
+              end_minute = '00';
+
+            d1 = moment(start_date).format("MMMM D  " + start_hour + ":" + start_minute);
+            d2 = moment(end_date).format("MMMM D  " + end_hour + ":" + end_minute);
+
+            if (total_day > 0) {
+              result += total_day + " {% trans 'Day' %}";
+              text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br></div>";
+            }
+
+            if (total_hour > 0) {
+              result += total_hour + " {% trans 'Hour' %}";
+              text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br>" + "</div><div><small>* {% trans 'Please notice that if your leave period is between 4 hours or 8 hours, system will deduct 1 hour for lunch time automatcally.' %}</small></div>";
+            }            
+
+            $('#show-error').html(text);
+
+          } else {
+            $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + data.error + "</strong></div>");
+          }
+
+        }
+      });      
+    }
+    
+  });
+
+  </script>
+{% endblock %}
+
