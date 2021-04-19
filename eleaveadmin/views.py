@@ -8,11 +8,14 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
 from django.utils import translation
 from django.utils.translation import ugettext as _
+from leave.models import LeavePlan, LeaveHoliday, LeaveEmployee, LeaveType, EmployeeInstance
 import django.db as db
 from django.db import connection
 from page.rules import *
 from django.utils import timezone
 from leave.models import LeaveEmployee
+from .forms import EmployeeM1247Form
+from .rules import *
 
 
 def convertDateToYYYYMMDD(old_date):
@@ -21,8 +24,149 @@ def convertDateToYYYYMMDD(old_date):
 	new_date_format = str(temp[2]) + "-" + str(temp[1]) + "-" + str(temp[0])	
 	return new_date_format
 
+
 @permission_required('eleaveadmin.can_create_m1_leave_request', login_url='/accounts/login/')
 def CreateM1LeaveRequest(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+    
+    dattime_format = "%Y-%m-%d %H:%M:%S"
+
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = getDateFormatDisplay(user_language)
+        
+    if request.method == "POST":
+        form = EmployeeM1247Form(request.POST, request.FILES, user=request.user)
+        render_template_name = 'eleaveadmin/create_m1_leave_request.html'
+
+        if form.is_valid():           
+            start_date = form.cleaned_data['start_date']
+            start_hour = form.cleaned_data['start_hour']
+            start_minute = form.cleaned_data['start_minute']
+
+            end_date = form.cleaned_data['end_date']
+            end_hour = form.cleaned_data['end_hour']            
+            end_minute = form.cleaned_data['end_minute']
+
+            d1 = str(start_date) + ' ' + str(start_hour) + ':' + str(start_minute) + ':00'
+            d2 = str(end_date) + ' ' + str(end_hour) + ':' + str(end_minute) + ':00'
+            start_date = datetime.strptime(d1, dattime_format)
+            end_date = datetime.strptime(d2, dattime_format)
+
+            leave_type_id = form.data['leave_type']
+            leave_type = form.cleaned_data['leave_type']
+            leave_reason = form.cleaned_data['leave_reason']
+            username = request.user.username
+            fullname = request.user.first_name + " " + request.user.last_name
+            created_by = request.user.username                        
+
+            employee = form.save(commit=False)
+
+            employee.start_date = start_date
+            employee.end_date = end_date
+            employee.emp_id = request.user.username
+            employee.created_by = request.user.username
+            employee.leave_reason = leave_reason
+            
+            found_m1247_error = checkM1247BusinessRules('M1247', start_date, end_date, leave_type_id)
+            if found_m1247_error[0]:
+                raise forms.ValidationError(found_m1247_error[1])
+            else:
+                grand_total_hours = found_m1247_error[1]
+
+            employee.lve_act = grand_total_hours // 8
+            employee.lve_act_hr = grand_total_hours % 8
+        
+            employee.save()
+            ref = employee.id 
+
+            day_hour_display = ""
+            if grand_total_hours // 8 > 0:
+                day_hour_display += str(grand_total_hours // 8) + ' วัน '
+            if grand_total_hours % 8 > 0:
+                day_hour_display += str(grand_total_hours % 8) + ' ช.ม.'
+
+            # EMPLOYEE SENDS LEAVE REQUEST EMAIL
+            if request.user.username not in excluded_username:
+
+                if settings.TURN_SEND_MAIL_ON:                    
+                    employee = LeaveEmployee.objects.get(emp_id=request.user.username)
+                    supervisor_id = employee.emp_spid
+                    supervisor = User.objects.get(username=supervisor_id)
+                    supervisor_email = supervisor.email
+                    recipients = [supervisor_email]                
+                    employee_full_name = employee.emp_fname_th + ' ' + employee.emp_lname_th
+                    supervisor_obj = LeaveEmployee.objects.get(emp_id=supervisor_id)
+                    supervisor_fullname = supervisor_obj.emp_fname_th + " " + supervisor_obj.emp_lname_th
+                    
+                    if settings.TURN_DUMMY_EMAIL_ON:
+                        recipients = settings.DUMMY_EMAIL
+
+                    if len(leave_reason) <= 0:
+                        leave_reason = _('There is no reason provided.')
+
+                    mail.send(                        
+                        recipients, # To
+                        settings.DEFAULT_FROM_EMAIL, # From
+                        subject = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
+                        message = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
+                        html_message = 'เรียน คุณ <strong>' + supervisor_fullname + '</strong><br><br>'
+                            'พนักงานแจ้งใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'                            
+                            'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
+                            'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
+                            'ลาวันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึงวันที่ <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br>'
+                            'จำนวน: <strong>' + day_hour_display + '</strong><br>'
+                            'เหตุผลการลา: <strong>' + leave_reason + '</strong><br><br>'
+                            'กรุณา <a href="http://27.254.207.51:8080">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br>'
+                            '<br><br>--This email was sent from E-Leave System<br>'
+                            'ref: ' + str(ref) + '<br>'
+                    )
+
+            return HttpResponseRedirect('/leave/leave-history/?submitted=True')
+              
+    else:
+        form = EmployeeM1247Form(user=request.user)
+        render_template_name = 'eleaveadmin/create_m1_leave_request.html'
+        
+    # Check number of waiting leave request
+    waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p') and year(end_date)='2021'"))     
+    
+    # Check leave approval right
+    if checkLeaveRequestApproval(request.user.username):
+        able_to_approve_leave_request = True
+    else:
+        able_to_approve_leave_request = False
+
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+    return render(request, render_template_name, {
+        'form': form,
+        'page_title': settings.PROJECT_NAME,
+        'today_date': today_date,
+        'project_version': settings.PROJECT_VERSION,
+        'db_server': settings.DATABASES['default']['HOST'],
+        'project_name': settings.PROJECT_NAME,
+        'waiting_for_approval_item': waiting_for_approval_item,
+        'able_to_approve_leave_request': able_to_approve_leave_request,
+        'user_language': user_language,
+        'username_display': username_display,
+    })
+
+
+@permission_required('eleaveadmin.can_create_m1_leave_request', login_url='/accounts/login/')
+def CreateM1LeaveRequest_Temp(request):
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)	
 	page_title = settings.PROJECT_NAME
@@ -41,55 +185,6 @@ def CreateM1LeaveRequest(request):
 
 	leave_request_pending_object = None
 	leave_request_pending_list = {}
-
-	'''
-	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date "
-	sql += "from leave_employeeinstance l "
-	sql += "left join leave_employee e on l.emp_id=e.emp_id "
-	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
-	sql += "where year(start_date)=year(getdate()) and status='p' "
-	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
-	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') "
-	sql += "order by created_date desc;"
-	print("SQL:", sql)
-
-	try:				
-		cursor = connection.cursor()
-		cursor.execute(sql)
-		leave_request_pending_object = cursor.fetchall()
-		error_message = "No error"
-	except db.OperationalError as e:
-		error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)		
-	except db.Error as e:
-		error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
-	finally:
-		cursor.close()
-
-	record = {}	
-	leave_request_pending_list = []
-
-	if leave_request_pending_object is not None:
-		print("Total=", len(leave_request_pending_object))
-		row_count = 1
-		for item in leave_request_pending_object:				
-			record = {
-				"row_count": row_count,
-				"emp_id": item[0],
-				'emp_fname_th': item[1],
-				'emp_lname_th': item[2],
-				'pos_th': item[3],
-				'div_th': item[4],
-				"leave_type_id": item[5],
-				"leave_type_th": item[6],
-				"start_date": item[7],
-				"end_date": item[8],
-				"created_date": item[9],
-
-			}
-			leave_request_pending_list.append(record)
-			row_count = row_count + 1	
-	
-	'''
 
 	if user_language == "th":
 		username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
