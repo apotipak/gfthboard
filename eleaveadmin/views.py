@@ -3,6 +3,7 @@ from django.utils import timezone
 from datetime import datetime
 from django.conf import settings
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
@@ -18,6 +19,10 @@ from django.http import JsonResponse
 from .forms import EmployeeM1247Form
 from .rules import *
 
+
+# excluded_username = {'900590','580816','900630'}
+excluded_username = {}
+current_year = datetime.now().year
 
 def convertDateToYYYYMMDD(old_date):
 	new_date_format = ""
@@ -38,16 +43,18 @@ def CreateM1LeaveRequest(request):
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
     today_date = getDateFormatDisplay(user_language)
-        
+
     if request.method == "POST":
         form = EmployeeM1247Form(request.POST, request.FILES, user=request.user)
         render_template_name = 'eleaveadmin/create_m1_leave_request.html'
 
-        if form.is_valid():           
+        if form.is_valid():
+
+            search_emp_id = form.cleaned_data['search_emp_id']
+
             start_date = form.cleaned_data['start_date']
             start_hour = form.cleaned_data['start_hour']
             start_minute = form.cleaned_data['start_minute']
-
             end_date = form.cleaned_data['end_date']
             end_hour = form.cleaned_data['end_hour']            
             end_minute = form.cleaned_data['end_minute']
@@ -60,7 +67,10 @@ def CreateM1LeaveRequest(request):
             leave_type_id = form.data['leave_type']
             leave_type = form.cleaned_data['leave_type']
             leave_reason = form.cleaned_data['leave_reason']
+            
             username = request.user.username
+            # username = search_emp_id
+
             fullname = request.user.first_name + " " + request.user.last_name
             created_by = request.user.username                        
 
@@ -68,7 +78,10 @@ def CreateM1LeaveRequest(request):
 
             employee.start_date = start_date
             employee.end_date = end_date
-            employee.emp_id = request.user.username
+            
+            # employee.emp_id = request.user.username
+            employee.emp_id = search_emp_id
+
             employee.created_by = request.user.username
             employee.leave_reason = leave_reason
             
@@ -237,7 +250,10 @@ def ajax_search_employee(request):
 		try:				
 			cursor = connection.cursor()
 			cursor.execute(sql)
-			leave_type_object = cursor.fetchall()			
+			leave_type_object = cursor.fetchall()
+			if leave_type_object is not None:
+				leave_type_list = list(leave_type_object)
+
 		except db.OperationalError as e:
 			is_found = False
 			message = "<b>Error: please send this error to IT team</b><br>" + str(e)		
@@ -256,7 +272,7 @@ def ajax_search_employee(request):
 		"search_emp_lname": search_emp_lname,
 		"search_emp_pos_th": search_emp_pos_th,
 		"search_emp_div_th": search_emp_div_th,
-		"leave_type_list": list(leave_type_object),
+		"leave_type_list": leave_type_list,
 	})
 	
 	response.status_code = 200

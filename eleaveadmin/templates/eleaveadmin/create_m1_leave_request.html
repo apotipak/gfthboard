@@ -55,7 +55,7 @@
 
               <div class="row pl-3 pt-3 pr-3 pb-0">
                 
-                <div class="float-right text-right col-4 offset-4">
+                <div class="float-right text-right col-5 offset-3">
 
                     <form action="" method="post" autocomplete="off" id="search_employee_form" name="search_employee_form">
                     {% csrf_token %}
@@ -71,7 +71,7 @@
                         <input type="text" name="emp_lname" class="form-control border-bottom-1 border-left-0 rounded-0 bg-white" required="" id="id_emp_lname" value="">&nbsp;
                         -->
 
-                        <button type="reset" id="id_cancel_employee_button" name="cancel_employee_button" class="btn btn-secondary">Cancel</button>&nbsp;
+                        <!--<button type="reset" id="id_cancel_employee_button" name="cancel_employee_button" class="btn btn-secondary">Cancel</button>&nbsp;-->
                         <button type="button" id="id_search_employee" name="search_employee" data-url="{% url 'm1247_check_leave_request_day' %}" class="btn btn-primary">Search</button>
 
                     </div>
@@ -201,9 +201,10 @@
                 </div>
 
                 <div class="card-footer clearfix bg-light">
+                  {{ form.search_emp_id }}
                   <div class="float-right text-right col-md-12">
-                    <button type="button" id="check-request-date" name="check-request-date" data-url="{% url 'm1247_check_leave_request_day' %}" class="btn btn-info">{% trans 'Preview' %}</button>
-                    <button type="submit" class="btn btn-success submitBtn">{% trans 'Submit Request' %}</button>
+                    <button type="reset" id="id_cancel_employee_button" name="cancel_employee_button" class="btn btn-secondary">Cancel</button>&nbsp;
+                    <button type="submit" class="btn btn-success submitBtn">บันทึกรายการ</button>
                   </div>
                 </div>
               </form>
@@ -235,9 +236,13 @@
 
       $("#id_cancel_employee_button").on('click', function() {
           $("#leaveform :input").prop("disabled", true);
+          $("#search_employee_form :input").prop("disabled", false);
+          $("#id_search_emp_id").val("");
           $("#id_leave_type").empty();
           $("#id_employee_information").html("");
-          $("#id_emp_id").focus();        
+          
+          $("#id_emp_id").focus();
+          $("#id_emp_id").select();
       });
 
       $("#search_employee_form").submit(function(e) {
@@ -269,6 +274,14 @@
         }
       });
 
+      $('#id_start_date').datepicker({
+        dateFormat: "yy-mm-dd",
+      }).attr('readonly', 'readonly');
+
+      $('#id_end_date').datepicker({
+        dateFormat: "yy-mm-dd",
+      }).attr('readonly', 'readonly');
+
     });
 
 
@@ -288,6 +301,8 @@
           },
           success: function(data) {                   
               if(data.is_found) {                        
+
+                  $("#id_search_emp_id").val(emp_id);
 
                   result = "<div id='accordion'>";
                   result += "  <div class='card card-success'>";
@@ -310,6 +325,9 @@
                   // Enable Leave Request Form
                   $("#leaveform :input").prop("disabled", false);
 
+                  // Disable Search Employee Form
+                  $("#search_employee_form :input").prop("disabled", true);
+
                   // Show employee information
                   $("#id_employee_information").html(result);
 
@@ -325,7 +343,6 @@
                     $("#id_leave_type").empty();
                   }
 
-
               } else {
                   $(document).Toasts('create', {
                       class: "bg-danger", 
@@ -339,6 +356,7 @@
                       autoremove: true,
                   });
 
+                  $("#id_search_emp_id").val("");
                   $("#id_emp_id").focus();
                   $("#id_emp_id").select();
               }
@@ -347,10 +365,9 @@
 
     }
 
-    /*
     $("#leaveform").submit(function(e){
-        alert("todo");
-        return false;
+        //alert("todo");
+        //return false;
 
         if ($(".submitBtn").attr('attempted') == 'true' ) {
           e.preventDefault();
@@ -361,6 +378,74 @@
         }
     });
 
+
+    $('#check-request-date').click(function(){
+        var obj = $(this);
+        var leave_type_id = $('#id_leave_type').children("option:selected").val();
+        var leave_type_value = $('#id_leave_type').children("option:selected").text();  
+        var start_date = $('#id_start_date').datepicker('getDate');
+        var start_hour = $('#id_start_hour').val();
+        var start_minute = $('#id_start_minute').val();
+        var end_date = $('#id_end_date').datepicker('getDate');    
+        var end_hour = $('#id_end_hour').val();
+        var end_minute = $('#id_end_minute').val();
+      
+        if(leave_type_id == "") {
+          $('#show-error').html("<div class='alert alert-warning' role='alert'><i class='fas fa-exclamation'></i>&nbsp;&nbsp;{% trans 'Please select Leave Type' %}</div>");
+
+        } else {
+          $.ajax({
+            type:"GET",
+            dataType: 'json',
+            url: obj.attr("data-url"),
+            data:{
+              leave_type_id: leave_type_id,
+              start_date: moment(start_date).format("YYYY-MM-DD " + start_hour + ":" + start_minute + ":00"),
+              end_date: moment(end_date).format("YYYY-MM-DD " + end_hour + ":" + end_minute + ":00"),
+            },
+            beforeSend: function () {
+              $('#show-error').html("<div class='alert alert-warning' role='alert'>Loading...</strong></div>");
+            },        
+            success: function( data ) 
+            {
+              result = "";
+
+              if (data.error.length == 0) {  
+                total_day = data.total_day;
+                total_hour = data.total_hour;
+
+                if (start_minute == 0)
+                  start_minute = '00';
+                
+                if (end_minute == 0)
+                  end_minute = '00';
+
+                d1 = moment(start_date).format("MMMM D  " + start_hour + ":" + start_minute);
+                d2 = moment(end_date).format("MMMM D  " + end_hour + ":" + end_minute);
+
+                if (total_day > 0) {
+                  result += total_day + " {% trans 'Day' %}";
+                  text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br></div>";
+                }
+
+                if (total_hour > 0) {
+                  result += total_hour + " {% trans 'Hour' %}";
+                  text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br>" + "</div><div><small>* {% trans 'Please notice that if your leave period is between 4 hours or 8 hours, system will deduct 1 hour for lunch time automatcally.' %}</small></div>";
+                }            
+
+                $('#show-error').html(text);
+
+              } else {
+                $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + data.error + "</strong></div>");
+              }
+
+            }
+          });      
+        }
+    });
+
+
+    /*
     $(".custom-file-input").on("change", function() {
         var fileName = $(this).val().split("\\").pop();
         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
