@@ -14,6 +14,7 @@ from django.db import connection
 from page.rules import *
 from django.utils import timezone
 from leave.models import LeaveEmployee
+from django.http import JsonResponse
 from .forms import EmployeeM1247Form
 from .rules import *
 
@@ -165,6 +166,81 @@ def CreateM1LeaveRequest(request):
     })
 
 
+
+@permission_required('eleaveadmin.can_create_m1_leave_request', login_url='/accounts/login/')
+def ajax_search_employee(request):
+	is_found = False
+	message = "Not found"
+	employee_information = ""
+	search_employee_object = None
+	search_emp_id = ""
+	search_emp_fname = ""
+	search_emp_lname = ""
+	search_emp_pos_th = ""
+	search_emp_div_th = ""
+	
+	emp_id = None if request.POST.get('emp_id') == "" else request.POST.get('emp_id')
+	# emp_fname = None if request.POST.get('emp_fname') == "" else request.POST.get('emp_fname')
+	# emp_lname = None if request.POST.get('emp_lname') == "" else request.POST.get('emp_lname')
+
+	if emp_id is not None:
+		sql = "select emp_id,emp_fname_th,emp_lname_th,pos_th,div_th from leave_employee where emp_type='M1' and emp_id='" + str(emp_id) + "';"
+	else:
+		response = JsonResponse(data={
+			"success": True,
+			"is_found": False,
+			"message": "Please enter employee ID",
+			"search_emp_id": search_emp_id,
+			"search_emp_fname": search_emp_fname,
+			"search_emp_lname": search_emp_lname,
+			"search_emp_pos_th": search_emp_pos_th,
+			"search_emp_div_th": search_emp_div_th			
+		})
+		response.status_code = 200
+		return response			
+
+	try:				
+		cursor = connection.cursor()
+		cursor.execute(sql)
+		search_employee_object = cursor.fetchone()
+		
+		if search_employee_object is not None:			
+			message = "Found"
+			is_found = True
+			search_emp_id = search_employee_object[0]
+			search_emp_fname = search_employee_object[1]
+			search_emp_lname = search_employee_object[2]
+			search_emp_pos_th = search_employee_object[3]
+			search_emp_div_th = search_employee_object[4]
+		else:
+			message = "ไม่พบข้อมูลพนักงานในระบบ"
+
+	except db.OperationalError as e:
+		is_found = False
+		message = "<b>Error: please send this error to IT team</b><br>" + str(e)		
+	except db.Error as e:
+		is_found = False
+		message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+	finally:
+		cursor.close()
+
+	response = JsonResponse(data={
+	    "success": True,
+	    "is_found": is_found,
+	    "message": message,
+		"search_emp_id": search_emp_id,
+		"search_emp_fname": search_emp_fname,
+		"search_emp_lname": search_emp_lname,
+		"search_emp_pos_th": search_emp_pos_th,
+		"search_emp_div_th": search_emp_div_th
+	})
+	
+	response.status_code = 200
+	return response	
+
+
+
+'''
 @permission_required('eleaveadmin.can_create_m1_leave_request', login_url='/accounts/login/')
 def CreateM1LeaveRequest_Temp(request):
 	user_language = getDefaultLanguage(request.user.username)
@@ -202,4 +278,5 @@ def CreateM1LeaveRequest_Temp(request):
 	    'end_date': end_date,
 	    'username_display': username_display,
 	})
+'''
 

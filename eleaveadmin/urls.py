@@ -7,5 +7,5 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('create-m1-leave-request', views.CreateM1LeaveRequest, name='create_m1_leave_request'),
-    # path('view-m1-leave-report', views.ViewM1LeaveReport, name='view_m1_leave_report'),
+    url(r'^ajax/search_employee/$', views.ajax_search_employee, name='ajax_search_employee'),
 ]
