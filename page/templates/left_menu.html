@@ -179,10 +179,10 @@
 
                   {% if perms.eleaveadmin.can_create_m1_leave_request %}
                   <li class="nav-item">                    
-                    {% if request.path == '/eleave-report/view-m1-leave-report' %}
-                    <a href="{% url 'view_m1_leave_report' %}" class="nav-link active">
+                    {% if request.path == '/eleave-admin/create-m1-leave-request' %}
+                    <a href="{% url 'create_m1_leave_request' %}" class="nav-link active">
                     {% else %}
-                    <a href="{% url 'view_m1_leave_report' %}" class="nav-link">
+                    <a href="{% url 'create_m1_leave_request' %}" class="nav-link">
                     {% endif %}
                       &nbsp;&nbsp;<i class="far fa-edit"></i>&nbsp;&nbsp;&nbsp;<p>สร้างใบลาแทน M1</p>
                     </a>
