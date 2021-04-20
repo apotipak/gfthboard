@@ -16,34 +16,11 @@
           <div class="col-sm-6">
             <h1 class="m-0 text-dark">{% trans 'Alert Settings' %} </h1>
           </div>
-          <div class="col-sm-6">                        
-            <!--
-            <ol class="breadcrumb float-sm-right">
-              <li>
-                <button class="btn btn-outline-info btn-md dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fas fa-print fa-sm"></i>&nbsp;&nbsp;Print
-                </button>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink"> 
-                  <span style="font-size: 14px;">
-                  <a class="dropdown-item" href="#" onclick="print_document();"><i class="fas fa-desktop text-secondary"></i>&nbsp;&nbsp;Display on screen</a>                  
-                  <a class="dropdown-item" href="#" onclick="export_to_excel();"><i class="far fa-file-excel text-secondary"></i>&nbsp;&nbsp;Export to Excel</a>
-                  </span>
-                </div>
-                &nbsp;&nbsp;
-              </li>
-
-              <li class="breadcrumb-item">
-                <button type='button' onclick='open_add_item_modal();' class='btn btn-md btn-success' data-toggle='modal'><b>&nbsp;<i class='fas fa-plus fa-xs'></i>&nbsp;New</b>&nbsp;</button>
-              </li>              
-            </ol>
-            -->         
-          </div>
+          <div class="col-sm-6">&nbsp;</div>
         </div>
       </div>
     </div>
-    <!-- /.content-header -->
 
-    <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
         <div class="row">
@@ -52,11 +29,13 @@
 
             <div class="card card-info">
               <div class="card-header">
-                <h3 class="card-title">Email Alert</h3>
+                <h3 class="card-title"><i class="far fa-envelope"></i>&nbsp;&nbsp;Email Alert</h3>
               </div>
 
               <form method="post" autocomplete="off" id="id_schedule_alert_setting_form" name="id_schedule_alert_setting_form">
                 {% csrf_token %}
+                <input type="hidden" id="id_alert_id" name="alert_id" value="{{ schedule_alert_setting_list.alert_id }}">
+
                 <div class="card-body">
                   <div class="form-group row">
                     <label for="id_send_to_email" class="col-3 col-form-label" style="white-space: nowrap;">Send to Email</label>
@@ -85,11 +64,12 @@
                     <label for="id_reach_minimum_day" class="col-3 col-form-label" style="white-space: nowrap;">เปิด / ปิด การแจ้งเตือน</label>
                     <div class="col-9">
                       {% if schedule_alert_setting_list.alert_active == "1" %}
-                      <input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                      <input type="checkbox" id="id_alert_active" name="alert_active" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
                       {% else %}
-                      <input type="checkbox" name="my-checkbox" data-bootstrap-switch data-off-color="danger" data-on-color="success">
-                      {% endif %}                      
+                      <input type="checkbox" id="id_alert_active" name="alert_active" data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                      {% endif %}
                     </div>
+
                   </div>
 
                 </div>
@@ -97,8 +77,8 @@
                 <div class="card-footer">
                   <div class="col-8 float-left">&nbsp;</div>
                   <div class="col-4 text-right float-right">
-                    <button type="reset" class="btn btn-default">Cancel</button>&nbsp;&nbsp;
-                    <button type="submit" class="btn btn-info">Save</button>                    
+                    <button type="reset" class="btn btn-default">Cancel</button>&nbsp;&nbsp;                                        
+                    <button type="button" id="id_save_form" name="save_form" class="btn btn-primary">Save</button>                   
                   </div>
                 </div>
 
@@ -120,11 +100,90 @@
 {% block javascript %}
 <script>
 
+function save_form() {
+  var alert_id = $("#id_alert_id").val();
+  var send_to_email = $("#id_send_to_email").val();
+  var send_to_group_email = $("#id_send_to_group_email").val();
+  var reach_minimum_day = $("#id_reach_minimum_day").val();
+  var alert_active = 0;  
+
+  if ($('#id_alert_active').is(":checked"))
+    alert_active = 1;
+  else
+    alert_active = 0;
+
+  //alert(send_to_email + "," + send_to_group_email + "," + reach_minimum_day + "," + alert_active);
+  //return false;
+
+  $.ajax({
+      url: '{% url "ajax-update-email-alert-setting" %}',
+      type : "POST",
+      data : {          
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          alert_id: alert_id,
+          send_to_email: send_to_email,
+          send_to_group_email: send_to_group_email,
+          reach_minimum_day: reach_minimum_day,
+          alert_active: alert_active,
+      },
+      success: function(data) {
+        if(data.is_error) {
+          $(document).Toasts('create', {
+              class: "bg-danger", 
+              title: "{% trans 'Error' %}",
+              subtitle: '',
+              autohide: true,
+              delay: 2000,
+              body: data.message,
+              autoDismiss: true,
+              close: true,
+              autoremove: true,
+          });          
+        } else {
+          $(document).Toasts('create', {
+              class: "bg-success", 
+              title: "{% trans 'Success' %}",
+              subtitle: '',
+              autohide: true,
+              delay: 2000,
+              body: data.message,
+              autoDismiss: true,
+              close: true,
+              autoremove: true,
+          });            
+        }
+        
+      }
+  });
+ 
+
+}
+
 $(document).ready( function () {
+
+  $("#id_save_form").on('click', function() {
+    save_form();
+  });
 
   $("input[data-bootstrap-switch]").each(function(){
     $(this).bootstrapSwitch('state', $(this).prop('checked'));
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   $("#id_start_date_add").datepicker({

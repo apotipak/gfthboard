@@ -46,6 +46,7 @@ import json
 import collections
 
 
+
 current_year = datetime.now().year
 
 @login_required(login_url='/accounts/login/')
@@ -736,3 +737,45 @@ def ITcontractAlertSetting(request):
         'today_date': today_date,
         'schedule_alert_setting_list': schedule_alert_setting_list,
     })
+
+
+@permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
+def AjaxUpdateEmailAlertSetting(request):
+    is_error = True
+    message = "Error #0 - Please contact IT."
+
+    alert_id = request.POST.get("alert_id")
+    send_to_email = request.POST.get("send_to_email")
+    send_to_group_email = request.POST.get("send_to_group_email")
+    reach_minimum_day = request.POST.get("reach_minimum_day")
+    alert_active = request.POST.get("alert_active")
+
+    print(alert_id,send_to_email, send_to_group_email, reach_minimum_day, alert_active)
+
+    schedule_alert_setting_obj = ScheduleAlertSetting.objects.filter(alert_id=alert_id).get()
+    if schedule_alert_setting_obj is not None:
+        schedule_alert_setting_obj.send_to_email = send_to_email
+        schedule_alert_setting_obj.send_to_group_email = send_to_group_email
+        schedule_alert_setting_obj.reach_minimum_day = reach_minimum_day
+        schedule_alert_setting_obj.alert_active = alert_active
+        
+        schedule_alert_setting_obj.modified_date = datetime.now()        
+        schedule_alert_setting_obj.modified_by = request.user.first_name
+        schedule_alert_setting_obj.modified_flag = 'E'
+
+        schedule_alert_setting_obj.save()
+
+        is_error = False
+        message = "บันทึกรายการสำเร็จ"
+    else:
+        is_error = True
+        message = "ไม่พบข้อมูลในระบบ"
+
+    response = JsonResponse(data={
+        "success": True,
+        "is_error": is_error,
+        "message": message,
+    })
+    
+    response.status_code = 200
+    return response 

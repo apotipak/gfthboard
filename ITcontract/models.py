@@ -7,6 +7,7 @@ import datetime
 from django.utils.timezone import now
 from django import forms
 from django.urls import reverse
+import datetime
 import uuid
 
 
@@ -49,6 +50,7 @@ class ITcontractDB(models.Model):
         return ITcontractPolicyInstance
 
 
+# Send email notification when IT contract is expired.
 class ScheduleAlertSetting(models.Model):
     alert_id = models.AutoField(primary_key=True)
     app_name = models.CharField(max_length=100, blank=True, null=True)
@@ -57,8 +59,8 @@ class ScheduleAlertSetting(models.Model):
     send_to_group_email = models.CharField(max_length=100, blank=True, null=True)
     alert_active = models.CharField(max_length=1, blank=True, null=True)
     reach_minimum_day = models.SmallIntegerField(blank=True, null=True)
-    created_date = models.DateTimeField(null=True)
-    created_by = models.CharField(max_length=50, blank=True, null=True)    
+    created_date = models.DateTimeField(null=True, default=datetime.date.today)
+    created_by = models.CharField(max_length=50, blank=True, null=True, default='System')    
     modified_date = models.DateTimeField(null=True)
     modified_by = models.CharField(max_length=50, blank=True, null=True)
     modified_flag = models.CharField(max_length=1, blank=True, null=True)
@@ -70,5 +72,3 @@ class ScheduleAlertSetting(models.Model):
 
     def __str__(self):
         return '{0} ({1} {2})'.format(self.alert_id, self.alert_name, self.alert_email, self.alert_status)
-
-# Send email notification when IT contract is expired.
