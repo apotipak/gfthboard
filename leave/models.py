@@ -141,6 +141,16 @@ class LeavePlan(models.Model):
             EmployeeLeavePolicyInstance = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_year, lt.lve_id as lve_type_id, lp.lve_code, lp.lve_plan, lt.lve_th, lt.lve_en, lp.lve_act, lp.lve_act_hr, lp.lve_miss, lp.lve_miss_hr, lp.lve_HRMS, lp.lve_HRMS_HR from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + UserName + " and lp.lve_year=" + LeaveYear)
         return EmployeeLeavePolicyInstance
 
+    def SearchEmployeeLeavePolicy(request, search_emp_id):
+        UserName = request.user.username
+        now = datetime.datetime.now()
+        LeaveYear = str(now.year)
+
+        if UserName == 'superadmin':
+            EmployeeLeavePolicyInstance = ""
+        else:
+            EmployeeLeavePolicyInstance = LeavePlan.objects.raw("select lp.emp_id as id, lp.lve_year, lt.lve_id as lve_type_id, lp.lve_code, lp.lve_plan, lt.lve_th, lt.lve_en, lp.lve_act, lp.lve_act_hr, lp.lve_miss, lp.lve_miss_hr, lp.lve_HRMS, lp.lve_HRMS_HR from leave_plan lp inner join leave_type lt on lp.lve_id=lt.lve_id where lp.emp_id=" + search_emp_id + " and lp.lve_year=" + LeaveYear)
+        return EmployeeLeavePolicyInstance
 
 class EmployeeInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)   

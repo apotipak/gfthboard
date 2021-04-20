@@ -11,19 +11,30 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark">เขียนใบลาแทน M1</h1>
+        
+        <div class="row col-12">
+          
+          <div class="col-4">
+            <h1 class="m-0 text-dark">เขียนใบลา M1</h1>
           </div>
-          <div class="col-sm-6">
-            <!--
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
-              <li class="breadcrumb-item active">{% trans 'New Request' %}</li>
+
+          <!--
+          <div class="col-8">
+            <ol class="breadcrumb float-right">
+              <li class="breadcrumb-item">
+                <div class="input-group-prepend p-0">
+                    <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:100px;"><b>{% trans 'EMP ID' %}</b></span>
+                    <input type="text" name="emp_id" class="form-control border-bottom-1 border-left-0 rounded-0 bg-white" required="" value="" id="id_emp_id">&nbsp;
+                    <button type="button" id="id_search_employee" name="search_employee" data-url="{% url 'm1247_check_leave_request_day' %}" class="btn btn-primary">Search</button>
+                </div>
+                
+              </li>              
             </ol>
-            -->
           </div>
+          -->
+
         </div>
+
       </div>
     </div>
     <!-- /.content-header -->
@@ -40,12 +51,68 @@
           <!-- left column -->
           <div class="col-md-12">
             <!-- jquery validation -->
-            <div class="card card-primary">
+            <div class="card card-primary p-0">
 
-              <form action="" method="post" autocomplete="off" enctype="multipart/form-data" id="leaveform">
+              <div class="row pl-3 pt-3 pr-3 pb-0">
+                
+                <div class="float-right text-right col-6 offset-3">
+
+                    <form action="" method="post" autocomplete="off" id="search_employee_form" name="search_employee_form">
+                    {% csrf_token %}
+                    <div class="input-group-prepend p-0 col-12">
+                        <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:120px;"><b>รหัสพนักงาน</b></span>
+                        <input type="number" min=3 maxlength=6 id="id_emp_id" name="emp_id" class="form-control border-bottom-1 border-left-0 rounded-0 bg-white" required="" value="" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">&nbsp;                        
+                    
+                        <!--
+                        <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:100px;">&nbsp;<b>First Name</b></span>
+                        <input type="text" name="emp_fname" class="form-control border-bottom-1 border-left-0 rounded-0 bg-white" required="" id="id_emp_fname" value="">&nbsp;
+                        
+                        <span class="input-group-text border-bottom-0 rounded-0" style="background-color: #d2d4d6; width:100px;">&nbsp;<b>Last Name</b></span>
+                        <input type="text" name="emp_lname" class="form-control border-bottom-1 border-left-0 rounded-0 bg-white" required="" id="id_emp_lname" value="">&nbsp;
+                        -->
+
+                        <!--<button type="reset" id="id_cancel_employee_button" name="cancel_employee_button" class="btn btn-secondary">Cancel</button>&nbsp;-->
+                        <button type="button" id="id_search_employee" name="search_employee" data-url="{% url 'm1247_check_leave_request_day' %}" class="btn btn-primary">Search</button>
+
+                    </div>
+                    </form>
+                </div>
+              </div>
+                        
+
+              <div class="pt-2 pl-3 pr-3 pb-0" id="id_employee_information">
+                <!--
+                <div id='accordion'>
+                  <div class='card card-success'>
+                    
+                    <div class='card-header'>
+                      
+                      <h4 class='card-title'>
+                        <a data-toggle='collapse' data-parent='#accordion' href='#emp_info'>
+                          Employee Information
+                        </a>
+                      </h4>
+
+                    </div>
+
+                    <div id='emp_info' class='panel-collapse collapse'>
+                      <div class='card-body'>
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid...
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                -->
+              </div>
+
+
+
+              <form action="" method="post" autocomplete="off" enctype="multipart/form-data" id="leaveform" name="leaveform">
                 {% csrf_token %}
 
                 <div class="card-body">      
+
 
                   <div class="form-group">                    
                     <label for="{{ form.leave_type.id_for_label }}">{{ form.leave_type.label }}</label>
@@ -115,52 +182,31 @@
                       <small>สามารถแนบไฟล์ประเภท JPG, PNG, PDF</small>
                     </div>
 
-                    <!--                                        
-                    <div class="input-group col-xs-12 .hidden-md-down text-left">
-                      <span id='button'>แนบไฟล์&nbsp;&nbsp;<i class="fa fa-paperclip" aria-hidden="true"></i></span>&nbsp;&nbsp;
-                      <input id="id_document" name="document" type='file' accept='image/png, image/jpeg'>
-                    </div>
-                    -->
-
-                    <!--
-                    <div class="input-group col-xs-12 .hidden-md-down text-left">
-                      <input id="id_document" name="document" type="file" class="custom-file-input">
-                      <label class="custom-file-label text-truncate"><small>เลือกไฟล์...</small></label>
-                    </div>
-                    -->
-
                     <div class="text-danger">{{ form.end_date.errors }}</div>
 
                   </div>                
 
                   <div class="container-fluid mb-12" id="show-error">
-                  {% if form.errors %}
-                      <!--
-                      {% for field in form %}
-                          {% for error in field.errors %}
-                              <div class="alert alert-danger">
-                                  <strong><i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}</strong>
-                              </div>
-                          {% endfor %}
-                      {% endfor %}
-                      -->
 
+                  {% comment %}
+                  {% if form.errors %}
                       {% for error in form.non_field_errors %}
                           <div class="alert alert-danger">
                               <i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}
                           </div>
-                      {% endfor %}
-                      
+                      {% endfor %}                      
                   {% endif %}
+                  {% endcomment %}
+
                   </div> 
 
                 </div>
 
                 <div class="card-footer clearfix bg-light">
+                  {{ form.search_emp_id }}
                   <div class="float-right text-right col-md-12">
-                    <button type="button" id="check-request-date" name="check-request-date" data-url="{% url 'm1247_check_leave_request_day' %}" class="btn btn-info">{% trans 'Preview' %}</button>
-
-                    <button type="submit" class="btn btn-success submitBtn">{% trans 'Submit Request' %}</button>
+                    <button type="reset" id="id_cancel_employee_button" name="cancel_employee_button" class="btn btn-secondary">Cancel</button>&nbsp;
+                    <button type="submit" class="btn btn-success submitBtn">บันทึกรายการ</button>
                   </div>
                 </div>
               </form>
@@ -180,141 +226,371 @@
 {% endblock %}
 
 {% block javascript %}
-  <script>
-  $(document).ready(function () {
-      $("#leaveform").submit(function(e){
-
-        alert("todo");
-        return false;
+<script>
+  
+    $(document).ready(function () {
+      $("#leaveform :input").prop("disabled", true);
+      $("#id_emp_id").focus();
         
-        if ($(".submitBtn").attr('attempted') == 'true' ) {
-          e.preventDefault();
-        } else {
-          $(".submitBtn").html("<i class='fa fa-hourglass-half' aria-hidden='true'></i>&nbsp;&nbsp;Processing...");
-          $(".submitBtn").attr("disabled", true);
-          $(".submitBtn").attr("attempted", 'true');          
+      $("#id_search_employee").on('click', function() {
+        search_employee();
+      });
+
+      $("#id_cancel_employee_button").on('click', function() {
+          $("#leaveform :input").prop("disabled", true);
+          $("#search_employee_form :input").prop("disabled", false);
+          $("#id_search_emp_id").val("");
+          $("#id_leave_type").empty();
+          $("#id_employee_information").html("");
+          $('#show-error').html("");
+          
+          $("#id_emp_id").focus();
+          $("#id_emp_id").select();
+      });
+
+      $("#search_employee_form").submit(function(e) {
+        e.preventDefault();
+                  
+        if(e.keyCode==13) {
+          var emp_id = $("#id_emp_id").val();
+          if(emp_id=="") {
+            alert("No data");
+            $("#id_emp_id").focus();
+          }
+          else {
+            alert("todo");
+          }
+        }
+      });
+         
+      $("#id_emp_id").bind("keyup",function(e){
+        e.preventDefault();
+        if(e.keyCode==13) {
+          var emp_id = $("#id_emp_id").val();
+          if(emp_id=="") {
+            $("#id_emp_id").focus();
+          }
+          else {
+            search_employee()
+          }
         }
       });
 
-      $(".custom-file-input").on("change", function() {
-        var fileName = $(this).val().split("\\").pop();
-        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-      });
-
-      $('#button').click(function () {
-          $("input[type='file']").trigger('click');
-      })
-      $("input[type='file']").change(function () {
-          $('#val').text(this.value.replace(/C:\\fakepath\\/i, ''))
-      })
-
-      var today = new Date();
-      var lastDate = new Date(today.getFullYear() + 0, 11, 31);
-
-      $("#id_start_date").datepicker({
-          dateFormat: "yy-mm-dd",
-          minDate: -45,
-          maxDate: lastDate,
-          onSelect: function () {
-              var dt2 = $('#id_end_date');
-              var startDate = $(this).datepicker('getDate');
-              //add 30 days to selected date
-              startDate.setDate(startDate.getDate() + 120);            
-              var minDate = $(this).datepicker('getDate');
-
-              var dt2Date = dt2.datepicker('getDate');
-
-              //difference in days. 86400 seconds in day, 1000 ms in second
-              var dateDiff = (dt2Date - minDate)/(86400 * 1000);
-
-              //dt2 not set or dt1 date is greater than dt2 date
-              if (dt2Date == null || dateDiff < 0) {
-                      dt2.datepicker('setDate', minDate);
-              }
-              //dt1 date is 30 days under dt2 date
-              else if (dateDiff > 30){
-                      dt2.datepicker('setDate', startDate);
-              }
-              //sets dt2 maxDate to the last day of 30 days window
-              dt2.datepicker('option', 'maxDate', startDate);
-              //first day which can be selected in dt2 is selected date in dt1
-              dt2.datepicker('option', 'minDate', minDate);
-          }
+      $('#id_start_date').datepicker({
+        dateFormat: "yy-mm-dd",
       }).attr('readonly', 'readonly');
-      
+
       $('#id_end_date').datepicker({
-          dateFormat: "yy-mm-dd",
-          minDate: 0,
-          maxDate: lastDate
+        dateFormat: "yy-mm-dd",
       }).attr('readonly', 'readonly');
-  });
 
-  $('#check-request-date').click(function(){
-    var obj = $(this);
-    var leave_type_id = $('#id_leave_type').children("option:selected").val();
-    var leave_type_value = $('#id_leave_type').children("option:selected").text();  
-    var start_date = $('#id_start_date').datepicker('getDate');
-    var start_hour = $('#id_start_hour').val();
-    var start_minute = $('#id_start_minute').val();
-    var end_date = $('#id_end_date').datepicker('getDate');    
-    var end_hour = $('#id_end_hour').val();
-    var end_minute = $('#id_end_minute').val();
+    });
 
-    if(leave_type_id == "") {
-      $('#show-error').html("<div class='alert alert-warning' role='alert'><i class='fas fa-exclamation'></i>&nbsp;&nbsp;{% trans 'Please select Leave Type' %}</div>");
+    function search_employee() {
+      var emp_id = $("#id_emp_id").val();
+      var emp_fname = "";
+      var emp_lname = "";
 
-    } else {
       $.ajax({
-        type:"GET",
-        dataType: 'json',
-        url: obj.attr("data-url"),
-        data:{
-          leave_type_id: leave_type_id,
-          start_date: moment(start_date).format("YYYY-MM-DD " + start_hour + ":" + start_minute + ":00"),
-          end_date: moment(end_date).format("YYYY-MM-DD " + end_hour + ":" + end_minute + ":00"),
-        },
-        beforeSend: function () {
-          $('#show-error').html("<div class='alert alert-warning' role='alert'>Loading...</strong></div>");
-        },        
-        success: function( data ) 
-        {
-          result = "";
+          url : "/eleaveadmin/ajax/search_employee/",
+          type : "POST",
+          data : {          
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              emp_id: emp_id,
+              emp_fname: emp_fname,
+              emp_lname: emp_lname,
+          },
+          success: function(data) {                   
+              if(data.is_found) {                        
 
-          if (data.error.length == 0) {  
-            total_day = data.total_day;
-            total_hour = data.total_hour;
+                  $("#id_search_emp_id").val(emp_id);
 
-            if (start_minute == 0)
-              start_minute = '00';
-            
-            if (end_minute == 0)
-              end_minute = '00';
+                  // Enable Leave Request Form
+                  $("#leaveform :input").prop("disabled", false);
 
-            d1 = moment(start_date).format("MMMM D  " + start_hour + ":" + start_minute);
-            d2 = moment(end_date).format("MMMM D  " + end_hour + ":" + end_minute);
+                  // Disable Search Employee Form
+                  $("#search_employee_form :input").prop("disabled", true);
 
-            if (total_day > 0) {
-              result += total_day + " {% trans 'Day' %}";
-              text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br></div>";
-            }
+                  // Show Employee Information
+                  result = "<div id='accordion'>";
+                  result += "  <div class='card card-success'>";
+                  result += "    <div class='card-header pl-2'>";
 
-            if (total_hour > 0) {
-              result += total_hour + " {% trans 'Hour' %}";
-              text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br>" + "</div><div><small>* {% trans 'Please notice that if your leave period is between 4 hours or 8 hours, system will deduct 1 hour for lunch time automatcally.' %}</small></div>";
-            }            
+                  result += "      <div class='text-left float-left col-6'>";
+                  result += "        <h4 class='card-title'>";
+                  result += "        <a data-toggle='collapse' data-parent='#accordion' href='#emp_info'>";
+                  result += "        <b>" + data.search_emp_fname + " " + data.search_emp_lname + "</b> [" + data.search_emp_pos_th + " " + data.search_emp_div_th + "]";
+                  result += "      </div>";                  
+                  result += "      <div class='text-right float-right col-6'>";
+                  result += "        สิทธิ์การลา&nbsp;&nbsp;<i class='fas fa-angle-double-down fa-xs'></i>";
+                  result += "      </div>";
 
-            $('#show-error').html(text);
+                  result += "        </a>";
+                  result += "      </h4>";
+                  result += "    </div>";
+                  result += "    <div id='emp_info' class='panel-collapse collapse'>";
+                  result += "      <div class='card-body p-2'>";
 
-          } else {
-            $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + data.error + "</strong></div>");
-          }
-
-        }
-      });      
-    }
     
-  });
+                  // Show Leave Entitlement
+                  if(data.leave_policy.length > 0) {
+                    result += "<h5><b>สิทธิ์การลาปี " + data.current_year + "</b></h5>";
+                    result += "<div class='col-lg-12 p-0'>";
+                    result += "  <table class='table table-striped table-sm'>";
+                    result += "    <thead>";
+                    result += "      <tr>";
+                    result += "        <th scope='col'><b>{% trans 'Type' %}</b></th>";
+                    result += "        <th scope='col' style='text-align: right'>{% trans 'Remaining' %}</th>";
+                    result += "        <th scope='col' style='text-align: center'>{% trans 'Used' %}&nbsp;<small>| HRMS</small></th>";
+                    result += "        <th scope='col' style='text-align: center'>{% trans 'Used' %}&nbsp;<small>| E-Leave</small></th>";
+                    //result += "        <th scope='col' style='text-align: center'>วันลาอนุมัติรอซิงค์ข้อมูล</th>";
+                    result += "      </tr>";
+                    result += "    </thead>";
+                    result += "    <tbody>";
+                    
+                    for(i=0;i<data.leave_policy.length;i++) {
 
-  </script>
+                      result += "  <tr>";
+
+                      // สิทธิ์ลา
+                      result += "     <td><b>" + data.leave_policy[i]['lve_th'] + "</b> " +  data.leave_policy[i]['lve_plan'] + " {% trans 'Day' %}</td>";
+
+                      // วันคงเหลือ
+                      result += "     <td class='text-right'>";
+                      if(data.leave_policy[i]['total_day_remaining'] > 0) {
+                        result += data.leave_policy[i]['total_day_remaining'] + " {% trans 'Day' %}";
+                      }
+                      if(data.leave_policy[i]['total_hour_remaining'] > 0) {
+                        result += data.leave_policy[i]['total_hour_remaining'] + " {% trans 'Hour' %}";
+                      }
+                      if(data.leave_policy[i]['total_day_remaining'] == 0 && data.leave_policy[i]['total_hour_remaining'] == 0) {
+                        result += "0";
+                      }
+                      if(data.leave_policy[i]['total_day_remaining'] < 0 && data.leave_policy[i]['total_hour_remaining'] < 0) {
+                        result += "รอตรวจสอบ";
+                      }
+                      result += "     </td>";
+
+
+                      // ใช้ไป | HRMS
+                      result += "     <td class='text-center'>";
+                      if(data.leave_policy[i]['lve_HRMS'] > 0) {
+                        result += data.leave_policy[i]['lve_HRMS'] + " {% trans 'Day' %}"; 
+                      }
+                      if(data.leave_policy[i]['lve_HRMS_HR'] > 0) {
+                        result += data.leave_policy[i]['lve_HRMS_HR'] + " {% trans 'Hour' %}"; 
+                      }
+                      if(data.leave_policy[i]['lve_HRMS'] == 0 && data.leave_policy[i]['lve_HRMS_HR'] == 0) {
+                        result += "0";
+                      }
+                      result += "     </td>";
+
+
+                      // ใช้ไป | E-Leave
+                      result += "     <td class='text-center'>";
+                      if(data.leave_policy[i]['total_approved_lve_act_eleave'] > 0) {
+                        result += data.leave_policy[i]['total_approved_lve_act_eleave'] + " {% trans 'Day' %}";
+                      }
+                      if(data.leave_policy[i]['total_approved_lve_act_hr_eleave'] > 0) {
+                        result += data.leave_policy[i]['total_approved_lve_act_eleave'] + " trans 'Hour' %}";
+                      }
+                      if(data.leave_policy[i]['total_approved_lve_act_eleave'] == 0 && data.leave_policy[i]['total_approved_lve_act_hr_eleave'] == 0) {
+                        result += "0"
+                      }
+                      result += "     </td>";
+                      
+                      // วันลาอนุมัติรอซิงค์ข้อมูล
+                      /*
+                      result += "     <td class='text-center'>";
+                      if(data.leave_policy[i]['total_pending_lve_act_eleave'] > 0) {
+                        result += data.leave_policy[i]['total_pending_lve_act_eleave'] + " {% trans 'Day' %}";
+                      }
+                      if(data.leave_policy[i]['total_pending_lve_act_hr_eleave'] > 0) {
+                        result += data.leave_policy[i]['total_pending_lve_act_hr_eleave'] + " {% trans 'Hour' %}";
+                      }
+                      if(data.leave_policy[i]['total_pending_lve_act_eleave'] == 0 && data.leave_policy[i]['total_pending_lve_act_hr_eleave'] == 0) {
+                        result += "0";
+                      }
+                      result += "     </td>";
+                      */
+
+                      result += "  </tr>";
+                    }
+                    
+                    result += "    </tbody>";
+                    result += "  </table>";
+                    result += "</div>";
+                  } else {
+                    result += "<h6><b>สิทธิ์การลาปี " + data.current_year + "</b></h6>";                    
+                    result += "<div class='col-lg-12 p-0' style='font-size:14px;'>" + "ไม่มีข้อมูลสิทธิ์วันลาของปี " + data.current_year + " ในระบบ กรุณาตรวจสอบอีกครั้ง" + "</div>";
+                  }
+
+                  result += "      </div>";
+                  result += "    </div>";
+                  result += "  </div>";
+                  result += "</div>";
+
+                  $("#id_employee_information").html(result);
+
+
+                  // Fillin Type List
+                  $("#id_leave_type").empty();
+                  if (data.leave_type_list.length > 0) {
+                    $('#id_leave_type').append('<option value="">----------</option>');
+                    for(i=0;i<data.leave_type_list.length;i++) {
+                      lve_id = data.leave_type_list[i][0];
+                      lve_th = data.leave_type_list[i][1];
+                      $('#id_leave_type').append('<option value="' + lve_id + '">' + lve_th + '</option>');
+                    }                    
+                  } else {
+                    $("#id_leave_type").empty();
+                  }
+
+              } else {
+                  $(document).Toasts('create', {
+                      class: "bg-danger", 
+                      title: "{% trans 'Error' %}",
+                      subtitle: '',
+                      autohide: true,
+                      delay: 2000,
+                      body: data.message,
+                      autoDismiss: true,
+                      close: true,
+                      autoremove: true,
+                  });
+
+                  $("#id_search_emp_id").val("");
+                  $("#id_emp_id").focus();
+                  $("#id_emp_id").select();
+              }
+          }
+      });
+
+    }
+
+
+    $('#check-request-date').click(function(){
+        var obj = $(this);
+        var leave_type_id = $('#id_leave_type').children("option:selected").val();
+        var leave_type_value = $('#id_leave_type').children("option:selected").text();  
+        var start_date = $('#id_start_date').datepicker('getDate');
+        var start_hour = $('#id_start_hour').val();
+        var start_minute = $('#id_start_minute').val();
+        var end_date = $('#id_end_date').datepicker('getDate');    
+        var end_hour = $('#id_end_hour').val();
+        var end_minute = $('#id_end_minute').val();
+      
+        if(leave_type_id == "") {
+          $('#show-error').html("<div class='alert alert-warning' role='alert'><i class='fas fa-exclamation'></i>&nbsp;&nbsp;{% trans 'Please select Leave Type' %}</div>");
+
+        } else {
+          $.ajax({
+            type:"GET",
+            dataType: 'json',
+            url: obj.attr("data-url"),
+            data:{
+              leave_type_id: leave_type_id,
+              start_date: moment(start_date).format("YYYY-MM-DD " + start_hour + ":" + start_minute + ":00"),
+              end_date: moment(end_date).format("YYYY-MM-DD " + end_hour + ":" + end_minute + ":00"),
+            },
+            beforeSend: function () {
+              $('#show-error').html("<div class='alert alert-warning' role='alert'>Loading...</strong></div>");
+            },        
+            success: function( data ) 
+            {
+              result = "";
+
+              if (data.error.length == 0) {  
+                total_day = data.total_day;
+                total_hour = data.total_hour;
+
+                if (start_minute == 0)
+                  start_minute = '00';
+                
+                if (end_minute == 0)
+                  end_minute = '00';
+
+                d1 = moment(start_date).format("MMMM D  " + start_hour + ":" + start_minute);
+                d2 = moment(end_date).format("MMMM D  " + end_hour + ":" + end_minute);
+
+                if (total_day > 0) {
+                  result += total_day + " {% trans 'Day' %}";
+                  text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br></div>";
+                }
+
+                if (total_hour > 0) {
+                  result += total_hour + " {% trans 'Hour' %}";
+                  text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br>" + "</div><div><small>* {% trans 'Please notice that if your leave period is between 4 hours or 8 hours, system will deduct 1 hour for lunch time automatcally.' %}</small></div>";
+                }            
+
+                $('#show-error').html(text);
+
+              } else {
+                $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + data.error + "</strong></div>");
+              }
+
+            }
+          });      
+        }
+    });
+
+
+
+    $("#leaveform").submit(function(e) {
+      e.preventDefault();      
+            
+      $('#show-error').html("");
+
+      $.confirm({
+          title: 'Confirmation',
+          type: 'red',
+          content: 'ยืนยันการทำรายการ',
+          animation: 'zoom',
+          animationBounce: 1.5,
+          closeIcon: true,
+          boxWidth: '38%',
+          useBootstrap: false,        
+          buttons: {
+              confirm: {
+                text: 'ยืนยัน',
+                btnClass: 'btn-danger',
+                action: function () {                   
+                  //alert("OK");
+                  formData = new FormData();  
+                  data = new FormData($('#leaveform').get(0));
+
+                  $.ajax({
+                    url : "/eleaveadmin/ajax/create_m1_leave_request/",
+                    type: 'post',          
+                    dataType: 'json',
+                    data: data,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success : function(data) {
+                      if(data.is_error) {                                                
+                        $('#show-error').html("<div class='alert alert-danger' role='alert'>" + data.message + "</strong></div>");
+                      } else {
+
+                        alert(data.message);
+                        // TODO
+
+                      }
+                      
+                    },
+                  });
+                }
+              },
+              cancel: {                   
+                action: function () {
+                  //alert("Cancel");
+                }
+              }
+          }
+      });
+
+    });
+
+</script>
 {% endblock %}
 
