@@ -37,9 +37,11 @@ def convertDateToYYYYMMDD(old_date):
 def AjaxCreateM1LeaveRequest(request):
 	is_error = True
 	message = "Error"
+	record = {}
+	pickup_records = []
 
-	search_emp_id = request.POST.get('search_emp_id')    
-	print("search_emp_id : ", search_emp_id)
+	# search_emp_id = request.POST.get('search_emp_id')    
+	# print("search_emp_id : ", search_emp_id)
 
 	if request.method == "POST":
 		print("POST")
@@ -95,11 +97,93 @@ def AjaxCreateM1LeaveRequest(request):
 			employee.save()
 			ref = employee.id 
 
+			# Refresh Leave Entitlement
+			leave_policy = LeavePlan.SearchEmployeeLeavePolicy(request, search_emp_id)
+			for policy in leave_policy:		
+				leave_plan_day = policy.lve_plan
+				leave_plan_hour = policy.lve_plan * 8
+
+				# จำนวน วัน/ช.ม. ที่ใช้ใน HRMS
+				total_lve_act = policy.lve_act
+				total_lve_act_hr = policy.lve_act_hr
+				grand_total_lve_act_hr = total_lve_act_hr + (total_lve_act * 8)
+
+				# จำนวน วัน/ช.ม. คงเหลือใน HRMS
+				total_lve_miss = policy.lve_miss
+				total_lve_miss_hr = policy.lve_miss_hr
+				grand_total_lve_miss_hr = total_lve_miss_hr + (total_lve_miss * 8)
+
+				# จำนวน วัน/ช.ม. ที่ใช้ใน HRMS 2
+				total_lve_hrms = policy.lve_HRMS
+				total_lve_hrms_hr = policy.lve_HRMS_HR
+				grand_total_lve_hrms = total_lve_hrms_hr + (total_lve_hrms * 8)
+
+
+				# จำนวน วัน/ช.ม. ที่รออนุมัติใน E-Leave
+				total_pending_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=search_emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+				total_pending_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=search_emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+				grand_total_pending_eleave = total_pending_lve_act_hr_eleave + (total_pending_lve_act_eleave * 8)
+				policy.total_pending_lve_act_eleave = grand_total_pending_eleave // 8
+				policy.total_pending_lve_act_hr_eleave = grand_total_pending_eleave % 8  
+
+				# จำนวน วัน/ช.ม. ที่อนุมัติแล้ว E-Leave
+				total_approved_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=search_emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
+				total_approved_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=search_emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+
+				grand_total_approved_eleave = total_approved_lve_act_hr_eleave + (total_approved_lve_act_eleave * 8)
+				policy.total_approved_lve_act_eleave = grand_total_approved_eleave // 8
+				policy.total_approved_lve_act_hr_eleave = grand_total_approved_eleave % 8
+
+				# จำนวนวันคงเหลือสุทธิ
+				result = leave_plan_hour - (grand_total_lve_hrms + grand_total_approved_eleave + grand_total_pending_eleave)        
+				total_day_remaining = result // 8
+				total_hour_remaining = result % 8
+				policy.total_day_remaining = total_day_remaining
+				policy.total_hour_remaining = total_hour_remaining
+
+				# ประเภทการลา
+				lve_th = policy.lve_th
+				lve_plan = policy.lve_plan
+				# print(lve_th, lve_plan)		
+
+				# วันคงเหลือ
+				total_day_remaining = policy.total_day_remaining
+				total_hour_remaining = policy.total_hour_remaining
+
+				# HRMS ใช้ไป
+				lve_HRMS = policy.lve_HRMS
+				lve_HRMS_HR = policy.lve_HRMS_HR
+				
+				# E-Leave ใช้ไป
+				total_approved_lve_act_eleave = policy.total_approved_lve_act_eleave
+				total_approved_lve_act_hr_eleave = policy.total_approved_lve_act_hr_eleave
+
+				# รออนุมัติ
+				total_pending_lve_act_eleave = policy.total_pending_lve_act_eleave
+				total_pending_lve_act_hr_eleave = policy.total_pending_lve_act_hr_eleave
+
+				record = {
+					"lve_th": lve_th,
+					"lve_plan": lve_plan,
+					"total_day_remaining": total_day_remaining,
+					"total_hour_remaining": total_hour_remaining,
+					"lve_HRMS": lve_HRMS,
+					"lve_HRMS_HR": lve_HRMS_HR,
+					"total_approved_lve_act_eleave": total_approved_lve_act_eleave,
+					"total_approved_lve_act_hr_eleave": total_approved_lve_act_hr_eleave,
+					"total_pending_lve_act_eleave": total_pending_lve_act_eleave,
+					"total_pending_lve_act_hr_eleave": total_pending_lve_act_hr_eleave,
+				}
+				pickup_records.append(record)	
+
+
+			'''
 			day_hour_display = ""
 			if grand_total_hours // 8 > 0:
 			    day_hour_display += str(grand_total_hours // 8) + ' วัน '
 			if grand_total_hours % 8 > 0:
 			    day_hour_display += str(grand_total_hours % 8) + ' ช.ม.'
+			'''
 
 
 			# EMPLOYEE SENDS LEAVE REQUEST EMAIL
@@ -139,6 +223,7 @@ def AjaxCreateM1LeaveRequest(request):
 			                'ref: ' + str(ref) + '<br>'
 			        )
 			'''
+			message = "บันทึกรายการสำเร็จ"
 		else:
 			message = form.errors['__all__']
 			# print(form.errors.as_json())
@@ -150,7 +235,9 @@ def AjaxCreateM1LeaveRequest(request):
 	return JsonResponse(data={
 		"success": True, 
 		"is_error": is_error,
-		"message": message,    
+		"message": message,
+		"current_year": current_year,
+		"leave_policy": list(pickup_records),
 	})
 
 
@@ -440,7 +527,6 @@ def ajax_search_employee(request):
 		policy.total_day_remaining = total_day_remaining
 		policy.total_hour_remaining = total_hour_remaining
 
-
 		# ประเภทการลา
 		lve_th = policy.lve_th
 		lve_plan = policy.lve_plan
@@ -517,46 +603,3 @@ def ajax_search_employee(request):
 	
 	response.status_code = 200
 	return response	
-
-
-
-'''
-@permission_required('eleaveadmin.can_create_m1_leave_request', login_url='/accounts/login/')
-def CreateM1LeaveRequest_Temp(request):
-	user_language = getDefaultLanguage(request.user.username)
-	translation.activate(user_language)	
-	page_title = settings.PROJECT_NAME
-	db_server = settings.DATABASES['default']['HOST']
-	project_name = settings.PROJECT_NAME
-	project_version = settings.PROJECT_VERSION
-
-	today_day = timezone.now().strftime('%d')
-	today_month = timezone.now().strftime('%m')
-	today_year = timezone.now().year
-	today_date = str(today_day) + "-" + today_month + "-" + str(today_year)	
-
-	start_date = today_date if request.POST.get('start_date') is None else request.POST.get('start_date')
-	end_date = today_date if request.POST.get('end_date') is None else request.POST.get('end_date')
-	convertDateToYYYYMMDD(start_date)
-
-	leave_request_pending_object = None
-	leave_request_pending_list = {}
-
-	if user_language == "th":
-		username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
-	else:
-		username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
-
-	return render(request, 'eleaveadmin/create_m1_leave_request.html', {
-	    'page_title': settings.PROJECT_NAME,
-	    'today_date': today_date,
-	    'project_version': settings.PROJECT_VERSION,
-	    'db_server': settings.DATABASES['default']['HOST'],
-	    'project_name': settings.PROJECT_NAME,
-	    'leave_request_pending_list': list(leave_request_pending_list),
-	    'start_date': start_date,
-	    'end_date': end_date,
-	    'username_display': username_display,
-	})
-'''
-
