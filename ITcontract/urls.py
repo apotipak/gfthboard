@@ -27,4 +27,7 @@ urlpatterns = [
     # Export
     url(r'^export-it-contract-to-excel/$', views.export_it_contract_to_excel, name='export_it_contract_to_excel'), 
 
+    # Alert Setting
+    path('alert-setting/', views.ITcontractAlertSetting, name='it_contract_alert_setting'),
+    url(r'^ajax/update-email-alert-setting/$', views.AjaxUpdateEmailAlertSetting, name='ajax-update-email-alert-setting'),
 ]
