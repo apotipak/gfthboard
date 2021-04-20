@@ -10,14 +10,16 @@ from django.contrib.auth.decorators import permission_required
 from django.utils import translation
 from django.utils.translation import ugettext as _
 from leave.models import LeavePlan, LeaveHoliday, LeaveEmployee, LeaveType, EmployeeInstance
-import django.db as db
 from django.db import connection
+from django.db.models import Sum
 from page.rules import *
 from django.utils import timezone
 from leave.models import LeaveEmployee
 from django.http import JsonResponse
 from .forms import EmployeeM1247Form
 from .rules import *
+from django.forms.models import model_to_dict
+import django.db as db
 
 
 # excluded_username = {'900590','580816','900630'}
@@ -187,7 +189,9 @@ def ajax_search_employee(request):
 	employee_information = ""
 	search_employee_object = None
 	leave_type_object = None
-	leave_type_list = {}
+	leave_type_list = {}	
+	leave_entitlement_object = None
+	leave_entitlement_list = {}
 	search_emp_id = ""
 	search_emp_fname = ""
 	search_emp_lname = ""
@@ -205,11 +209,15 @@ def ajax_search_employee(request):
 			"success": True,
 			"is_found": False,
 			"message": "Please enter employee ID",
+		    "current_year": current_year,
 			"search_emp_id": search_emp_id,
 			"search_emp_fname": search_emp_fname,
 			"search_emp_lname": search_emp_lname,
 			"search_emp_pos_th": search_emp_pos_th,
-			"search_emp_div_th": search_emp_div_th			
+			"search_emp_div_th": search_emp_div_th,
+			"leave_type_list": leave_type_list,
+			"leave_entitlement_list": leave_entitlement_list,
+			'leave_policy': {},
 		})
 		response.status_code = 200
 		return response			
@@ -240,14 +248,123 @@ def ajax_search_employee(request):
 		cursor.close()
 
 
+	# Get Leave Entitlement
+	if search_employee_object is not None:		
+		sql = "select lp.emp_id,lp.lve_id,lp.lve_code,lt.lve_th,lp.lve_plan,"
+		sql += "lp.lve_plan_hr,lp.lve_act,lp.lve_act_hr,lp.lve_HRMS,lp.lve_HRMS_HR,"
+		sql += "lp.lve_miss,lp.lve_miss_hr,lp.upd_date,lp.upd_by "
+		sql += "from leave_plan lp "
+		sql += "left join leave_type lt on lp.lve_id=lt.lve_id "
+		sql += "where lp.emp_id='" + str(emp_id) + "' and lp.lve_year='" + str(current_year) + "' "
+		sql += "order by lp.lve_id;"
+		
+		try:			
+			cursor = connection.cursor()
+			cursor.execute(sql)
+			leave_entitlement_object = cursor.fetchall()
+			if leave_entitlement_object is not None:
+				leave_entitlement_list = list(leave_entitlement_object)
+
+		except db.OperationalError as e:
+			is_found = False
+			message = "<b>Error: please send this error to IT team</b><br>" + str(e)		
+		except db.Error as e:
+			is_found = False
+			message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+		finally:
+			cursor.close()		
+
+	leave_policy = LeavePlan.SearchEmployeeLeavePolicy(request, emp_id)
+	record = {}
+	pickup_records = []
+	for policy in leave_policy:
+		print(policy.lve_plan)
+		leave_plan_day = policy.lve_plan
+		leave_plan_hour = policy.lve_plan * 8
+
+		# จำนวน วัน/ช.ม. ที่ใช้ใน HRMS
+		total_lve_act = policy.lve_act
+		total_lve_act_hr = policy.lve_act_hr
+		grand_total_lve_act_hr = total_lve_act_hr + (total_lve_act * 8)
+
+		# จำนวน วัน/ช.ม. คงเหลือใน HRMS
+		total_lve_miss = policy.lve_miss
+		total_lve_miss_hr = policy.lve_miss_hr
+		grand_total_lve_miss_hr = total_lve_miss_hr + (total_lve_miss * 8)
+
+		# จำนวน วัน/ช.ม. ที่ใช้ใน HRMS 2
+		total_lve_hrms = policy.lve_HRMS
+		total_lve_hrms_hr = policy.lve_HRMS_HR
+		grand_total_lve_hrms = total_lve_hrms_hr + (total_lve_hrms * 8)
+
+
+		# จำนวน วัน/ช.ม. ที่รออนุมัติใน E-Leave
+		total_pending_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act'))['sum'] or 0
+		total_pending_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('p')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+		grand_total_pending_eleave = total_pending_lve_act_hr_eleave + (total_pending_lve_act_eleave * 8)
+		policy.total_pending_lve_act_eleave = grand_total_pending_eleave // 8
+		policy.total_pending_lve_act_hr_eleave = grand_total_pending_eleave % 8  
+
+		# จำนวน วัน/ช.ม. ที่อนุมัติแล้ว E-Leave
+		total_approved_lve_act_eleave = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act'))['sum'] or 0        
+		total_approved_lve_act_hr_eleave = EmployeeInstance.objects.filter(emp_id__exact=emp_id).filter(end_date__year='2021').filter(leave_type_id__exact=policy.lve_type_id).filter(status__in=('a','C','F')).aggregate(sum=Sum('lve_act_hr'))['sum'] or 0
+
+		grand_total_approved_eleave = total_approved_lve_act_hr_eleave + (total_approved_lve_act_eleave * 8)
+		policy.total_approved_lve_act_eleave = grand_total_approved_eleave // 8
+		policy.total_approved_lve_act_hr_eleave = grand_total_approved_eleave % 8
+
+		# จำนวนวันคงเหลือสุทธิ
+		result = leave_plan_hour - (grand_total_lve_hrms + grand_total_approved_eleave + grand_total_pending_eleave)        
+		total_day_remaining = result // 8
+		total_hour_remaining = result % 8
+		policy.total_day_remaining = total_day_remaining
+		policy.total_hour_remaining = total_hour_remaining
+
+
+		# ประเภทการลา
+		lve_th = policy.lve_th
+		lve_plan = policy.lve_plan
+		# print(lve_th, lve_plan)		
+
+		# วันคงเหลือ
+		total_day_remaining = policy.total_day_remaining
+		total_hour_remaining = policy.total_hour_remaining
+
+		# HRMS ใช้ไป
+		lve_HRMS = policy.lve_HRMS
+		lve_HRMS_HR = policy.lve_HRMS_HR
+		
+		# E-Leave ใช้ไป
+		total_approved_lve_act_eleave = policy.total_approved_lve_act_eleave
+		total_approved_lve_act_hr_eleave = policy.total_approved_lve_act_hr_eleave
+
+		# รออนุมัติ
+		total_pending_lve_act_eleave = policy.total_pending_lve_act_eleave
+		total_pending_lve_act_hr_eleave = policy.total_pending_lve_act_hr_eleave
+
+		record = {
+			"lve_th": lve_th,
+			"lve_plan": lve_plan,
+			"total_day_remaining": total_day_remaining,
+			"total_hour_remaining": total_hour_remaining,
+			"lve_HRMS": lve_HRMS,
+			"lve_HRMS_HR": lve_HRMS_HR,
+			"total_approved_lve_act_eleave": total_approved_lve_act_eleave,
+			"total_approved_lve_act_hr_eleave": total_approved_lve_act_hr_eleave,
+			"total_pending_lve_act_eleave": total_pending_lve_act_eleave,
+			"total_pending_lve_act_hr_eleave": total_pending_lve_act_hr_eleave,
+		}
+		pickup_records.append(record)		
+		
+
 	# Generate Leave Type
 	if search_employee_object is not None:
 		sql = "select lp.lve_id,lt.lve_th from leave_plan lp ";
 		sql += "left join leave_type lt on lp.lve_id=lt.lve_id ";
-		sql += "where lp.emp_id='900662' and lp.lve_year='2021' ";
+		sql += "where lp.emp_id='" + str(emp_id) + "' and lp.lve_year='" + str(current_year) + "' ";
 		sql += "order by lp.lve_id;"
 
-		try:				
+		try:			
 			cursor = connection.cursor()
 			cursor.execute(sql)
 			leave_type_object = cursor.fetchall()
@@ -267,12 +384,15 @@ def ajax_search_employee(request):
 	    "success": True,
 	    "is_found": is_found,
 	    "message": message,
+	    "current_year": current_year,
 		"search_emp_id": search_emp_id,
 		"search_emp_fname": search_emp_fname,
 		"search_emp_lname": search_emp_lname,
 		"search_emp_pos_th": search_emp_pos_th,
 		"search_emp_div_th": search_emp_div_th,
 		"leave_type_list": leave_type_list,
+		"leave_entitlement_list": leave_entitlement_list,
+		'leave_policy': list(pickup_records),
 	})
 	
 	response.status_code = 200

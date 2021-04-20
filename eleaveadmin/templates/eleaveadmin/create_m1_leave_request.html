@@ -15,7 +15,7 @@
         <div class="row col-12">
           
           <div class="col-4">
-            <h1 class="m-0 text-dark">เขียนใบลาแทน M1</h1>
+            <h1 class="m-0 text-dark">เขียนใบลา M1</h1>
           </div>
 
           <!--
@@ -304,6 +304,13 @@
 
                   $("#id_search_emp_id").val(emp_id);
 
+                  // Enable Leave Request Form
+                  $("#leaveform :input").prop("disabled", false);
+
+                  // Disable Search Employee Form
+                  $("#search_employee_form :input").prop("disabled", true);
+
+                  // Show Employee Information
                   result = "<div id='accordion'>";
                   result += "  <div class='card card-success'>";
                   result += "    <div class='card-header pl-2'>";
@@ -315,21 +322,143 @@
                   result += "      </h4>";
                   result += "    </div>";
                   result += "    <div id='emp_info' class='panel-collapse collapse'>";
-                  result += "      <div class='card-body'>";
-                  result += "&nbsp;";
+                  result += "      <div class='card-body p-2'>";
+
+                  // Show Leave Entitlement
+                  /*
+                  if(data.leave_entitlement_list.length > 0) {
+                    result += "<h6><b>สิทธิ์การลาปี " + data.current_year + "</b></h6>";
+                    result += "<div class='col-lg-12 p-0' style='font-size:12px;'>";
+                    result += "  <table class='table table-striped table-sm'>";
+                    result += "    <thead>";
+                    result += "      <tr>";
+                    result += "        <th scope='col'>{% trans 'Type' %}</th>";
+                    result += "        <th scope='col' style='text-align: left'>{% trans 'Remaining' %}</th>";
+                    result += "        <th scope='col' style='text-align: left'>{% trans 'Used' %}&nbsp;<small>| HRMS</small></th>";
+                    result += "        <th scope='col' style='text-align: left'>{% trans 'Used' %}&nbsp;<small>| E-Leave</small></th>";
+                    result += "      </tr>";
+                    result += "    </thead>";
+                    result += "    <tbody>";
+                    
+                    for(i=0;i<data.leave_entitlement_list.length;i++) {
+
+
+
+                      result += "  <tr>";
+                      result += "     <td><b>" + data.leave_entitlement_list[i][3] + "</b> " +  data.leave_entitlement_list[i][4] + " วัน</td>";
+                      result += "     <td>" + data.leave_entitlement_list[i][10] + " วัน</td>";
+                      result += "     <td>" + data.leave_entitlement_list[i][6] + " วัน</td>";
+                      result += "     <td>" + data.leave_entitlement_list[i][8] + " วัน</td>";
+                      result += "  </tr>";
+                    }
+                    
+                    result += "    </tbody>";
+                    result += "  </table>";
+                    result += "</div>";
+                  } else {
+                    result += "<h6><b>สิทธิ์การลาปี " + data.current_year + "</b></h6>";                    
+                    result += "<div class='col-lg-12 p-0' style='font-size:14px;'>" + "ไม่มีข้อมูลสิทธิ์วันลาของปี " + data.current_year + " ในระบบ กรุณาตรวจสอบอีกครั้ง" + "</div>";
+                  }
+
+                  result += "      </div>";
+                  result += "    </div>";
+                  result += "  </div>";
+                  result += "</div>";
+                  */
+    
+                  // Show Leave Entitlement
+                  if(data.leave_policy.length > 0) {
+                    result += "<h6><b>สิทธิ์การลาปี " + data.current_year + "</b></h6>";
+                    result += "<div class='col-lg-12 p-0' style='font-size:12px;'>";
+                    result += "  <table class='table table-striped table-sm'>";
+                    result += "    <thead>";
+                    result += "      <tr>";
+                    result += "        <th scope='col'>{% trans 'Type' %}</th>";
+                    result += "        <th scope='col' style='text-align: left'>{% trans 'Remaining' %}</th>";
+                    result += "        <th scope='col' style='text-align: left'>{% trans 'Used' %}&nbsp;<small>| HRMS</small></th>";
+                    result += "        <th scope='col' style='text-align: left'>{% trans 'Used' %}&nbsp;<small>| E-Leave</small></th>";
+                    result += "      </tr>";
+                    result += "    </thead>";
+                    result += "    <tbody>";
+                    
+                    for(i=0;i<data.leave_policy.length;i++) {
+
+                      result += "  <tr>";
+                      result += "     <td><b>" + data.leave_policy[i]['lve_th'] + "</b> " +  data.leave_policy[i]['lve_plan'] + " วัน</td>";
+
+                      result += "     <td>";
+                      if(data.leave_policy[i]['total_day_remaining'] > 0) {
+                        result += data.leave_policy[i]['total_day_remaining'] + " Day";
+                      }
+                      if(data.leave_policy[i]['total_hour_remaining'] > 0) {
+                        result += data.leave_policy[i]['total_hour_remaining'] + " Hour";
+                      }
+                      if(data.leave_policy[i]['total_day_remaining'] == 0 && data.leave_policy[i]['total_hour_remaining'] == 0) {
+                        result += "0 Day";
+                      }
+                      if(data.leave_policy[i]['total_day_remaining'] < 0 && data.leave_policy[i]['total_hour_remaining'] < 0) {
+                        result += "รอตรวจสอบ";
+                      }
+                      result += "     </td>";
+
+                      //result += "     <td>" + data.leave_policy[i]['total_day_remaining'] + " วัน</td>";
+
+
+                      result += "     <td>" + data.leave_policy[i]['lve_HRMS_HR'] + " วัน</td>";
+                      result += "     <td>" + data.leave_policy[i]['lve_HRMS'] + " วัน</td>";
+                      result += "  </tr>";
+                    }
+                    
+                    result += "    </tbody>";
+                    result += "  </table>";
+                    result += "</div>";
+                  } else {
+                    result += "<h6><b>สิทธิ์การลาปี " + data.current_year + "</b></h6>";                    
+                    result += "<div class='col-lg-12 p-0' style='font-size:14px;'>" + "ไม่มีข้อมูลสิทธิ์วันลาของปี " + data.current_year + " ในระบบ กรุณาตรวจสอบอีกครั้ง" + "</div>";
+                  }
+
                   result += "      </div>";
                   result += "    </div>";
                   result += "  </div>";
                   result += "</div>";
 
-                  // Enable Leave Request Form
-                  $("#leaveform :input").prop("disabled", false);
+/*
 
-                  // Disable Search Employee Form
-                  $("#search_employee_form :input").prop("disabled", true);
+                  <td>
+                    {% if policy.total_day_remaining > 0 %}
+                      {{policy.total_day_remaining}} <small>{% trans 'Day' %}</small>
+                    {% endif %}
 
-                  // Show employee information
+                    {% if policy.total_hour_remaining > 0 %}
+                      {{ policy.total_hour_remaining|stringformat:"1.0f" }} <small>{% trans 'Hour' %}</small>
+                    {% endif %}
+
+                    {% if policy.total_day_remaining == 0 and policy.total_hour_remaining == 0 %}
+                      <span class="text-danger"><strong>0</strong></span>&nbsp;{% trans 'Day' %}
+                    {% endif %}             
+
+                    {% if policy.total_day_remaining < 0 or policy.total_hour_remaining < 0 %}
+                      <span class="text-danger"><small>รอตรวจสอบ</small></span>
+                    {% endif %}
+
+                  </td>
+
+
+      
+      "lve_th": lve_th,
+      "lve_plan": lve_plan,
+      "total_day_remaining": total_day_remaining,
+      "total_hour_remaining": total_hour_remaining,
+      "lve_HRMS": lve_HRMS,
+      "lve_HRMS_HR": lve_HRMS_HR,
+      "total_approved_lve_act_eleave": total_approved_lve_act_eleave,
+      "total_approved_lve_act_hr_eleave": total_approved_lve_act_hr_eleave,
+      "total_pending_lve_act_eleave": total_pending_lve_act_eleave,
+      "total_pending_lve_act_hr_eleave": total_pending_lve_act_hr_eleave,
+      */
+
                   $("#id_employee_information").html(result);
+
 
                   // Fillin Type List
                   $("#id_leave_type").empty();
