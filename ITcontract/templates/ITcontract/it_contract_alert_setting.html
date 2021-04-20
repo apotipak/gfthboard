@@ -4,7 +4,7 @@
 
 {% load i18n %}
 
-{% block title %} {% trans 'Manage IT Contract' %} {% endblock %}
+{% block title %} {% trans 'IT Contract Alert Setting' %} {% endblock %}
 
 {% block content %}
 
@@ -14,9 +14,10 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">{% trans 'IT Contract' %} </h1>
+            <h1 class="m-0 text-dark">{% trans 'Alert Settings' %} </h1>
           </div>
           <div class="col-sm-6">                        
+            <!--
             <ol class="breadcrumb float-sm-right">
               <li>
                 <button class="btn btn-outline-info btn-md dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -33,9 +34,9 @@
 
               <li class="breadcrumb-item">
                 <button type='button' onclick='open_add_item_modal();' class='btn btn-md btn-success' data-toggle='modal'><b>&nbsp;<i class='fas fa-plus fa-xs'></i>&nbsp;New</b>&nbsp;</button>
-              </li>
-              
-            </ol>            
+              </li>              
+            </ol>
+            -->         
           </div>
         </div>
       </div>
@@ -46,343 +47,72 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-lg-12" style="font-size: 14px;">
-                <table class="table table-striped table-sm dataTable" id="contract_list_table">
-                  <thead>
-                    <tr>
-                      <th scope="col">ID</th>
-                      <th scope="col">{% trans 'Deptartment' %}</th>
-                      <th scope="col" style="text-align: left">{% trans 'Vendor' %}</th>
-                      <th scope="col" style="text-align: left">{% trans 'Description' %}</th>
-                      
-                      <th scope="col" style="text-align: left">{% trans 'Contact' %}</th>
-                      <th scope="col" style="text-align: left">{% trans 'Phone' %}</th>
-                      <th scope="col" style="text-align: left">Email&nbsp;</th>
+          
+          <div class="col-8 offset-2">
 
-                      <th scope="col" style="text-align: left; white-space:nowrap;">{% trans 'Start Date' %}</th>
-                      <th scope="col" style="text-align: left; white-space:nowrap;">{% trans 'End Date' %}</th>
-                      <th scope="col">Expired</th>
-                      <!--<th scope="col" class='text-center'>{% trans 'Attached' %}</th>-->
+            <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title">Email Alert</h3>
+              </div>
 
-                      <th scope="col">Remark</th>
+              <form method="post" autocomplete="off" id="id_schedule_alert_setting_form" name="id_schedule_alert_setting_form">
+                {% csrf_token %}
+                <div class="card-body">
+                  <div class="form-group row">
+                    <label for="id_send_to_email" class="col-3 col-form-label" style="white-space: nowrap;">Send to Email</label>
+                    <div class="col-9">
+                      <input type="email" class="form-control" id="id_send_to_email" value="{{ schedule_alert_setting_list.send_to_email }}">
+                    </div>
+                  </div>
 
-                      <th scope="col" style="text-align: center; white-space:nowrap;">{% trans 'Upd By' %}</th>
-                      <th scope="col">&nbsp;</th>
-                    </tr>
-                  </thead>
+                  <div class="form-group row">
+                    <label for="id_send_to_group_email" class="col-3 col-form-label" style="white-space: nowrap;">Send to Group Email</label>
+                    <div class="col-9">
+                      <input type="email" class="form-control" id="id_send_to_group_email" value="{{ schedule_alert_setting_list.send_to_group_email|default_if_none:'' }}">
+                    </div>
+                  </div>
 
-                  <!-- ironman -->
-                  {% if ITcontractList %}
-                  <tbody>  
-                    {% for item in ITcontractList %}
-                    <tr>                  
-                      <td>{{item.id}}</td>                      
-                      <td>{{item.dept}}</td>
-                      <td><a href="#" onclick='edit_item("{{item.id}}")'>{{item.vendor}}</a></td>
-                      <td>{{item.description}}</td>
+                  <div class="form-group row">
+                    <label for="id_reach_minimum_day" class="col-3 col-form-label" style="white-space: nowrap;">แจ้งเตือนก่อนหมดสัญญา</label>
+                    <div class="col-8">
+                      <input type="number" class="form-control" id="id_reach_minimum_day" value="{{ schedule_alert_setting_list.reach_minimum_day|default_if_none:60 }}">
+                    </div>
+                    <div class="col-1 pt-1">วัน</div>
+                  </div>
 
-                      <td>{{item.contact}}</td>
-                      <td>{{item.phone}}</td>
-                      <td>{{item.email}}</td>
 
-                      <td>{{item.start_date|date:"d/m/Y"}}</td>
-                      <td>{{item.end_date|date:"d/m/Y"}}</td>
-
-                      {% if item.is_contract_expired %}
-                      <td><span class='text-danger'>expired</span></td>
+                  <div class="form-group row">
+                    <label for="id_reach_minimum_day" class="col-3 col-form-label" style="white-space: nowrap;">เปิด / ปิด การแจ้งเตือน</label>
+                    <div class="col-9">
+                      {% if schedule_alert_setting_list.alert_active == "1" %}
+                      <input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
                       {% else %}
-                      <td nowrap><span class='text-success'><b>{{item.remaining_day}}</b></span>&nbsp;days</td>
-                      {% endif %}
+                      <input type="checkbox" name="my-checkbox" data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                      {% endif %}                      
+                    </div>
+                  </div>
 
-                      {% comment %}
-                      {% if item.afile != "" %}
-                      <td style="text-align: center;"><i class='fas fa-check fa-xs text-success'></i></td>
-                      {% else %}
-                      <td style="text-align: center;"><i class='fas fa-times fa-xs text-danger'></i></td>
-                      {% endif %}
-                      {% endcomment %}
-                      
-                      <td>{{item.remark}}</td>
-                      <td>{{item.upd_by}}</td>
-
-                      <td class='text-right' nowrap>
-                        <button type='button' onclick='edit_item("{{item.id}}")' class='btn btn-info btn-xs' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>
-                        <button type='button' onclick='delete_item("{{item.id}}")' class='btn btn-danger btn-xs' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button>
-                      </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>                
-                  {% else %}
-                  <tbody>                    
-                    <tr>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>                      
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                    </tr>
-                  </tbody>
-                  {% endif %}           
-                  </table>
-          </div>
-
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-
-
-
-
-
-<!-- ADD MODAL -->
-<div class="modal fade" id="add_modal" tabindex="-1" role="dialog">
-
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content">
-      
-      <div class="modal-header bg-success text-white" style="padding:7px;">
-        <h5 class="modal-title"><i class="fas fa-plus fa-xs text-white"></i>&nbsp;&nbsp;<strong>Add new item</strong></h5>
-        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;&nbsp;</span>
-        </button>
-      </div>
-
-            
-      <div class="modal-body" style="padding:5px 5px 2px 5px;">        
-
-        <form method="post" autocomplete="off" name="add_contract_list_form" id="add_contract_list_form" autocomplete="off" enctype="multipart/form-data">        
-        {% csrf_token %}
-
-        <div class="col-12 p-0 pt-2 pb-3">
-            
-            <div class="card-body p-0 pt-2">              
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Department</b>&nbsp;&nbsp;</span>
-                <input type="text" name="dept_add" class="form-control rounded-0" id="id_dept_add" value="IT Department" readonly="">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Vendor Name</b>&nbsp;&nbsp;</span>
-                <input type="text" name="vendor_add" class="form-control rounded-0" id="id_vendor_add">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Description</b>&nbsp;&nbsp;</span>
-                <input type="text" name="description_add" class="form-control rounded-0" id="id_description_add">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Contact Person</b>&nbsp;&nbsp;</span>
-                <input type="text" name="person_add" class="form-control rounded-0" id="id_person_add">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">    
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Email</b>&nbsp;&nbsp;</span>
-                <input type="text" name="e_mail_add" class="form-control rounded-0" id="id_e_mail_add">
-                <span class="pt-1 pl-3" style="width: 120px;"><b>Phone</b>&nbsp;&nbsp;</span>
-                <input type="text" name="tel_add" class="form-control rounded-0" id="id_tel_add">                
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Price</b>&nbsp;&nbsp;</span>
-                <input type="number" name="price_add" class="form-control rounded-0" id="id_price_add" value="0.00">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Remark</b>&nbsp;&nbsp;</span>
-                <input type="text" name="remark_add" class="form-control rounded-0" id="id_remark_add">
-              </div>                              
-            </div>
-
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Start Date</b>&nbsp;&nbsp;</span>                              
-                <input type="text" name="start_date_add" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{start_date}}" id="id_start_date_add" readonly="readonly">                
-                <span class="pt-1 pl-3" style="width: 120px;"><b>End Date</b>&nbsp;&nbsp;</span>
-                <input type="text" name="end_date_add" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{end_date}}" id="id_end_date_add" readonly="readonly">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">
-              <div class="input-group col-12 p-0 pl-2">                
-                <span class="pt-1" style="width: 120px;"><b>Alert Email</b>&nbsp;&nbsp;</span>
-                <input type="text" name="ae_mail_add" class="form-control rounded-0" id="id_ae_mail_add" value="itsupport@guardforce.co.th">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">
-              <div class="custom-file col-12 pl-20">
-                <b>Attached File</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="file" id="id_it_contract_document_add" name="it_contract_document_add">
-              </div>              
-            </div>
-
-        </div>
-      </div>
-
-      <div class="modal-footer" style="padding:5px 5px 5px 0;">        
-        <button type="reset" class="btn btn-secondary btn-md" data-dismiss="modal">&nbsp;&nbsp;{% trans 'Cancel' %}&nbsp;&nbsp;</button>
-        <button onclick="add_item()" type="button" class="btn btn-primary btn-md">&nbsp;&nbsp;&nbsp;&nbsp;{% trans 'Save' %}&nbsp;&nbsp;&nbsp;&nbsp;</button>
-      </div>
-
-      </form> 
-
-    </div>
-  </div>
-
-</div>
-
-
-
-
-<!-- EDIT MODAL -->
-<div class="modal fade" id="edit_modal" tabindex="-1" role="dialog">
-
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content">
-      
-      <div class="modal-header bg-info text-white" style="padding:7px;">
-        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-pen fa-xs text-white"></i>&nbsp;&nbsp;<strong><span id="edit_item_title">Edit</span></strong></h5>
-        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;&nbsp;</span>
-        </button>
-      </div>
-            
-      <div class="modal-body" style="padding:5px 5px 2px 5px;">        
-
-        <div class="col-12 p-0 pt-2 pb-3">
-
-          <!--<form action="/upload/" method="post" autocomplete="off" id="edit_contract_list_form" name="edit_contract_list_form" enctype="multipart/form-data">-->
-          <form method="post" autocomplete="off" name="edit_contract_list_form" id="edit_contract_list_form" autocomplete="off" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <div class="card-body p-0 pt-2">              
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Department</b>&nbsp;&nbsp;</span>
-                <input type="text" name="dept_edit" class="form-control rounded-0" id="id_dept_edit" value="IT Department" readonly="">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Vendor Name</b>&nbsp;&nbsp;</span>
-                <input type="text" name="vendor_edit" class="form-control rounded-0" id="id_vendor_edit">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Description</b>&nbsp;&nbsp;</span>
-                <input type="text" name="description_edit" class="form-control rounded-0" id="id_description_edit">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Contact Person</b>&nbsp;&nbsp;</span>
-                <input type="text" name="person_edit" class="form-control rounded-0" id="id_person_edit">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                      
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Email</b>&nbsp;&nbsp;</span>
-                <input type="text" name="e_mail_edit" class="form-control rounded-0" id="id_e_mail_edit">
-                <span class="pt-1 pl-3" style="width: 120px;"><b>Phone</b>&nbsp;&nbsp;</span>
-                <input type="text" name="tel_edit" class="form-control rounded-0" id="id_tel_edit">
-
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Price</b>&nbsp;&nbsp;</span>
-                <input type="number" name="price_edit" class="form-control rounded-0" id="id_price_edit" value="0">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Remark</b>&nbsp;&nbsp;</span>
-                <input type="text" name="remark_edit" class="form-control rounded-0" id="id_remark_edit">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                           
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Start Date</b>&nbsp;&nbsp;</span>                              
-                <input type="text" name="start_date_edit" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{start_date}}" id="id_start_date_edit" readonly="readonly">
-                <span class="pt-1 pl-3" style="width: 120px;"><b>End Date</b>&nbsp;&nbsp;</span>
-                <input type="text" name="end_date_edit" class="form-control datepicker rounded-0 bg-white" placeholder="" required="" value="{{end_date}}" id="id_end_date_edit" readonly="readonly">
-
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">                      
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;"><b>Alert Email</b>&nbsp;&nbsp;</span>
-                <input type="text" name="ae_mail_edit" class="form-control rounded-0" id="id_ae_mail_edit" value="itsupport@guardforce.co.th">
-              </div>                              
-            </div>
-
-            <div class="card-body p-0 pt-2">
-              <div class="custom-file col-12 pl-20">
-                <b>Attached File</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="file" id="id_it_contract_document_edit" name="it_contract_document_edit">
-              </div>              
-            </div>
-
-            <input type="hidden" name="contract_id_edit" id="id_it_contract_id_edit" value="">
-
-            </form> 
-
-            
-            <div class="card-body p-0">                      
-              <div class="input-group col-12 p-0 pl-2">
-                <span class="pt-1" style="width: 120px;">&nbsp;</span>
-                <div id="is_attached">
-                  <button class='btn btn-info btn-sm' onclick="view_contract_document();"><i class="far fa-file-pdf"></i>&nbsp;&nbsp;View PDF</button>
                 </div>
 
-              </div>              
+                <div class="card-footer">
+                  <div class="col-8 float-left">&nbsp;</div>
+                  <div class="col-4 text-right float-right">
+                    <button type="reset" class="btn btn-default">Cancel</button>&nbsp;&nbsp;
+                    <button type="submit" class="btn btn-info">Save</button>                    
+                  </div>
+                </div>
+
+              </form>
             </div>
-                      
 
-        </div>
+          </div>
+
       </div>
+    </section>
 
-      <div class="modal-footer" style="padding:5px 5px 5px 0;">
-        <button type="button" class="btn btn-secondary btn-md" data-dismiss="modal">&nbsp;&nbsp;{% trans 'Cancel' %}&nbsp;&nbsp;</button>
-        <button onclick="save_item();" type="button" class="btn btn-primary btn-md">&nbsp;&nbsp;&nbsp;&nbsp;{% trans 'Save' %}&nbsp;&nbsp;&nbsp;&nbsp;</button>
-      </div>
-
-    </div>
   </div>
 
-</div>
+
 
 {% endblock %}
 
@@ -391,6 +121,11 @@
 <script>
 
 $(document).ready( function () {
+
+  $("input[data-bootstrap-switch]").each(function(){
+    $(this).bootstrapSwitch('state', $(this).prop('checked'));
+  });
+
 
   $("#id_start_date_add").datepicker({
     dateFormat: "dd/mm/yy",

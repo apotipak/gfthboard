@@ -358,8 +358,9 @@
             {% endif %}
           {% endif %}
 
-          <!-- IT Contract -->
 
+
+          <!-- IT Contract -->
           {% if request.path|slice:":12" == '/ITcontract/' %}
             {% if perms.ITcontract.view_itcontractdb %}
             <li class="nav-item has-treeview active menu-open">
@@ -381,10 +382,19 @@
                   {% else %}
                   <a href="{% url 'ITcontract' %}" class="nav-link">
                   {% endif %}
-                    &nbsp;&nbsp;<i class="far fa-calendar-check"></i>
-                    <p>รายการสัญญา IT</p>
+                    <i class="far fa-calendar-check"></i>&nbsp;&nbsp;<p>รายการสัญญาแผนกไอที</p>
                   </a>
                 </li>
+
+
+                <li class="nav-item">
+                  {% if request.path == "/ITcontract/alert-setting/" %}
+                  <a href="{% url 'it_contract_alert_setting' %}" class="nav-link active"><i class="fas fa-wrench"></i>&nbsp;&nbsp;<p>Alert Settings</p></a>
+                  {% else %}
+                  <a href="{% url 'it_contract_alert_setting' %}" class="nav-link"><i class="fas fa-wrench"></i>&nbsp;&nbsp;<p>Alert Settings</p></a>
+                  {% endif %}
+                </li>
+
               </ul>
             </li>
             {% endif %}

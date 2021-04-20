@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from leave.models import LeavePlan, LeaveHoliday, LeaveEmployee, LeaveType
-from .models import ITcontractDB
+from .models import ITcontractDB, ScheduleAlertSetting
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
@@ -698,3 +698,41 @@ def export_it_contract_to_excel(request):
 
     wb.save(response)
     return response
+
+
+@permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
+def ITcontractAlertSetting(request):
+    username = request.user.username
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION    
+    today_date = getDateFormatDisplay(user_language)
+    
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+    schedule_alert_setting_list = ScheduleAlertSetting.objects.filter(app_name='ITcontract').get()
+
+    return render(request,
+        'ITcontract/it_contract_alert_setting.html', {
+        'page_title': settings.PROJECT_NAME,
+        'today_date': today_date,
+        'project_version': settings.PROJECT_VERSION,
+        'db_server': settings.DATABASES['default']['HOST'],
+        'project_name': settings.PROJECT_NAME,
+        'user_language': user_language,
+        'username_display': username_display,
+        'today_date': today_date,
+        'schedule_alert_setting_list': schedule_alert_setting_list,
+    })
