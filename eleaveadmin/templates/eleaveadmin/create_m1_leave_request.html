@@ -315,10 +315,16 @@
                   result = "<div id='accordion'>";
                   result += "  <div class='card card-success'>";
                   result += "    <div class='card-header pl-2'>";
-                  result += "      <h4 class='card-title'>";
+
+                  result += "      <div class='text-left float-left col-6'>";
+                  result += "        <h4 class='card-title'>";
                   result += "        <a data-toggle='collapse' data-parent='#accordion' href='#emp_info'>";
-                  result += "<b>" + data.search_emp_fname + " " + data.search_emp_lname + "</b> | " + data.search_emp_pos_th + " (" + data.search_emp_div_th + ")";
-                  result += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fas fa-angle-double-down fa-sm'></i>";
+                  result += "        <b>" + data.search_emp_fname + " " + data.search_emp_lname + "</b> [" + data.search_emp_pos_th + " " + data.search_emp_div_th + "]";
+                  result += "      </div>";                  
+                  result += "      <div class='text-right float-right col-6'>";
+                  result += "        สิทธิ์การลา&nbsp;&nbsp;<i class='fas fa-angle-double-down fa-xs'></i>";
+                  result += "      </div>";
+
                   result += "        </a>";
                   result += "      </h4>";
                   result += "    </div>";
@@ -532,13 +538,13 @@
 
     $("#leaveform").submit(function(e) {
       e.preventDefault();      
-      
-      // alert("todo");
+            
+      $('#show-error').html("");
 
       $.confirm({
           title: 'Confirmation',
           type: 'red',
-          content: 'กรุณาตรวจสอบข้อมูลให้แน่ใจก่อนบันทึกรายการ',
+          content: 'ยืนยันการทำรายการ',
           animation: 'zoom',
           animationBounce: 1.5,
           closeIcon: true,
@@ -562,26 +568,13 @@
                     processData: false,
                     contentType: false,
                     success : function(data) {
-                      if(data.is_error) {                        
-                        // alert(data.message);
-                        /*
-                        $(document).Toasts('create', {
-                            class: "bg-danger", 
-                            title: "{% trans 'Error' %}",
-                            subtitle: '',
-                            autohide: true,
-                            delay: 2000,
-                            body: data.message,
-                            autoDismiss: true,
-                            close: true,
-                            autoremove: true,
-                        });
-                        */
-                        
+                      if(data.is_error) {                                                
                         $('#show-error').html("<div class='alert alert-danger' role='alert'>" + data.message + "</strong></div>");
-
                       } else {
+
                         alert(data.message);
+                        // TODO
+
                       }
                       
                     },
@@ -596,27 +589,7 @@
           }
       });
 
-
     });
-
-
-    /*
-    $("#leaveform").submit(function(e){
-        //alert("todo");
-        //return false;
-
-        if ($(".submitBtn").attr('attempted') == 'true' ) {
-          e.preventDefault();
-        } else {
-          $(".submitBtn").html("<i class='fa fa-hourglass-half' aria-hidden='true'></i>&nbsp;&nbsp;Processing...");
-          $(".submitBtn").attr("disabled", true);
-          $(".submitBtn").attr("attempted", 'true');
-
-          alert("TODO");
-          return false;
-        }
-    });
-    */
 
 </script>
 {% endblock %}
