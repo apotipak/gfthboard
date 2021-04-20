@@ -277,8 +277,7 @@ def ajax_search_employee(request):
 	leave_policy = LeavePlan.SearchEmployeeLeavePolicy(request, emp_id)
 	record = {}
 	pickup_records = []
-	for policy in leave_policy:
-		print(policy.lve_plan)
+	for policy in leave_policy:		
 		leave_plan_day = policy.lve_plan
 		leave_plan_hour = policy.lve_plan * 8
 
