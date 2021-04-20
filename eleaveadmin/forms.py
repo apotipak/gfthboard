@@ -167,19 +167,21 @@ class EmployeeM1247Form(forms.ModelForm):
 
             # RULE 1: Check not over leave quota
             if (total_leave_request_hour) > grand_total_leave_quota_remaining_hour:
-                #raise forms.ValidationError({'start_date': "เลือกวันลาเกินโควต้าที่กำหนด"})
                 raise forms.ValidationError(_("เลือกวันเกินจำนวนวันลาที่กำหนด"))
             else:
                 if grand_total_leave_quota_remaining_hour <= 0:
-                    #raise forms.ValidationError({'start_date': "ใช้วัน" + str(leave_type) + "หมดแล้ว" })
                     raise forms.ValidationError(_("ใช้วัน" + str(leave_type) + "หมดแล้ว"))
+            
 
             # RULE 2: Check duplicate leave
             #select id from leave_employeeinstance where not (start_date > @end_date OR end_date < @start_date)
-            queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where not (start_date > '" + str(end_date.strftime("%Y-%m-%d %H:00") + "' or end_date < '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "')") + " and emp_id=" + username + " and status in ('a','p','C','F')")            
+            sql = "select id from leave_employeeinstance where not (start_date > '" + str(end_date.strftime("%Y-%m-%d %H:00") + "' or end_date < '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "')") + " and emp_id=" + search_emp_id + " and status in ('a','p','C','F')"
+            print(sql)
+            print(search_emp_id, start_date, end_date)
+            queryset = EmployeeInstance.objects.raw("select id from leave_employeeinstance where not (start_date > '" + str(end_date.strftime("%Y-%m-%d %H:00") + "' or end_date < '" + str(start_date.strftime("%Y-%m-%d %H:01")) + "')") + " and emp_id=" + search_emp_id + " and status in ('a','p','C','F')")
             if len(queryset) > 0:
-                #raise forms.ValidationError({'start_date': "เลือกวันลาซ้ำ"})
-                raise forms.ValidationError(_("มีการเลือกวันลาซ้ำ"))
+                raise forms.ValidationError(_("วันที่ " + str(start_date) + " - " + str(end_date) + " มีการลาไปแล้ว"))
+
 
             # RULE 3: Check public holidays
             if checkLeaveTypeIncludePublicHoliday(leave_type_id):
@@ -193,5 +195,5 @@ class EmployeeM1247Form(forms.ModelForm):
             if(checkLeaveRequestOverMonth("M1", start_date, end_date)):
                 #raise forms.ValidationError({'start_date': "เลือกวันลาข้ามเดือน"})
                 raise forms.ValidationError(_("ไม่สามารถเลือกวันลาข้ามเดือน กรุณาแบ่งทำ 2 รายการแยกเดือนกัน"))
-        
+
         return cleaned_data    

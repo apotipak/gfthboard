@@ -55,7 +55,7 @@
 
               <div class="row pl-3 pt-3 pr-3 pb-0">
                 
-                <div class="float-right text-right col-5 offset-3">
+                <div class="float-right text-right col-6 offset-3">
 
                     <form action="" method="post" autocomplete="off" id="search_employee_form" name="search_employee_form">
                     {% csrf_token %}
@@ -187,15 +187,17 @@
                   </div>                
 
                   <div class="container-fluid mb-12" id="show-error">
-                  {% if form.errors %}
 
+                  {% comment %}
+                  {% if form.errors %}
                       {% for error in form.non_field_errors %}
                           <div class="alert alert-danger">
                               <i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}
                           </div>
-                      {% endfor %}
-                      
+                      {% endfor %}                      
                   {% endif %}
+                  {% endcomment %}
+
                   </div> 
 
                 </div>
@@ -240,6 +242,7 @@
           $("#id_search_emp_id").val("");
           $("#id_leave_type").empty();
           $("#id_employee_information").html("");
+          $('#show-error').html("");
           
           $("#id_emp_id").focus();
           $("#id_emp_id").select();
@@ -282,78 +285,6 @@
       }).attr('readonly', 'readonly');
 
     });
-
-    
-    $("#leaveform").submit(function(e) {
-      e.preventDefault();      
-      
-      // alert("todo");
-
-      $.confirm({
-          title: 'Confirmation',
-          type: 'red',
-          content: 'กรุณาตรวจสอบข้อมูลให้แน่ใจก่อนบันทึกรายการ',
-          animation: 'zoom',
-          animationBounce: 1.5,
-          closeIcon: true,
-          boxWidth: '38%',
-          useBootstrap: false,        
-          buttons: {
-              confirm: {
-                text: 'ยืนยัน',
-                btnClass: 'btn-danger',
-                action: function () {                   
-                  //alert("OK");
-                  
-                  $.ajax({
-                    url : "/eleaveadmin/ajax/create_m1_leave_request/",
-                    type : "POST",
-                    data : {          
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                        /*
-                        dly_date: dly_date,
-                        shift_id: shift_id,
-                        cus_id: cus_id,
-                        cus_brn: cus_brn,
-                        cus_vol: cus_vol,
-                        emp_id: emp_id,
-                        */
-                    },
-                    success : function(data) {
-                      alert(data.message);
-                    },
-                  });
-                }
-              },
-              cancel: {                   
-                action: function () {
-                  //alert("Cancel");
-                }
-              }
-          }
-      });
-
-
-    });
-
-
-    /*
-    $("#leaveform").submit(function(e){
-        //alert("todo");
-        //return false;
-
-        if ($(".submitBtn").attr('attempted') == 'true' ) {
-          e.preventDefault();
-        } else {
-          $(".submitBtn").html("<i class='fa fa-hourglass-half' aria-hidden='true'></i>&nbsp;&nbsp;Processing...");
-          $(".submitBtn").attr("disabled", true);
-          $(".submitBtn").attr("attempted", 'true');
-
-          alert("TODO");
-          return false;
-        }
-    });
-    */
 
     function search_employee() {
       var emp_id = $("#id_emp_id").val();
@@ -403,10 +334,10 @@
                     result += "    <thead>";
                     result += "      <tr>";
                     result += "        <th scope='col'><b>{% trans 'Type' %}</b></th>";
-                    result += "        <th scope='col' style='text-align: left'>{% trans 'Remaining' %}</th>";
-                    result += "        <th scope='col' style='text-align: left'>{% trans 'Used' %}&nbsp;<small>| HRMS</small></th>";
-                    result += "        <th scope='col' style='text-align: left'>{% trans 'Used' %}&nbsp;<small>| E-Leave</small></th>";
-                    result += "        <th scope='col' style='text-align: center'>วันลาอนุมัติรอซิงค์ข้อมูล</th>";
+                    result += "        <th scope='col' style='text-align: right'>{% trans 'Remaining' %}</th>";
+                    result += "        <th scope='col' style='text-align: center'>{% trans 'Used' %}&nbsp;<small>| HRMS</small></th>";
+                    result += "        <th scope='col' style='text-align: center'>{% trans 'Used' %}&nbsp;<small>| E-Leave</small></th>";
+                    //result += "        <th scope='col' style='text-align: center'>วันลาอนุมัติรอซิงค์ข้อมูล</th>";
                     result += "      </tr>";
                     result += "    </thead>";
                     result += "    <tbody>";
@@ -419,7 +350,7 @@
                       result += "     <td><b>" + data.leave_policy[i]['lve_th'] + "</b> " +  data.leave_policy[i]['lve_plan'] + " {% trans 'Day' %}</td>";
 
                       // วันคงเหลือ
-                      result += "     <td>";
+                      result += "     <td class='text-right'>";
                       if(data.leave_policy[i]['total_day_remaining'] > 0) {
                         result += data.leave_policy[i]['total_day_remaining'] + " {% trans 'Day' %}";
                       }
@@ -436,7 +367,7 @@
 
 
                       // ใช้ไป | HRMS
-                      result += "     <td>";
+                      result += "     <td class='text-center'>";
                       if(data.leave_policy[i]['lve_HRMS'] > 0) {
                         result += data.leave_policy[i]['lve_HRMS'] + " {% trans 'Day' %}"; 
                       }
@@ -450,7 +381,7 @@
 
 
                       // ใช้ไป | E-Leave
-                      result += "     <td>";
+                      result += "     <td class='text-center'>";
                       if(data.leave_policy[i]['total_approved_lve_act_eleave'] > 0) {
                         result += data.leave_policy[i]['total_approved_lve_act_eleave'] + " {% trans 'Day' %}";
                       }
@@ -463,6 +394,7 @@
                       result += "     </td>";
                       
                       // วันลาอนุมัติรอซิงค์ข้อมูล
+                      /*
                       result += "     <td class='text-center'>";
                       if(data.leave_policy[i]['total_pending_lve_act_eleave'] > 0) {
                         result += data.leave_policy[i]['total_pending_lve_act_eleave'] + " {% trans 'Day' %}";
@@ -474,6 +406,7 @@
                         result += "0";
                       }
                       result += "     </td>";
+                      */
 
                       result += "  </tr>";
                     }
@@ -497,6 +430,7 @@
                   // Fillin Type List
                   $("#id_leave_type").empty();
                   if (data.leave_type_list.length > 0) {
+                    $('#id_leave_type').append('<option value="">----------</option>');
                     for(i=0;i<data.leave_type_list.length;i++) {
                       lve_id = data.leave_type_list[i][0];
                       lve_th = data.leave_type_list[i][1];
@@ -595,123 +529,91 @@
     });
 
 
-    /*
-    $(".custom-file-input").on("change", function() {
-        var fileName = $(this).val().split("\\").pop();
-        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-    });
 
-    $('#button').click(function () {
-        $("input[type='file']").trigger('click');
-    });
+    $("#leaveform").submit(function(e) {
+      e.preventDefault();      
+      
+      // alert("todo");
 
-    $("input[type='file']").change(function () {
-        $('#val').text(this.value.replace(/C:\\fakepath\\/i, ''))
-    });
+      $.confirm({
+          title: 'Confirmation',
+          type: 'red',
+          content: 'กรุณาตรวจสอบข้อมูลให้แน่ใจก่อนบันทึกรายการ',
+          animation: 'zoom',
+          animationBounce: 1.5,
+          closeIcon: true,
+          boxWidth: '38%',
+          useBootstrap: false,        
+          buttons: {
+              confirm: {
+                text: 'ยืนยัน',
+                btnClass: 'btn-danger',
+                action: function () {                   
+                  //alert("OK");
+                  formData = new FormData();  
+                  data = new FormData($('#leaveform').get(0));
 
-    var today = new Date();
-    var lastDate = new Date(today.getFullYear() + 0, 11, 31);
+                  $.ajax({
+                    url : "/eleaveadmin/ajax/create_m1_leave_request/",
+                    type: 'post',          
+                    dataType: 'json',
+                    data: data,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success : function(data) {
+                      if(data.is_error) {                        
+                        // alert(data.message);
+                        /*
+                        $(document).Toasts('create', {
+                            class: "bg-danger", 
+                            title: "{% trans 'Error' %}",
+                            subtitle: '',
+                            autohide: true,
+                            delay: 2000,
+                            body: data.message,
+                            autoDismiss: true,
+                            close: true,
+                            autoremove: true,
+                        });
+                        */
+                        
+                        $('#show-error').html("<div class='alert alert-danger' role='alert'>" + data.message + "</strong></div>");
 
-    $("#id_start_date").datepicker({
-      dateFormat: "yy-mm-dd",
-      minDate: -45,
-      maxDate: lastDate,
-      onSelect: function () {
-          var dt2 = $('#id_end_date');
-          var startDate = $(this).datepicker('getDate');
-          //add 30 days to selected date
-          startDate.setDate(startDate.getDate() + 120);            
-          var minDate = $(this).datepicker('getDate');
-
-          var dt2Date = dt2.datepicker('getDate');
-
-          //difference in days. 86400 seconds in day, 1000 ms in second
-          var dateDiff = (dt2Date - minDate)/(86400 * 1000);
-
-          //dt2 not set or dt1 date is greater than dt2 date
-          if (dt2Date == null || dateDiff < 0) {
-                  dt2.datepicker('setDate', minDate);
-          }
-          //dt1 date is 30 days under dt2 date
-          else if (dateDiff > 30){
-                  dt2.datepicker('setDate', startDate);
-          }
-          //sets dt2 maxDate to the last day of 30 days window
-          dt2.datepicker('option', 'maxDate', startDate);
-          //first day which can be selected in dt2 is selected date in dt1
-          dt2.datepicker('option', 'minDate', minDate);
-      }
-    }).attr('readonly', 'readonly');
-
-    $('#id_end_date').datepicker({
-      dateFormat: "yy-mm-dd",
-      minDate: 0,
-      maxDate: lastDate
-    }).attr('readonly', 'readonly');
-
-
-    $('#check-request-date').click(function(){
-        var obj = $(this);
-        var leave_type_id = $('#id_leave_type').children("option:selected").val();
-        var leave_type_value = $('#id_leave_type').children("option:selected").text();  
-        var start_date = $('#id_start_date').datepicker('getDate');
-        var start_hour = $('#id_start_hour').val();
-        var start_minute = $('#id_start_minute').val();
-        var end_date = $('#id_end_date').datepicker('getDate');    
-        var end_hour = $('#id_end_hour').val();
-        var end_minute = $('#id_end_minute').val();
-
-        if(leave_type_id == "") {
-          $('#show-error').html("<div class='alert alert-warning' role='alert'><i class='fas fa-exclamation'></i>&nbsp;&nbsp;{% trans 'Please select Leave Type' %}</div>");
-
-        } else {
-          $.ajax({
-            type:"GET",
-            dataType: 'json',
-            url: obj.attr("data-url"),
-            data:{
-              leave_type_id: leave_type_id,
-              start_date: moment(start_date).format("YYYY-MM-DD " + start_hour + ":" + start_minute + ":00"),
-              end_date: moment(end_date).format("YYYY-MM-DD " + end_hour + ":" + end_minute + ":00"),
-            },
-            beforeSend: function () {
-              $('#show-error').html("<div class='alert alert-warning' role='alert'>Loading...</strong></div>");
-            },        
-            success: function( data ) 
-            {
-              result = "";
-
-              if (data.error.length == 0) {  
-                total_day = data.total_day;
-                total_hour = data.total_hour;
-
-                if (start_minute == 0)
-                  start_minute = '00';
-                
-                if (end_minute == 0)
-                  end_minute = '00';
-
-                d1 = moment(start_date).format("MMMM D  " + start_hour + ":" + start_minute);
-                d2 = moment(end_date).format("MMMM D  " + end_hour + ":" + end_minute);
-
-                if (total_day > 0) {
-                  result += total_day + " {% trans 'Day' %}";
-                  text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br></div>";
+                      } else {
+                        alert(data.message);
+                      }
+                      
+                    },
+                  });
                 }
-
-                if (total_hour > 0) {
-                  result += total_hour + " {% trans 'Hour' %}";
-                  text = "<div class='alert alert-warning' role='alert'><strong>" + leave_type_value + " " + result + "</strong><br>{% trans 'Start' %}&nbsp;<strong>" + d1 + "</strong> {% trans 'To' %} <strong>" + d2 + "</strong><br>" + "</div><div><small>* {% trans 'Please notice that if your leave period is between 4 hours or 8 hours, system will deduct 1 hour for lunch time automatcally.' %}</small></div>";
-                }            
-
-                $('#show-error').html(text);
-
-              } else {
-                $('#show-error').html("<div class='alert alert-warning' role='alert'><strong>" + data.error + "</strong></div>");
+              },
+              cancel: {                   
+                action: function () {
+                  //alert("Cancel");
+                }
               }
+          }
+      });
 
-            }
-          });      
+
+    });
+
+
+    /*
+    $("#leaveform").submit(function(e){
+        //alert("todo");
+        //return false;
+
+        if ($(".submitBtn").attr('attempted') == 'true' ) {
+          e.preventDefault();
+        } else {
+          $(".submitBtn").html("<i class='fa fa-hourglass-half' aria-hidden='true'></i>&nbsp;&nbsp;Processing...");
+          $(".submitBtn").attr("disabled", true);
+          $(".submitBtn").attr("attempted", 'true');
+
+          alert("TODO");
+          return false;
         }
     });
     */

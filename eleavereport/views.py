@@ -130,11 +130,11 @@ def ViewM1LeaveReport(request):
 	leave_request_approved_object = None	
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 
-	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by "
+	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status "
 	sql += "from leave_employeeinstance l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
-	sql += "where year(start_date)=year(getdate()) and status in ('C','p') "
+	sql += "where year(start_date)=year(getdate()) and status in ('a','C','p') "
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
 	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') "
 	sql += "order by created_date desc;"
@@ -173,7 +173,7 @@ def ViewM1LeaveReport(request):
 				"created_date": item[9],
 				"updated_date": item[10],
 				"updated_by": item[11],
-
+				"status": item[12],
 			}
 			leave_request_approved_list.append(record)
 			row_count = row_count + 1	

@@ -131,7 +131,11 @@
 					      {% if item.updated_date is not None %}
 					      <td>{{ item.updated_date|date:"d/n/Y"}}</td>
 					      {% else %}
-					      <td>รออนุมัติ</td>
+						      {% if item.status == 'a' %}
+						      	<td>รอซิงค์ข้อมูล</td>
+						      {% else %}
+						      	<td>รออนุมัติ</td>
+						      {% endif %}					      
 					      {% endif %}
 					    </tr>
 					    {% endfor %}
