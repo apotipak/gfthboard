@@ -86,7 +86,7 @@ def CreateM1LeaveRequest(request):
 
             employee.created_by = request.user.username
             employee.leave_reason = leave_reason
-            
+                      
             found_m1247_error = checkM1247BusinessRules('M1247', start_date, end_date, leave_type_id)
             if found_m1247_error[0]:
                 raise forms.ValidationError(found_m1247_error[1])
@@ -95,7 +95,8 @@ def CreateM1LeaveRequest(request):
 
             employee.lve_act = grand_total_hours // 8
             employee.lve_act_hr = grand_total_hours % 8
-        
+            employee.status = 'a'
+        	
             employee.save()
             ref = employee.id 
 
