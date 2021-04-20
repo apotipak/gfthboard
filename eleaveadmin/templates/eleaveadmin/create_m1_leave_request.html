@@ -304,37 +304,25 @@
                 btnClass: 'btn-danger',
                 action: function () {                   
                   //alert("OK");
-                  /*
+                  
                   $.ajax({
-                    url : "/monitoring/ajax/is_scheduled/",
+                    url : "/eleaveadmin/ajax/create_m1_leave_request/",
                     type : "POST",
                     data : {          
                         csrfmiddlewaretoken: '{{ csrf_token }}',
+                        /*
                         dly_date: dly_date,
                         shift_id: shift_id,
                         cus_id: cus_id,
                         cus_brn: cus_brn,
                         cus_vol: cus_vol,
                         emp_id: emp_id,
+                        */
                     },
                     success : function(data) {
-                      if (data.is_scheduled) {
-                        $.alert({
-                            title: 'Error',
-                            type: 'red',
-                            content: data.message,
-                            animation: 'zoom',
-                            animationBounce: 1.5,
-                            closeIcon: false,
-                            boxWidth: '38%',
-                            useBootstrap: false,
-                        });
-                      } else {                        
-                        saveRecord(allowZeroBathForPhoneAmount,AEdly,dly_date,cus_id,cus_brn,cus_vol,emp_id,emp_rank,emp_dept,shift_id,shift_name,relief_emp_id,ui_phone_check,tel_time,tel_amount,ui_absent_status,ui_relief_status,ui_late_status,late_from,late_to,late_reason_option,late_hour,late_full_paid_status,id_search_emp_id,customer_wage_rate_id,customer_zone_id);
-                      }
+                      alert(data.message);
                     },
                   });
-                  */
                 }
               },
               cancel: {                   
@@ -418,7 +406,7 @@
                     result += "        <th scope='col' style='text-align: left'>{% trans 'Remaining' %}</th>";
                     result += "        <th scope='col' style='text-align: left'>{% trans 'Used' %}&nbsp;<small>| HRMS</small></th>";
                     result += "        <th scope='col' style='text-align: left'>{% trans 'Used' %}&nbsp;<small>| E-Leave</small></th>";
-                    result += "        <th scope='col' style='text-align: left'>รอซิงค์ข้อมูล</th>";
+                    result += "        <th scope='col' style='text-align: center'>วันลาอนุมัติรอซิงค์ข้อมูล</th>";
                     result += "      </tr>";
                     result += "    </thead>";
                     result += "    <tbody>";
@@ -474,8 +462,8 @@
                       }
                       result += "     </td>";
                       
-                      // รออนุมัติ
-                      result += "     <td>";
+                      // วันลาอนุมัติรอซิงค์ข้อมูล
+                      result += "     <td class='text-center'>";
                       if(data.leave_policy[i]['total_pending_lve_act_eleave'] > 0) {
                         result += data.leave_policy[i]['total_pending_lve_act_eleave'] + " {% trans 'Day' %}";
                       }

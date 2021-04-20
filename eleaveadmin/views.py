@@ -34,6 +34,17 @@ def convertDateToYYYYMMDD(old_date):
 
 
 @permission_required('eleaveadmin.can_create_m1_leave_request', login_url='/accounts/login/')
+def AjaxCreateM1LeaveRequest(request):
+    
+    form = EmployeeM1247Form(request.POST, request.FILES, user=request.user)
+
+    return JsonResponse(data={
+    	"success": True, 
+    	"message": "TODO"
+    })
+
+
+@permission_required('eleaveadmin.can_create_m1_leave_request', login_url='/accounts/login/')
 def CreateM1LeaveRequest(request):
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
