@@ -27,3 +27,12 @@ class TclContractQty(models.Model):
 
     def __str__(self):
         return self.cus_name_th
+
+
+'''
+class EmployeePaySlip(models.Model):
+    class Meta:
+        permissions = (
+            ("can_access_m1_pay_slip", "Able to access M1 pay slip"),
+        )
+'''
