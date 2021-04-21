@@ -36,14 +36,14 @@ from django.db import connection
 from .forms import ITcontractDBForm
 from django.http import FileResponse
 from gfthboard.settings import MEDIA_ROOT
-from docxtpl import DocxTemplate
-from docx2pdf import convert
 from os import path
 import xlwt
 import django.db as db
 import sys
 import json
 import collections
+# from docxtpl import DocxTemplate
+# from docx2pdf import convert
 
 
 current_year = datetime.now().year
