@@ -51,7 +51,7 @@ class ITcontractDB(models.Model):
 
 
 # Send email notification when IT contract is expired.
-class ScheduleAlertSetting(models.Model):
+class ITContractEmailAlert(models.Model):
     alert_id = models.AutoField(primary_key=True)
     app_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
@@ -68,7 +68,7 @@ class ScheduleAlertSetting(models.Model):
     class Meta:
         managed = True
         ordering = ('alert_id',)
-        db_table = 'schedule_alert_setting'
+        db_table = 'itcontract_email_alert'
 
     def __str__(self):
         return '{0} ({1} {2})'.format(self.alert_id, self.alert_name, self.alert_email, self.alert_status)
