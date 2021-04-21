@@ -125,7 +125,7 @@ class Command(BaseCommand):
 				
 				subject = "GFTH Board - แจ้งเตือนสัญญาหมดอายุ"
 				html_message = ""
-				html_message += "เรียน ฝ่ายไอที<b>"
+				html_message += "เรียน ฝ่ายไอที<br>"
 
 				for item in expired_contract_list:
 					vendor = item['vendor']
@@ -133,7 +133,7 @@ class Command(BaseCommand):
 					is_contract_expired = item['is_contract_expired']
 
 					if is_contract_expired:
-						html_message += "สัญญาบริษัท <b>" + str(vendor) + "</b> <span style='font-color: red;'>หมดอายุแล้ว</span><br>"
+						html_message += "สัญญาบริษัท <b>" + str(vendor) + "</b> <span style='color: red;'>หมดอายุแล้ว</span><br>"
 					else:
 						html_message += "สัญญาบริษัท <b>" + str(vendor) + "</b> จะสิ้นสุดในวันที่ " + str(end_date) + " - <b>เหลืออีก " + str(remaining_day.days) + " วัน)</b><br>"
 
