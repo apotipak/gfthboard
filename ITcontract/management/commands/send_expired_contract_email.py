@@ -164,9 +164,9 @@ class Command(BaseCommand):
 					remaining_day = item['remaining_day']
 
 					if is_contract_expired:
-						html_message += "สัญญาเลขที่ " + str(it_contract_id) + " ของบริษัท <b>" + str(vendor) + "</b> <span style='color: red;'>หมดอายุแล้ว</span><br>"
+						html_message += "สัญญาเลขที่ " + str(it_contract_id) + " ของบริษัท <b><a href='http://27.254.207.51:8080/ITcontract/'>" + str(vendor) + "</a></b> <span style='color: red;'>หมดอายุแล้ว</span><br>"
 					else:
-						html_message += "สัญญาเลขที่ " + str(it_contract_id) + " ของบริษัท <b>" + str(vendor) + "</b> จะสิ้นสุดในวันที่ " + str(end_date) + " - <b><span style='color: green;'>เหลือ " + str(remaining_day) + " วัน</span></b><br>"
+						html_message += "สัญญาเลขที่ " + str(it_contract_id) + " ของบริษัท <b><a href='http://27.254.207.51:8080/ITcontract/'>" + str(vendor) + "</a></b> จะสิ้นสุดในวันที่ " + str(end_date) + " - <b><span style='color: green;'>เหลือ " + str(remaining_day) + " วัน</span></b><br>"
 
 				html_message += "<br>"
 				html_message += "-- This email was automatically sent from system. Please do not reply. --"
