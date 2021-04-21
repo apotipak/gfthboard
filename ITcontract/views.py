@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from leave.models import LeavePlan, LeaveHoliday, LeaveEmployee, LeaveType
-from .models import ITcontractDB, ScheduleAlertSetting
+from .models import ITcontractDB, ITContractEmailAlert
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
@@ -723,7 +723,7 @@ def ITcontractAlertSetting(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
-    schedule_alert_setting_list = ScheduleAlertSetting.objects.filter(app_name='ITcontract').get()
+    itcontract_email_alert_list = ITContractEmailAlert.objects.filter(app_name='ITcontract').get()
 
     return render(request,
         'ITcontract/it_contract_alert_setting.html', {
@@ -735,7 +735,7 @@ def ITcontractAlertSetting(request):
         'user_language': user_language,
         'username_display': username_display,
         'today_date': today_date,
-        'schedule_alert_setting_list': schedule_alert_setting_list,
+        'schedule_alert_setting_list': itcontract_email_alert_list,
     })
 
 
@@ -752,18 +752,18 @@ def AjaxUpdateEmailAlertSetting(request):
 
     print(alert_id,send_to_email, send_to_group_email, reach_minimum_day, alert_active)
 
-    schedule_alert_setting_obj = ScheduleAlertSetting.objects.filter(alert_id=alert_id).get()
-    if schedule_alert_setting_obj is not None:
-        schedule_alert_setting_obj.send_to_email = send_to_email
-        schedule_alert_setting_obj.send_to_group_email = send_to_group_email
-        schedule_alert_setting_obj.reach_minimum_day = reach_minimum_day
-        schedule_alert_setting_obj.alert_active = alert_active
+    itcontract_email_alert_list = ITContractEmailAlert.objects.filter(alert_id=alert_id).get()
+    if itcontract_email_alert_list is not None:
+        itcontract_email_alert_list.send_to_email = send_to_email
+        itcontract_email_alert_list.send_to_group_email = send_to_group_email
+        itcontract_email_alert_list.reach_minimum_day = reach_minimum_day
+        itcontract_email_alert_list.alert_active = alert_active
         
-        schedule_alert_setting_obj.modified_date = datetime.now()        
-        schedule_alert_setting_obj.modified_by = request.user.first_name
-        schedule_alert_setting_obj.modified_flag = 'E'
+        itcontract_email_alert_list.modified_date = datetime.now()        
+        itcontract_email_alert_list.modified_by = request.user.first_name
+        itcontract_email_alert_list.modified_flag = 'E'
 
-        schedule_alert_setting_obj.save()
+        itcontract_email_alert_list.save()
 
         is_error = False
         message = "บันทึกรายการสำเร็จ"
