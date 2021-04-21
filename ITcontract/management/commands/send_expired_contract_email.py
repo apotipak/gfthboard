@@ -132,9 +132,9 @@ class Command(BaseCommand):
 					is_contract_expired = item['is_contract_expired']
 
 					if is_contract_expired:
-						html_message += "สัญญาของ " + str(vendor) + " หมดอายุแล้ว"
+						html_message += "สัญญาบริษัท <b>" + str(vendor) + "</b> <span class='text-danger'>หมดอายุแล้ว</span><br>"
 					else:
-						html_message += "สัญญาของ " + str(vendor) + " จะสิ้นสุดในวันที่ " + str(end_date) + " (เหลืออีก " + str(remaining_day.days) + " วัน)"
+						html_message += "สัญญาบริษัท <b>" + str(vendor) + "</b> จะสิ้นสุดในวันที่ " + str(end_date) + " - <b>เหลืออีก " + str(remaining_day.days) + " วัน)</b><br>"
 
 				send_expired_contract_email(subject, send_to_email, send_to_group_email, html_message)
 		else:
