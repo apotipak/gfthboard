@@ -6,6 +6,27 @@
       <div class="container">
 
         <div class="row justify-content-md-center">
+
+          {% if perms.employeem1.can_access_employee_m1 %}
+          <div class="col-12 col-xs-12 col-sm-12 col-md-6">
+            <div class="info-box mb-4">
+              <span class="info-box-icon" style="background-color:#257638 !important"><i class="fas fa-user-alt text-white"></i></span>
+              <div class="info-box-content">
+                <div class="col-12">
+                  <h4><span class="info-box-text">Employee</span></h4>
+                  <div>
+                    <span class="info-box-number"><small>ระบบข้อมูลพนักงานออนไลน์<br>
+                      <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a><br>
+                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a></small>
+                      <a href="{% url 'employee_m1_pay_slip' %}" type="button" class="btn btn-outline-primary float-right">{% trans 'Open' %}</a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
           {% if perms.leave.view_leaveemployee %}
           <div class="col-12 col-xs-12 col-sm-12 col-md-6">
             <div class="info-box mb-4">
@@ -44,14 +65,14 @@
                 </div>
               </div>
             </div>
-          </div>   
+          </div>    
           {% endif %}
 
 
           {% if perms.ITcontract.view_itcontractdb %}
           <div class="col-12 col-sm-6 col-md-6">
             <div class="info-box mb-4">
-              <span class="info-box-icon" style="background-color:#ff3300 !important"><i class="fas fa-user-alt text-white"></i></span>
+              <span class="info-box-icon" style="background-color:#ff3300 !important"><i class="fas fa-file-signature text-white"></i></span>
               <div class="info-box-content">
                 <div class="col-12">
                   <h4><span class="info-box-text">IT Contract</span></h4>

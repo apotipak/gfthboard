@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class TclContractQty(models.Model):
     cnt_id = models.CharField(primary_key=True, max_length=13)
     cus_name_th = models.CharField(max_length=120, blank=True, null=True)
@@ -29,10 +28,3 @@ class TclContractQty(models.Model):
         return self.cus_name_th
 
 
-'''
-class EmployeePaySlip(models.Model):
-    class Meta:
-        permissions = (
-            ("can_access_m1_pay_slip", "Able to access M1 pay slip"),
-        )
-'''
