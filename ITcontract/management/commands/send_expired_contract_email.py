@@ -10,6 +10,8 @@ from ITcontract.models import ITcontractDB, ITContractEmailAlert
 
 def send_expired_contract_email(subject, send_to_email, send_to_group_email, html_message):
 	# print(subject, send_to_email, send_to_group_email, html_message)
+	# print(html_message)
+
 	try:
 		con = mail.get_connection()
 		con.open()
@@ -125,20 +127,22 @@ class Command(BaseCommand):
 				
 				subject = "GFTH Board - แจ้งเตือนสัญญาหมดอายุ"
 				html_message = ""
-				html_message += "เรียน ฝ่ายไอที<br>"
+				html_message += "เรียน แผนกไอที<br><br>"
 
 				for item in expired_contract_list:
+					it_contract_id = item['id']
 					vendor = item['vendor']
-					end_date = item['end_date']
+					end_date = item['end_date'].strftime("%d/%m/%Y")
 					is_contract_expired = item['is_contract_expired']
+					remaining_day = item['remaining_day']
 
 					if is_contract_expired:
-						html_message += "สัญญาบริษัท <b>" + str(vendor) + "</b> <span style='color: red;'>หมดอายุแล้ว</span><br>"
+						html_message += "สัญญาเลขที่ " + str(it_contract_id) + " ของบริษัท <b>" + str(vendor) + "</b> <span style='color: red;'>หมดอายุแล้ว</span><br>"
 					else:
-						html_message += "สัญญาบริษัท <b>" + str(vendor) + "</b> จะสิ้นสุดในวันที่ " + str(end_date) + " - <b>เหลืออีก " + str(remaining_day.days) + " วัน)</b><br>"
+						html_message += "สัญญาเลขที่ " + str(it_contract_id) + " ของบริษัท <b>" + str(vendor) + "</b> จะสิ้นสุดในวันที่ " + str(end_date) + " - <b>เหลืออีก " + str(remaining_day) + " วัน)</b><br>"
 
-				html_message += "<br><br>"
-				html_message += "-- This email is automatically sent from system. Please do not reply. --"
+				html_message += "<br>"
+				html_message += "-- This email was automatically sent from system. Please do not reply. --"
 				send_expired_contract_email(subject, send_to_email, send_to_group_email, html_message)
 		else:
 			print("Send email is turn off")
