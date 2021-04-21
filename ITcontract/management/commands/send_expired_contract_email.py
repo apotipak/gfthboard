@@ -10,7 +10,10 @@ from ITcontract.models import ITcontractDB, ITContractEmailAlert
 
 def send_expired_contract_email(subject, send_to_email, send_to_group_email, html_message):
 	# print(subject, send_to_email, send_to_group_email, html_message)
-	# print(html_message)
+
+	if send_to_email == "" and send_to_group_email == "":
+		print("No email provided")
+		return False
 
 	try:
 		con = mail.get_connection()
@@ -30,16 +33,40 @@ def send_expired_contract_email(subject, send_to_email, send_to_group_email, htm
 		    timeout=10
 		)
 
-		msg = mail.EmailMessage(
-		    subject=subject,
-		    body=html_message,
-		    from_email=host_user,
-		    to=[send_to_email],
-		    connection=con,
-		)
+		if send_to_email != "":
+			print("send_to_email only")
+			msg = mail.EmailMessage(
+			    subject=subject,
+			    body=html_message,
+			    from_email=host_user,
+			    to=[send_to_email],
+			    connection=con,
+			)
+
+
+		if send_to_email == "" and send_to_group_email != "":
+			print("send_to_group_email only")
+			msg = mail.EmailMessage(
+			    subject=subject,
+			    body=html_message,
+			    from_email=host_user,
+			    to=[send_to_group_email],
+			    connection=con,
+			)
+
+
+		if send_to_email != "" and send_to_group_email != "":
+			print("sent to both email and group email")
+			msg = mail.EmailMessage(
+			    subject=subject,
+			    body=html_message,
+			    from_email=host_user,
+			    to=[send_to_email, send_to_group_email],
+			    connection=con,
+			)
 
 		msg.content_subtype = 'html'
-		mail_obj.send_messages([msg])        
+		mail_obj.send_messages([msg])    
 		mail_obj.close()
 
 		print('Message has been sent.')
@@ -139,7 +166,7 @@ class Command(BaseCommand):
 					if is_contract_expired:
 						html_message += "สัญญาเลขที่ " + str(it_contract_id) + " ของบริษัท <b>" + str(vendor) + "</b> <span style='color: red;'>หมดอายุแล้ว</span><br>"
 					else:
-						html_message += "สัญญาเลขที่ " + str(it_contract_id) + " ของบริษัท <b>" + str(vendor) + "</b> จะสิ้นสุดในวันที่ " + str(end_date) + " - <b>เหลืออีก " + str(remaining_day) + " วัน)</b><br>"
+						html_message += "สัญญาเลขที่ " + str(it_contract_id) + " ของบริษัท <b>" + str(vendor) + "</b> จะสิ้นสุดในวันที่ " + str(end_date) + " - <b><span style='color: green;'>เหลือ " + str(remaining_day) + " วัน</span></b><br>"
 
 				html_message += "<br>"
 				html_message += "-- This email was automatically sent from system. Please do not reply. --"
