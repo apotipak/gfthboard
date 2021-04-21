@@ -37,11 +37,11 @@ from .forms import ITcontractDBForm
 from django.http import FileResponse
 from gfthboard.settings import MEDIA_ROOT
 from os import path
-import xlwt
 import django.db as db
 import sys
 import json
 import collections
+# import xlwt
 # from docxtpl import DocxTemplate
 # from docx2pdf import convert
 
