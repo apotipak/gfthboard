@@ -21,7 +21,7 @@
 
             {% if perms.employeem1.can_access_employee_m1 %}
             <li class="nav-item has-treeview active menu-open">
-              {% if request.path|slice:":13" == '/employee-m1/' %}
+              {% if request.path|slice:":22" == '/e-document-dashboard/' %}
               <a href="#" class="nav-link active">
               {% else %}
               <a href="#" class="nav-link">
@@ -32,17 +32,39 @@
               <ul class="nav nav-treeview">
 
                 <li class="nav-item">
-                  {% if request.path == "/employee-m1/payslip/" %}
-                  <a href="{% url 'employee_m1_pay_slip' %}" class="nav-link active">
+                  {% if request.path == "/employee-m1/e-document-dashboard/" %}
+                  <a href="{% url 'e_document_dashboard' %}" class="nav-link active">
                   {% else %}
-                  <a href="{% url 'employee_m1_pay_slip' %}" class="nav-link">
+                  <a href="{% url 'e_document_dashboard' %}" class="nav-link">
                   {% endif %}
-                    &nbsp;&nbsp;<i class="far fa-calendar-check"></i>&nbsp;&nbsp;<p>Pay Slip</p>
+                    &nbsp;&nbsp;<i class="far fa-calendar-check"></i>&nbsp;&nbsp;<p>E-Document</p>
                   </a>
                 </li>
 
               </ul>
             </li>
+            {% endif %}
+          {% endif %}
+
+
+          <!-- Employee M1 -->
+          {% if request.path|slice:":14" == '/e-payslip-m1/' %}
+            {% if perms.epayslipm1.can_access_e_payslip_m1 %}
+              <li class="nav-item has-treeview active menu-open">
+                <ul class="nav nav-treeview">
+
+                  <li class="nav-item">
+                    {% if request.path == "/e-payslip-m1/" %}
+                    <a href="{% url 'e_payslip_m1' %}" class="nav-link active">
+                    {% else %}
+                    <a href="{% url 'e_payslip_m1' %}" class="nav-link">
+                    {% endif %}
+                      &nbsp;&nbsp;<i class="far fa-calendar-check"></i>&nbsp;&nbsp;<p>E-Payslip</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
             {% endif %}
           {% endif %}
 

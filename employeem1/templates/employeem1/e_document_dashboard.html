@@ -1,0 +1,686 @@
+{% extends "page_employeem1.html" %}
+
+{% load humanize %}
+
+{% load i18n %}
+
+{% block title %} {% trans 'Pay Slip' %} {% endblock %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">E-Document</h1>
+          </div>
+          <div class="col-sm-6">                        
+            <!--
+            <ol class="breadcrumb float-sm-right">
+              <li>
+                <button class="btn btn-outline-info btn-md dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-print fa-sm"></i>&nbsp;&nbsp;Print
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink"> 
+                  <span style="font-size: 14px;">
+                  <a class="dropdown-item" href="#" onclick="print_document();"><i class="fas fa-desktop text-secondary"></i>&nbsp;&nbsp;Display on screen</a>                  
+                  <a class="dropdown-item" href="#" onclick="export_to_excel();"><i class="far fa-file-excel text-secondary"></i>&nbsp;&nbsp;Export to Excel</a>
+                  </span>
+                </div>
+                &nbsp;&nbsp;
+              </li>
+
+              <li class="breadcrumb-item">
+                <button type='button' onclick='open_add_item_modal();' class='btn btn-md btn-success' data-toggle='modal'><b>&nbsp;<i class='fas fa-plus fa-xs'></i>&nbsp;New</b>&nbsp;</button>
+              </li>
+              
+            </ol>
+            -->            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+
+          <div class="col-lg-12">
+            
+          </div>
+
+      </div>
+    </section>    
+  </div>
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+
+$(document).ready( function () {
+
+  $("#id_start_date_add").datepicker({
+    dateFormat: "dd/mm/yy",
+    changeYear: true,
+  }).attr('readonly', 'readonly').datepicker("setDate", new Date());
+
+  $("#id_end_date_add").datepicker({
+    dateFormat: "dd/mm/yy",
+    changeYear: true,
+  }).attr('readonly', 'readonly').datepicker("setDate", new Date());
+
+  $("#id_start_date_edit").datepicker({
+    dateFormat: "dd/mm/yy",
+    changeYear: true,
+  }).attr('readonly', 'readonly');
+
+  $("#id_end_date_edit").datepicker({
+    dateFormat: "dd/mm/yy",
+    changeYear: true,
+  }).attr('readonly', 'readonly');
+
+  $('#add_modal').on('hide.bs.modal', function (e) {
+    var today = new Date(); 
+    var year = today.getFullYear();
+    var month = today.getMonth()+1;
+    var day = today.getDate();    
+
+    if(month.length==1)
+      month = "0" + month;
+    if(day.length==1)
+      day = "0" + day;
+    var default_date = day + "/" + month + "/" + year;
+
+    $("#id_dept_add").val("IT Department");
+    $("#id_ae_mail_add").val("itsupport@guardforce.co.th");
+
+    $("#id_vendor_add").val("");
+    $("#id_description_add").val("");
+    
+    $("#id_person_add").val("");
+    $("#id_tel_add").val("");
+    $("#id_price_add").val(0.00);
+    $("#id_email_add").val("");
+    $("#id_remark_add").val("");
+
+    $("#id_start_date_add").val(default_date);
+    $("#id_end_date_add").val(default_date);
+  });            
+
+});
+
+var table = $('#contract_list_table').DataTable({
+  "paging": true,
+  "pageLength": 15,
+  "scrollCollapse": true,
+  "lengthChange": false,
+  "searching": true,
+  "ordering": true,
+  "info": false,
+  "autoWidth": true,
+  "language": {
+    search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+    searchPlaceholder: 'Filter data'
+  },
+  "columnDefs": [
+    {
+      "targets": [12],
+      "orderable": false
+    },
+    {
+        "targets": [10],
+        "visible": false
+    }    
+  ],  
+  "dom": 'Bfrtip',
+  buttons: [
+    {
+        extend: 'print',
+        title: '',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        }
+    },
+    {
+        extend: 'excelHtml5',        
+        title: '',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        }
+    },
+  ]
+}); 
+
+table.buttons('.buttons-print').nodes().css("display", "none");
+table.buttons('.buttons-excel').nodes().css("display", "none");
+table.buttons('.buttons-pdf').nodes().css("display", "none");
+
+$('#edit_modal').on('hidden.bs.modal', function () {    
+  $("#id_it_contract_document_edit").val('');
+})
+
+$('#add_modal').on('hidden.bs.modal', function () {  
+  $("#id_it_contract_document_add").val('');  
+})
+
+
+function view_contract_document() {
+    it_contract_id = $("#id_it_contract_id_edit").val();
+    window.open("/ITcontract/view_contract_document/" + it_contract_id, "_blank");    
+}
+
+
+function save_item(id) {
+  event.preventDefault();
+
+  formData = new FormData();  
+  data = new FormData($('#edit_contract_list_form').get(0));
+
+  $.ajax({
+    url: '{% url "ajax_save_it_contract_item" %}',
+    type: 'post',          
+    dataType: 'json',
+    data: data,
+    cache: false,
+    processData: false,
+    contentType: false,    
+    success: function (data) {
+      if(data.is_error) {        
+        $(document).Toasts('create', {
+          class: "bg-danger", 
+          title: "{% trans 'Error' %}",
+          subtitle: '',
+          autohide: true,
+          delay: 2000,
+          body: data.message,
+          autoDismiss: true,
+          close: true,
+          autoremove: true,
+        });  
+      } else {
+
+        $(document).Toasts('create', {
+          class: "bg-success", 
+          title: "{% trans 'Success' %}",
+          subtitle: '',
+          autohide: true,
+          delay: 2000,
+          body: data.message,
+          autoDismiss: true,
+          close: true,
+          autoremove: true,
+        });
+
+        result = "";
+        for(i=0;i<data.refresh_it_contract_list.length;i++) {
+          it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
+          result += "<tr>";
+          result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";          
+          result += "<td><a href='#' onclick='edit_item(" + it_contract_id + ");'>" + data.refresh_it_contract_list[i]['vendor'] + "</a></td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
+
+          result += "<td>" + data.refresh_it_contract_list[i]['person'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['tel'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['e_mail'] + "</td>";
+
+          result += "<td nowrap>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
+          result += "<td nowrap>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
+
+          if(data.refresh_it_contract_list[i]['is_contract_expired']) {
+            result += "<td><span class='text-danger'>expired</span></td>";
+          } else {
+            result += "<td nowrap><span class='text-success'><b>" + data.refresh_it_contract_list[i]['remaining_day'] + "</b></span>&nbsp;days</td>";
+          }
+          
+          /*
+          if(data.refresh_it_contract_list[i]['is_file_attached'])
+            result += "<td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>";
+          else
+            result += "<td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>";
+          */
+
+          result += "<td>" + data.refresh_it_contract_list[i]['remark'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";
+
+          result += "<td class='text-right' nowrap>";
+          result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
+          result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
+          result += "</tr>";          
+        }
+
+        // $('#contract_list_table tbody').html(result);
+
+        table.destroy();
+
+        $('#contract_list_table tbody').empty().append(result);        
+
+        table = $('#contract_list_table').DataTable({
+          "paging": true,
+          "pageLength": 15,
+          "scrollCollapse": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": false,
+          "autoWidth": true,
+          "language": {
+            search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+            searchPlaceholder: 'Filter data'
+          },
+          "columnDefs": [
+            {
+              "targets": [12],
+              "orderable": false
+            },
+            {
+                "targets": [10],
+                "visible": false
+            }    
+          ],
+          "dom": 'Bfrtip',
+          buttons: [
+            {
+                extend: 'print',
+                title: '',
+                exportOptions: {
+                  columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                }
+            },
+            {
+                extend: 'excelHtml5',        
+                title: '',
+                exportOptions: {
+                  columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                }
+            },
+          ]          
+        }); 
+
+        table.buttons('.buttons-print').nodes().css("display", "none");
+        table.buttons('.buttons-excel').nodes().css("display", "none");
+        table.buttons('.buttons-pdf').nodes().css("display", "none");
+
+        $("#edit_modal").modal("hide");
+      }
+    }
+  });  
+  
+}
+
+function add_item() {
+  formData = new FormData();  
+  data = new FormData($('#add_contract_list_form').get(0));
+
+  $.ajax({
+    url: '{% url "ajax_add_it_contract_item" %}',
+    type: 'post', 
+    dataType: 'json',
+    data: data,
+    cache: false,
+    processData: false,
+    contentType: false,    
+    success: function (data) {
+      if(data.is_error) {        
+        $(document).Toasts('create', {
+          class: "bg-danger", 
+          title: "{% trans 'Error' %}",
+          subtitle: '',
+          autohide: true,
+          delay: 2000,
+          body: data.message,
+          autoDismiss: true,
+          close: true,
+          autoremove: true,
+        });
+
+      } else {
+        $(document).Toasts('create', {
+          class: "bg-success", 
+          title: "{% trans 'Success' %}",
+          subtitle: '',
+          autohide: true,
+          delay: 2000,
+          body: data.message,
+          autoDismiss: true,
+          close: true,
+          autoremove: true,
+        });
+
+        result = "";
+        for(i=0;i<data.refresh_it_contract_list.length;i++) {
+          it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
+          result += "<tr>";
+          result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";          
+          result += "<td><a href='#' onclick='edit_item(" + it_contract_id + ");'>" + data.refresh_it_contract_list[i]['vendor'] + "</a></td>";          
+          result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
+
+          result += "<td>" + data.refresh_it_contract_list[i]['person'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['tel'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['e_mail'] + "</td>";
+
+          result += "<td nowrap>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
+          result += "<td nowrap>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
+          
+          if(data.refresh_it_contract_list[i]['is_contract_expired']) {
+            result += "<td><span class='text-danger'>expired</span></td>";
+          } else {
+            result += "<td nowrap><span class='text-success'><b>" + data.refresh_it_contract_list[i]['remaining_day'] + "</b></span>&nbsp;days</td>";
+          }
+
+          /*
+          if(data.refresh_it_contract_list[i]['is_file_attached'])
+            result += "<td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>";
+          else
+            result += "<td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>";
+          */
+
+          result += "<td>" + data.refresh_it_contract_list[i]['remark'] + "</td>";
+          result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";
+
+          result += "<td class='text-right' nowrap>";
+          result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
+          result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
+          result += "</tr>";          
+        }
+        
+        table.destroy();
+
+        $('#contract_list_table tbody').empty().append(result);        
+
+        table = $('#contract_list_table').DataTable({
+          "paging": true,
+          "pageLength": 15,
+          "scrollCollapse": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": false,
+          "autoWidth": true,
+          "language": {
+            search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+            searchPlaceholder: 'Filter data'
+          },
+          "columnDefs": [
+            {
+              "targets": [12],
+              "orderable": false
+            },
+            {
+                "targets": [10],
+                "visible": false
+            }    
+          ],
+          "dom": 'Bfrtip',
+          buttons: [
+            {
+                extend: 'print',
+                title: '',
+                exportOptions: {
+                  columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                }
+            },
+            {
+                extend: 'excelHtml5',        
+                title: '',
+                exportOptions: {
+                  columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                }
+            },
+          ]          
+        }); 
+
+        table.buttons('.buttons-print').nodes().css("display", "none");
+        table.buttons('.buttons-excel').nodes().css("display", "none");
+        table.buttons('.buttons-pdf').nodes().css("display", "none");
+
+        $("#add_modal").modal("hide");
+
+      }      
+    }
+  });  
+}
+ 
+
+function edit_item(id) {  
+  $.ajax({
+    url: '{% url "ajax_get_it_contract_item" %}',
+    type: 'post',          
+    dataType: 'json',
+    data: {
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      id: id,
+    },
+    success: function (data) {
+      if(data.is_error) {
+        alert(data.error_message);
+      } else {
+        it_contract_id = id;
+        dept = data.dept;
+        vendor = data.vendor;
+        description = data.description;
+        person = data.person;
+        tel = data.tel;
+        price = data.price
+        e_mail = data.e_mail
+        remark = data.remark
+        start_date = data.start_date;
+        end_date = data.end_date;
+        is_attached = data.attacehed_file;
+        attached_file_name = data.attached_file_name;
+
+        $("#id_it_contract_id_edit").val(it_contract_id);
+        $("#id_dept_edit").val(dept.trim());
+        $("#id_vendor_edit").val(vendor.trim());
+        $("#id_description_edit").val(description.trim());
+        $("#id_person_edit").val(person.trim());
+        $("#id_tel_edit").val(tel.trim());
+        $("#id_price_edit").val(price);
+        $("#id_e_mail_edit").val(e_mail.trim());
+        $("#id_remark_edit").val(remark.trim());
+        $("#id_start_date_edit").val(start_date);
+        $("#id_end_date_edit").val(end_date);
+        $("#edit_item_title").html("Edit #" + id);
+        
+        if(is_attached) {
+          $("#is_attached").html("<button class='btn btn-success btn-sm' onclick='view_contract_document();'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;View contract file</button>");
+          $("#is_attached").html("<button class='btn btn-success btn-sm' onclick='view_contract_document();'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;" + attached_file_name + "</button>");
+          
+        } else {
+          $("#is_attached").html("No attached file.");
+        }
+      }
+    }
+  });  
+  
+  $("#edit_modal").modal("show");
+}
+
+function delete_item(id) {
+
+  $.confirm({
+    title: 'Confirmation',
+    type: 'red',
+    content: 'ยืนยันการลบรายการสัญญาเลขที่ <b>#' + id + "</b>",
+    animation: 'zoom',
+    animationBounce: 1.5,
+    closeIcon: true,
+    boxWidth: '38%',
+    useBootstrap: false,        
+    buttons: {
+      confirm: {
+        text: 'ยืนยัน',
+        btnClass: 'btn-danger',
+          action: function () {                   
+            $.ajax({
+              url: '{% url "ajax_delete_it_contract_item" %}',
+              type: 'post',          
+              dataType: 'json',
+              data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                it_contract_id: id,
+              },
+              success: function (data) {
+                if(data.is_error) {        
+                  $(document).Toasts('create', {
+                    class: "bg-danger", 
+                    title: "{% trans 'Error' %}",
+                    subtitle: '',
+                    autohide: true,
+                    delay: 2000,
+                    body: data.message,
+                    autoDismiss: true,
+                    close: true,
+                    autoremove: true,
+                  });  
+                } else {
+
+                  $(document).Toasts('create', {
+                    class: "bg-success", 
+                    title: "{% trans 'Success' %}",
+                    subtitle: '',
+                    autohide: true,
+                    delay: 2000,
+                    body: data.message,
+                    autoDismiss: true,
+                    close: true,
+                    autoremove: true,
+                  });
+
+                  result = "";
+                  for(i=0;i<data.refresh_it_contract_list.length;i++) {
+                    it_contract_id = data.refresh_it_contract_list[i]['it_contract_id'];
+                    result += "<tr>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['it_contract_id'] + "</td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['dept'] + "</td>";                    
+                    result += "<td><a href='#' onclick='edit_item(" + it_contract_id + ");'>" + data.refresh_it_contract_list[i]['vendor'] + "</a></td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['description'] + "</td>";
+
+                    result += "<td>" + data.refresh_it_contract_list[i]['person'] + "</td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['tel'] + "</td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['e_mail'] + "</td>";
+
+                    result += "<td nowrap>" + data.refresh_it_contract_list[i]['start_date'] + "</td>";
+                    result += "<td nowrap>" + data.refresh_it_contract_list[i]['end_date'] + "</td>";
+
+                    if(data.refresh_it_contract_list[i]['is_contract_expired']) {
+                      result += "<td><span class='text-danger'>expired</span></td>";
+                    } else {
+                      result += "<td nowrap><span class='text-success'><b>" + data.refresh_it_contract_list[i]['remaining_day'] + "</b></span>&nbsp;days</td>";
+                    }
+
+                    /*
+                    if(data.refresh_it_contract_list[i]['is_file_attached'])
+                      result += "<td class='text-center'><i class='fas fa-check fa-xs text-success'></i></td>";
+                    else
+                      result += "<td class='text-center'><i class='fas fa-times fa-xs text-danger'></i></td>";
+                    */
+
+                    result += "<td>" + data.refresh_it_contract_list[i]['remark'] + "</td>";
+                    result += "<td>" + data.refresh_it_contract_list[i]['upd_by'] + "</td>";
+
+                    result += "<td class='text-right' nowrap>";          
+                    result += " <button type='button' onclick='edit_item(" + it_contract_id + ")' class='btn btn-info btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>&nbsp;";
+                    result += "<button type='button' onclick='delete_item(" + it_contract_id + ")' class='btn btn-danger btn-xs js-update-contract-service' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button></td>";
+                    result += "</tr>";          
+                  }
+
+                  //$('#contract_list_table tbody').html(result);
+
+                  table.destroy();
+
+                  $('#contract_list_table tbody').empty().append(result);        
+
+                  table = $('#contract_list_table').DataTable({
+                    "paging": true,
+                    "pageLength": 15,
+                    "scrollCollapse": true,
+                    "lengthChange": false,
+                    "searching": true,
+                    "ordering": true,
+                    "info": false,
+                    "autoWidth": true,
+                    "language": {
+                      search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+                      searchPlaceholder: 'Filter data'
+                    },
+                    "columnDefs": [
+                      {
+                        "targets": [12],
+                        "orderable": false
+                      },
+                      {
+                          "targets": [10],
+                          "visible": false
+                      }    
+                    ],
+                    "dom": 'Bfrtip',
+                    buttons: [
+                      {
+                          extend: 'print',
+                          title: '',
+                          exportOptions: {
+                            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          }
+                      },
+                      {
+                          extend: 'excelHtml5',        
+                          title: '',
+                          exportOptions: {
+                            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          }
+                      },
+                    ]          
+                  }); 
+
+                  table.buttons('.buttons-print').nodes().css("display", "none");
+                  table.buttons('.buttons-excel').nodes().css("display", "none");
+                  table.buttons('.buttons-pdf').nodes().css("display", "none");
+
+                  $("#edit_modal").modal("hide");
+                }    
+              }
+            });
+          }
+        },
+        cancel: {                   
+          action: function () {
+                    
+          }
+        }
+      }
+  });
+
+}
+
+function print_document() {  
+  //var href = "/ITcontract/print-it-contract-report/";
+  //window.open(href,'_blank');
+  $(".buttons-print").trigger("click");
+}
+
+function export_to_excel() {
+  $(".buttons-excel").trigger("click");  
+}
+
+function showLoading() {
+  $.LoadingOverlaySetup({
+      background      : "rgba(0, 0, 0, 0.5)",
+      image           : "/static/img/logo-small.png",        
+      imageAnimation  : "1.5s fadein",
+      imageColor      : "#ffcc00"
+  });
+  $.LoadingOverlay("show"); 
+}
+
+function open_add_item_modal() {
+  $("#add_modal").modal("show");
+}
+
+</script>
+{% endblock %}

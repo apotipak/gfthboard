@@ -7,26 +7,6 @@
 
         <div class="row justify-content-md-center">
 
-          {% if perms.employeem1.can_access_employee_m1 %}
-          <div class="col-12 col-xs-12 col-sm-12 col-md-6">
-            <div class="info-box mb-4">
-              <span class="info-box-icon" style="background-color:#257638 !important"><i class="fas fa-user-alt text-white"></i></span>
-              <div class="info-box-content">
-                <div class="col-12">
-                  <h4><span class="info-box-text">Employee</span></h4>
-                  <div>
-                    <span class="info-box-number"><small>ระบบข้อมูลพนักงานออนไลน์<br>
-                      <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a><br>
-                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a></small>
-                      <a href="{% url 'employee_m1_pay_slip' %}" type="button" class="btn btn-outline-primary float-right">{% trans 'Open' %}</a>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% endif %}
-
           {% if perms.leave.view_leaveemployee %}
           <div class="col-12 col-xs-12 col-sm-12 col-md-6">
             <div class="info-box mb-4">
@@ -35,10 +15,95 @@
                 <div class="col-12">
                   <h4><span class="info-box-text">E-Leave</span></h4>
                   <div>
-                    <span class="info-box-number"><small>{% trans 'Leave request system' %} <br>
+                    <span style="font-size: 14px;">{% trans 'Leave request system' %} <br>
                       <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a><br>
-                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a></small>
-                      <a href="{% url 'leave_policy' %}" type="button" class="btn btn-outline-primary float-right">{% trans 'Open' %}</a>
+                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a>
+                      <a href="{% url 'leave_policy' %}" type="button" class="btn btn-outline-primary float-right">Open</a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- E-Payslip M1 -->
+          {% if perms.epayslipm1.can_access_e_payslip_m1 %}
+          <div class="col-12 col-sm-6 col-md-6">
+            <div class="info-box mb-4">
+              <span class="info-box-icon" style="background-color:#3c8dbc !important"><i class="fas fa-file-invoice-dollar text-white"></i></span>
+              <div class="info-box-content">
+                <div class="col-12">
+                  <h4><span class="info-box-text">E-Payslip</span></h4>
+                  <div>
+                    <span style="font-size: 14px;">ระบบขอใบ Payslip ออนไลน์<br>
+                      <!--<i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a>--><br>
+                      <!--<i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a>-->
+                      <a href="{% url 'e_payslip_m1' %}" type="button" class="btn btn-outline-primary float-right">Open</a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>    
+          {% endif %}
+
+
+          {% if perms.employeem1.can_access_employee_m1 %}
+          <div class="col-12 col-xs-12 col-sm-12 col-md-6">
+            <div class="info-box mb-4">
+              <span class="info-box-icon" style="background-color:#257638 !important"><i class="fas fa-user-alt text-white"></i></span>
+              <div class="info-box-content">
+                <div class="col-12">
+                  <h4><span class="info-box-text">Employee</span></h4>
+                  <div>
+                    <span style="font-size: 14px;">ระบบขอเอกสารออนไลน์<br>
+                      <!--<i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a>--><br>
+                      <!--<i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a>-->
+                      <a href="{% url 'e_document_dashboard' %}" type="button" class="btn btn-outline-primary float-right">Open</a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+
+          {% if perms.ITcontract.view_itcontractdb %}
+          <div class="col-12 col-sm-6 col-md-6">
+            <div class="info-box mb-4">
+              <span class="info-box-icon" style="background-color:#ff3300 !important"><i class="fas fa-file-signature text-white"></i></span>
+              <div class="info-box-content">
+                <div class="col-12">
+                  <h4><span class="info-box-text">IT Contract</span></h4>
+                  <div>
+                    <span style="font-size: 14px;">ระบบจัดการข้อมูลสัญญาบริการ<br>
+                      <!--<i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a>--><br>
+                      <!--<i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a>-->
+                      <a href="{% url 'ITcontract' %}" type="button" class="btn btn-outline-primary float-right">Open</a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+
+
+          {% if perms.prpo.add_prpoactions %}
+          <div class="col-12 col-sm-6 col-md-6">
+            <div class="info-box mb-4">
+              <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-wrench"></i></span>
+              <div class="info-box-content">
+                <div class="col-12">
+                  <h4><span class="info-box-text">PRPO</span></h4>
+                  <div>
+                    <span style="font-size: 14px;">ระบบจัดการขอสั่งซื้อ<br>
+                      <!--<i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a>--><br>
+                      <!--<i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a>-->
+                      <a href="{% url 'prpo_company' %}" type="button" class="btn btn-outline-primary float-right ">Open</a>
                     </span>
                   </div>
                 </div>
@@ -56,9 +121,9 @@
                 <div class="col-12">
                   <h4><span class="info-box-text">Daily Guard Info</span></h4>
                   <div>
-                    <span class="info-box-number"><small>{% trans 'Check clock-in time system' %}<br>
-                      <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a><br>
-                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a></small>
+                    <span style="font-size: 14px;">ระบบตรวจสอบตารางเวร<br>
+                      <!--<i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a>--><br>
+                      <!--<i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a>-->
                       <a href="contract/contract-list-Sum" type="button" class="btn btn-outline-primary float-right">{% trans 'Open' %}</a>
                     </span>
                   </div>
@@ -68,66 +133,8 @@
           </div>    
           {% endif %}
 
-
-          {% if perms.ITcontract.view_itcontractdb %}
-          <div class="col-12 col-sm-6 col-md-6">
-            <div class="info-box mb-4">
-              <span class="info-box-icon" style="background-color:#ff3300 !important"><i class="fas fa-file-signature text-white"></i></span>
-              <div class="info-box-content">
-                <div class="col-12">
-                  <h4><span class="info-box-text">IT Contract</span></h4>
-                  <div>
-                    <span class="info-box-number"><small>ข้อมูลสัญญา<br>
-                      <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a><br>
-                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a></small>
-                      <a href="{% url 'ITcontract' %}" type="button" class="btn btn-outline-primary float-right">Open</a>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% endif %}
-
           <!-- fix for small devices only -->
           <div class="clearfix hidden-md-up"></div>
-
-          {% if perms.prpo.add_prpoactions %}
-          <div class="col-12 col-sm-6 col-md-6">
-            <div class="info-box mb-4">
-              <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-wrench"></i></span>
-              <div class="info-box-content">
-                <div class="col-12">
-                  <h4><span class="info-box-text">PRPO</span></h4>
-                  <div>
-                    <span class="info-box-number"><small>ระบบขอสั่งซื้อ<br>
-                      <i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a><br>
-                      <i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a></small>
-                      <a href="{% url 'prpo_company' %}" type="button" class="btn btn-outline-primary float-right ">Open</a>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% endif %}
-          <!--
-          <div class="col-12 col-sm-6 col-md-6">
-            <div class="info-box mb-4">
-              <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-wrench"></i></span>
-              <div class="info-box-content">
-                <div class="col-12">
-                  <h4><span class="info-box-text">ระบบทดสอบ 2</span></h4>
-                  <div>
-                    <span class="info-box-number"><small>คำอธิบายระบบ</small>
-                      <a href="#" type="button" class="btn btn-outline-primary float-right disabled">ใช้งาน</a>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          -->
 
         </div>
 
