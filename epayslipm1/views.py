@@ -14,6 +14,12 @@ from page.rules import *
 from django.http import JsonResponse
 from django.db import connection
 from leave.models import LeaveEmployee
+from gfthboard.settings import MEDIA_ROOT
+from docxtpl import DocxTemplate
+from docx.shared import Cm, Mm, Pt, Inches
+from docx.enum.section import WD_ORIENT
+from docx.enum.text import WD_LINE_SPACING
+from docx.enum.style import WD_STYLE_TYPE
 import django.db as db
 
 
@@ -147,6 +153,14 @@ def AjaxSendPayslipM1(request):
 				"pay_th": pay_th,
 				"pay_en": pay_en,				
 			}
+
+		# Generate PDF file
+		is_error, message = generate_payslip_pdf_file_m1(emp_id, pay_slip_object)
+
+		# Send Email
+		# TODO
+
+
 	else:
 		is_error = True
 		message = "ระบบไม่สามารถส่งไฟล์ Payslip ให้ท่านได้ กรุณาติดต่อฝ่ายบุคคลอีกครั้ง"
@@ -158,14 +172,6 @@ def AjaxSendPayslipM1(request):
 
 	response.status_code = 200
 	return response
-
-
-def generate_payslip_to_pdf():
-	print("todo")
-
-
-def send_payslip():
-	print("todo")
 
 
 def convert_thai_month_name(month_number):
@@ -199,3 +205,40 @@ def convert_thai_month_name(month_number):
 		thai_month_name
 
 	return thai_month_name
+
+
+# Generate PDF File
+def generate_payslip_pdf_file_m1(emp_id, pay_slip_object):
+	is_error = True
+	message = ""	
+	base_url = MEDIA_ROOT + '/epayslipm1/template/'
+	template_name = base_url + 'payslip_m1_th.docx'
+	file_name = str(emp_id) + "_payslip"
+
+	document = DocxTemplate(template_name)
+	style = document.styles['Normal']
+	font = style.font
+	font.name = 'AngsanaUPC'
+	font.size = Pt(14)
+
+	context = {
+	    "paid_period": "1",
+	}
+
+	try:
+		document.render(context)
+		document.save(MEDIA_ROOT + '/epayslipm1/download/' + file_name + ".docx")    
+		is_error = False
+		message = "Generate file is success."
+	except Exception as e:
+		is_error = True
+		message = str(e);
+
+	return is_error, message
+
+
+# Send Email to Employee
+@permission_required('dailyattendreport.can_access_psn_slip_d1_report', login_url='/accounts/login/')
+def send_payslip():
+	print("todo")
+
