@@ -23,6 +23,7 @@ from docx.enum.style import WD_STYLE_TYPE
 from os import path
 from docx2pdf import convert
 import django.db as db
+import PyPDF2 as p,os
 
 
 @permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
@@ -145,8 +146,6 @@ def AjaxSendPayslipM1(request):
 		cursor.close()
 
 	if pay_slip_object is not None:
-		is_error = False
-		message = "ระบบส่งไฟล์ Payslip " + "<span class='text-success'><b>Period " + str(selected_period_name) + "</b></span> ไปให้ท่านทางอีเมล์แล้ว กรุณาตรวจสอบ Inbox ของท่านอีกครั้ง"
 		for item in pay_slip_object:
 			pay_th = item[0]
 			pay_en = item[1]
@@ -159,9 +158,14 @@ def AjaxSendPayslipM1(request):
 		# Generate PDF file
 		is_error, message = generate_payslip_pdf_file_m1(emp_id, pay_slip_object)
 
+		if is_error:
+			is_error = True			
+		else:
+			is_error = False
+			message = "ระบบส่งไฟล์ Payslip " + "<span class='text-success'><b>Period " + str(selected_period_name) + "</b></span> ไปที่ Mailbox ของท่านแล้ว กรุณาตรวจสอบ"
+
 		# Send Email
 		# TODO
-
 
 	else:
 		is_error = True
@@ -228,6 +232,7 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object):
 	    "paid_period": "1",
 	}
 
+	# Generate Word file
 	try:
 		document.render(context)
 		document.save(MEDIA_ROOT + '/epayslipm1/download/' + file_name + ".docx")    
@@ -237,10 +242,32 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object):
 		is_error = True
 		message = str(e);
 
+
+	# Generate PDF file
 	try:
 		docx_file = path.abspath("media\\epayslipm1\\download\\" + file_name + ".docx")
-		pdf_file = path.abspath("media\\epayslipm1\\download\\" + file_name + ".pdf")    
+		pdf_file = path.abspath("media\\epayslipm1\\download\\" + file_name + "_temp.pdf")    
 		convert(docx_file, pdf_file)
+		
+		output = p.PdfFileWriter()
+		
+		# input_stream = p.PdfFileReader(open(pdf_file, "rb"))
+		f = open(pdf_file, "rb")
+		pdf = p.PdfFileReader(f)
+
+		for i in range(0, pdf.getNumPages()):
+			output.addPage(pdf.getPage(i))
+
+		outputstream = open(path.abspath("media\\epayslipm1\\download\\" + file_name + ".pdf"), "wb")
+
+		output.encrypt("mypass", use_128bit=True)
+		output.write(outputstream)
+		outputstream.close()
+
+		f.close()
+		os.remove(pdf_file)
+		os.remove(docx_file)
+
 	except Exception as e:
 		is_error = True
 		message = str(e)
