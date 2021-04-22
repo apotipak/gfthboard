@@ -9,13 +9,11 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
 from django.utils import translation
 from django.utils.translation import ugettext as _
-from django.db import connection
 from django.db.models import Sum
 from page.rules import *
-from django.utils import timezone
-from leave.models import LeaveEmployee
 from django.http import JsonResponse
-from django.forms.models import model_to_dict
+from django.db import connection
+from leave.models import LeaveEmployee
 import django.db as db
 
 
@@ -56,10 +54,10 @@ def EmployeeM1Dashboard(request):
 
 
 @permission_required('employeem1.can_access_employee_m1_pay_slip', login_url='/accounts/login/')
-def EmployeeM1PaySlip(request):
+def EDocumentDashboard(request):
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
-    render_template_name = 'employeem1/pay_slip.html'
+    render_template_name = 'employeem1/e_document_dashboard.html'
 
     dattime_format = "%Y-%m-%d %H:%M:%S"
 

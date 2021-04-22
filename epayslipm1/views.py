@@ -1,0 +1,201 @@
+from django.shortcuts import render
+from django.utils import timezone
+from datetime import datetime
+from django.conf import settings
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.decorators import permission_required
+from django.utils import translation
+from django.utils.translation import ugettext as _
+from django.db.models import Sum
+from page.rules import *
+from django.http import JsonResponse
+from django.db import connection
+from leave.models import LeaveEmployee
+import django.db as db
+
+
+@permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
+def EPaySlipM1(request):
+	user_language = getDefaultLanguage(request.user.username)
+	translation.activate(user_language)
+	render_template_name = 'epayslipm1/request_payslip.html'
+
+	dattime_format = "%Y-%m-%d %H:%M:%S"
+
+	page_title = settings.PROJECT_NAME
+	db_server = settings.DATABASES['default']['HOST']
+	project_name = settings.PROJECT_NAME
+	project_version = settings.PROJECT_VERSION
+	today_date = getDateFormatDisplay(user_language)
+
+	available_period_obj = None
+	available_period_list = []
+	record = {}
+
+	# For temporarially used only
+	# Start
+	if user_language == "th":
+	    if request.user.username == "999999":
+	        username_display = request.user.first_name
+	    else:            
+	        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+	else:
+	    if request.user.username == "999999":
+	        username_display = request.user.first_name
+	    else:                    
+	        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+	# end
+
+	# Get available period for M1
+	sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
+	sql += "where eps_emp_type='M1' "
+	sql += "group by eps_prd_id,prd_year,prd_month,period "
+	sql += "order by eps_prd_id desc;"
+	print("SQL : ", sql)
+
+	try:
+		cursor = connection.cursor()
+		cursor.execute(sql)
+		available_period_obj = cursor.fetchall()
+	except db.OperationalError as e:
+		is_error = True
+		error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+	except db.Error as e:
+		is_error = True
+		error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+	finally:
+		cursor.close()
+
+	if available_period_obj is not None:
+		for item in available_period_obj:
+			eps_prd_id = item[0]
+			prd_year = item[1]
+			prd_month = item[2]
+			period = item[3]
+			prd_month_name_en = datetime.strptime(str(item[2]), "%m").strftime("%B")
+			prd_month_name_th = convert_thai_month_name(prd_month)
+			record = {
+				"eps_prd_id": eps_prd_id,
+				"prd_year": prd_year,
+				"prd_month": prd_month,
+				"period": period,
+				"prd_month_name_en": prd_month_name_en,
+				"prd_month_name_th": prd_month_name_th,
+			}
+			available_period_list.append(record)			
+
+	return render(request, render_template_name, {
+		'page_title': settings.PROJECT_NAME,
+		'today_date': today_date,
+		'project_version': settings.PROJECT_VERSION,
+		'db_server': settings.DATABASES['default']['HOST'],
+		'project_name': settings.PROJECT_NAME,
+		'user_language': user_language,
+		'username_display': username_display,
+		'available_period_obj': available_period_obj,
+		'available_period_list': list(available_period_list),
+	})
+
+
+@permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
+def AjaxSendPayslipM1(request):
+	is_error = True
+	message = "Error #0 - default error"
+	pay_slip_object = None
+	pay_slip_list = []
+	record = {}
+
+	user_language = getDefaultLanguage(request.user.username)
+	translation.activate(user_language)
+
+	render_template_name = 'epayslipm1/request_payslip.html'
+	page_title = settings.PROJECT_NAME
+	db_server = settings.DATABASES['default']['HOST']
+	project_name = settings.PROJECT_NAME
+	project_version = settings.PROJECT_VERSION
+	today_date = getDateFormatDisplay(user_language)
+	
+	emp_id = request.user.username
+	eps_prd_id = request.POST.get("selected_period")
+	selected_period_name = request.POST.get("selected_period_name")
+	
+	sql = "select * from sp_slip1 where eps_emp_id='" + str(emp_id) + "' and eps_prd_id='" + str(eps_prd_id) + "' and eps_emp_type='M1' order by prd_year desc, prd_month desc, pay_seq;"
+	try:
+		cursor = connection.cursor()
+		cursor.execute(sql)
+		pay_slip_object = cursor.fetchall()
+	except db.OperationalError as e:
+		is_error = True
+		message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+	except db.Error as e:
+		is_error = True
+		message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+	finally:
+		cursor.close()
+
+	if pay_slip_object is not None:
+		is_error = False
+		message = "ระบบส่งไฟล์ Payslip " + "<span class='text-success'><b>Period " + str(selected_period_name) + "</b></span> ไปให้ท่านทางอีเมล์แล้ว กรุณาตรวจสอบ Inbox ของท่านอีกครั้ง"
+		for item in pay_slip_object:
+			pay_th = item[0]
+			pay_en = item[1]
+			print(pay_th)
+			record = {
+				"pay_th": pay_th,
+				"pay_en": pay_en,				
+			}
+	else:
+		is_error = True
+		message = "ระบบไม่สามารถส่งไฟล์ Payslip ให้ท่านได้ กรุณาติดต่อฝ่ายบุคคลอีกครั้ง"
+
+	response = JsonResponse(data={        
+	    "is_error": is_error,
+	    "message": message,
+	})
+
+	response.status_code = 200
+	return response
+
+
+def generate_payslip_to_pdf():
+	print("todo")
+
+
+def send_payslip():
+	print("todo")
+
+
+def convert_thai_month_name(month_number):
+	thai_month_name = "Unknown"
+
+	if month_number == 1:
+		thai_month_name = "มกราคม"
+	elif month_number == 2:
+		thai_month_name = "กุมภาพันธ์"
+	elif month_number == 3:
+		thai_month_name = "มีนาคม"
+	elif month_number == 4:
+		thai_month_name = "เมษายน"
+	elif month_number == 5:
+		thai_month_name = "พฤษภาคม"
+	elif month_number == 6:
+		thai_month_name = "มิถุนายน"
+	elif month_number == 7:
+		thai_month_name = "กรกฏาคม"
+	elif month_number == 8:
+		thai_month_name = "สิงหาคม"
+	elif month_number == 9:
+		thai_month_name = "กันยายน"
+	elif month_number == 10:
+		thai_month_name = "ตุลาคม"
+	elif month_number == 11:
+		thai_month_name = "พฤศจิกายน"
+	elif month_number == 12:
+		thai_month_name = "ธันวาคม"
+	else:
+		thai_month_name
+
+	return thai_month_name
