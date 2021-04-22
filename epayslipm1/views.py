@@ -20,6 +20,8 @@ from docx.shared import Cm, Mm, Pt, Inches
 from docx.enum.section import WD_ORIENT
 from docx.enum.text import WD_LINE_SPACING
 from docx.enum.style import WD_STYLE_TYPE
+from os import path
+from docx2pdf import convert
 import django.db as db
 
 
@@ -222,6 +224,7 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object):
 	font.size = Pt(14)
 
 	context = {
+		"emp_id": emp_id,
 	    "paid_period": "1",
 	}
 
@@ -229,10 +232,18 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object):
 		document.render(context)
 		document.save(MEDIA_ROOT + '/epayslipm1/download/' + file_name + ".docx")    
 		is_error = False
-		message = "Generate file is success."
+		message = "Generate file is success."		
 	except Exception as e:
 		is_error = True
 		message = str(e);
+
+	try:
+		docx_file = path.abspath("media\\epayslipm1\\download\\" + file_name + ".docx")
+		pdf_file = path.abspath("media\\epayslipm1\\download\\" + file_name + ".pdf")    
+		convert(docx_file, pdf_file)
+	except Exception as e:
+		is_error = True
+		message = str(e)
 
 	return is_error, message
 
