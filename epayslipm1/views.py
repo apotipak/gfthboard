@@ -21,9 +21,12 @@ from docx.enum.section import WD_ORIENT
 from docx.enum.text import WD_LINE_SPACING
 from docx.enum.style import WD_STYLE_TYPE
 from os import path
-from docx2pdf import convert
+# from docx2pdf import convert
 import django.db as db
 import PyPDF2 as p,os
+import sys
+import os
+import comtypes.client
 
 
 @permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
@@ -235,7 +238,7 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object):
 	# Generate Word file
 	try:
 		document.render(context)
-		document.save(MEDIA_ROOT + '/epayslipm1/download/' + file_name + ".docx")    
+		document.save(MEDIA_ROOT + '/epayslipm1/download/' + file_name + "_temp.docx")    
 		is_error = False
 		message = "Generate file is success."		
 	except Exception as e:
@@ -245,13 +248,19 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object):
 
 	# Generate PDF file
 	try:
-		docx_file = path.abspath("media\\epayslipm1\\download\\" + file_name + ".docx")
+		docx_file = path.abspath("media\\epayslipm1\\download\\" + file_name + "_temp.docx")
 		pdf_file = path.abspath("media\\epayslipm1\\download\\" + file_name + "_temp.pdf")    
-		convert(docx_file, pdf_file)
+		
+		# convert(docx_file, pdf_file)
+		
+		wdFormatPDF = 17
+		word = comtypes.client.CreateObject('Word.Application')
+		doc = word.Documents.Open(docx_file)
+		doc.SaveAs(pdf_file, FileFormat=wdFormatPDF)
+		doc.Close()
+		word.Quit()		
 		
 		output = p.PdfFileWriter()
-		
-		# input_stream = p.PdfFileReader(open(pdf_file, "rb"))
 		f = open(pdf_file, "rb")
 		pdf = p.PdfFileReader(f)
 
