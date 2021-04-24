@@ -15,18 +15,23 @@ from django.http import JsonResponse
 from django.db import connection
 from leave.models import LeaveEmployee
 from gfthboard.settings import MEDIA_ROOT
-from docxtpl import DocxTemplate
+
+# from docxtpl import DocxTemplate
+
+'''
 from docx.shared import Cm, Mm, Pt, Inches
 from docx.enum.section import WD_ORIENT
 from docx.enum.text import WD_LINE_SPACING
 from docx.enum.style import WD_STYLE_TYPE
+''' 
+
 from os import path
 # from docx2pdf import convert
 import django.db as db
-import PyPDF2 as p,os
+# import PyPDF2 as p,os
 import sys
 import os
-import comtypes.client
+# import comtypes.client
 
 
 @permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
@@ -223,43 +228,55 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object):
 	base_url = MEDIA_ROOT + '/epayslipm1/template/'
 	template_name = base_url + 'payslip_m1_th.docx'
 	file_name = str(emp_id) + "_payslip"
-
+	
+	from docxtpl import DocxTemplate
 	document = DocxTemplate(template_name)
-	style = document.styles['Normal']
-	font = style.font
-	font.name = 'AngsanaUPC'
-	font.size = Pt(14)
+
+	try:
+		style = document.styles['Normal']
+		font = style.font
+		font.name = 'AngsanaUPC'
+		font.size = Pt(14)
+	except Exception as e:
+		is_error = True
+		message = str(e)
 
 	context = {
 		"emp_id": emp_id,
-	    "paid_period": "1",
+	    	"paid_period": "1",
 	}
+
 
 	# Generate Word file
 	try:
 		document.render(context)
-		document.save(MEDIA_ROOT + '/epayslipm1/download/' + file_name + "_temp.docx")    
+		document.save(MEDIA_ROOT + '/epayslipm1/download/' + file_name + '_temp.docx')
 		is_error = False
 		message = "Generate file is success."		
 	except Exception as e:
 		is_error = True
-		message = str(e);
+		message = str(e)	
 
 
-	# Generate PDF file
+	
+	# return is_error, message
+
+	from subprocess import  Popen
+	docx_file = path.abspath("media\\epayslipm1\\download\\" + file_name + "_temp.docx")
+	out_folder = path.abspath("media\\epayslipm1\\download\\")
+		
 	try:
-		docx_file = path.abspath("media\\epayslipm1\\download\\" + file_name + "_temp.docx")
-		pdf_file = path.abspath("media\\epayslipm1\\download\\" + file_name + "_temp.pdf")    
-		
-		# convert(docx_file, pdf_file)
-		
-		wdFormatPDF = 17
-		word = comtypes.client.CreateObject('Word.Application')
-		doc = word.Documents.Open(docx_file)
-		doc.SaveAs(pdf_file, FileFormat=wdFormatPDF)
-		doc.Close()
-		word.Quit()		
-		
+		LIBRE_OFFICE = r"C:\Program Files\LibreOffice\program\soffice.exe"
+		p = Popen([LIBRE_OFFICE, '--headless', '--convert-to', 'pdf', '--outdir', out_folder, docx_file])
+		print([LIBRE_OFFICE, '--convert-to', 'pdf', docx_file])
+		p.communicate()
+	except Exception as e:
+		is_error = True
+		message = str(e)
+
+	import PyPDF2 as p,os
+	pdf_file = path.abspath("media\\epayslipm1\\download\\" + file_name + "_temp.pdf")
+	try:
 		output = p.PdfFileWriter()
 		f = open(pdf_file, "rb")
 		pdf = p.PdfFileReader(f)
@@ -276,16 +293,16 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object):
 		f.close()
 		os.remove(pdf_file)
 		os.remove(docx_file)
-
 	except Exception as e:
 		is_error = True
 		message = str(e)
-
+		
 	return is_error, message
 
-
+	
 # Send Email to Employee
 @permission_required('dailyattendreport.can_access_psn_slip_d1_report', login_url='/accounts/login/')
 def send_payslip():
 	print("todo")
+
 
