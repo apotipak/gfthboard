@@ -15,11 +15,11 @@ from django.http import JsonResponse
 from django.db import connection
 from leave.models import LeaveEmployee
 from gfthboard.settings import MEDIA_ROOT
-from docxtpl import DocxTemplate
-from docx.shared import Cm, Mm, Pt, Inches
-from docx.enum.section import WD_ORIENT
-from docx.enum.text import WD_LINE_SPACING
-from docx.enum.style import WD_STYLE_TYPE
+# from docxtpl import DocxTemplate
+# from docx.shared import Cm, Mm, Pt, Inches
+# from docx.enum.section import WD_ORIENT
+# from docx.enum.text import WD_LINE_SPACING
+# from docx.enum.style import WD_STYLE_TYPE
 from os import path
 import django.db as db
 import sys
@@ -378,6 +378,12 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_p
 			"eps_ysm_soc": 1,
 		}		
 
+	from docxtpl import DocxTemplate
+	from docx.shared import Cm, Mm, Pt, Inches
+	from docx.enum.section import WD_ORIENT
+	from docx.enum.text import WD_LINE_SPACING
+	from docx.enum.style import WD_STYLE_TYPE
+		
 	document = DocxTemplate(template_name)
 
 	try:
@@ -479,23 +485,24 @@ def email_payslip(send_to_email, pdf_file, random_password):
 
 		html_message = "password=" + random_password
 		attachments = []
+		'''
 		for filename in pdf_file:    
 			content = open(filename, 'rb').read()
 			attachment = (filename, content, 'application/pdf')    
 			attachments.append(attachment)
-
+		'''
 		if send_to_email != "":
 			msg = mail.EmailMessage(
 			    subject = subject,
 			    body = html_message,
 			    from_email = host_user,
-			    to = [send_to_email],
-			    attachments = attachments,
+			    to = [send_to_email],			    
 			    connection = con,
 			)
 
 		msg.content_subtype = 'html'
-		mail_obj.send_messages([msg])    
+		# msg.attach_file(attachements)
+		# mail_obj.send_messages([msg])    
 		mail_obj.close()
 		
 		is_send_email_success = True
