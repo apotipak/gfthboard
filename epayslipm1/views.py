@@ -479,9 +479,8 @@ def email_payslip(emp_full_name, send_to_email, file_name, prd_year, prd_month, 
 		)
 
 		html_message = "เรียน คุณ" + str(emp_full_name) + "<br><br>"
-		html_message += "ไฟล์ส่วนตัวของท่านสามารถเปิดโดยใช้รหัส " + str(random_password) + "<br>"
-		html_message += "<b>*** เพื่อรักษาความเป็นส่วนตัวของข้อมูลของท่าน ห้ามส่งต่ออีเมล์หรือควรทำการลบอีเมล์นี้หากใช้งานเสร็จแล้ว ***</b><br>"
-		html_message += "<b>*** This email is confidential. Please do not forward or reply. ***</b><br><br>"
+		html_message += "ไฟล์นี้สามารถเปิดอ่านได้โดยใช้รหัส " + str(random_password) + "<br><br>"
+		html_message += "<b>เพื่อรักษาความเป็นส่วนตัวของข้อมูลของท่านห้ามส่งต่อหรือตอบกลับอีเมล์และควรลบอีเมล์นี้หากใช้งานเสร็จแล้ว</b><br><br>"
 		html_message += "<i>This email was automatically sent from system. Please do not reply.</i>"
 
 		if send_to_email != "":
