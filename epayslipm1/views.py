@@ -26,6 +26,9 @@ import sys
 import os
 import string
 import random
+from django.core import mail
+from django.core.mail.backends.smtp import EmailBackend
+from django.core.mail import EmailMultiAlternatives
 
 
 @permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
@@ -435,7 +438,8 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_p
 		os.remove(docx_file)
 
 		# Send Email
-		
+		payslip_pdf_file = path.abspath("media\\epayslipm1\\download\\" + file_name + ".pdf")
+		send_email_success = email_payslip("amnaj.potipak@guardforce.co.th", payslip_pdf_file, random_password)
 		
 	except Exception as e:
 		is_error = True
@@ -445,9 +449,62 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_p
 
 	
 # Send Email to Employee
-@permission_required('dailyattendreport.can_access_psn_slip_d1_report', login_url='/accounts/login/')
-def send_payslip():
-	print("todo")
+def email_payslip(send_to_email, pdf_file, random_password):
+		
+	# print("send_to_email : ", send_to_email)
+	# print("pdf_file : ", pdf_file)
+	# print("random_password : ", random_password)
+
+	if send_to_email == "" or pdf_file == "":
+		is_send_email_success = False		
+		return is_send_email_success
+
+	try:
+		con = mail.get_connection()
+		con.open()
+
+		host = getattr(settings, "EMAIL_HOST", None)
+		host_user = getattr(settings, "EMAIL_HOST_USER", None)
+		host_pass = getattr(settings, "EMAIL_HOST_PASSWORD", None)
+		host_port = getattr(settings, "EMAIL_PORT", None)
+
+		mail_obj = EmailBackend(
+		    host = host,
+		    port = host_port,
+		    password = host_pass,
+		    username = host_user,
+		    use_tls = True,
+		    timeout = 10
+		)
+
+		html_message = "password=" + random_password
+		attachments = []
+		for filename in pdf_file:    
+			content = open(filename, 'rb').read()
+			attachment = (filename, content, 'application/pdf')    
+			attachments.append(attachment)
+
+		if send_to_email != "":
+			msg = mail.EmailMessage(
+			    subject = subject,
+			    body = html_message,
+			    from_email = host_user,
+			    to = [send_to_email],
+			    attachments = attachments,
+			    connection = con,
+			)
+
+		msg.content_subtype = 'html'
+		mail_obj.send_messages([msg])    
+		mail_obj.close()
+		
+		is_send_email_success = True
+		return True
+
+	except Exception as _error:
+		print('Error in sending mail >> {}'.format(_error))
+		is_send_email_success = False
+		return False			
 
 
 def random_password_generator(size=8, chars=string.ascii_uppercase + string.digits):
