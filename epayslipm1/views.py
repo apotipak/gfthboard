@@ -444,8 +444,7 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_p
 		os.remove(docx_file)
 
 		# Send Email
-		payslip_pdf_file = path.abspath("media\\epayslipm1\\download\\" + file_name + ".pdf")
-		send_email_success = email_payslip("amnaj.potipak@guardforce.co.th", payslip_pdf_file, random_password)
+		send_email_success = email_payslip(emp_full_name, "amnaj.potipak@guardforce.co.th", file_name, prd_year, prd_month, random_password)
 		
 	except Exception as e:
 		is_error = True
@@ -455,13 +454,9 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_p
 
 	
 # Send Email to Employee
-def email_payslip(send_to_email, pdf_file, random_password):
+def email_payslip(emp_full_name, send_to_email, file_name, prd_year, prd_month, random_password):
 		
-	# print("send_to_email : ", send_to_email)
-	# print("pdf_file : ", pdf_file)
-	# print("random_password : ", random_password)
-
-	if send_to_email == "" or pdf_file == "":
+	if send_to_email == "" or file_name == "":
 		is_send_email_success = False		
 		return is_send_email_success
 
@@ -483,17 +478,15 @@ def email_payslip(send_to_email, pdf_file, random_password):
 		    timeout = 10
 		)
 
-		html_message = "password=" + random_password
-		attachments = []
-		'''
-		for filename in pdf_file:    
-			content = open(filename, 'rb').read()
-			attachment = (filename, content, 'application/pdf')    
-			attachments.append(attachment)
-		'''
+		html_message = "เรียน คุณ" + str(emp_full_name) + "<br><br>"
+		html_message += "ไฟล์ส่วนตัวของท่านสามารถเปิดโดยใช้รหัส " + str(random_password) + "<br>"
+		html_message += "<b>*** เพื่อรักษาความเป็นส่วนตัวของข้อมูลของท่าน ห้ามส่งต่ออีเมล์หรือควรทำการลบอีเมล์นี้หากใช้งานเสร็จแล้ว ***</b><br>"
+		html_message += "<b>*** This email is confidential. Please do not forward or reply. ***</b><br><br>"
+		html_message += "<i>This email was automatically sent from system. Please do not reply.</i>"
+
 		if send_to_email != "":
 			msg = mail.EmailMessage(
-			    subject = subject,
+			    subject = "HRMS - เอกสารสำคัญ (Payslip " + str(prd_year) + "/" + str(prd_month) + ")",
 			    body = html_message,
 			    from_email = host_user,
 			    to = [send_to_email],			    
@@ -501,8 +494,8 @@ def email_payslip(send_to_email, pdf_file, random_password):
 			)
 
 		msg.content_subtype = 'html'
-		# msg.attach_file(attachements)
-		# mail_obj.send_messages([msg])    
+		msg.attach_file(path.abspath("media\\epayslipm1\\download\\" + str(file_name) + ".pdf"))
+		mail_obj.send_messages([msg])
 		mail_obj.close()
 		
 		is_send_email_success = True
