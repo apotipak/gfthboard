@@ -506,12 +506,11 @@ def email_payslip(emp_full_name, send_to_email, file_name, prd_year, prd_month, 
 
 		html_message = "เรียน คุณ" + str(emp_full_name) + "<br><br>"
 		html_message += "ไฟล์นี้สามารถเปิดอ่านได้โดยใช้รหัสบัตรประชาชนของท่าน<br><br>"
-		html_message += "<b>เพื่อรักษาความเป็นส่วนตัวของข้อมูลของท่าน <span style='color:red;'>ห้ามส่งต่อหรือตอบกลับและควรลบอีเมล์นี้</span> หากใช้งานเสร็จแล้ว</b><br><br>"
+		html_message += "<b>เพื่อรักษาความเป็นส่วนตัวของข้อมูล <span style='color:red;'>ห้ามส่งต่อหรือตอบกลับและควรลบอีเมล์นี้</span> หากใช้งานเสร็จแล้ว</b><br><br>"
 		html_message += "<hr>"
-		html_message += "<b>Tips: 3 ขั้นตอนป้องกันข้อมูลส่วนตัว</b><br>"
-		html_message += "1. ตั้งพาสเวิร์ดให้เดายาก<br>"
-		html_message += "2. เปลี่ยนพาสเวิร์ดบ่อยขึ้น<br>"
-		html_message += "3. เครื่องส่วนตัวใช้ส่วนตัว<br>"
+		html_message += "<b>IT Tips: 2 ขั้นตอนป้องกันข้อมูลส่วนตัว</b><br>"
+		html_message += "1. ตั้งรหัสให้เดายาก<br>"
+		html_message += "2. เปลี่ยนรหัสให้บ่อยขึ้น<br>"
 		html_message += "<hr>"
 		html_message += "<br><i>This email was automatically sent from system. Please do not reply.</i>"
 
