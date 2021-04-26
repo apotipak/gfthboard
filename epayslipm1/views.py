@@ -430,7 +430,7 @@ def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd
 
 	import PyPDF2 as p,os
 	pdf_file = path.abspath("media\\epayslipm1\\download\\" + file_name + "_temp.pdf")
-	try:
+	try:		
 		output = p.PdfFileWriter()
 		f = open(pdf_file, "rb")
 		pdf = p.PdfFileReader(f)
@@ -440,7 +440,22 @@ def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd
 
 		outputstream = open(path.abspath("media\\epayslipm1\\download\\" + file_name + ".pdf"), "wb")
 
-		random_password = random_password_generator()
+
+		count = 0
+		bank_no = ""
+		citizen_id = ""
+		for item in pay_slip_object:
+			if count == 0:
+				bank_no = item[26]
+				citizen_id = item[33]
+			count = count + 1
+
+		if citizen_id != "":
+			# random_password = random_password_generator()
+			random_password = citizen_id
+		else:
+			is_error = True
+			message = "Your profile is not completed. Please contact HR department."
 
 		output.encrypt(random_password, use_128bit=True)
 		output.write(outputstream)
@@ -451,15 +466,6 @@ def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd
 		os.remove(docx_file)
 
 		# Send Email
-		count = 0
-		bank_no = ""
-		citizen_id = ""
-		for item in pay_slip_object:
-			if count == 0:
-				bank_no = item[26]
-				citizen_id = item[33]
-			count = count + 1
-
 		if citizen_id != "":
 			send_email_success = email_payslip(emp_full_name, primary_email, file_name, prd_year, prd_month, citizen_id)
 		else:
