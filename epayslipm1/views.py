@@ -165,14 +165,6 @@ def AjaxSendPayslipM1(request):
 		else:
 			is_error = False
 			message = "ระบบส่ง " + "<span class='text-success'><b>Payslip " + str(selected_period_name) + "</b></span> ไว้ในเมล์บ็อกซ์ของคุณแล้ว<br><br>"
-			message += "<b>เทคนิคป้องกันข้อมูลส่วนตัว</b><br>"
-			message += "1. เปลี่ยนพาสเวิร์ดบ่อยๆ<br>"
-			message += "2. ตั้งพาสเวิร์ดให้เดายาก<br>"
-			message += "3. เครื่องส่วนตัวใช้ส่วนตัว<br>"
-
-		# Send Email
-		# TODO
-
 	else:
 		is_error = True
 		message = "ระบบไม่สามารถส่งไฟล์ Payslip ให้ท่านได้ กรุณาติดต่อฝ่ายบุคคลอีกครั้ง"
@@ -477,12 +469,10 @@ def email_payslip(emp_full_name, send_to_email, file_name, prd_year, prd_month, 
 
 		html_message = "เรียน คุณ" + str(emp_full_name) + "<br><br>"
 		html_message += "ไฟล์นี้สามารถเปิดอ่านได้โดยใช้รหัส " + str(random_password) + "<br><br>"
-		html_message += "<b>เพื่อรักษาความเป็นส่วนตัวของข้อมูลของท่าน <span style='color:red;'>ห้ามส่งต่อหรือตอบกลับและควรลบอีเมล์นี้</span> หากใช้งานเสร็จแล้ว</b><br><br><br>"
-
-		html_message += "<b>เทคนิคป้องกันข้อมูลส่วนตัว</b><br>"
-		html_message += "1. เปลี่ยนพาสเวิร์ดบ่อยๆ<br>"
-		html_message += "2. ตั้งพาสเวิร์ดให้เดายาก<br>"
-		html_message += "3. เครื่องส่วนตัวใช้ส่วนตัว<br>"
+		html_message += "<b>เพื่อรักษาความเป็นส่วนตัวของข้อมูลของท่าน <span style='color:red;'>ห้ามส่งต่อหรือตอบกลับและควรลบอีเมล์นี้</span> หากใช้งานเสร็จแล้ว</b><br><br>"
+		html_message += "<b>2 ขั้นตอนป้องกันข้อมูลส่วนตัว</b><br>"
+		html_message += "1. ตั้งพาสเวิร์ดให้เดายาก<br>"
+		html_message += "2. เครื่องส่วนตัวใช้ส่วนตัว<br>"
 
 		html_message += "<br><i>This email was automatically sent from system. Please do not reply.</i>"
 
