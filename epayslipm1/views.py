@@ -28,6 +28,8 @@ from django.core.mail import EmailMultiAlternatives
 
 @permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
 def EPaySlipM1(request):
+	dummy_data = False
+
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)
 	render_template_name = 'epayslipm1/request_payslip.html'
@@ -48,19 +50,23 @@ def EPaySlipM1(request):
 	# Start
 	if user_language == "th":
 	    if request.user.username == "999999":
-	        username_display = request.user.first_name
-	    else:            
+	    	username_display = request.user.first_name
+	    else:
 	        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
 	else:
 	    if request.user.username == "999999":
 	        username_display = request.user.first_name
-	    else:                    
+	    else:
 	        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 	# end
 
 	# Get available period for M1
 	
-	sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip "
+	if dummy_data:
+		sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
+	else:
+		sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip "
+
 	sql += "where eps_emp_type='M1' "
 	sql += "group by eps_prd_id,prd_year,prd_month,period "
 	sql += "order by eps_prd_id desc;"
@@ -112,6 +118,8 @@ def EPaySlipM1(request):
 
 @permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
 def AjaxSendPayslipM1(request):	
+	dummy_data = False
+
 	is_error = True
 	message = "Error #0 - default error"
 	pay_slip_object = None
@@ -139,8 +147,13 @@ def AjaxSendPayslipM1(request):
 	eps_prd_id = request.POST.get("selected_period")
 	selected_period_name = request.POST.get("selected_period_name")
 	
-	sql = "select * from sp_slip where eps_emp_id='" + str(emp_id) + "' and eps_prd_id='" + str(eps_prd_id) + "' and eps_emp_type='M1' order by prd_year desc, prd_month desc, pay_seq;"
-	print("SQL : ", sql)
+	if dummy_data:
+		sql = "select * from sp_slip1 where eps_emp_id='" + str(emp_id) + "' and eps_prd_id='" + str(eps_prd_id) + "' and eps_emp_type='M1' order by prd_year desc, prd_month desc, pay_seq;"
+	else:
+		sql = "select * from sp_slip where eps_emp_id='" + str(emp_id) + "' and eps_prd_id='" + str(eps_prd_id) + "' and eps_emp_type='M1' order by prd_year desc, prd_month desc, pay_seq;"
+
+	print("SQLLL : ", sql)
+
 	try:
 		cursor = connection.cursor()
 		cursor.execute(sql)
@@ -158,7 +171,6 @@ def AjaxSendPayslipM1(request):
 		for item in pay_slip_object:
 			pay_th = item[0]
 			pay_en = item[1]
-			print(pay_th)
 			record = {
 				"pay_th": pay_th,
 				"pay_en": pay_en,	
@@ -220,8 +232,7 @@ def convert_thai_month_name(month_number):
 
 # Generate PDF File
 def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd_id, selected_period_name):
-	dummy_data = True
-	# dummy_data = False
+	dummy_data = False
 
 	is_error = True
 	message = ""	
@@ -321,7 +332,33 @@ def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd
 			count = count + 1
 
 
-	if not dummy_data:
+	if dummy_data:
+		context = {
+			"emp_id": "xxxxxx",
+			"title_th": "คุณ",
+			"emp_fname_th": "ทดสอบ",
+			"emp_lname_th": "ระบบ",
+			"emp_full_name": "ทดสอบ ระบบใหม่",
+			"dept_en": "Test Department",
+			"emp_dept": "xxxx",
+			"emp_acc_no": "xxx-xxxxxxxxxx",
+		    "paid_period": 0,
+		    "prd_year": prd_year,
+		    "prd_month": prd_month,
+		    "prd_date_paid": prd_date_paid.strftime("%d/%m/%Y"),
+		    "pay_slip_object": pay_slip_object,
+		    "income_list": list(income_list),
+		    "deduct_list": list(deduct_list),
+			"eps_prd_in": 1.00,
+			"eps_prd_net": 1.00,
+			"eps_ysm_in": 1.00,
+			"eps_ysm_prv": 1.00,
+			"eps_prd_de": 1.00,
+			"eps_prd_tax": 1.00,
+			"eps_ysm_tax": 1.00,
+			"eps_ysm_soc": 1.00,
+		}		
+	else:
 		context = {
 			"emp_id": emp_id,
 			"title_th": title_th,
@@ -347,32 +384,7 @@ def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd
 			"eps_ysm_tax": eps_ysm_tax,
 			"eps_ysm_soc": eps_ysm_soc,
 		}
-	else:
-		context = {
-			"emp_id": "xxxxxx",
-			"title_th": "คุณ",
-			"emp_fname_th": "ทดสอบ",
-			"emp_lname_th": "ระบบ",
-			"emp_full_name": "ทดสอบ ระบบใหม่",
-			"dept_en": "Test Department",
-			"emp_dept": "xxxx",
-			"emp_acc_no": "xxx-xxxxxxxxxx",
-		    "paid_period": 0,
-		    "prd_year": prd_year,
-		    "prd_month": prd_month,
-		    "prd_date_paid": prd_date_paid.strftime("%d/%m/%Y"),
-		    "pay_slip_object": pay_slip_object,
-		    "income_list": list(income_list),
-		    "deduct_list": list(deduct_list),
-			"eps_prd_in": 1.00,
-			"eps_prd_net": 1.00,
-			"eps_ysm_in": 1.00,
-			"eps_ysm_prv": 1.00,
-			"eps_prd_de": 1.00,
-			"eps_prd_tax": 1.00,
-			"eps_ysm_tax": 1.00,
-			"eps_ysm_soc": 1.00,
-		}
+
 
 	from docxtpl import DocxTemplate
 	from docx.shared import Cm, Mm, Pt, Inches
@@ -439,7 +451,20 @@ def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd
 		os.remove(docx_file)
 
 		# Send Email
-		send_email_success = email_payslip(emp_full_name, primary_email, file_name, prd_year, prd_month, random_password)
+		count = 0
+		bank_no = ""
+		citizen_id = ""
+		for item in pay_slip_object:
+			if count == 0:
+				bank_no = item[26]
+				citizen_id = item[33]
+			count = count + 1
+
+		if citizen_id != "":
+			send_email_success = email_payslip(emp_full_name, primary_email, file_name, prd_year, prd_month, citizen_id)
+		else:
+			is_error = True
+			message = "Your profile is not completed. Please contact HR department."
 		
 	except Exception as e:
 		is_error = True
