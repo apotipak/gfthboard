@@ -118,6 +118,13 @@ def AjaxSendPayslipM1(request):
 	pay_slip_list = []
 	record = {}
 
+	# Check email
+	primary_email = request.user.email
+	if (primary_email is None ) or (primary_email == ""):
+		response = JsonResponse(data={"is_error": True, "message": "Your email has not been setup properly. Please check."})
+		response.status_code = 200
+		return response
+
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)
 
@@ -154,11 +161,11 @@ def AjaxSendPayslipM1(request):
 			print(pay_th)
 			record = {
 				"pay_th": pay_th,
-				"pay_en": pay_en,				
+				"pay_en": pay_en,	
 			}
 
 		# Generate PDF file
-		is_error, message = generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_period_name)
+		is_error, message = generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd_id, selected_period_name)
 
 		if is_error:
 			is_error = True			
@@ -212,7 +219,7 @@ def convert_thai_month_name(month_number):
 
 
 # Generate PDF File
-def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_period_name):
+def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd_id, selected_period_name):
 	dummy_data = True
 	# dummy_data = False
 
@@ -422,7 +429,6 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_p
 		outputstream = open(path.abspath("media\\epayslipm1\\download\\" + file_name + ".pdf"), "wb")
 
 		random_password = random_password_generator()
-		print("random password : ", random_password)
 
 		output.encrypt(random_password, use_128bit=True)
 		output.write(outputstream)
@@ -433,7 +439,7 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_p
 		os.remove(docx_file)
 
 		# Send Email
-		send_email_success = email_payslip(emp_full_name, "amnaj.potipak@guardforce.co.th", file_name, prd_year, prd_month, random_password)
+		send_email_success = email_payslip(emp_full_name, primary_email, file_name, prd_year, prd_month, random_password)
 		
 	except Exception as e:
 		is_error = True
@@ -446,7 +452,7 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_p
 def email_payslip(emp_full_name, send_to_email, file_name, prd_year, prd_month, random_password):
 		
 	if send_to_email == "" or file_name == "":
-		is_send_email_success = False		
+		is_send_email_success = False	
 		return is_send_email_success
 
 	try:
@@ -470,10 +476,12 @@ def email_payslip(emp_full_name, send_to_email, file_name, prd_year, prd_month, 
 		html_message = "เรียน คุณ" + str(emp_full_name) + "<br><br>"
 		html_message += "ไฟล์นี้สามารถเปิดอ่านได้โดยใช้รหัส " + str(random_password) + "<br><br>"
 		html_message += "<b>เพื่อรักษาความเป็นส่วนตัวของข้อมูลของท่าน <span style='color:red;'>ห้ามส่งต่อหรือตอบกลับและควรลบอีเมล์นี้</span> หากใช้งานเสร็จแล้ว</b><br><br>"
-		html_message += "<b>2 ขั้นตอนป้องกันข้อมูลส่วนตัว</b><br>"
+		html_message += "<hr>"
+		html_message += "<b>Tips: 3 ขั้นตอนป้องกันข้อมูลส่วนตัว</b><br>"
 		html_message += "1. ตั้งพาสเวิร์ดให้เดายาก<br>"
-		html_message += "2. เครื่องส่วนตัวใช้ส่วนตัว<br>"
-
+		html_message += "2. เปลี่ยนพาสเวิร์ดบ่อยขึ้น<br>"
+		html_message += "3. เครื่องส่วนตัวใช้ส่วนตัว<br>"
+		html_message += "<hr>"
 		html_message += "<br><i>This email was automatically sent from system. Please do not reply.</i>"
 
 		if send_to_email != "":
@@ -484,7 +492,6 @@ def email_payslip(emp_full_name, send_to_email, file_name, prd_year, prd_month, 
 			    to = [send_to_email],			    
 			    connection = con,
 			)
-
 
 		msg.content_subtype = 'html'
 		msg.attach_file(path.abspath("media\\epayslipm1\\download\\" + str(file_name) + ".pdf"))
