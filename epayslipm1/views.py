@@ -499,7 +499,7 @@ def email_payslip(emp_full_name, send_to_email, file_name, prd_year, prd_month, 
 		)
 
 		html_message = "เรียน คุณ" + str(emp_full_name) + "<br><br>"
-		html_message += "ไฟล์นี้สามารถเปิดอ่านได้โดยใช้รหัส " + str(random_password) + "<br><br>"
+		html_message += "ไฟล์นี้สามารถเปิดอ่านได้โดยใช้รหัสบัตรประชาชนของท่าน<br><br>"
 		html_message += "<b>เพื่อรักษาความเป็นส่วนตัวของข้อมูลของท่าน <span style='color:red;'>ห้ามส่งต่อหรือตอบกลับและควรลบอีเมล์นี้</span> หากใช้งานเสร็จแล้ว</b><br><br>"
 		html_message += "<hr>"
 		html_message += "<b>Tips: 3 ขั้นตอนป้องกันข้อมูลส่วนตัว</b><br>"
