@@ -510,8 +510,8 @@ def email_payslip(emp_full_name, send_to_email, file_name, prd_year, prd_month, 
 		html_message += "<br><i>This email was automatically sent from system. Please do not reply.</i>"		
 		html_message += "<hr>"
 		html_message += "<b>IT Tips: 2 ขั้นตอนป้องกันข้อมูลส่วนตัว</b><br>"
-		html_message += "1. ตั้งรหัสให้เดายาก<br>"
-		html_message += "2. เปลี่ยนรหัสให้บ่อยขึ้น<br>"
+		html_message += "1. ตั้ง <b>รหัสผ่านอีเมล์</b>/<b>รหัสผ่านเข้าเครื่อง</b>/<b>รหัสผ่านส่วนตัวอื่นๆ</b> ให้เดายาก<br>"
+		html_message += "2. เปลี่ยนรหัสผ่านให้บ่อยขึ้น<br>"
 		html_message += "<hr>"
 
 		if send_to_email != "":
