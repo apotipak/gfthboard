@@ -15,11 +15,6 @@ from django.http import JsonResponse
 from django.db import connection
 from leave.models import LeaveEmployee
 from gfthboard.settings import MEDIA_ROOT
-# from docxtpl import DocxTemplate
-# from docx.shared import Cm, Mm, Pt, Inches
-# from docx.enum.section import WD_ORIENT
-# from docx.enum.text import WD_LINE_SPACING
-# from docx.enum.style import WD_STYLE_TYPE
 from os import path
 import django.db as db
 import sys
@@ -169,7 +164,11 @@ def AjaxSendPayslipM1(request):
 			is_error = True			
 		else:
 			is_error = False
-			message = "ระบบส่ง " + "<span class='text-success'><b>Payslip " + str(selected_period_name) + "</b></span> ไปที่อีเมล์แล้ว กรุณาตรวจสอบอินบอกซ์อีกครั้ง"
+			message = "ระบบส่ง " + "<span class='text-success'><b>Payslip " + str(selected_period_name) + "</b></span> ไว้ในเมล์บ็อกซ์ของคุณแล้ว<br><br>"
+			message += "<b>เทคนิคป้องกันข้อมูลส่วนตัว</b><br>"
+			message += "1. เปลี่ยนพาสเวิร์ดบ่อยๆ<br>"
+			message += "2. ตั้งพาสเวิร์ดให้เดายาก<br>"
+			message += "3. เครื่องส่วนตัวใช้ส่วนตัว<br>"
 
 		# Send Email
 		# TODO
@@ -323,8 +322,6 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_p
 			count = count + 1
 
 
-	
-
 	if not dummy_data:
 		context = {
 			"emp_id": emp_id,
@@ -353,14 +350,14 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_p
 		}
 	else:
 		context = {
-			"emp_id": "000000",
+			"emp_id": "xxxxxx",
 			"title_th": "คุณ",
 			"emp_fname_th": "ทดสอบ",
 			"emp_lname_th": "ระบบ",
 			"emp_full_name": "ทดสอบ ระบบใหม่",
 			"dept_en": "Test Department",
-			"emp_dept": "0000",
-			"emp_acc_no": "000-0000000000",
+			"emp_dept": "xxxx",
+			"emp_acc_no": "xxx-xxxxxxxxxx",
 		    "paid_period": 0,
 		    "prd_year": prd_year,
 		    "prd_month": prd_month,
@@ -368,15 +365,15 @@ def generate_payslip_pdf_file_m1(emp_id, pay_slip_object, eps_prd_id, selected_p
 		    "pay_slip_object": pay_slip_object,
 		    "income_list": list(income_list),
 		    "deduct_list": list(deduct_list),
-			"eps_prd_in": 1,
-			"eps_prd_net": 1,
-			"eps_ysm_in": 1,
-			"eps_ysm_prv": 1,
-			"eps_prd_de": 1,
-			"eps_prd_tax": 1,
-			"eps_ysm_tax": 1,
-			"eps_ysm_soc": 1,
-		}		
+			"eps_prd_in": 1.00,
+			"eps_prd_net": 1.00,
+			"eps_ysm_in": 1.00,
+			"eps_ysm_prv": 1.00,
+			"eps_prd_de": 1.00,
+			"eps_prd_tax": 1.00,
+			"eps_ysm_tax": 1.00,
+			"eps_ysm_soc": 1.00,
+		}
 
 	from docxtpl import DocxTemplate
 	from docx.shared import Cm, Mm, Pt, Inches
@@ -480,8 +477,14 @@ def email_payslip(emp_full_name, send_to_email, file_name, prd_year, prd_month, 
 
 		html_message = "เรียน คุณ" + str(emp_full_name) + "<br><br>"
 		html_message += "ไฟล์นี้สามารถเปิดอ่านได้โดยใช้รหัส " + str(random_password) + "<br><br>"
-		html_message += "<b>เพื่อรักษาความเป็นส่วนตัวของข้อมูลของท่าน <span style='color:red;'>ห้ามส่งต่อหรือตอบกลับและควรลบอีเมล์นี้</span> หากใช้งานเสร็จแล้ว</b><br><br>"
-		html_message += "<i>This email was automatically sent from system. Please do not reply.</i>"
+		html_message += "<b>เพื่อรักษาความเป็นส่วนตัวของข้อมูลของท่าน <span style='color:red;'>ห้ามส่งต่อหรือตอบกลับและควรลบอีเมล์นี้</span> หากใช้งานเสร็จแล้ว</b><br><br><br>"
+
+		html_message += "<b>เทคนิคป้องกันข้อมูลส่วนตัว</b><br>"
+		html_message += "1. เปลี่ยนพาสเวิร์ดบ่อยๆ<br>"
+		html_message += "2. ตั้งพาสเวิร์ดให้เดายาก<br>"
+		html_message += "3. เครื่องส่วนตัวใช้ส่วนตัว<br>"
+
+		html_message += "<br><i>This email was automatically sent from system. Please do not reply.</i>"
 
 		if send_to_email != "":
 			msg = mail.EmailMessage(
@@ -491,6 +494,7 @@ def email_payslip(emp_full_name, send_to_email, file_name, prd_year, prd_month, 
 			    to = [send_to_email],			    
 			    connection = con,
 			)
+
 
 		msg.content_subtype = 'html'
 		msg.attach_file(path.abspath("media\\epayslipm1\\download\\" + str(file_name) + ".pdf"))
