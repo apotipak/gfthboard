@@ -1,11 +1,24 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.decorators import permission_required
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import ContractPolicy
+from .models import ContractPolicy, OutlookEmailActiveUserList
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from leave.models import LeaveEmployee
+from gfthboard.settings import MEDIA_ROOT
+from page.rules import *
+from django.db import connection
+from datetime import datetime
+import django.db as db
+from django.http import JsonResponse
+from django.utils import translation
+from django.utils.translation import ugettext as _
+from numpy import genfromtxt
+import csv
+from os import path
 
 
 class ContractPolicyListView(PermissionRequiredMixin, generic.ListView):
@@ -41,3 +54,97 @@ class ContractPolicyListView(PermissionRequiredMixin, generic.ListView):
 		current_login_user = self.request.user.username
 		return TclContractQty.objects.all()
 	"""
+
+
+@permission_required('system.add_outlookemailactiveuserlist', login_url='/accounts/login/')
+def ManageOutlookEmailActiveUserList(request):
+	dummy_data = False
+
+	user_language = getDefaultLanguage(request.user.username)
+	translation.activate(user_language)
+	render_template_name = 'system/outlook_active_user_list.html'
+
+	dattime_format = "%Y-%m-%d %H:%M:%S"
+
+	page_title = settings.PROJECT_NAME
+	db_server = settings.DATABASES['default']['HOST']
+	project_name = settings.PROJECT_NAME
+	project_version = settings.PROJECT_VERSION
+	today_date = getDateFormatDisplay(user_language)
+
+	available_period_obj = None
+	available_period_list = []
+	record = {}
+
+	# For temporarially used only
+	# Start
+	if user_language == "th":
+	    if request.user.username == "999999":
+	    	username_display = request.user.first_name
+	    else:
+	        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+	else:
+	    if request.user.username == "999999":
+	        username_display = request.user.first_name
+	    else:
+	        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+	# End
+
+	return render(request, render_template_name, {
+		'page_title': settings.PROJECT_NAME,
+		'today_date': today_date,
+		'project_version': settings.PROJECT_VERSION,
+		'db_server': settings.DATABASES['default']['HOST'],
+		'project_name': settings.PROJECT_NAME,
+		'user_language': user_language,
+		'username_display': username_display,
+		'available_period_obj': available_period_obj,
+		'available_period_list': list(available_period_list),
+	})
+
+
+
+@permission_required('system.add_outlookemailactiveuserlist', login_url='/accounts/login/')
+def ImportOutlokActiveUser(request):	
+	
+	csv_file = path.abspath("media\\system\\outlook.csv")
+
+	try:
+		with open(csv_file, newline='') as csvfile:
+			data = list(csv.reader(csvfile))
+		
+		OutlookEmailActiveUserList.objects.all().delete()
+		for item in data:
+			first_name = item[0]
+			last_name = item[1]
+			email = item[2]			
+			p = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email)
+			p.save()
+			
+		is_error = False
+		message = "Success"
+
+		'''
+		if len(data > 0):
+			for item in data:
+				first_name = item[0]
+				# last_name = item[1]
+				# email = item[2]
+
+			is_error = False
+			message = "Success"
+		else:		
+			is_error = True
+			message = "No record found"
+		'''
+	except Exception as e:
+		is_error = True
+		message = str(e)
+
+	response = JsonResponse(data={        
+		"is_error": is_error,
+		"message": message,
+	})
+
+	response.status_code = 200
+	return response
