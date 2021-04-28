@@ -133,6 +133,29 @@
           </div>    
           {% endif %}
 
+
+
+          {% if perms.system.add_outlookemailactiveuserlist %}
+          <div class="col-12 col-sm-6 col-md-6">
+            <div class="info-box mb-4">
+              <span class="info-box-icon" style="background-color:#a00d1b !important"><i class="fas fa-cogs text-white"></i></span>
+              <div class="info-box-content">
+                <div class="col-12">
+                  <h4><span class="info-box-text">System</span></h4>
+                  <div>
+                    <span style="font-size: 14px;">System configuration<br>
+                      <!--<i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a>--><br>
+                      <!--<i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a>-->
+                      <a href="{% url 'manage_outlook_email_active_user_list' %}" type="button" class="btn btn-outline-primary float-right">Open</a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+
           <!-- fix for small devices only -->
           <div class="clearfix hidden-md-up"></div>
 

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
+from django.utils.timezone import now
 
 
 class ComZone(models.Model):
@@ -30,3 +32,22 @@ class ContractPolicy(models.Model):
 
 	def __str__(self):
 		return ('%s - %s' % (self.username, self.zone.zone_en))
+
+
+class OutlookEmailActiveUserList(models.Model):
+    id = models.AutoField(primary_key=True)
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    email = models.CharField(max_length=100, blank=True, null=True)
+    description = models.CharField(max_length=100, blank=True, null=True)
+    created_date = models.DateTimeField(null=True, default=datetime.date.today)
+    created_by = models.CharField(max_length=50, blank=True, null=True, default='System')    
+
+    class Meta:
+        managed = True
+        db_table = 'system_outlook_email_active_user_list'
+        unique_together = [("email")]
+
+    def __str__(self):
+        return '{0}'.format(self.email)
+

@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import permission_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from leave.models import LeavePlan, LeaveHoliday, LeaveEmployee, LeaveType
 from .models import EmployeeInstance
+from system.models import OutlookEmailActiveUserList
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
@@ -53,6 +54,7 @@ current_year = datetime.now().year
 
 @login_required(login_url='/accounts/login/')
 def m1817_check_leave_request_day(request):
+
     result = {}
     total_day = 0
     total_hour = 0
@@ -84,6 +86,9 @@ def m1817_check_leave_request_day(request):
 
 @login_required(login_url='/accounts/login/')
 def m1247_check_leave_request_day(request):
+
+    return False
+
     result = {}
     total_day = 0
     total_hour = 0
@@ -220,8 +225,9 @@ def EmployeeNew(request):
 
             # EMPLOYEE SENDS LEAVE REQUEST EMAIL
             if request.user.username not in excluded_username:
-
-                if settings.TURN_SEND_MAIL_ON:                    
+                
+                if settings.TURN_SEND_MAIL_ON:
+                    print("Send email 1 - Yes")
                     employee = LeaveEmployee.objects.get(emp_id=request.user.username)
                     supervisor_id = employee.emp_spid
                     supervisor = User.objects.get(username=supervisor_id)
@@ -237,6 +243,23 @@ def EmployeeNew(request):
                     if len(leave_reason) <= 0:
                         leave_reason = _('There is no reason provided.')
 
+                    # TODO
+                    emp_type = 'M1'
+                    subject = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
+                    message = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
+                    html_message = 'เรียน คุณ <strong>' + supervisor_fullname + '</strong><br><br>'
+                    html_message += 'พนักงานแจ้งใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'                            
+                    html_message += 'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
+                    html_message += 'ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
+                    html_message += 'ลาวันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึงวันที่ <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br>'
+                    html_message += 'จำนวน: <strong>' + day_hour_display + '</strong><br>'
+                    html_message += 'เหตุผลการลา: <strong>' + leave_reason + '</strong><br><br>'
+                    html_message += 'กรุณา <a href="http://27.254.207.51:8080">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br>'
+                    html_message += '<br><br>--This email was sent from E-Leave System<br>'
+                    html_message += 'ref: ' + str(ref) + '<br>'
+                    is_error, error_messsage = send_custom_mail(emp_type, recipients, subject, message, html_message)
+
+                    '''
                     mail.send(                        
                         recipients, # To
                         settings.DEFAULT_FROM_EMAIL, # From
@@ -253,6 +276,9 @@ def EmployeeNew(request):
                             '<br><br>--This email was sent from E-Leave System<br>'
                             'ref: ' + str(ref) + '<br>'
                     )
+                    '''
+                else:
+                    print("Send email 1 - No")
 
             return HttpResponseRedirect('/leave/leave-history/?submitted=True')
               
@@ -488,6 +514,21 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
                 if settings.TURN_DUMMY_EMAIL_ON:
                     recipients = settings.DUMMY_EMAIL
 
+                # TODO
+                emp_type = 'M1'
+                subject = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา',
+                message = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา',
+                html_message = 'เรียน คุณ <strong>' + supervisor_fullname + '</strong><br><br>'                
+                html_message += 'มีการขอแจ้งยกเลิกวันลาตามรายละเอียดด้านล่าง<br><br>'                        
+                html_message += 'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
+                html_message += 'ประเภทการลา: <strong>' + str(leave_type_name) + '</strong><br>'
+                html_message += 'ลาวันที่: <strong>' + str(start_date.strftime("%d-%b-%Y %H:%M")) + '</strong> ถึงวันที่ <strong>' + str(end_date.strftime("%d-%b-%Y %H:%M")) + '</strong><br>'
+                html_message += 'จำนวน: <strong>' + day_hour_display + '</strong><br>'
+                html_message += '<br><br>--This email was sent from E-Leave System<br>'
+                html_message += 'ref: ' + str(ref) + '<br>'
+                is_error, error_messsage = send_custom_mail(emp_type, recipients, subject, message, html_message)
+
+                '''
                 mail.send(                        
                     recipients, # To
                     settings.DEFAULT_FROM_EMAIL, # From
@@ -501,7 +542,8 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
                         'จำนวน: <strong>' + day_hour_display + '</strong><br>'
                         '<br><br>--This email was sent from E-Leave System<br>'
                         'ref: ' + str(ref) + '<br>'
-                )            
+                )
+                '''
 
         return reverse_lazy('leave_history')
 
@@ -857,7 +899,6 @@ def EmployeeInstanceApprove(request, pk):
         employee_leave_instance.updated_date = datetime.now()
         employee_leave_instance.save()
 
-        # TODO: Send mail funciton
         if request.user.username not in excluded_username:
             if settings.TURN_SEND_MAIL_ON:
                 employee = User.objects.get(username=employee_leave_instance.emp_id)
@@ -884,7 +925,23 @@ def EmployeeInstanceApprove(request, pk):
                 if settings.TURN_DUMMY_EMAIL_ON:
                     recipients = settings.DUMMY_EMAIL
 
-                mail.send(                        
+                # TODO
+                emp_type = 'M1'
+                subject = 'E-Leave: แจ้งอนุมัติวันลา',
+                message = 'E-Leave: แจ้งอนุมัติวันลา',
+                html_message = 'เรียน คุณ <strong>' + employee_full_name + '</strong><br><br>'
+                html_message += "ผู้จัดการของท่านแจ้ง <strong>อนุมัติ</strong> การใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>"
+                html_message += "ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>"
+                html_message += "วันที่: <strong>' + start_date + '</strong> ถึง <strong>' + end_date + '</strong><br>"
+                html_message += "จำนวน: <strong>' + day_hour_display + '</strong><br>"
+                html_message += "สถานะ: <strong>อนุมัติ</strong><br><br>"
+                html_message += 'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://27.254.207.51:8080">ที่นี่</a><br>'
+                html_message += "<br><br>--This email was sent from E-Leave System<br>"
+                html_message += "ref: " + str(ref) + "<br>"
+                is_error, error_messsage = send_custom_mail(emp_type, recipients, subject, message, html_message)
+
+                '''
+                mail.send(
                     recipients, # To
                     settings.DEFAULT_FROM_EMAIL, # From
                     subject = 'E-Leave: แจ้งอนุมัติวันลา',
@@ -899,6 +956,7 @@ def EmployeeInstanceApprove(request, pk):
                         '<br><br>--This email was sent from E-Leave System<br>'
                         'ref: ' + str(ref) + '<br>'
                 )
+                '''
 
         return HttpResponseRedirect(reverse('leave_approve_pending_list'))
     
@@ -965,8 +1023,9 @@ def EmployeeInstanceReject(request, pk):
 
         if request.user.username not in excluded_username:
 
-            # TODO: Send mail funciton
+            print("SEND MAIL IS ON : ?")            
             if settings.TURN_SEND_MAIL_ON:
+                print("MAIL IS ON : TRUE")
                 employee = User.objects.get(username=employee_leave_instance.emp_id)
                 recipients = [employee.email]
 
@@ -987,10 +1046,30 @@ def EmployeeInstanceReject(request, pk):
                     day_hour_display += str(day) + ' วัน '
                 if hour > 0:
                     day_hour_display += str(hour) + ' ช.ม.'
-                                        
+                
+
+                print("recipients : ", recipients)
                 if settings.TURN_DUMMY_EMAIL_ON:
                     recipients = settings.DUMMY_EMAIL
+                print("recipients : ", recipients)
 
+                # TODO
+                emp_type = 'M1'
+                subject = 'E-Leave: แจ้งไม่อนุมัติวันลา',
+                message = 'E-Leave: แจ้งไม่อนุมัติวันลา',
+                html_message = 'เรียน คุณ <strong>' + employee_full_name + '</strong><br><br>'
+                html_message +='ผู้จัดการของท่านแจ้ง <strong>ไม่อนุมัติ</strong> การใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
+                html_message +='ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
+                html_message +='วันที่: <strong>' + start_date + '</strong> ถึง <strong>' + end_date + '</strong><br>'
+                html_message +='จำนวน: <strong>' + day_hour_display + '</strong><br>'
+                html_message +='สถานะ: <strong>ไม่อนุมัติ</strong><br>'
+                html_message +='เหตุผล: <strong>' + comment +'</strong><br><br>'
+                html_message +='สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://27.254.207.51:8080">ที่นี่</a><br><br><br>'                        
+                html_message +='--This email was sent from E-Leave System<br>'
+                html_message +='ref: ' + str(ref) + '<br>'
+                is_error, error_messsage = send_custom_mail(emp_type, recipients, subject, message, html_message)
+
+                '''
                 mail.send(
                     recipients, # To
                     settings.DEFAULT_FROM_EMAIL, # From
@@ -1007,6 +1086,9 @@ def EmployeeInstanceReject(request, pk):
                         '--This email was sent from E-Leave System<br>'
                         'ref: ' + str(ref) + '<br>'
                 )
+                '''
+            else:
+                print("SEND MAIL IS ON : FALSE")
 
         return HttpResponseRedirect(reverse('leave_approve_pending_list'))
 
@@ -1348,3 +1430,61 @@ def get_pdf_file(request, pk):
     response = FileResponse(document_data)
     return response
 
+
+
+def send_custom_mail(emp_type, recipients, subject, message, html_message):
+
+    send_from = settings.DEFAULT_FROM_EMAIL
+    send_to = recipients
+    subject = subject
+    message = message
+    html_message = html_message
+
+    print("Send mail : ", subject)
+    print("Send from : ", send_from)
+    print("Send to : ", recipients)
+    print("Subject : ", subject)
+    print("Message : ", message)
+
+
+    if is_email_existed(recipients):
+        print("DEBUG : " + str(recipients) + " is existed.")
+        try:
+            '''
+            mail.send(                        
+                send_to,
+                send_from,
+                subject = subject,
+                message = message,
+                html_message = html_message
+            )
+            '''
+            is_error = False
+            error_message = "Send mail success."
+        except Exception as e:
+            is_error = True
+            error_message = str(e)
+    else:
+        print("DEBUG : " + str(recipients) + " is not existed.")
+        is_error = True
+        error_message = str(recipients) + " is not existed."
+
+    return is_error, error_message
+
+
+def is_email_existed(email):
+    is_existed = False
+
+    try:
+        email_object = OutlookEmailActiveUserList.objects.filter(email=email[0]).get()
+    except OutlookEmailActiveUserList.DoesNotExist:
+        email_object = None
+
+    if email_object is not None:
+        print(email_object)
+        
+        is_existed = True
+    else:
+        is_existed = False
+
+    return is_existed
