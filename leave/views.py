@@ -46,7 +46,7 @@ from django.db import connection
 from django.http import FileResponse
 from base64 import b64encode
 # from colorama import init
-from termcolor import colored
+# from termcolor import colored
 
 
 # excluded_username = {'900590','580816','900630'}
