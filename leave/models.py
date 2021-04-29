@@ -184,6 +184,7 @@ class EmployeeInstance(models.Model):
         blank=True,
         default='p',
         help_text='Leave Request Status')
+    emp_type = models.CharField(max_length=2, blank=True, null=True)
     
     class Meta:
         #ordering = ['-created_date', '-start_date']
