@@ -15,7 +15,7 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.utils import translation
 from django.utils.translation import ugettext as _
-from numpy import genfromtxt
+# from numpy import genfromtxt
 from decimal import Decimal
 from os import path
 import django.db as db
