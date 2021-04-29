@@ -12,13 +12,14 @@ from gfthboard.settings import MEDIA_ROOT
 from page.rules import *
 from django.db import connection
 from datetime import datetime
-import django.db as db
 from django.http import JsonResponse
 from django.utils import translation
 from django.utils.translation import ugettext as _
 from numpy import genfromtxt
-import csv
+from decimal import Decimal
 from os import path
+import django.db as db
+import csv
 
 
 class ContractPolicyListView(PermissionRequiredMixin, generic.ListView):
@@ -110,33 +111,31 @@ def ImportOutlokActiveUser(request):
 	csv_file = path.abspath("media\\system\\outlook.csv")
 
 	try:
-		with open(csv_file, newline='') as csvfile:
-			data = list(csv.reader(csvfile))
+		with open(csv_file, newline='', encoding='utf-8') as csvfile:
+			reader = csv.reader(csvfile)
+			next(reader)
+			data = list(reader)
 		
 		OutlookEmailActiveUserList.objects.all().delete()
 		for item in data:
-			first_name = item[0]
-			last_name = item[1]
-			email = item[2]			
-			p = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email)
+
+			if item[29] != "":
+				print(item[29])
+				emp_id = Decimal(item[29])
+			else:
+				print("blank")
+				emp_id = None
+
+			first_name = item[8]
+			last_name = item[10]
+			email = item[31]
+
+			p = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email, emp_id=emp_id)			
 			p.save()
-			
+		
 		is_error = False
 		message = "Success"
 
-		'''
-		if len(data > 0):
-			for item in data:
-				first_name = item[0]
-				# last_name = item[1]
-				# email = item[2]
-
-			is_error = False
-			message = "Success"
-		else:		
-			is_error = True
-			message = "No record found"
-		'''
 	except Exception as e:
 		is_error = True
 		message = str(e)

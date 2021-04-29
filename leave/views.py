@@ -45,11 +45,27 @@ import django.db as db
 from django.db import connection
 from django.http import FileResponse
 from base64 import b64encode
+from colorama import init
+from termcolor import colored
 
 
 # excluded_username = {'900590','580816','900630'}
 excluded_username = {}
 current_year = datetime.now().year
+
+
+'''
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+'''
 
 
 @login_required(login_url='/accounts/login/')
@@ -86,8 +102,6 @@ def m1817_check_leave_request_day(request):
 
 @login_required(login_url='/accounts/login/')
 def m1247_check_leave_request_day(request):
-
-    return False
 
     result = {}
     total_day = 0
@@ -257,6 +271,7 @@ def EmployeeNew(request):
                     html_message += 'กรุณา <a href="http://27.254.207.51:8080">ล็อคอินที่นี่</a> เพื่อดำเนินการพิจารณาต่อไป<br>'
                     html_message += '<br><br>--This email was sent from E-Leave System<br>'
                     html_message += 'ref: ' + str(ref) + '<br>'
+
                     is_error, error_messsage = send_custom_mail(emp_type, recipients, subject, message, html_message)
 
                     '''
@@ -1447,10 +1462,13 @@ def send_custom_mail(emp_type, recipients, subject, message, html_message):
     print("Message : ", message)
 
 
-    if is_email_existed(recipients):
-        print("DEBUG : " + str(recipients) + " is existed.")
+    # init()
+    if is_email_existed(recipients):    
+        # print("DEBUG : " + str(recipients) + " is existed.")
+        # print(colored(str(recipients) + " is existed.", 'green'))
+
         try:
-            '''
+            
             mail.send(                        
                 send_to,
                 send_from,
@@ -1458,14 +1476,16 @@ def send_custom_mail(emp_type, recipients, subject, message, html_message):
                 message = message,
                 html_message = html_message
             )
-            '''
+
             is_error = False
             error_message = "Send mail success."
         except Exception as e:
             is_error = True
             error_message = str(e)
     else:
-        print("DEBUG : " + str(recipients) + " is not existed.")
+        # print("DEBUG : " + str(recipients) + " is not existed.")
+        # print(colored(str(recipients) + " is not existed.", 'red'))
+
         is_error = True
         error_message = str(recipients) + " is not existed."
 
@@ -1481,8 +1501,6 @@ def is_email_existed(email):
         email_object = None
 
     if email_object is not None:
-        print(email_object)
-        
         is_existed = True
     else:
         is_existed = False
