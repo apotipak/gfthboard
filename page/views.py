@@ -259,9 +259,10 @@ def StaffProfile(request):
         emp_id = request.user.username
         first_name = request.user.first_name
         last_name = request.user.last_name
+        email = request.user.email
         
-        # email_object = OutlookEmailActiveUserList.objects.filter(emp_id=emp_id).get()
-        email_object = OutlookEmailActiveUserList.objects.filter(first_name=first_name).filter(last_name=last_name).first()
+        # email_object = OutlookEmailActiveUserList.objects.filter(first_name=first_name).filter(last_name=last_name).first()
+        email_object = OutlookEmailActiveUserList.objects.filter(email=email).first()
 
     except db.OperationalError as e:
         message = str(e)
