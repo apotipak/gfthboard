@@ -46,7 +46,8 @@ def ViewM3Report(request):
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status='p' "
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
-	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') "
+	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
+	sql += "l.emp_type='M3' "
 	sql += "order by created_date desc;"
 	print("SQL:", sql)
 
@@ -136,7 +137,8 @@ def ViewM3LeaveReport(request):
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status in ('a','C','p') "
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
-	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') "
+	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
+	sql += "l.emp_type='M3' "
 	sql += "order by created_date desc;"
 	print("SQL:", sql)
 
@@ -234,7 +236,8 @@ def ViewM5Report(request):
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status='p' "
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
-	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') "
+	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
+	sql += "l.emp_type='M5' "
 	sql += "order by created_date desc;"
 	print("SQL:", sql)
 
@@ -324,7 +327,8 @@ def ViewM5LeaveReport(request):
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status in ('a','C','p') "
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
-	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') "
+	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
+	sql += "l.emp_type='M5' "
 	sql += "order by created_date desc;"
 	print("SQL:", sql)
 
@@ -422,7 +426,8 @@ def ViewM1Report(request):
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status='p' "
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
-	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') "
+	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
+	sql += "l.emp_type='M1' "
 	sql += "order by created_date desc;"
 	print("SQL:", sql)
 
@@ -513,7 +518,8 @@ def ViewM1LeaveReport(request):
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status in ('a','C','p') "
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
-	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') "
+	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
+	sql += "l.emp_type='M1' "
 	sql += "order by created_date desc;"
 	print("SQL:", sql)
 
