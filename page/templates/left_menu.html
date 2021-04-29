@@ -47,7 +47,7 @@
           {% endif %}
 
 
-          <!-- Employee M1 -->
+          <!-- E-Payslip M1 -->
           {% if request.path|slice:":14" == '/e-payslip-m1/' %}
             {% if perms.epayslipm1.can_access_e_payslip_m1 %}
               <li class="nav-item has-treeview active menu-open">
@@ -213,10 +213,40 @@
                     {% else %}
                     <a href="{% url 'view_m1_leave_report' %}" class="nav-link">
                     {% endif %}
-                      &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>ข้อมูลการลา M1</p>
+                      &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>ข้อมูลการลา M-1</p>
+                    </a>
+                  </li>
+                  {% endif %}
+
+
+                  {% if perms.eleavereport.can_view_m3_leave_report %}
+                  <li class="nav-item">                    
+                    {% if request.path == '/eleave-report/view-m3-leave-report' %}
+                    <a href="{% url 'view_m3_leave_report' %}" class="nav-link active">
+                    {% else %}
+                    <a href="{% url 'view_m3_leave_report' %}" class="nav-link">
+                    {% endif %}
+                      &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>ข้อมูลการลา M-3</p>
                     </a>
                   </li>                  
-                  {% endif %}                
+                  {% endif %}
+
+
+                  {% if perms.eleavereport.can_view_m5_leave_report %}
+                  <li class="nav-item">                    
+                    {% if request.path == '/eleave-report/view-m5-leave-report' %}
+                    <a href="{% url 'view_m5_leave_report' %}" class="nav-link active">
+                    {% else %}
+                    <a href="{% url 'view_m5_leave_report' %}" class="nav-link">
+                    {% endif %}
+                      &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>ข้อมูลการลา M-5</p>
+                    </a>
+                  </li>                  
+                  {% endif %}
+
+
+
+
                 </ul>
               </li>
               {% endif %}
@@ -342,9 +372,36 @@
                     {% else %}
                     <a href="{% url 'view_m1_leave_report' %}" class="nav-link">
                     {% endif %}
-                    &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>ข้อมูลการลา M1</p>
+                    &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>ข้อมูลการลา M-1</p>
+                    </a>
+                  </li>
+
+                  {% if perms.eleavereport.can_view_m3_leave_report %}
+                  <li class="nav-item">                    
+                    {% if request.path == '/eleave-report/view-m3-leave-report' %}
+                    <a href="{% url 'view_m3_leave_report' %}" class="nav-link active">
+                    {% else %}
+                    <a href="{% url 'view_m3_leave_report' %}" class="nav-link">
+                    {% endif %}
+                      &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>ข้อมูลการลา M-3</p>
                     </a>
                   </li>                  
+                  {% endif %}
+
+
+                  {% if perms.eleavereport.can_view_m5_leave_report %}
+                  <li class="nav-item">                    
+                    {% if request.path == '/eleave-report/view-m5-leave-report' %}
+                    <a href="{% url 'view_m5_leave_report' %}" class="nav-link active">
+                    {% else %}
+                    <a href="{% url 'view_m5_leave_report' %}" class="nav-link">
+                    {% endif %}
+                      &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>ข้อมูลการลา M-5</p>
+                    </a>
+                  </li>                  
+                  {% endif %}
+
+
                   {% endif %}
                 </ul>
               </li>
@@ -641,7 +698,35 @@
                     {% endif %}
                       &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>ข้อมูลการลา M1</p>
                     </a>
+                  </li>
+
+
+                  {% if perms.eleavereport.can_view_m3_leave_report %}
+                  <li class="nav-item">                    
+                    {% if request.path == '/eleave-report/view-m3-leave-report' %}
+                    <a href="{% url 'view_m3_leave_report' %}" class="nav-link active">
+                    {% else %}
+                    <a href="{% url 'view_m3_leave_report' %}" class="nav-link">
+                    {% endif %}
+                      &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>ข้อมูลการลา M-3</p>
+                    </a>
                   </li>                  
+                  {% endif %}
+
+
+                  {% if perms.eleavereport.can_view_m5_leave_report %}
+                  <li class="nav-item">                    
+                    {% if request.path == '/eleave-report/view-m5-leave-report' %}
+                    <a href="{% url 'view_m5_leave_report' %}" class="nav-link active">
+                    {% else %}
+                    <a href="{% url 'view_m5_leave_report' %}" class="nav-link">
+                    {% endif %}
+                      &nbsp;&nbsp;<i class="fas fa-poll-h"></i>&nbsp;&nbsp;&nbsp;<p>ข้อมูลการลา M-5</p>
+                    </a>
+                  </li>                  
+                  {% endif %}
+
+
                   {% endif %}
                 </ul>
               </li>
