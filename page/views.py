@@ -4,6 +4,7 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from leave.models import LeaveEmployee
 from page.models import UserProfile, ComDivision
+from system.models import OutlookEmailActiveUserList
 from django.contrib.auth.models import User
 from .forms import UserForm, LanguageForm, ViewAllStaffForm
 from django.http import HttpResponse
@@ -19,6 +20,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from django.core import serializers
+import django.db as db
 import json
 import os
 
@@ -249,6 +251,31 @@ def StaffProfile(request):
 
     TeamMemberList = LeaveEmployee.TeamMemberList(request)
 
+    # Get email
+    email = ""
+    email_object = None
+    try:
+
+        emp_id = request.user.username
+        first_name = request.user.first_name
+        last_name = request.user.last_name
+        
+        # email_object = OutlookEmailActiveUserList.objects.filter(emp_id=emp_id).get()
+        email_object = OutlookEmailActiveUserList.objects.filter(first_name=first_name).filter(last_name=last_name).first()
+
+    except db.OperationalError as e:
+        message = str(e)
+    except db.Error as e:
+        message = str(e)
+    except Exception as e:                
+        message = str(e)
+    if email_object is not None:
+        print("a")
+        email = email_object.email
+    else:
+        print("b")
+    print("EMAIL : ", email)
+
     # Check leave approval right
     if checkLeaveRequestApproval(request.user.username):
         able_to_approve_leave_request = True
@@ -325,6 +352,7 @@ def StaffProfile(request):
             'form': form,
             'dept': department_name_en,
             'emp_name': first_name,
+            'email': email,
         }        
     else:
         form = ViewAllStaffForm(user=request.user)
@@ -389,6 +417,7 @@ def StaffProfile(request):
             'form': form,
             'dept': department_name_en,
             'emp_name': first_name,
+            'email': email,
         }
 
     return render(request, 'page/staff_profile.html', context)

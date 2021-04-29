@@ -36,12 +36,13 @@ class ContractPolicy(models.Model):
 
 class OutlookEmailActiveUserList(models.Model):
     id = models.AutoField(primary_key=True)
+    emp_id = models.DecimalField(max_digits=7, decimal_places=0,blank=True, null=True)
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
     email = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
     created_date = models.DateTimeField(null=True, default=datetime.date.today)
-    created_by = models.CharField(max_length=50, blank=True, null=True, default='System')    
+    created_by = models.CharField(max_length=50, blank=True, null=True, default='System')
 
     class Meta:
         managed = True

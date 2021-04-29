@@ -36,7 +36,7 @@
         <div class="row">
 
           <!--<div class="col-lg-12">-->
-          <div class="col-md-3">
+          <div class="col-md-4">
 
             <!-- Profile Image -->
             {% if EmployeeInstance %}
@@ -47,9 +47,25 @@
                       <!--<img class="profile-user-img img-fluid img-circle" src="{% static 'img/profile-128x128.png' %}" alt="User profile picture">-->
                     </div>
                     {% if user_language == "th" %}
-                    <h3 class="profile-username text-center">{{ employee.emp_fname_th }} {{ employee.emp_lname_th }}</h3>
-                    <p class="text-muted text-center">{{ employee.pos_en }}</p>
+                    <h3 class="profile-username text-center">
+                    {{ employee.emp_fname_th }} {{ employee.emp_lname_th }}<br>
+                    <small>{{ employee.emp_fname_en }} {{ employee.emp_lname_en }}</small><br>
+
+                    </h3>
+
+                    <!--<p class="text-muted text-center">{{ employee.pos_en }}</p>-->
+
                     <ul class="list-group list-group-unbordered mb-3">
+
+                      {% if email %}
+                      <li class="list-group-item">
+                        <b><i class="far fa-envelope"></i></b> <a class="float-right">{{ email }}</a>
+                      </li>
+                      {% endif %}
+
+                      <li class="list-group-item">
+                        <b>ตำแหน่ง</b> <a class="float-right">{{ employee.pos_th }}</a>
+                      </li>                      
                       <li class="list-group-item">
                         <b>{% trans 'ID' %}</b> <a class="float-right">{{ employee.emp_id }}</a>
                       </li>                        
@@ -59,11 +75,24 @@
                       <li class="list-group-item">
                         <b>{% trans 'Department' %}</b> <a class="float-right">{{ employee.div_th }}</a>
                       </li>
+                      
+
                     </ul>
                     {% else %}
                     <h3 class="profile-username text-center">{{ employee.emp_fname_en }} {{ employee.emp_lname_en }}</h3>
-                    <p class="text-muted text-center">{{ employee.pos_en }}</p>
+                    
+                    <!--<p class="text-muted text-center">{{ employee.pos_en }}</p>-->
+
                     <ul class="list-group list-group-unbordered mb-3">
+                      {% if email %}
+                      <li class="list-group-item">
+                        <b><i class="far fa-envelope"></i></b> <a class="float-right">{{ email }}</a>
+                      </li>
+                      {% endif %}
+                      
+                      <li class="list-group-item">
+                        <b>{% trans 'POSITION' %}</b> <a class="float-right">{{ employee.pos_en }}</a>
+                      </li>                                              
                       <li class="list-group-item">
                         <b>{% trans 'ID' %}</b> <a class="float-right">{{ employee.emp_id }}</a>
                       </li>                        
@@ -81,7 +110,7 @@
                 {% endfor %}
             {% else %}
                 <div class="alert alert-warning" role="alert">
-                    <i class="fa fa-info-circle"></i>  ไม่พบข้อมูลในระบบ กรุณาสอบถามข้อมูลจากเจ้าหน้าที่ฝ่ายบุคคล
+                    <i class="fa fa-info-circle"></i>  ไม่พบข้อมูลในระบบ กรุณาตรวจสอบข้อมูลจากเจ้าหน้าที่ฝ่ายบุคคล
                 </div>            
             {% endif %}
             <p>&nbsp;</p>            
@@ -90,14 +119,16 @@
 
 
 
-          <div class="col-md-9">
+          <div class="col-md-8">
             <div class="card">
 
               <div class="card-header p-2">
                 <ul class="nav nav-pills" id="profiletab">
-                  <li class="nav-item"><a class="nav-link active" href="#mymanager" data-toggle="tab"><span style="">{% trans 'My Manager' %}</span></a></li>
+                  <!--<li class="nav-item"><a class="nav-link active" href="#mymanager" data-toggle="tab"><span style="">{% trans 'My Manager' %}</span></a></li>-->
+                  <li class="nav-item"><a class="nav-link active" href="#mymanager" data-toggle="tab"><span style="">My Manager</span></a></li>
                   {% if able_to_approve_leave_request %}
-                  <li class="nav-item"><a class="nav-link" href="#myteam" data-toggle="tab">{% trans 'My Team' %}</a></li>
+                  <!--<li class="nav-item"><a class="nav-link" href="#myteam" data-toggle="tab">{% trans 'My Team' %}</a></li>-->
+                  <li class="nav-item"><a class="nav-link" href="#myteam" data-toggle="tab">My Team</a></li>
                   {% endif %}
                   
                   {% if perms.page.can_view_all_employees %}
@@ -130,12 +161,15 @@
                                 <tr>
                                     {% if user_language == "th" %}
                                     <td>                                      
-                                      {{member.emp_fname_th}} {{member.emp_lname_th}}                                      
+                                      {{member.emp_fname_th}} {{member.emp_lname_th}}
                                     </td>
                                     <td>{{member.div_th}}</td>
                                     <td>{{member.pos_th}}</td>
                                     {% else %}
-                                    <td>{{member.emp_fname_en}} {{member.emp_lname_en}}</td>
+                                    <td>
+                                      {{member.emp_fname_en}} {{member.emp_lname_en}}
+                                    </td>
+
                                     <td>{{member.div_en}}</td>
                                     <td>{{member.pos_en}}</td>
                                     {% endif %}
