@@ -242,9 +242,10 @@ def EmployeeNew(request):
             except db.Error as e:
                 error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
             finally:
-                cursor.close()            
+                cursor.close()
+
             print("emp_type = ", leave_employee_object[0])
-            #employee.emp_type = emp_type
+            employee.emp_type = leave_employee_object[0]
 
             employee.save()
             ref = employee.id 
@@ -1473,12 +1474,11 @@ def send_custom_mail(emp_type, recipients, subject, message, html_message):
     message = message
     html_message = html_message
 
-    print("Send mail : ", subject)
-    print("Send from : ", send_from)
-    print("Send to : ", recipients)
-    print("Subject : ", subject)
-    print("Message : ", message)
-
+    # print("Send mail : ", subject)
+    # print("Send from : ", send_from)
+    # print("Send to : ", recipients)
+    # print("Subject : ", subject)
+    # print("Message : ", message)
 
     # init()
     if is_email_existed(recipients):    
@@ -1492,7 +1492,7 @@ def send_custom_mail(emp_type, recipients, subject, message, html_message):
                 subject = subject,
                 message = message,
                 html_message = html_message
-            )            
+            )
             is_error = False
             error_message = "Send mail success."
         except Exception as e:
