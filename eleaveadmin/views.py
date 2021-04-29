@@ -14,7 +14,7 @@ from django.db import connection
 from django.db.models import Sum
 from page.rules import *
 from django.utils import timezone
-from leave.models import LeaveEmployee
+# from leave.models import LeaveEmployee
 from django.http import JsonResponse
 from .forms import EmployeeM1247Form
 from .rules import *
@@ -93,6 +93,23 @@ def AjaxCreateM1LeaveRequest(request):
 			employee.lve_act = grand_total_hours // 8
 			employee.lve_act_hr = grand_total_hours % 8
 			employee.status = 'a'
+
+			# Get Employee Type - emp_type
+			emp_type = ""
+			sql = "select emp_type from leave_employee where emp_id=" + str(request.user.username) + ";"
+			try:                
+			    cursor = connection.cursor()
+			    cursor.execute(sql)
+			    leave_employee_object = cursor.fetchone()
+			    error_message = "No error"
+			except db.OperationalError as e:
+			    error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)      
+			except db.Error as e:
+			    error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+			finally:
+			    cursor.close()
+			print("emp_type = ", leave_employee_object[0])
+			employee.emp_type = leave_employee_object[0]
 
 			employee.save()
 			ref = employee.id 
@@ -304,6 +321,24 @@ def CreateM1LeaveRequest(request):
             employee.lve_act_hr = grand_total_hours % 8
             employee.status = 'a'
         	
+            # Get Employee Type - emp_type
+            emp_type = ""
+            sql = "select emp_type from leave_employee where emp_id=" + str(request.user.username) + ";"
+            try:                
+                cursor = connection.cursor()
+                cursor.execute(sql)
+                leave_employee_object = cursor.fetchone()
+                error_message = "No error"
+            except db.OperationalError as e:
+                error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)      
+            except db.Error as e:
+                error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+            finally:
+                cursor.close()
+
+            print("emp_type = ", leave_employee_object[0])
+            employee.emp_type = leave_employee_object[0]
+
             employee.save()
             ref = employee.id 
 
