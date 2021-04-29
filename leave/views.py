@@ -191,7 +191,7 @@ def EmployeeNew(request):
             leave_reason = form.cleaned_data['leave_reason']
             username = request.user.username
             fullname = request.user.first_name + " " + request.user.last_name
-            created_by = request.user.username                        
+            created_by = request.user.username                    
 
             employee = form.save(commit=False)
 
@@ -228,6 +228,24 @@ def EmployeeNew(request):
             employee.lve_act = grand_total_hours // 8
             employee.lve_act_hr = grand_total_hours % 8
         
+
+            # Get Employee Type - emp_type
+            emp_type = ""
+            sql = "select emp_type from leave_employee where emp_id=" + str(request.user.username) + ";"
+            try:                
+                cursor = connection.cursor()
+                cursor.execute(sql)
+                leave_employee_object = cursor.fetchone()
+                error_message = "No error"
+            except db.OperationalError as e:
+                error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)      
+            except db.Error as e:
+                error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+            finally:
+                cursor.close()            
+            print("emp_type = ", leave_employee_object[0])
+            #employee.emp_type = emp_type
+
             employee.save()
             ref = employee.id 
 
@@ -1468,16 +1486,13 @@ def send_custom_mail(emp_type, recipients, subject, message, html_message):
         # print(colored(str(recipients) + " is existed.", 'green'))
 
         try:
-            
-            '''
             mail.send(                        
                 send_to,
                 send_from,
                 subject = subject,
                 message = message,
                 html_message = html_message
-            )
-            '''
+            )            
             is_error = False
             error_message = "Send mail success."
         except Exception as e:
