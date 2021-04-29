@@ -260,7 +260,7 @@ def StaffProfile(request):
         first_name = request.user.first_name
         last_name = request.user.last_name
         email = request.user.email
-        
+        # print("--- a --- : ", email)
         # email_object = OutlookEmailActiveUserList.objects.filter(first_name=first_name).filter(last_name=last_name).first()
         email_object = OutlookEmailActiveUserList.objects.filter(email=email).first()
 
@@ -271,11 +271,13 @@ def StaffProfile(request):
     except Exception as e:                
         message = str(e)
     if email_object is not None:
-        print("a")
+        # print("a")
         email = email_object.email
     else:
-        print("b")
-    print("EMAIL : ", email)
+        email = ""
+        # print("b")
+    
+    # print("--- b --- : ", email)
 
     # Check leave approval right
     if checkLeaveRequestApproval(request.user.username):
