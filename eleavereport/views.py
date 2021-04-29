@@ -16,7 +16,6 @@ from leave.models import LeaveEmployee
 from page.rules import *
 
 
-
 @permission_required('eleavereport.can_view_m3_report', login_url='/accounts/login/')
 def ViewM3Report(request):
 	user_language = getDefaultLanguage(request.user.username)
@@ -192,7 +191,7 @@ def ViewM3LeaveReport(request):
 
 	today_date = getDateFormatDisplay(user_language)
 	
-	return render(request, 'eleavereport/view_m1_leave_report.html', {
+	return render(request, 'eleavereport/view_m3_leave_report.html', {
 	    'page_title': settings.PROJECT_NAME,
 	    'today_date': today_date,
 	    'project_version': settings.PROJECT_VERSION,
@@ -380,7 +379,7 @@ def ViewM5LeaveReport(request):
 
 	today_date = getDateFormatDisplay(user_language)
 	
-	return render(request, 'eleavereport/view_m1_leave_report.html', {
+	return render(request, 'eleavereport/view_m5_leave_report.html', {
 	    'page_title': settings.PROJECT_NAME,
 	    'today_date': today_date,
 	    'project_version': settings.PROJECT_VERSION,
@@ -485,6 +484,7 @@ def ViewM1Report(request):
 
 @permission_required('eleavereport.can_view_m1_leave_report', login_url='/accounts/login/')
 def ViewM1LeaveReport(request):
+	print("DEBUG")
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)	
 	page_title = settings.PROJECT_NAME
