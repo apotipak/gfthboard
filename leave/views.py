@@ -45,7 +45,7 @@ import django.db as db
 from django.db import connection
 from django.http import FileResponse
 from base64 import b64encode
-from colorama import init
+# from colorama import init
 from termcolor import colored
 
 
@@ -1469,6 +1469,7 @@ def send_custom_mail(emp_type, recipients, subject, message, html_message):
 
         try:
             
+            '''
             mail.send(                        
                 send_to,
                 send_from,
@@ -1476,7 +1477,7 @@ def send_custom_mail(emp_type, recipients, subject, message, html_message):
                 message = message,
                 html_message = html_message
             )
-
+            '''
             is_error = False
             error_message = "Send mail success."
         except Exception as e:
