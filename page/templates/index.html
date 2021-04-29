@@ -5,10 +5,10 @@
 {% block content %}
       <div class="container">
 
-        <div class="row justify-content-md-center">
-
+        <div class="row justify-content-md">
+      
           {% if perms.leave.view_leaveemployee %}
-          <div class="col-12 col-xs-12 col-sm-12 col-md-6">
+          <div class="col-6">
             <div class="info-box mb-4">
               <span class="info-box-icon" style="background-color:#0099ff !important"><i class="fas fa-laptop-medical text-white"></i></span>
               <div class="info-box-content">
@@ -29,7 +29,7 @@
 
           <!-- E-Payslip M1 -->
           {% if perms.epayslipm1.can_access_e_payslip_m1 %}
-          <div class="col-12 col-sm-6 col-md-6">
+          <div class="col-6">
             <div class="info-box mb-4">
               <span class="info-box-icon" style="background-color:#3c8dbc !important"><i class="fas fa-file-invoice-dollar text-white"></i></span>
               <div class="info-box-content">
@@ -134,25 +134,28 @@
           {% endif %}
 
 
-
           {% if perms.system.add_outlookemailactiveuserlist %}
-          <div class="col-12 col-sm-6 col-md-6">
-            <div class="info-box mb-4">
-              <span class="info-box-icon" style="background-color:#a00d1b !important"><i class="fas fa-cogs text-white"></i></span>
-              <div class="info-box-content">
-                <div class="col-12">
-                  <h4><span class="info-box-text">System</span></h4>
-                  <div>
-                    <span style="font-size: 14px;">System configuration<br>
-                      <!--<i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a>--><br>
-                      <!--<i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a>-->
-                      <a href="{% url 'manage_outlook_email_active_user_list' %}" type="button" class="btn btn-outline-primary float-right">Open</a>
-                    </span>
+          
+
+            <div class="col-6 col-sm-6 col-md-6">
+              <div class="info-box mb-4">
+                <span class="info-box-icon" style="background-color:#a00d1b !important"><i class="fas fa-cogs text-white"></i></span>
+                <div class="info-box-content">
+                  <div class="col-12">
+                    <h4><span class="info-box-text">System</span></h4>
+                    <div>
+                      <span style="font-size: 14px;">System configuration<br>
+                        <!--<i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a>--><br>
+                        <!--<i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a>-->
+                        <a href="{% url 'manage_outlook_email_active_user_list' %}" type="button" class="btn btn-outline-primary float-right">Open</a>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+
+          
           {% endif %}
 
 
