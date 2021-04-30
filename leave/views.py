@@ -278,8 +278,8 @@ def EmployeeNew(request):
 
                     # TODO
                     emp_type = 'M1'
-                    subject = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
-                    message = 'E-Leave: ' + employee_full_name + ' - ขออนุมัติวันลา',
+                    subject = 'E-Leave: ' + str(employee_full_name) + ' - ขออนุมัติวันลา'
+                    message = 'E-Leave: ' + str(employee_full_name) + ' - ขออนุมัติวันลา'
                     html_message = 'เรียน คุณ <strong>' + supervisor_fullname + '</strong><br><br>'
                     html_message += 'พนักงานแจ้งใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'                            
                     html_message += 'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
@@ -550,8 +550,8 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
 
                 # TODO
                 emp_type = 'M1'
-                subject = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา',
-                message = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา',
+                subject = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา'
+                message = 'E-Leave: ' + employee_full_name + ' - แจ้งยกเลิกวันลา'
                 html_message = 'เรียน คุณ <strong>' + supervisor_fullname + '</strong><br><br>'                
                 html_message += 'มีการขอแจ้งยกเลิกวันลาตามรายละเอียดด้านล่าง<br><br>'                        
                 html_message += 'ชื่อพนักงาน: <strong>' + employee_full_name + '</strong><br>'
@@ -961,8 +961,8 @@ def EmployeeInstanceApprove(request, pk):
 
                 # TODO
                 emp_type = 'M1'
-                subject = 'E-Leave: แจ้งอนุมัติวันลา',
-                message = 'E-Leave: แจ้งอนุมัติวันลา',
+                subject = 'E-Leave: แจ้งอนุมัติวันลา'
+                message = 'E-Leave: แจ้งอนุมัติวันลา'
                 html_message = 'เรียน คุณ <strong>' + employee_full_name + '</strong><br><br>'
                 html_message += "ผู้จัดการของท่านแจ้ง <strong>อนุมัติ</strong> การใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>"
                 html_message += "ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>"
@@ -1089,8 +1089,8 @@ def EmployeeInstanceReject(request, pk):
 
                 # TODO
                 emp_type = 'M1'
-                subject = 'E-Leave: แจ้งไม่อนุมัติวันลา',
-                message = 'E-Leave: แจ้งไม่อนุมัติวันลา',
+                subject = 'E-Leave: แจ้งไม่อนุมัติวันลา'
+                message = 'E-Leave: แจ้งไม่อนุมัติวันลา'
                 html_message = 'เรียน คุณ <strong>' + employee_full_name + '</strong><br><br>'
                 html_message +='ผู้จัดการของท่านแจ้ง <strong>ไม่อนุมัติ</strong> การใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>'
                 html_message +='ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>'
@@ -1465,49 +1465,6 @@ def get_pdf_file(request, pk):
     return response
 
 
-
-def send_custom_mail(emp_type, recipients, subject, message, html_message):
-
-    send_from = settings.DEFAULT_FROM_EMAIL
-    send_to = recipients
-    subject = subject
-    message = message
-    html_message = html_message
-
-    # print("Send mail : ", subject)
-    # print("Send from : ", send_from)
-    # print("Send to : ", recipients)
-    # print("Subject : ", subject)
-    # print("Message : ", message)
-
-    # init()
-    if is_email_existed(recipients):    
-        # print("DEBUG : " + str(recipients) + " is existed.")
-        # print(colored(str(recipients) + " is existed.", 'green'))
-
-        try:
-            mail.send(                        
-                send_to,
-                send_from,
-                subject = subject,
-                message = message,
-                html_message = html_message
-            )
-            is_error = False
-            error_message = "Send mail success."
-        except Exception as e:
-            is_error = True
-            error_message = str(e)
-    else:
-        # print("DEBUG : " + str(recipients) + " is not existed.")
-        # print(colored(str(recipients) + " is not existed.", 'red'))
-
-        is_error = True
-        error_message = str(recipients) + " is not existed."
-
-    return is_error, error_message
-
-
 def is_email_existed(email):
     is_existed = False
 
@@ -1522,3 +1479,48 @@ def is_email_existed(email):
         is_existed = False
 
     return is_existed
+
+
+def send_custom_mail(emp_type, recipients, subject, message, html_message):
+
+    send_from = settings.DEFAULT_FROM_EMAIL
+    send_to = recipients
+    subject = subject
+    message = message
+    html_message = html_message
+
+    '''
+    print("Send mail : ", subject)
+    print("Send from : ", send_from)
+    print("Send to : ", recipients)
+    print("Subject : ", subject)
+    print("Message : ", message)
+    '''
+
+    # init()
+    if is_email_existed(recipients):    
+        # print("DEBUG : " + str(recipients) + " is existed.")
+        # print(colored(str(recipients) + " is existed.", 'green'))
+
+        try:
+            mail.send(                        
+                send_to,
+                send_from,
+                subject = subject,
+                message = message,
+                html_message = html_message
+            )
+            
+            is_error = False
+            error_message = "Send mail success."
+        except Exception as e:
+            is_error = True
+            error_message = str(e)
+    else:
+        # print("DEBUG : " + str(recipients) + " is not existed.")
+        # print(colored(str(recipients) + " is not existed.", 'red'))
+
+        is_error = True
+        error_message = str(recipients) + " is not existed."
+
+    return is_error, error_message
