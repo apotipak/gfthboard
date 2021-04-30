@@ -10,7 +10,7 @@ from django.conf import settings
 from leave.models import LeaveEmployee
 from gfthboard.settings import MEDIA_ROOT
 from page.rules import *
-from django.db import connection
+from django.db import connections
 from datetime import datetime
 from django.http import JsonResponse
 from django.utils import translation
@@ -120,10 +120,10 @@ def ImportOutlokActiveUser(request):
 		for item in data:
 
 			if item[29] != "":
-				print(item[29])
+				# print(item[29])
 				emp_id = Decimal(item[29])
 			else:
-				print("blank")
+				# print("blank")
 				emp_id = None
 
 			first_name = item[8]
@@ -139,6 +139,65 @@ def ImportOutlokActiveUser(request):
 	except Exception as e:
 		is_error = True
 		message = str(e)
+
+
+	# TEST
+	'''
+	try:
+		sql = "select count(*) from employee;"
+		cursor = connections['reportdb'].cursor()
+		cursor.execute(sql)
+		leave_employeeinstance_object = cursor.fetchone()
+		error_message = "No error"
+	except db.OperationalError as e:
+		error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)      
+	except db.Error as e:
+	    error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+	finally:
+	    cursor.close()
+
+	if leave_employeeinstance_object is not None:
+		print("HRMS-Employee 51 : ", leave_employeeinstance_object[0])
+	else:
+		print("ERROR")
+	'''
+	# TEST
+
+
+	# TEST
+	'''
+	try:
+		sql = "select count(*) from employee;"
+		cursor = connections['hrms14'].cursor()
+		cursor.execute(sql)
+		leave_employeeinstance_object = cursor.fetchone()
+		error_message = "No error"
+	except db.OperationalError as e:
+		error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)      
+	except db.Error as e:
+	    error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+	except Exception as e:
+		error_message = str(e)
+	finally:
+	    cursor.close()
+
+	print(error_message)
+	'''
+
+	'''
+	if leave_employeeinstance_object is not None:
+		print("HRMS-Employee 14 : ", leave_employeeinstance_object[0])
+	else:
+		print("ERROR")
+	'''
+	# TEST
+
+
+
+	# from django.db import connections
+	# cursor = connections['reportdb'].cursor()
+	# cursor.execute("select * from leave_employeeinstance")
+	# cursor.close()
 
 	response = JsonResponse(data={        
 		"is_error": is_error,
