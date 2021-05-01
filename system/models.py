@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-import datetime
+from datetime import datetime
 from django.utils.timezone import now
 
 
@@ -41,7 +41,7 @@ class OutlookEmailActiveUserList(models.Model):
     last_name = models.CharField(max_length=100, blank=True, null=True)
     email = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
-    created_date = models.DateTimeField(null=True, default=datetime.date.today)
+    created_date = models.DateTimeField(null=True, blank=True, default=datetime.now)    
     created_by = models.CharField(max_length=50, blank=True, null=True, default='System')
 
     class Meta:
