@@ -18,6 +18,7 @@ from django.utils.translation import ugettext as _
 from decimal import Decimal
 from os import path
 import django.db as db
+from django.db import connection
 import csv
 import subprocess, sys
 
@@ -146,7 +147,10 @@ def ImportOutlokActiveUser(request):
 
 	if cred_file_is_existed:
 		try:
-			p = subprocess.Popen(["powershell.exe", "C:\\gfthboard\\temp\\email_script_1.ps1"], cwd="C:\\gfthboard\\temp", stdout=sys.stdout)
+			ps1_file = path.abspath("temp\\GFTH_export_office_365_email.ps1")
+			cwd_path = path.abspath("temp")
+			print(ps1_file, cwd_path)
+			p = subprocess.Popen(["powershell.exe", ps1_file], cwd=cwd_path, stdout=sys.stdout)
 			p.communicate()			
 
 			# Get latest updated date
@@ -169,34 +173,55 @@ def ImportOutlokActiveUser(request):
 
 					OutlookEmailActiveUserList.objects.all().delete()
 
-					save_time = datetime.now()
-					
-					for item in data:
-						if item[2] != "" and item[2] is not None:
-							emp_id = Decimal(item[2])
-						else:
-							emp_id = None
 
-						first_name = item[0]
-						last_name = item[1]
-						email = item[4]
+					# Reset auto increment key
+					is_reset_auto_increment_error = True
+					sql = "DBCC CHECKIDENT (system_outlook_email_active_user_list, RESEED, 0)"
+					try:                
+						cursor = connection.cursor()
+						cursor.execute(sql)
+						is_reset_auto_increment_error = False
+					except db.OperationalError as e:
+						error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+					except db.Error as e:
+						error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+					finally:
+						cursor.close()
 
-						record = {
-							"first_name": first_name,
-							"last_name": last_name,
-							"email": email,							
-						}
+					if is_reset_auto_increment_error:
+						message = "Cannot reset auto increment number."
+						is_error = True
+					else:
+						print("Reset auto increment number is success")
 
-						office_365_email_list.append(record)
-						count = count + 1
-						outlook_obj = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email, emp_id=emp_id, created_date=save_time)
-						outlook_obj.save()
+						save_time = datetime.now()
+						
+						for item in data:
+							if item[2] != "" and item[2] is not None:
+								emp_id = Decimal(item[2])
+							else:
+								emp_id = None
 
-					# Get latest updated date
-					latest_updated = OutlookEmailActiveUserList.objects.values_list('created_date', flat=True).first()
+							first_name = item[0]
+							last_name = item[1]
+							email = item[4]
 
-					is_error = False
-					message = "Success"
+							record = {
+								"first_name": first_name,
+								"last_name": last_name,
+								"email": email,							
+							}
+
+							office_365_email_list.append(record)
+							count = count + 1
+							outlook_obj = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email, emp_id=emp_id, created_date=save_time)
+							outlook_obj.save()
+
+						# Get latest updated date
+						latest_updated = OutlookEmailActiveUserList.objects.values_list('created_date', flat=True).first()
+
+						is_error = False
+						message = "Success"
 
 				except Exception as e:
 					is_error = True
