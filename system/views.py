@@ -335,9 +335,6 @@ def ImportOutlokActiveUser(request):
 						outlook_obj = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email, emp_id=emp_id, created_date=save_time)
 						outlook_obj.save()
 
-					# Get latest updated date
-					latest_updated = OutlookEmailActiveUserList.objects.values_list('created_date', flat=True).first()
-
 					is_error = False
 					message = "Success"
 
