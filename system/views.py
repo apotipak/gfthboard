@@ -270,7 +270,7 @@ def ImportOutlokActiveUser(request):
 	csv_file_size = 0
 
 	# Get latest updated date
-	csv_file = path.abspath("media\\system\\export_outlook_365_email.csv")
+	csv_file = path.abspath("media\\system\\export_office_365_email.csv")
 	if path.exists(csv_file):
 		csv_file_is_existed = True	
 		csv_file_created_date = datetime.fromtimestamp(getmtime(csv_file)).strftime('%d/%m/%Y %H:%M:%S')
