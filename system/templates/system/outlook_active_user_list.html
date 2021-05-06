@@ -196,17 +196,21 @@ function import_outlook_active_user_click() {
         });
 
         result = "";
+
         for(i=0;i<data.office_365_email_list.length;i++) {
           result += "<tr>";
           result += "<td>" + data.office_365_email_list[i]['first_name'] + "</td>";
           result += "<td>" + data.office_365_email_list[i]['last_name'] + "</td>";
           result += "<td>" + data.office_365_email_list[i]['email'] + "</td>";
-          if(data.office_365_email_list[i]['is_licensed']) {
+
+          console.log(data.office_365_email_list[i]['is_licensed']);
+
+          if(data.office_365_email_list[i]['is_licensed']=='True') {
             result += "<td>" + "<span class='badge badge-success'><i class='fa fa-check fa-xs' aria-hidden='true'></i>&nbsp;&nbsp;Licensed</span></td>";
           } else {
-            result += "<td>" + "<span class='badge badge-secondary'><i class='fas fa-ban fa-xs' aria-hidden='true'></i>&nbsp;&nbsp;Licensed</span></td>";  
-          }
-          
+            result += "<td>" + "<span class='badge badge-secondary'><i class='fas fa-ban fa-xs' aria-hidden='true'></i>&nbsp;&nbsp;Unlicensed</span></td>";  
+          }        
+
           result += "</tr>";
         }
 
