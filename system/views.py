@@ -119,6 +119,7 @@ def ManageOutlookEmailActiveUserList(request):
 				"first_name": item.first_name,
 				"last_name": item.last_name,
 				"email": item.email,
+				"is_licensed": item.is_licensed,			
 			}
 
 			office_365_email_list.append(record)
@@ -215,16 +216,18 @@ def ImportOutlokActiveUser_V1(request):
 							first_name = item[0]
 							last_name = item[1]
 							email = item[4]
+							is_licensed = item[5]
 
 							record = {
 								"first_name": first_name,
 								"last_name": last_name,
-								"email": email,							
+								"email": email,
+								"is_licensed": is_licensed,				
 							}
 
 							office_365_email_list.append(record)
 							count = count + 1
-							outlook_obj = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email, emp_id=emp_id, created_date=save_time)
+							outlook_obj = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email, emp_id=emp_id, is_licensed=is_licensed, created_date=save_time)
 							outlook_obj.save()
 
 						# Get latest updated date
@@ -323,16 +326,18 @@ def ImportOutlokActiveUser(request):
 						first_name = item[0]
 						last_name = item[1]
 						email = item[4]
+						is_licensed = item[5]
 
 						record = {
 							"first_name": first_name,
 							"last_name": last_name,
-							"email": email,							
+							"email": email,
+							"is_licensed": is_licensed,						
 						}
 
 						office_365_email_list.append(record)
 						count = count + 1
-						outlook_obj = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email, emp_id=emp_id, created_date=save_time)
+						outlook_obj = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email, is_licensed=is_licensed, emp_id=emp_id, created_date=save_time)
 						outlook_obj.save()
 
 					is_error = False
