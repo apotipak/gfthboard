@@ -64,6 +64,7 @@
                           <th scope="col">First Name</th>
                           <th scope="col">Last Name</th>
                           <th scope="col">Email</th>
+                          <th scope="col">Licensed</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -73,6 +74,15 @@
                         <td>{{ item.first_name }}</td>
                         <td>{{ item.last_name }}</td>
                         <td>{{ item.email }}</td>
+                        {% if item.is_licensed %}
+                          <td>                           
+                           <span class="badge badge-success"><i class="fa fa-check fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;Licensed</span>
+                          </td>
+                        {% else %}
+                          <td>
+                            <span class="badge badge-secondary"><i class="fas fa-ban fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;Unlicensed</span>
+                          </td>
+                        {% endif %}
                         </tr>
                         {% endfor %}
                         
@@ -191,6 +201,12 @@ function import_outlook_active_user_click() {
           result += "<td>" + data.office_365_email_list[i]['first_name'] + "</td>";
           result += "<td>" + data.office_365_email_list[i]['last_name'] + "</td>";
           result += "<td>" + data.office_365_email_list[i]['email'] + "</td>";
+          if(data.office_365_email_list[i]['is_licensed']) {
+            result += "<td>" + "<span class='badge badge-success'><i class='fa fa-check fa-xs' aria-hidden='true'></i>&nbsp;&nbsp;Licensed</span></td>";
+          } else {
+            result += "<td>" + "<span class='badge badge-secondary'><i class='fas fa-ban fa-xs' aria-hidden='true'></i>&nbsp;&nbsp;Licensed</span></td>";  
+          }
+          
           result += "</tr>";
         }
 

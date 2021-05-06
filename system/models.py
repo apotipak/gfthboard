@@ -41,6 +41,7 @@ class OutlookEmailActiveUserList(models.Model):
     last_name = models.CharField(max_length=100, blank=True, null=True)
     email = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
+    is_licensed = models.BooleanField(default=False)
     created_date = models.DateTimeField(null=True, blank=True, default=datetime.now)    
     created_by = models.CharField(max_length=50, blank=True, null=True, default='System')
 

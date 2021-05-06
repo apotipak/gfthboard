@@ -66,7 +66,8 @@ def import_office_365_email():
 						first_name = item[0]
 						last_name = item[1]
 						email = item[4]
-						outlook_obj = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email, emp_id=emp_id, created_date=csv_file_created_date)
+						is_licensed = item[5]
+						outlook_obj = OutlookEmailActiveUserList(first_name=first_name, last_name=last_name, email=email, is_licensed=is_licensed, emp_id=emp_id, created_date=csv_file_created_date)
 						outlook_obj.save()
 
 					is_error = False
