@@ -38,7 +38,8 @@ class ITcontractDB(models.Model):
     opn2 = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
     opn3 = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
     afile = models.FileField(upload_to='documents/', null=True)
-    afile_data = models.BinaryField(null=True)    
+    afile_data = models.BinaryField(null=True)
+    turn_off_notification = models.BooleanField(default=False)
 
     class Meta:
         managed = True

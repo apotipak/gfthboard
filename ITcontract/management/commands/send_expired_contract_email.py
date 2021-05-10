@@ -98,7 +98,8 @@ class Command(BaseCommand):
 
 		if alert_active=="1":
 
-			itcontractdb_object = ITcontractDB.objects.exclude(upd_flag='D').all().values_list('id','dept','vendor','description','person','tel','e_mail','start_date','end_date','price','remark','upd_by')
+			itcontractdb_object = ITcontractDB.objects.exclude(upd_flag='D').exclude(turn_off_notification=True).all().values_list('id','dept','vendor','description','person','tel','e_mail','start_date','end_date','price','remark','upd_by')
+			# itcontractdb_object = ITcontractDB.objects.exclude(upd_flag='D').all().values_list('id','dept','vendor','description','person','tel','e_mail','start_date','end_date','price','remark','upd_by')
 
 			if itcontractdb_object is not None:
 				str_today_date = datetime.now().strftime("%Y-%m-%d")
@@ -143,9 +144,11 @@ class Command(BaseCommand):
 
 					if is_contract_expired:
 						expired_contract_list.append(record)
+						print("ID : ", it_contract_id)
 					else:
 						if remaining_day.days <= reach_minimum_day:						
 							expired_contract_list.append(record)
+
 			else:
 				print("Not found expired contract")
 
@@ -170,6 +173,7 @@ class Command(BaseCommand):
 
 				html_message += "<br>"
 				html_message += "-- This email was automatically sent from system. Please do not reply. --"
+
 				send_expired_contract_email(subject, send_to_email, send_to_group_email, html_message)
 		else:
 			print("Send email is turn off")
