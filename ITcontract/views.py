@@ -170,7 +170,7 @@ def ajax_get_it_contract_item(request):
             remark = "" if itcontract.remark is None else itcontract.remark
             start_date = None if itcontract.start_date is None else itcontract.start_date.strftime("%d/%m/%Y")
             end_date = None if itcontract.end_date is None else itcontract.end_date.strftime("%d/%m/%Y")
-                        
+            turn_off_notification = True if itcontract.turn_off_notification else False
 
             if itcontract.afile != "":
                 if itcontract.afile_data is not None:
@@ -203,6 +203,7 @@ def ajax_get_it_contract_item(request):
         "end_date": end_date,
         "attacehed_file": attacehed_file,
         "attached_file_name": attached_file_name,
+        "turn_off_notification": turn_off_notification,
     })
 
     response.status_code = 200
@@ -295,6 +296,9 @@ def ajax_save_it_contract_item(request):
     remark = request.POST.get("remark_edit")
     start_date = datetime.strptime(request.POST.get("start_date_edit"), "%d/%m/%Y").date()
     end_date = datetime.strptime(request.POST.get("end_date_edit"), "%d/%m/%Y").date()
+    
+    turn_off_notification_edit = request.POST.get("turn_off_notification_edit")
+    print("turn_off_notification_edit : ", turn_off_notification_edit)
 
     record = {}
     refresh_it_contract_list = []    
@@ -317,7 +321,8 @@ def ajax_save_it_contract_item(request):
             itcontract.upd_date = datetime.now()
             itcontract.upd_by = request.user.first_name
             itcontract.upd_flag = 'E'
-    
+            itcontract.turn_off_notification = turn_off_notification_edit
+
             if request.FILES:
                 itcontract.afile = request.FILES["it_contract_document_edit"].name    
                 itcontract.afile_data = request.FILES['it_contract_document_edit'].read()

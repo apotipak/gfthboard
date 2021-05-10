@@ -71,14 +71,13 @@
                     </tr>
                   </thead>
 
-                  <!-- ironman -->
                   {% if ITcontractList %}
                   <tbody>  
                     {% for item in ITcontractList %}
                     <tr>                  
                       <td>{{item.id}}</td>                      
                       <td>{{item.dept}}</td>
-                      <td><a href="#" onclick='edit_item("{{item.id}}")'>{{item.vendor}}</a></td>
+                      <td style="white-space:nowrap;"><a href="#" onclick='edit_item("{{item.id}}")'>{{item.vendor}}</a></td>
                       <td>{{item.description}}</td>
 
                       <td>{{item.contact}}</td>
@@ -280,7 +279,14 @@
           <!--<form action="/upload/" method="post" autocomplete="off" id="edit_contract_list_form" name="edit_contract_list_form" enctype="multipart/form-data">-->
           <form method="post" autocomplete="off" name="edit_contract_list_form" id="edit_contract_list_form" autocomplete="off" enctype="multipart/form-data">
             {% csrf_token %}
-            
+
+            <div class="card-body p-0 pt-2 pb-3 float-right">              
+              <div class="input-group col-12">
+                <input class="form-check-input" type="checkbox" value="" name="turn_off_notification_edit" id="id_turn_off_notification_edit">
+                <label class="form-check-label" for="id_turn_off_notification_edit"><b>ยกเลิกการแจ้งเตือน</b></label>
+              </div>                              
+            </div>
+
             <div class="card-body p-0 pt-2">              
               <div class="input-group col-12 p-0 pl-2">
                 <span class="pt-1" style="width: 120px;"><b>Department</b>&nbsp;&nbsp;</span>
@@ -510,8 +516,15 @@ function view_contract_document() {
 function save_item(id) {
   event.preventDefault();
 
-  formData = new FormData();  
+  formData = new FormData();
   data = new FormData($('#edit_contract_list_form').get(0));
+
+  if ($('#id_turn_off_notification_edit').is(':checked')) {
+    turn_off_notification_edit = 1;
+  } else {
+    turn_off_notification_edit = 0;
+  }
+  data.append("turn_off_notification_edit", turn_off_notification_edit)
 
   $.ajax({
     url: '{% url "ajax_save_it_contract_item" %}',
@@ -806,6 +819,7 @@ function edit_item(id) {
         end_date = data.end_date;
         is_attached = data.attacehed_file;
         attached_file_name = data.attached_file_name;
+        turn_off_notification = data.turn_off_notification;
 
         $("#id_it_contract_id_edit").val(it_contract_id);
         $("#id_dept_edit").val(dept.trim());
@@ -820,9 +834,19 @@ function edit_item(id) {
         $("#id_end_date_edit").val(end_date);
         $("#edit_item_title").html("Edit #" + id);
         
+        //alert(turn_off_notification);
+
+        if(turn_off_notification) {
+          $("#id_turn_off_notification_edit").prop('checked', true);
+          //$("#id_turn_off_notification_edit").val(1);
+        } else {
+          $("#id_turn_off_notification_edit").prop('checked', false);
+          //$("#id_turn_off_notification_edit").val(0);
+        }
+
         if(is_attached) {
-          $("#is_attached").html("<button class='btn btn-success btn-sm' onclick='view_contract_document();'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;View contract file</button>");
-          $("#is_attached").html("<button class='btn btn-success btn-sm' onclick='view_contract_document();'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;" + attached_file_name + "</button>");
+          //$("#is_attached").html("<button class='btn btn-outline-success btn-sm' onclick='view_contract_document();'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;View contract file</button>");
+          $("#is_attached").html("ไฟล์แนบ&nbsp;&nbsp;<button class='btn btn-outline-success btn-sm' onclick='view_contract_document();'><i class='far fa-file-pdf'></i>&nbsp;&nbsp;" + attached_file_name + "</button>");
           
         } else {
           $("#is_attached").html("No attached file.");
