@@ -1,0 +1,48 @@
+{% load static %}
+{% load i18n %}
+
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="/" class="brand-link">      
+      <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <span class="brand-text font-weight-light"><img src="{% static 'img/logo-big.png' %}" width="150px;"></span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">  
+
+          <!-- System -->
+          {% if request.path|slice:":8" == '/system/' %}
+            {% if perms.system.add_outlookemailactiveuserlist %}
+            <li class="nav-item has-treeview active menu-open">
+              {% if request.path|slice:":8" == '/system/' %}
+              <a href="#" class="nav-link active">
+              {% else %}
+              <a href="#" class="nav-link">
+              {% endif %}
+                <i class="nav-icon fas fa-cogs"></i>
+                <p>System<i class="right fas fa-angle-left"></i></p>
+              </a>
+
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'manage_outlook_email_active_user_list' %}" class="nav-link active">
+                    <i class="far fa-envelope"></i>&nbsp;&nbsp;
+                    <p>Import Office 365 Email</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% endif %}
+          {% endif %}
+
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
