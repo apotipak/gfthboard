@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>GFTH Board | {% block title %}{% endblock %}</title>
+  <title>PRPO | {% block title %}{% endblock %}</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -73,11 +73,11 @@
   {% include "menu_bar_prpo.html" %}
 
   <!-- Main Sidebar Container -->
-  {% include "left_menu.html" %}
+  {% include "left_menu_prpo.html" %}
 
     {% block content %}{% endblock %}
 
-  {% include "footer.html" %}
+  {% include "footer_prpo.html" %}
   
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
@@ -138,6 +138,58 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 
 <script src="{% static 'plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"></script>
+
+
+<script>
+
+  $(document).ready(function() {
+
+    var url = window.location;
+    
+    // for sidebar menu but not for treeview submenu
+    $('ul.nav-sidebar a').filter(function() {                
+      return this.href == url;          
+    }).parent().siblings().removeClass('active').end().addClass('active');
+
+    // for treeview which is like a submenu
+    $('ul.nav-treeview a').filter(function() {
+      return this.href == url;
+    }).parentsUntil(".nav-sidebar > .nav-treeview").siblings().removeClass('active menu-open').end().addClass('active menu-open');
+    
+    $('ul.nav-treeview a').each(function() {      
+      current_url = window.location.pathname;
+      split_current_url = current_url.split("/");
+      
+      menu_url = $(this).attr("href");      
+      split_menu_url = menu_url.split("/");
+
+      switch(split_current_url[2]) {
+        case "currency":
+          break;
+        case "company":
+          if(split_menu_url[2]=="company") {
+            $(this).parentsUntil(".nav-sidebar > .nav-treeview").siblings().removeClass('active menu-open').end().addClass('active menu-open');
+          }
+          break;
+        case "department":
+          break;
+        case "user":
+          break;
+        case "category":
+          break;
+        case "item":
+          break;
+        case "vendor":
+          break;
+        default:
+          break;
+      }
+
+    });
+
+  });
+
+</script>
 
 {% block javascript %}{% endblock %}
 

@@ -1,0 +1,176 @@
+{% extends "page_prpo.html" %}
+
+{% load humanize %}
+
+{% load i18n %}
+
+{% block title %} {% trans 'Company Manage' %} {% endblock %}
+
+{% block content %}
+
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-6">
+            <h3 class="m-0 text-dark">{% trans 'Company Manage' %} </h3>
+          </div>
+          <div class="col-6">
+            <ol class="breadcrumb float-right">
+              <li class="breadcrumb-item">
+                  <i class="fas fa-reply fa-sm text-secondary"></i>&nbsp;Back to <a href="{% url 'prpo-company-list' %}">Company List</a>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="content">
+      <div class="container-fluid">
+
+        <div class="card card-default">            
+            <form id="save_company_form" method="post" autocomplete="off">
+            {% csrf_token %}
+            <div class="card-header">
+              <h2 id="company_title" class="card-title pt-1"><b>{{ prpo_company_list.3 }}</b></h2>
+              <div class="card-tools">                
+                <button type="reset" class="btn btn-sm btn-default" id="id_cancel_button">&nbsp;<b>Cancel</b>&nbsp;</button>
+                <button class="btn btn-sm btn-primary" id="id_save_button">&nbsp;<b>Save</b>&nbsp;</button>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+
+                <div class="col-12">
+                  <div class="col-lg-3 float-left">
+                    <label for="company_name_en" class="pb-2">Company Name (EN)</label>
+                  </div>
+                  <div class="col-lg-9 float-right">
+                    <input type="text" class="form-control mb-2 float-right" placeholder="Enter Company Name (EN)" id="company_name_en" name="company_name_en" value="{{ prpo_company_list.3 }}" />
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="col-lg-3 float-left">
+                    <label for="company_name_th" class="pb-2">Company Name (TH)</label>
+                  </div>
+                  <div class="col-lg-9 float-right">
+                    <input type="text" class="form-control mb-2 float-right" placeholder="Enter Company Name (TH)" id="company_name_th" name="company_name_th" value="{{ prpo_company_list.5 }}" />
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="col-lg-3 float-left">
+                    <label for="address" class="pb-2">Address</label>
+                  </div>
+                  <div class="col-lg-9 float-right">
+                    <input type="text" class="form-control mb-2 float-right" placeholder="Enter Address" id="company_address" name="company_address" value="{{ prpo_company_list.6 }}" />
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="col-lg-3 float-left">
+                    <label for="company_telephone" class="pb-2">Telephone</label>
+                  </div>
+                  <div class="col-lg-9 float-right">
+                    <input type="text" class="form-control mb-2 float-right" placeholder="Enter Telephone" id="company_telephone" name="company_telephone" value="{{ prpo_company_list.8 }}" />
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="col-lg-3 float-left">
+                    <label for="company_fax" class="pb-2">Fax</label>
+                  </div>
+                  <div class="col-lg-9 float-right">
+                    <input type="text" class="form-control mb-2 float-right" placeholder="Enter Fax" id="company_fax" name="company_fax" value="{{ prpo_company_list.9 }}" />
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="col-lg-3 float-left">
+                    <label for="company_note" class="pb-2">Note</label>
+                  </div>
+                  <div class="col-lg-9 float-right">                    
+                    <textarea class="form-control rounded-0" id="company_note" name="company_note" rows="5">{{prpo_company_list.12}}</textarea>
+                  </div>
+                </div>
+
+                <input type="hidden" value="{{ prpo_company_list.0 }}" name="company_id" id="company_id" />
+              </div>
+            </div>
+
+          </div>
+          </form>
+
+      </div>
+    </section>
+
+  </div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready( function () {
+
+  $("#save_company_form").submit(function(e) {
+	  e.preventDefault();
+
+    formData = new FormData();
+    data = new FormData($('#save_company_form').get(0));
+
+    $.ajax({
+      url: '{% url "prpo-ajax-save-company" %}',
+      type: 'post',
+      dataType: 'json',
+      data: data,
+      cache: false,
+      processData: false,
+      contentType: false,    
+      success: function (data) {
+        if(data.is_error) {          
+          $(document).Toasts('create', {
+            class: "bg-danger", 
+            title: "{% trans 'Error' %}",
+            subtitle: '',
+            autohide: true,
+            delay: 2000,
+            body: data.error_message,
+            autoDismiss: true,
+            close: true,
+            autoremove: true,
+          });     
+        } else {
+          $("#company_title").html("<b>" + data.company_title + "</b>");
+
+          $(document).Toasts('create', {
+            class: "bg-success", 
+            title: "{% trans 'Success' %}",
+            subtitle: '',
+            autohide: true,
+            delay: 2000,
+            body: data.error_message,
+            autoDismiss: true,
+            close: true,
+            autoremove: true,
+          });          
+        }
+      },
+    });   
+
+  });
+
+});
+
+function edit_company(company_id) {  
+  alert("todo: edit");
+}
+
+function delete_company(company_id) {
+  alert("todo: delete company_id " + company_id);
+}
+
+</script>
+{% endblock %}

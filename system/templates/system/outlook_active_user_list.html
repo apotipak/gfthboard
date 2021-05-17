@@ -4,7 +4,7 @@
 
 {% load i18n %}
 
-{% block title %} {% trans 'System' %} {% endblock %}
+{% block title %} {% trans 'System' %} - Import Office 365 Email{% endblock %}
 
 {% block content %}
 
@@ -14,9 +14,9 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">{% trans 'System' %} </h1>
+            <h1 class="m-0 text-dark"><i class="far fa-envelope"></i>&nbsp;&nbsp;{% trans 'Import Office 365 Email' %} </h1>
           </div>
-          <div class="col-sm-6">                        
+          <div class="col-sm-6">  
             <ol class="breadcrumb float-sm-right">
               <li>
                 <button class="btn btn-outline-info btn-md dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -51,7 +51,7 @@
                 <div class="card-body m-0 p-0 pb-2">
                   <div class="col-lg-12 text-left float-left p-0 m-0">
                     <!--<b><i class="far fa-envelope"></i>&nbsp;&nbsp;Import Office 365 Email</b>&nbsp;&nbsp;-->
-                    <button type="button" id="id_import_office_365_email_button" onclick="import_outlook_active_user_click();" class="btn btn-md btn-primary submitBtn"><i class="far fa-envelope"></i>&nbsp;&nbsp;Import Office 365 Email</button>
+                    <button type="button" id="id_import_office_365_email_button" onclick="import_outlook_active_user_click();" class="btn btn-md btn-primary submitBtn">Import</button>
                     <span id="id_last_updated" class='pl-2'>Total <b>{{ total }}</b>&nbsp;licenses<small>&nbsp;| Last updated <b>{{ created_date }}</b></small></span>
                   </div>
                 </div>

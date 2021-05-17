@@ -95,7 +95,7 @@
           {% if perms.prpo.add_prpoactions %}
           <div class="col-12 col-sm-6 col-md-6">
             <div class="info-box mb-4">
-              <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-wrench"></i></span>
+              <span class="info-box-icon elevation-1 text-light" style="background-color: #a4bb95;"><i class="fas fa-wrench"></i></span>
               <div class="info-box-content">
                 <div class="col-12">
                   <h4><span class="info-box-text">PRPO</span></h4>
@@ -103,7 +103,7 @@
                     <span style="font-size: 14px;">ระบบจัดการคำขอสั่งซื้อ<br>
                       <!--<i class="fas fa-book-open text-muted"></i>&nbsp;&nbsp;<a href="/help-eleave">{% trans 'User Manual' %}</a>--><br>
                       <!--<i class="fas fa-download text-muted"></i>&nbsp;&nbsp;<a href="{% static 'download/eleave_user_manual_v001.pdf' %}" target="_blank">{% trans 'Download' %}</a>-->
-                      <a href="{% url 'prpo_company' %}" type="button" class="btn btn-outline-primary float-right ">Open</a>
+                      <a href="{% url 'prpo-welcome' %}" type="button" class="btn btn-outline-primary float-right ">Open</a>
                     </span>
                   </div>
                 </div>
