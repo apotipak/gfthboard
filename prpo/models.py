@@ -11,8 +11,6 @@ class PrpoActions(models.Model):
         db_table = 'PRPO_Actions'
 
 class PrpoCompany(models.Model):
-    #lve_id = models.DecimalField(primary_key=True, max_digits=3, decimal_places=0)
-
     cpid = models.IntegerField(primary_key=True , db_column='cpID')  # Field name made lowercase.
     cpnumber = models.CharField(db_column='cpNumber', max_length=5)  # Field name made lowercase.
     cpcountry = models.IntegerField(db_column='cpCountry')  # Field name made lowercase.

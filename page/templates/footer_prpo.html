@@ -1,0 +1,19 @@
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="float-right d-none d-sm-inline">
+        {{ today_date }}
+    </div>
+<!-- Default to the left -->
+    v. <b><a href="{% url 'news' %}">{{ project_version }}</a></b> | 
+
+    {% if db_server == 'GFDEMOSQL01' %}
+    	Live
+    {% elif db_server == '27.254.207.51' %}
+    	Production Server
+    {% elif db_server == '10.176.68.27' %}
+        Staging
+    {% else %}
+    	Dev
+    {% endif %}
+    </footer>

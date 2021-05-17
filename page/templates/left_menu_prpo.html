@@ -1,0 +1,118 @@
+{% load static %}
+{% load i18n %}
+
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="/" class="brand-link">      
+      <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <span class="brand-text font-weight-light"><img src="{% static 'img/logo-big.png' %}" width="150px;"></span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">  
+            <!--<li class="nav-item has-treeview active menu-open">-->
+            <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                    <i class="fab fa-buromobelexperte"></i>&nbsp;&nbsp;<p><b>MASTER FILE</b><i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    {% if request.path == '/prpo/currency/' %}
+                    <a href="{% url 'prpo-currency' %}" class="nav-link active">&nbsp;&nbsp;<p>Currency</p></a>
+                    {% else %}
+                    <a href="{% url 'prpo-currency' %}" class="nav-link">&nbsp;&nbsp;<p>Currency</p></a>
+                    {% endif %}
+
+                    {% if request.path|slice:":13" == '/prpo/company' %}                    
+                    <a href="{% url 'prpo-company-list' %}" class="nav-link active">&nbsp;&nbsp;<p>Company</p></a>
+                    {% else %}
+                    <a href="{% url 'prpo-company-list' %}" class="nav-link">&nbsp;&nbsp;<p>Company</p></a>
+                    {% endif %}
+
+                    {% if request.path == '/prpo/department/' %}
+                    <a href="{% url 'prpo-department' %}" class="nav-link active">&nbsp;&nbsp;<p>Department</p></a>
+                    {% else %}
+                    <a href="{% url 'prpo-department' %}" class="nav-link">&nbsp;&nbsp;<p>Department</p></a>
+                    {% endif %}
+
+                    {% if request.path == '/prpo/user/' %}
+                    <a href="{% url 'prpo-user' %}" class="nav-link active">&nbsp;&nbsp;<p>User</p></a>
+                    {% else %}
+                    <a href="{% url 'prpo-user' %}" class="nav-link">&nbsp;&nbsp;<p>User</p></a>
+                    {% endif %}
+
+                    {% if request.path == '/prpo/category/' %}
+                    <a href="{% url 'prpo-category' %}" class="nav-link active">&nbsp;&nbsp;<p>Category</p></a>
+                    {% else %}
+                    <a href="{% url 'prpo-category' %}" class="nav-link">&nbsp;&nbsp;<p>Category</p></a>
+                    {% endif %}
+
+                    {% if request.path == '/prpo/item/' %}
+                    <a href="{% url 'prpo-item' %}" class="nav-link active">&nbsp;&nbsp;<p>Item</p></a>
+                    {% else %}
+                    <a href="{% url 'prpo-item' %}" class="nav-link">&nbsp;&nbsp;<p>Item</p></a>
+                    {% endif %}
+
+                    {% if request.path == '/prpo/vendor/' %}
+                    <a href="{% url 'prpo-vendor' %}" class="nav-link active">&nbsp;&nbsp;<p>Vendor</p></a>
+                    {% else %}
+                    <a href="{% url 'prpo-vendor' %}" class="nav-link">&nbsp;&nbsp;<p>Vendor</p></a>
+                    {% endif %}                    
+                </li>
+                </ul>
+            </li>
+        </ul>
+        
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">  
+            <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-file-invoice"></i>&nbsp;&nbsp;<p><b>PR / PO</b><i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    
+                    {% if request.path == '/prpo/entry-inquiry/' %}
+                    <a href="{% url 'prpo-entry-inquiry' %}" class="nav-link active">&nbsp;&nbsp;<i class="far fas fa-receipt"></i>&nbsp;&nbsp;<p>PR Entry & Inquiry</p></a>
+                    {% else %}
+                    <a href="{% url 'prpo-entry-inquiry' %}" class="nav-link">&nbsp;&nbsp;<i class="far fas fa-receipt"></i>&nbsp;&nbsp;<p>PR Entry / Inquiry</p></a>
+                    {% endif %}
+
+                    {% if request.path == '/prpo/pr-inbox/' %}
+                    <a href="{% url 'prpo-pr-inbox' %}" class="nav-link active">&nbsp;&nbsp;<i class="far fas fa-receipt"></i>&nbsp;&nbsp;<p>PR Inbox</p></a>
+                    {% else %}
+                    <a href="{% url 'prpo-pr-inbox' %}" class="nav-link">&nbsp;&nbsp;<i class="far fas fa-receipt"></i>&nbsp;&nbsp;<p>PR Inbox</p></a>                    
+                    {% endif %}
+
+                    {% if request.path == '/prpo/po-inbox/' %}                    
+                    <a href="{% url 'prpo-po-inbox' %}" class="nav-link active">&nbsp;&nbsp;<i class="far fas fa-receipt"></i>&nbsp;&nbsp;<p>PO Inbox</p></a>                    
+                    {% else %}
+                    <a href="{% url 'prpo-po-inbox' %}" class="nav-link">&nbsp;&nbsp;<i class="far fas fa-receipt"></i>&nbsp;&nbsp;<p>PO Inbox</p></a>                    
+                    {% endif %}
+                </li>
+                </ul>
+            </li>
+        </ul>
+
+
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">  
+            <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-print"></i>&nbsp;&nbsp;<p><b>REPORTS</b><i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">&nbsp;&nbsp;<i class="far fa-sticky-note"></i>&nbsp;&nbsp;<p>Report 1</p></a>
+                </li>
+                </ul>
+            </li>
+        </ul>
+
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
