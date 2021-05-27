@@ -65,7 +65,7 @@ def EPaySlipM1(request):
 	if dummy_data:
 		sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
 	else:
-		sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip "
+		sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
 
 	sql += "where eps_emp_type='M1' "
 	sql += "group by eps_prd_id,prd_year,prd_month,period "
@@ -150,9 +150,9 @@ def AjaxSendPayslipM1(request):
 	if dummy_data:
 		sql = "select * from sp_slip1 where eps_emp_id='" + str(emp_id) + "' and eps_prd_id='" + str(eps_prd_id) + "' and eps_emp_type='M1' order by prd_year desc, prd_month desc, pay_seq;"
 	else:
-		sql = "select * from sp_slip where eps_emp_id='" + str(emp_id) + "' and eps_prd_id='" + str(eps_prd_id) + "' and eps_emp_type='M1' order by prd_year desc, prd_month desc, pay_seq;"
+		sql = "select * from sp_slip1 where eps_emp_id='" + str(emp_id) + "' and eps_prd_id='" + str(eps_prd_id) + "' and eps_emp_type='M1' order by prd_year desc, prd_month desc, pay_seq;"
 
-	print("SQLLL : ", sql)
+	# print("SQLLL : ", sql)
 
 	try:
 		cursor = connection.cursor()
@@ -166,8 +166,9 @@ def AjaxSendPayslipM1(request):
 		message = "<b>Error: please send this error to IT team</b><br>" + str(e)
 	finally:
 		cursor.close()
+	
 
-	if pay_slip_object is not None:
+	if (pay_slip_object is not None and len(pay_slip_object)!=0):
 		for item in pay_slip_object:
 			pay_th = item[0]
 			pay_en = item[1]
@@ -186,7 +187,7 @@ def AjaxSendPayslipM1(request):
 			message = "ระบบส่ง " + "<span class='text-success'><b>Payslip " + str(selected_period_name) + "</b></span> ไว้ในเมล์บ็อกซ์ของคุณแล้ว<br><br>"
 	else:
 		is_error = True
-		message = "ระบบไม่สามารถส่งไฟล์ Payslip ให้ท่านได้ กรุณาติดต่อฝ่ายบุคคลอีกครั้ง"
+		message = "ขออภัย ระบบไม่สามารถส่งไฟล์ Payslip ให้ท่านผ่านทางอีเมล์ได้ กรุณาติดต่อแผนกบุคคล"
 
 	response = JsonResponse(data={        
 	    "is_error": is_error,
@@ -232,6 +233,9 @@ def convert_thai_month_name(month_number):
 
 # Generate PDF File
 def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd_id, selected_period_name):
+	
+	# return True, "TODO"
+
 	dummy_data = False
 
 	is_error = True
@@ -465,13 +469,15 @@ def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd
 		os.remove(pdf_file)
 		os.remove(docx_file)
 
+
+		# amnaj
 		# Send Email
 		if citizen_id != "":
 			send_email_success = email_payslip(emp_full_name, primary_email, file_name, prd_year, prd_month, citizen_id)
 		else:
 			is_error = True
 			message = "Your profile is not completed. Please contact HR department."
-		
+
 	except Exception as e:
 		is_error = True
 		message = str(e)
