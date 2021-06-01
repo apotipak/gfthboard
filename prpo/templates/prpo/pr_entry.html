@@ -4,41 +4,215 @@
 
 {% load i18n %}
 
-{% block title %} Welcome {% endblock %}
+{% block title %} {% trans 'PR Entry' %} {% endblock %}
 
 {% block content %}
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper" style="background-color: #a4bb95;">
-    <!-- Content Header (Page header) -->
+  <div class="content-wrapper">
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
-            <!--<h1 class="m-0 text-dark">{% trans 'Welcome to PR/PO System' %} </h1>-->
+          <div class="col-6">
+            <h3 class="m-0 text-dark">{{ pr_id }} <small><i>(edit)</i></small></h3>
           </div>
-          <div class="col-sm-6">
-            <!--
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/">{% trans 'Main Menu' %}</a></li>
-              <li class="breadcrumb-item active">{% trans 'PRPO Company' %}</li>
+          <div class="col-6">
+            <ol class="breadcrumb float-right">
+              <li class="breadcrumb-item">
+                  <i class="fas fa-reply fa-sm text-secondary"></i>&nbsp;Back to <a href="{% url 'pr-entry-inquiry' %}">PR Inquiry</a>
+              </li>
             </ol>
-            -->
           </div>
         </div>
       </div>
     </div>
-    <!-- /.content-header -->
 
-    <!-- Main content -->
     <section class="content">
+      <div class="container-fluid">
 
-      <div class="col-6 offset-2" style="position: absolute; top: 50%;">
-          PR Entry
+        <div class="card card-default">            
+
+            <form id="save_company_form" method="post" autocomplete="off">
+            {% csrf_token %}
+            <div class="card-header">
+              <h2 id="company_title" class="card-title pt-1"><b>{{ prpo_company_list.3 }}</b></h2>
+              <div class="card-tools">                
+                <button type="reset" class="btn btn-sm btn-default" id="id_cancel_button">&nbsp;<b>Cancel</b>&nbsp;</button>
+                <button class="btn btn-sm btn-primary" id="id_save_button">&nbsp;<b>Save</b>&nbsp;</button>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+
+                <div class="col-12">
+                
+                    <div class="col-6 float-left">
+                        <div class="col-lg-3 float-left">
+                            <label for="company_name_en" class="pb-2">Company</label>
+                        </div>
+
+                        <div class="col-lg-9 float-right">
+                            <!-- Company -->
+                            <select id="id_company_option" name="company_option" class="form-control form-control-md" style="border-radius: 0; width: 100%;" onchange="category_change();">
+                                {% for item in company_list %}
+                                <option value="{{item.cpid}}">{{ item.cpname }}</option>
+                                {% endfor %}                        
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="col-6 float-right">
+                        <div class="col-lg-3 float-left">
+                            <label for="company_name_en" class="pb-2">Project #</label>
+                          </div>
+                          <div class="col-lg-9 float-right">
+                            <!-- Project -->
+                            <select id="id_project_option" name="project_option" class="form-control form-control-md" style="border-radius: 0; width: 100%;" onchange="category_change();">
+                                {% for item in project_list %}
+                                <option value="{{item.cpaid}}">{{ item.cpanumber }}</option>
+                                {% endfor %}                        
+                            </select>
+                          </div>
+                    </div>
+
+                </div>
+
+                <div class="col-12">
+                
+                    <div class="col-6 float-left">
+                        <div class="col-lg-3 float-left">
+                            <label for="company_name_en" class="pb-2">Division</label>
+                          </div>
+                          <div class="col-lg-9 float-right">
+                            <!-- Division -->
+                            <select id="id_division_option" name="division_option" class="form-control form-control-md" style="border-radius: 0; width: 100%;" onchange="category_change();">
+                                {% for item in division_list %}
+                                <option value="{{item.ctid}}">{{ item.ctname }}</option>
+                                {% endfor %}                        
+                            </select>
+                          </div>
+                    </div>
+
+                    <div class="col-6 float-right">
+                        <div class="col-lg-3 float-left">
+                            <label for="company_name_en" class="pb-2">Currency</label>
+                          </div>
+                          <div class="col-lg-9 float-right">                            
+                            <!-- Currency -->
+                            <select id="id_currency_option" name="currency_option" class="form-control form-control-md" style="border-radius: 0; width: 100%;" onchange="category_change();">
+                                <option value="THB" selected>THB</option>
+                            </select>                            
+                          </div>
+                    </div>
+
+                </div>
+
+                <div class="col-12">
+                
+                    <div class="col-6 float-left">
+                        <div class="col-lg-3 float-left">
+                            <label for="company_name_en" class="pb-2">Vendor</label>
+                          </div>
+                          <div class="col-lg-9 float-right">
+                            <!-- Vendor -->
+                            <select id="id_division_option" name="division_option" class="form-control form-control-md" style="border-radius: 0; width: 100%;" onchange="category_change();">
+                                {% for item in division_list %}
+                                <option value="{{item.ctid}}">{{ item.ctname }}</option>
+                                {% endfor %}                        
+                            </select>
+                          </div>
+                    </div>
+
+                    <div class="col-6 float-right">
+                        <!--
+                        <div class="col-lg-3 float-left">
+                            <label for="company_name_en" class="pb-2">Currency</label>
+                        </div>
+                        <div class="col-lg-9 float-right">                            
+                            <select id="id_currency_option" name="currency_option" class="form-control form-control-md" style="border-radius: 0; width: 100%;" onchange="category_change();">
+                                <option value="THB" selected>THB</option>
+                            </select>                            
+                        </div>
+                        -->
+                    </div>
+
+                </div>
+
+                <input type="hidden" value="{{ prpo_company_list.0 }}" name="company_id" id="company_id" />
+              </div>
+            </div>
+
+          </div>
+          </form>
+
       </div>
     </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
 
+  </div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready( function () {
+
+  $("#save_company_form").submit(function(e) {
+	  e.preventDefault();
+
+    formData = new FormData();
+    data = new FormData($('#save_company_form').get(0));
+
+    $.ajax({
+      url: '{% url "prpo-ajax-save-company" %}',
+      type: 'post',
+      dataType: 'json',
+      data: data,
+      cache: false,
+      processData: false,
+      contentType: false,    
+      success: function (data) {
+        if(data.is_error) {          
+          $(document).Toasts('create', {
+            class: "bg-danger", 
+            title: "{% trans 'Error' %}",
+            subtitle: '',
+            autohide: true,
+            delay: 2000,
+            body: data.error_message,
+            autoDismiss: true,
+            close: true,
+            autoremove: true,
+          });     
+        } else {
+          $("#company_title").html("<b>" + data.company_title + "</b>");
+
+          $(document).Toasts('create', {
+            class: "bg-success", 
+            title: "{% trans 'Success' %}",
+            subtitle: '',
+            autohide: true,
+            delay: 2000,
+            body: data.error_message,
+            autoDismiss: true,
+            close: true,
+            autoremove: true,
+          });          
+        }
+      },
+    });   
+
+  });
+
+});
+
+function edit_company(company_id) {  
+  alert("todo: edit");
+}
+
+function delete_company(company_id) {
+  alert("todo: delete company_id " + company_id);
+}
+
+</script>
 {% endblock %}

@@ -32,19 +32,6 @@
               <div class="card-body">
                 <div class="input-group col-6 float-left">
 
-
-                  <!-- Department -->
-                  {% comment %}
-                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width: 100%;"><b>Department</b></span></div>
-                  <select id="id_department_option" class="form-control form-control-md" style="border-radius: 0; width:50%;">
-                    <option value="0">All Departments</option>
-                    {% for item in department_list %}
-                    <option value="{{item.dpid}}">{{ item.dpname }}</option>
-                    {% endfor %}                
-                  </select>
-                  {% endcomment %}
-
-
                   <!-- PR Number -->
                   <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width: 100%;"><b>PR #</b></span></div>
                   <input type="text" class="form-control form-control-md" placeholder="Enter PR Number" id="id_pr_number" name="pr_number" />

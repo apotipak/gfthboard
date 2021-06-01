@@ -752,14 +752,99 @@ def pr_entry(request):
     project_version = settings.PROJECT_VERSION    
     today_date = getDateFormatDisplay(user_language)
     username = request.user.username
+    
+    is_error = True
+    message = ""
     pr_id = request.POST.get("selected_pr_id")
+    company_list = []
+    project_list = []
+    division_list = []
+    currency_list = []
+    record = {}
 
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
                        
-    print("PR #: ", pr_id)
+    # Get Company List
+    sql = "select cpid,cpname from PRPO_Company;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            company_obj = cursor.fetchall()
+
+        if company_obj is not None:
+            for item in company_obj:
+                cpid = item[0]
+                cpname = item[1]
+                record = {"cpid":cpid, "cpname":cpname}
+                company_list.append(record)
+                print("company: ", cpname)
+            is_error = False
+            message = "Able to get company list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+    # Get Project List
+    sql = "select cpaid,cpanumber name from PRPO_CPA order by cpaNumber;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            project_obj = cursor.fetchall()
+
+        if project_obj is not None:
+            for item in project_obj:
+                cpaid = item[0]
+                cpanumber = item[1]
+                record = {"cpaid":cpaid, "cpanumber":cpanumber}
+                project_list.append(record)
+            is_error = False
+            message = "Able to get project list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+    # Get Division List
+    sql = "select ctID,ctName name from PRPO_Category where ctcountry=14 order by ctName;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            division_obj = cursor.fetchall()
+
+        if division_obj is not None:
+            for item in division_obj:
+                ctid = item[0]
+                ctname = item[1]
+                record = {"ctid":ctid, "ctname":ctname}
+                division_list.append(record)
+            is_error = False
+            message = "Able to get division list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+    # TODO
+
 
     return render(request,
         'prpo/pr_entry.html', {
@@ -771,4 +856,7 @@ def pr_entry(request):
         'user_language': user_language,
         'username_display': username_display,
         'pr_id': pr_id,
+        'company_list': list(company_list),
+        'project_list': list(project_list),
+        'division_list': list(division_list),
     })
