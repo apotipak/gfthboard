@@ -61,7 +61,7 @@
                   </td>
                   <td class='text-right' nowrap>
                     
-                    <form action="/prpo/company/manage/" method="post" autocomplete="off">
+                    <form action="/prpo/company/manage/" method="post">
                       {% csrf_token %}
                       <input type="hidden" id="company_id" name="company_id" value="{{company.0}}" />
                       <button type='submit' class='btn btn-outline-secondary btn-xs text-info'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>

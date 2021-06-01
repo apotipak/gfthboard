@@ -655,8 +655,8 @@ def ajax_pr_inquiry(request):
     category_id = request.POST.get("category_option")
     subcategory_id = request.POST.get("subcategory_option")
     item_id = request.POST.get("item_option")
-    date_from = datetime.strptime(request.POST.get("date_from"), "%d/%m/%Y")
-    date_to = datetime.strptime(request.POST.get("date_to"), "%d/%m/%Y")
+    date_from = datetime.strptime(request.POST.get("date_from"), "%d/%m/%Y").date()
+    date_to = datetime.strptime(request.POST.get("date_to"), "%d/%m/%Y").date()
     
     pr_list_obj = []
     pr_list = []
@@ -680,8 +680,8 @@ def ajax_pr_inquiry(request):
         sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner "
         sql += "from prpo_pr pr "
         sql += "join PRPO_ExchangeRate ex on pr.prCurrency=ex.erID "
-        sql += "where pr.prReqDate>='" + str(date_from) + "' and pr.prReqDate<='" + str(date_to) + "';"
-    
+        sql += "where pr.prReqDate between '" + str(date_from) + "' and '" + str(date_to) + " 23:59:00'";
+
     print("sql: ", sql)
 
     try:

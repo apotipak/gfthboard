@@ -197,14 +197,14 @@
 
 {% block javascript %}
 <script>
-$(document).ready(function () {    
+$(document).ready(function () {
   $('#id_date_from').datepicker(
-    {dateFormat: 'dd/mm/yy', altField: '#thealtdate', altFormat: 'dd/mm/yyyy', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date());
+    {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
+  }).datepicker("setDate", new Date(2021,2,01));
 
   $('#id_date_to').datepicker(
-    {dateFormat: 'dd/mm/yy', altField: '#thealtdate', altFormat: 'dd/mm/yyyy', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date());
+    {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
+  }).datepicker("setDate", new Date(2021,2,02));
 });
 
 var table = $('#id_pr_list_table').DataTable({
@@ -317,10 +317,10 @@ $('#id_search_pr_form').on('submit', function(event){
               result += "<td>&nbsp;</td>";
               result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
               result += "<td>" + json.pr_list[i]["prtotalamt"] + "</td>";
-              //result += "<td>" + json.pr_list[i]["prconsigner"] + "</td>";              
+              //result += "<td>" + json.pr_list[i]["prconsigner"] + "</td>";                            
               result += "<td class='text-right' nowrap>" + "<button class='btn btn-outline-secondary btn-xs text-info btn-block'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>" + "</td>";
               result += "</tr>";
-          }
+            }
           } else {
             //result += "<tr>";
             //result += "<td colspan='9'>There is no data.</td>";
