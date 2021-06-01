@@ -1,0 +1,344 @@
+{% extends "page_prpo.html" %}
+
+{% load humanize %}
+
+{% load i18n %}
+
+{% block title %} PR Entry & Inquiry {% endblock %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+  
+    <div class="content-header">
+      <div class="container-fluid">
+
+        <div class="col-md-12">
+
+          <form method="post" action="/prop/ajax-pr-inquiry/" autocomplete="off" name="search_pr_form" id="id_search_pr_form">
+            {% csrf_token %}
+
+            <!-- Search Card -->
+            <div class="card card-primary" style="background-color: #edeeef;">
+
+              <div class="card-header" style="background-color: #257638;">
+                <h3 class="card-title"><i class="fas fa-search"></i>&nbsp;&nbsp;PR Inquiry</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="input-group col-6 float-left">
+
+
+                  <!-- Department -->
+                  {% comment %}
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width: 100%;"><b>Department</b></span></div>
+                  <select id="id_department_option" class="form-control form-control-md" style="border-radius: 0; width:50%;">
+                    <option value="0">All Departments</option>
+                    {% for item in department_list %}
+                    <option value="{{item.dpid}}">{{ item.dpname }}</option>
+                    {% endfor %}                
+                  </select>
+                  {% endcomment %}
+
+
+                  <!-- PR Number -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width: 100%;"><b>PR #</b></span></div>
+                  <input type="text" class="form-control form-control-md" placeholder="Enter PR Number" id="id_pr_number" name="pr_number" />
+
+                  <!-- Category -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width:100%;"><b>Category</b></span></div>
+                  <select id="id_category_option" name="category_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="category_change();">
+                    <option value="0">All Categories</option>
+                    {% for item in category_list %}
+                    <option value="{{item.ctid}}">{{ item.ctname }}</option>
+                    {% endfor %}                                    
+                  </select>
+
+                  <!-- Subcategory -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Subcategory</b></span></div>
+                  <select id="id_subcategory_option" name="subcategory_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="subcategory_change();">
+                    <option value="0">All Subcategories</option>
+                  </select>
+
+                  <!-- Item -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Item</b></span></div>
+                  <select id="id_item_option" name="item_option" class="form-control form-control-md" style="border-radius: 0; width: 125px;">
+                    <option value="0">All Items</option>
+                  </select>                  
+
+                </div>
+
+                <div class="input-group col-6 float-right">
+                  <!-- Date From -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0">
+                    <span class="input-group-text border-bottom-0 border-right-0 rounded-0" style="width:60%;"><b>From</b></span>
+                    <span class="input-group-text border-bottom-0 border-left-0 rounded-0" style="width:40%;"><small>dd/mm/yyyy</small></span>
+                  </div>
+                  <input type="text" style="width: 80px;" id="id_date_from" name="date_from" class="form-control datepicker border-bottom-1 rounded-0 bg-white" required="" readonly="readonly">
+
+                  <!-- Date To -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0">
+                    <span class="input-group-text border-bottom-0 border-right-0 rounded-0" style="width:60%;"><b>To</b></span>
+                    <span class="input-group-text border-bottom-0 border-left-0 rounded-0" style="width:40%;"><small>dd/mm/yyyy</small></span>
+                  </div>
+                  <input type="text" style="width: 80px;" name="date_to" class="form-control datepicker border-bottom-1 rounded-0 bg-white" placeholder="dd/mm/yyyy" required="" id="id_date_to" readonly="readonly">
+
+
+                  <!-- Status -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Status</b></span></div>
+                  <select id="id_pr_status" name="pr_status" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
+                    <option value="0">All Status</option>
+                    {% for item in pr_status_list %}
+                    <option value="{{item.stid}}">{{ item.stname }}</option>
+                    {% endfor %}                                   
+                  </select>
+                </div>
+
+                <div class="col-12 pt-2 float-right text-right">
+                  <button class="btn btn-md btn-primary" id="id_search_button"><i class="fas fa-search"></i>&nbsp;<b>&nbsp;Search</b>&nbsp;</button>
+                </div>
+                                
+              </div>
+            </div>
+          </form>
+
+        </div>
+        
+        {% comment %}
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <!--<h1 class="m-0 text-dark">{% trans 'PR Entry & Inquiry' %} </h1>-->
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><button class="btn btn-md btn-primary" id="id_add_new_company_button" onclick="add_pr();"><b>&nbsp;<i class='fas fa-plus fa-xs'></i>&nbsp;New</b>&nbsp;</button></li>
+            </ol>
+          </div>
+        </div>
+        {% endcomment %}
+
+
+
+        <div class="col-md-12">
+          <div class="card card-primary">
+            <!--
+            <div class="card-header">
+              <h3 class="card-title">Primary Outline</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                </button>
+              </div>            
+            </div>
+            -->
+            
+            <div class="card-body">
+
+              <table id="id_pr_list_table" name="pr_list_table" class="table table-striped dataTable">
+                <thead>
+                  <tr>
+                    <th scope="col">PR#</th>
+                    <th scope="col">PO#</th>
+                    <th scope="col">Project#</th>
+                    <th scope="col" nowrap>Requested Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Division</th>
+                    <th scope="col">CUR</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Consigner</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+    <!-- /.content-header -->
+    
+
+    <!-- Main content -->
+    <!--
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">          
+          <div class="col-lg-12">            
+            &nbsp;
+          </div>
+      </div>
+    </section>
+    -->
+  </div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready(function () {    
+  $('#id_date_from').datepicker(
+    {dateFormat: 'dd/mm/yy', altField: '#thealtdate', altFormat: 'dd/mm/yyyy', autoclose: true, todayHighlight: true
+  }).datepicker("setDate", new Date());
+
+  $('#id_date_to').datepicker(
+    {dateFormat: 'dd/mm/yy', altField: '#thealtdate', altFormat: 'dd/mm/yyyy', autoclose: true, todayHighlight: true
+  }).datepicker("setDate", new Date());
+});
+
+var table = $('#id_pr_list_table').DataTable({
+  "paging": true,
+  "pageLength": 15,
+  "scrollCollapse": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": false,
+  "autoWidth": true,
+  "language": {
+    search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+    searchPlaceholder: 'Filter data'
+  },    
+});
+
+function category_change() {
+  category_id = $("#id_category_option").val();
+  $.ajax({
+      url: "/prpo/ajax-get-subcategory-list/" + category_id + "/",
+      success : function(data) {        
+        if(data.is_error) {
+          alert("Error");
+        } else {
+          var $el = $("#id_subcategory_option");
+          $el.empty();
+          $el.append("<option value='0' selected>All Subcategories</option>");
+          for(var i=0; i<data.subcategory_list.length; i++) {
+            scid = data.subcategory_list[i]["scid"];
+            scname = data.subcategory_list[i]["scname"];
+            $el.append($("<option></option>").attr("value", scid).text(scname));
+          }
+          
+          // Clear item dropdown list
+          $("#id_item_option").empty();
+          $("#id_item_option").append("<option value='0' selected>All Items</option>");
+        }
+      },
+  });
+}
+
+function subcategory_change() {
+  subcategory_id = $("#id_subcategory_option").val();
+
+  $.ajax({
+      url: "/prpo/ajax-get-item-list-by-subcategory-id/" + subcategory_id + "/",
+      success : function(data) {        
+        if(data.is_error) {
+          alert("Error");
+        } else {
+          var $el = $("#id_item_option");
+          $el.empty();
+          $el.append("<option value='0' selected>All Items</option>");
+          for(var i=0; i<data.item_list.length; i++) {
+            itid = data.item_list[i]["itid"];
+            itname = data.item_list[i]["itname"];
+            itdescription = data.item_list[i]["itdescription"];
+
+            if(itdescription!="") {
+              itdescription = " | " + itdescription
+            }
+                          
+            $el.append($("<option></option>").attr("value", itid).text(itname + itdescription));
+          }          
+        }
+      },
+  });
+
+}
+
+$('#id_search_pr_form').on('submit', function(event){
+    event.preventDefault();
+
+    formData = new FormData();
+    data = new FormData($('#id_search_pr_form').get(0));
+
+    $.ajax({      
+      type: "POST",
+      url: '{% url "ajax-pr-inquiry" %}',
+      dataType: 'json',
+      data: data,
+      cache: false,
+      processData: false,
+      contentType: false, 
+      success: function(json) {
+        if(json.is_error) {
+          alert(json.message);
+        } else {          
+          result = "";
+          
+          if(json.pr_list.length>0) {
+            for(i=0;i<json.pr_list.length;i++) {
+              result += "<tr>";
+              result += "<td>" + json.pr_list[i]["prid"] + "</td>";
+              result += "<td>&nbsp;</td>";
+              result += "<td>&nbsp;</td>";            
+              result += "<td>" + json.pr_list[i]["prreqdate"] + "</td>";                        
+              result += "<td>" + json.pr_list[i]["prcplstatus"] + "</td>";
+              result += "<td>&nbsp;</td>";
+              result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
+              result += "<td>" + json.pr_list[i]["prtotalamt"] + "</td>";
+              result += "<td>" + json.pr_list[i]["prconsigner"] + "</td>";
+              result += "</tr>";
+          }
+          } else {
+            //result += "<tr>";
+            //result += "<td colspan='9'>There is no data.</td>";
+            //result += "</tr>";
+          }
+          
+          table.destroy();
+          $('#id_pr_list_table tbody').empty().append(result);          
+          table = $('#id_pr_list_table').DataTable({
+            "paging": true,
+            "pageLength": 15,
+            "scrollCollapse": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": true,
+            "language": {
+              search: '<i class="fa fa-filter" aria-hidden="true"></i>',
+              searchPlaceholder: 'Filter data'
+            },    
+          });
+        }
+      },
+      error: function(xhr, errmsg, err) {
+        alert("error");
+      }
+    })
+});
+
+
+
+</script>
+{% endblock %}  

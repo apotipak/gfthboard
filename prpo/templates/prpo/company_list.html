@@ -64,10 +64,10 @@
                     <form action="/prpo/company/manage/" method="post" autocomplete="off">
                       {% csrf_token %}
                       <input type="hidden" id="company_id" name="company_id" value="{{company.0}}" />
-                      <button type='submit' class='btn btn-info btn-xs'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>
+                      <button type='submit' class='btn btn-outline-secondary btn-xs text-info'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>
 
                       <!--<button type='button' onclick='delete_company("{{company.0}}")' class='btn btn-danger btn-xs' data-toggle='modal'>&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button>-->
-                      <a href="#" type="button" class="btn btn-danger btn-xs"><i class='fas fa-trash fa-xs'></i></a>
+                      <button href="#" type="button" class="btn btn-outline-secondary btn-xs text-danger">&nbsp;<i class='fas fa-trash fa-xs'></i>&nbsp;</button>
                     </form>
                   </td>
 
