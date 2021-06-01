@@ -137,6 +137,10 @@
             
             <div class="card-body">
 
+              
+              <form action="/prpo/pr-entry/" method="post" name="pr_entry_form">
+              {% csrf_token %}
+              <input type="hidden" id="id_selected_pr_id" name="selected_pr_id" value="0" />
               <table id="id_pr_list_table" name="pr_list_table" class="table table-striped dataTable">
                 <thead>
                   <tr>
@@ -167,7 +171,7 @@
                   </tr>
                 </tbody>
               </table>
-
+              </form>
             </div>
 
           </div>
@@ -200,11 +204,12 @@
 $(document).ready(function () {
   $('#id_date_from').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,2,01));
+  }).datepicker("setDate", new Date(2021,01,05));
 
   $('#id_date_to').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,2,02));
+  }).datepicker("setDate", new Date(2021,01,08));
+
 });
 
 var table = $('#id_pr_list_table').DataTable({
@@ -231,6 +236,14 @@ var table = $('#id_pr_list_table').DataTable({
     },
   ],
 });
+
+function pr_entry(pr_id) {
+  //alert(pr_id);
+  //window.location.href = '/prpo/pr-entry/';
+  $("#id_selected_pr_id").val(pr_id);
+  $("#pr_entry_form").submit();
+
+}
 
 function category_change() {
   category_id = $("#id_category_option").val();
@@ -308,8 +321,9 @@ $('#id_search_pr_form').on('submit', function(event){
           
           if(json.pr_list.length>0) {
             for(i=0;i<json.pr_list.length;i++) {
+              pr_id = json.pr_list[i]["prid"];
               result += "<tr>";
-              result += "<td>" + json.pr_list[i]["prid"] + "</td>";
+              result += "<td>" + pr_id + "</td>";
               result += "<td>&nbsp;</td>";
               result += "<td>&nbsp;</td>";            
               result += "<td>" + json.pr_list[i]["prreqdate"] + "</td>";                        
@@ -318,13 +332,12 @@ $('#id_search_pr_form').on('submit', function(event){
               result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
               result += "<td>" + json.pr_list[i]["prtotalamt"] + "</td>";
               //result += "<td>" + json.pr_list[i]["prconsigner"] + "</td>";                            
-              result += "<td class='text-right' nowrap>" + "<button class='btn btn-outline-secondary btn-xs text-info btn-block'>&nbsp;<i class='fas fa-pen fa-xs'></i>&nbsp;</button>" + "</td>";
+              result += "<td class='text-right' nowrap>";
+              result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info btn-block">&nbsp;<i class="fas fa-pen fa-xs"></i>&nbsp;</button>';
+              result += "</td>";
               result += "</tr>";
+
             }
-          } else {
-            //result += "<tr>";
-            //result += "<td colspan='9'>There is no data.</td>";
-            //result += "</tr>";
           }
           
           table.destroy();

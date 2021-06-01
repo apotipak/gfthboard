@@ -692,7 +692,8 @@ def ajax_pr_inquiry(request):
         if pr_list_obj is not None:
             if len(pr_list_obj) > 0:
                 for item in pr_list_obj:
-                    prid = item[0]
+                    prid = item[0].strip()
+                    # print("prid :" + prid.strip())
                     prcurrency = item[2]
                     ercurrency = item[3]
                     prreqdate = item[1].strftime("%d/%m/%Y")
@@ -704,7 +705,7 @@ def ajax_pr_inquiry(request):
                     prconsigner = "" if item[9] is None else item[10]
 
                     record = {
-                        "prid": prid,
+                        "prid": prid.strip(),
                         "prcurrency": prcurrency,
                         "ercurrency": ercurrency,
                         "prreqdate": prreqdate,
@@ -739,3 +740,35 @@ def ajax_pr_inquiry(request):
     
     response.status_code = 200
     return response
+
+
+@login_required(login_url='/accounts/login/')
+def pr_entry(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION    
+    today_date = getDateFormatDisplay(user_language)
+    username = request.user.username
+    pr_id = request.POST.get("selected_pr_id")
+
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
+                       
+    print("PR #: ", pr_id)
+
+    return render(request,
+        'prpo/pr_entry.html', {
+        'page_title': settings.PROJECT_NAME,
+        'today_date': today_date,
+        'project_version': settings.PROJECT_VERSION,
+        'db_server': settings.DATABASES['default']['HOST'],
+        'project_name': settings.PROJECT_NAME,
+        'user_language': user_language,
+        'username_display': username_display,
+        'pr_id': pr_id,
+    })

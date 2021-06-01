@@ -35,8 +35,7 @@ urlpatterns = [
     # PR Inquiry
     path('ajax-pr-inquiry/', views.ajax_pr_inquiry, name='ajax-pr-inquiry'),
 
-
-    # prpo_status id = 1,2,3,10
-    # Get PR status list
+    # PR Entry
+    path('pr-entry/', views.pr_entry, name='pr-entry'),
     
 ]
