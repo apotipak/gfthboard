@@ -44,7 +44,11 @@
                     <!-- Urgent Flag -->
                     <div class="card-tools float-left">                    
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            {% if prurgent %}
+                            <input class="form-check-input" type="checkbox" value="" id="id_pr_urgent" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" value="" id="id_pr_urgent">
+                            {% endif %}
                             <label class="form-check-label text-danger" for="flexCheckDefault"><b>Urgent</b></label>
                         </div>                              
                     </div>
