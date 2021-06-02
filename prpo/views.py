@@ -760,6 +760,7 @@ def pr_entry(request):
     project_list = []
     division_list = []
     currency_list = []
+    attention_to_list = []
     record = {}
 
     if user_language == "th":
@@ -842,6 +843,33 @@ def pr_entry(request):
     finally:
         cursor.close()
 
+    # Get Attention To List
+    sql = "select * from prpo_user where usstatus=1 order by usname;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            attention_to_obj = cursor.fetchall()
+
+        if attention_to_obj is not None:
+            for item in attention_to_obj:
+                usid = item[0]
+                usname = item[1]
+
+                record = {"usid":usid, "usname":usname}
+                attention_to_list.append(record)
+            is_error = False
+            message = "Able to get Attention To list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+
     # Get PR information
     prid, prcompany,prapplicant = "","",""
 
@@ -904,6 +932,7 @@ def pr_entry(request):
         'division_list': list(division_list),
         'item_type_list': list(item_type_list),
         'vendor_type_list': list(vendor_type_list),
+        'attention_to_list': list(attention_to_list),
         'pr_id': pr_id,
         'prcompany': prcompany,
         'prapplicant': prapplicant,

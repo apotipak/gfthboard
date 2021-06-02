@@ -28,9 +28,6 @@
 
     <section class="content">
       <div class="container-fluid">
-
-
-
         
         <div class="col-md-12">            
             <!--<form method="post" action="/prop/ajax-pr-inquiry/" autocomplete="off" name="search_pr_form" id="id_search_pr_form">-->
@@ -113,7 +110,7 @@
   
 
                   <!-- Vendor Type -->                  
-                  <div class="input-group col-12 pt-2 float-left">
+                  <div class="input-group col-12 pt-1 pb-1 float-left">
                     <div class="input-group-prepend p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>Vendor Type</b></span></div>
 
                     <div class="float-left text-left pt-2">
@@ -132,20 +129,6 @@
                             {% endif %}
                         {% endfor %}
 
-                        <!--
-                        <div class="form-check form-check-inline pl-10">
-                            <input class="form-check-input" type="radio" name="vendor_options" id="inlineRadio1" value="option1" checked>
-                            <label class="form-check-label" for="inlineRadio1">Any Vendor</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="vendor_options" id="inlineRadio2" value="option2">
-                            <label class="form-check-label" for="inlineRadio2">Vendor Recommended</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="vendor_options" id="inlineRadio3" value="option3">
-                            <label class="form-check-label" for="inlineRadio3">Vendor Nominated</label>
-                        </div>
-                        -->
                     </div>                    
                   </div>
                  
@@ -155,15 +138,16 @@
                     <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Vendor Name</b></span></div>
                     <input type="text" class="form-control" id="id_vendor_name" name="vendor_name" />
 
-                    <!-- Ship To -->
+
                     <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Ship To</b></span></div>
-                    <input type="text" class="form-control" id="id_ship_to" name="ship_to" />
+                    <input type="text" class="form-control" style="border-radius:0;" id="id_ship_to" name="ship_to" />
+
                   </div>
   
                   
                   <div class="input-group col-6 float-right">
                     <!-- Reason -->
-                    <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-1" style="width:100%;"><b>Reason</b></span></div>
+                    <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-1 rounded-0" style="width:100%;"><b>Reason</b></span></div>
                     <input type="text" class="form-control" id="id_reason" name="reason" />
 
                     <!-- Item Type -->
@@ -181,20 +165,25 @@
 
                   <div class="input-group col-6 float-left">
                     <!-- Attention To -->
-                    <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Attention To</b></span></div>
-                    <input type="text" class="form-control" id="id_attention_to" name="attention_to" />
+                    <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-1 rounded-0" style="width:100%;"><b>Attention To</b></span></div>
+
+                    <select id="id_attention_to_options" name="attention_to_options" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
+                    {% for item in attention_to_list %}
+                    <option value="{{item.usid}}">{{ item.usname }}</option>
+                    {% endfor %}
+                    </select>
                   </div>
                 
                   <div class="input-group col-6 float-right">
                     <!-- Attachment -->
-                    <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-1 rounded-0" style="width:100%;"><b>Attachment</b></span></div>
-                    <input type="text" class="form-control" id="id_reason" name="reason" />
+                    <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text rounded-0" style="width:100%;"><b>Attachment</b></span></div>
+                    <input type="text" class="form-control" style="border-radius:0;" id="id_reason" name="reason" />
                   </div>
 
-                  <div class="input-group col-12 float-left">
+                  <div class="input-group col-12 pt-1 float-left">
                     <!-- Remark -->
                     <div class="input-group-prepend bg-secondary p-0"><span class="input-group-text rounded-0" style="width:100%;"><b>Remark</b></span></div>
-                    <input type="text" class="form-control" id="id_remark" name="remark" />
+                    <input type="text" class="form-control" style="border-radius:0;" id="id_remark" name="remark" />
                   </div>
 
 
