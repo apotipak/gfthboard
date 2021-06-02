@@ -671,17 +671,20 @@ def ajax_pr_inquiry(request):
 
     if pr_number!="":
         # sql = "select prID,prReqDate,prCurrency,prTotalAmt,prCplStatus,prRouting,prNextHandler,prurgent,prConsigner from prpo_pr "
-        sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner "
+        sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner,pr.prcpa "
         sql += "from prpo_pr pr "
         sql += "join PRPO_ExchangeRate ex on pr.prCurrency=ex.erID "
-        sql += "where pr.prid='" + str(pr_number) + "';"
+        sql += "where pr.prid='" + str(pr_number) + "'"        
     else:
         # sql = "select prID,prReqDate,prCurrency,prTotalAmt,prCplStatus,prRouting,prNextHandler,prurgent,prConsigner from prpo_pr "
-        sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner "
+        sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner,pr.prcpa "
         sql += "from prpo_pr pr "
         sql += "join PRPO_ExchangeRate ex on pr.prCurrency=ex.erID "
-        sql += "where pr.prReqDate between '" + str(date_from) + "' and '" + str(date_to) + " 23:59:00'";
+        sql += "where pr.prReqDate between '" + str(date_from) + "' and '" + str(date_to) + " 23:59:00'"
+        if category_id != "" and category_id != "0":
+            sql += " and prcategory=" + str(category_id)        
 
+    sql += ";"
     print("sql: ", sql)
 
     try:
@@ -694,15 +697,16 @@ def ajax_pr_inquiry(request):
                 for item in pr_list_obj:
                     prid = item[0].strip()
                     # print("prid :" + prid.strip())
-                    prcurrency = item[2]
-                    ercurrency = item[3]
                     prreqdate = item[1].strftime("%d/%m/%Y")
-                    prtotalamt = item[4]
+                    prcurrency = item[2]
+                    ercurrency = item[3]                                        
+                    prtotalamt = "{:,.2f}".format(item[4])
                     prcplstatus = "1" if item[5] else "0"
                     prrouting = item[6]
                     prnexthandler = item[7]
                     prurgent = item[8]
                     prconsigner = "" if item[9] is None else item[10]
+                    prcpa = item[10]
 
                     record = {
                         "prid": prid.strip(),
@@ -715,6 +719,7 @@ def ajax_pr_inquiry(request):
                         "prnexthandler": prnexthandler,
                         "prurgent": prurgent,
                         "prconsigner": prconsigner,
+                        "prcpa": prcpa,
                     }
 
                     pr_list.append(record)

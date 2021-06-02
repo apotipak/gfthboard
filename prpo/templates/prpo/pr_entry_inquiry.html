@@ -20,12 +20,15 @@
             {% csrf_token %}
 
             <!-- Search Card -->
-            <div class="card card-primary" style="background-color: #edeeef;">
+            <!--<div class="card card-primary" style="background-color: #edeeef;">-->
+            <div class="card card-primary">
 
-              <div class="card-header" style="background-color: #257638;">
-                <h3 class="card-title"><b>PR Inquiry</b></h3>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+              <!--<div class="card-header" style="background-color: #257638;">-->
+              <div class="card-header bg-light">
+                <h3 class="card-title pt-2"><b>PR Inquiry</b></h3>
+                <div class="card-tools text-dark">
+                  <!--<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>-->
+                  <button class="btn btn-sm btn-secondary" id="id_search_button"><i class="fas fa-search fa-sm"></i>&nbsp;&nbsp;Search&nbsp;</button>
                 </div>
               </div>
 
@@ -36,59 +39,93 @@
                   <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width: 100%;"><b>PR #</b></span></div>
                   <input type="text" class="form-control form-control-md" placeholder="Enter PR Number" id="id_pr_number" name="pr_number" />
 
+                  <!-- Date From -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0">
+                    <span class="input-group-text border-bottom-0 border-right-0 rounded-0" style="width:100%;"><b>From</b>&nbsp;&nbsp;&nbsp;&nbsp;<small>[dd/mm/yyyy]</small></span>                    
+                  </div>
+                  <input type="text" style="width: 80px;" id="id_date_from" name="date_from" class="form-control datepicker border-bottom-1 rounded-0 bg-white" required="" readonly="readonly">
+
+                  <!-- Category -->
+                  <!--
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width:100%;"><b>Category</b></span></div>
+                  <select id="id_category_option" name="category_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="category_change();">
+                    <option value="0">Select All</option>
+                    {% for item in category_list %}
+                    <option value="{{item.ctid}}">{{ item.ctname }}</option>
+                    {% endfor %}                                    
+                  </select>
+                  -->
+
+                  <!-- Subcategory -->
+                  <!--
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Sub Category</b></span></div>
+                  <select id="id_subcategory_option" name="subcategory_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="subcategory_change();">
+                    <option value="0">Select All</option>
+                  </select>
+                  -->
+
+                  <!-- Item -->
+                  <!--
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Item</b></span></div>
+                  <select id="id_item_option" name="item_option" class="form-control form-control-md" style="border-radius: 0; width: 125px;">
+                    <option value="0">Select All</option>
+                  </select>                  
+                  -->
+
+                  <!-- Status -->
+                  <!--
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Status</b></span></div>
+                  <select id="id_pr_status" name="pr_status" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
+                    <option value="0">Select All</option>
+                    {% for item in pr_status_list %}
+                    <option value="{{item.stid}}">{{ item.stname }}</option>
+                    {% endfor %}                                   
+                  </select>
+                  -->
+                </div>
+
+                <div class="input-group col-6 float-right">
                   <!-- Category -->
                   <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width:100%;"><b>Category</b></span></div>
                   <select id="id_category_option" name="category_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="category_change();">
-                    <option value="0">All Categories</option>
+                    <option value="0">Select All</option>
                     {% for item in category_list %}
                     <option value="{{item.ctid}}">{{ item.ctname }}</option>
                     {% endfor %}                                    
                   </select>
 
-                  <!-- Subcategory -->
-                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Subcategory</b></span></div>
-                  <select id="id_subcategory_option" name="subcategory_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="subcategory_change();">
-                    <option value="0">All Subcategories</option>
-                  </select>
-
-                  <!-- Item -->
-                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Item</b></span></div>
-                  <select id="id_item_option" name="item_option" class="form-control form-control-md" style="border-radius: 0; width: 125px;">
-                    <option value="0">All Items</option>
-                  </select>                  
-
-                </div>
-
-                <div class="input-group col-6 float-right">
                   <!-- Date From -->
+                  <!--
                   <div class="input-group-prepend col-6 bg-secondary p-0">
-                    <span class="input-group-text border-bottom-0 border-right-0 rounded-0" style="width:70%;"><b>From</b>&nbsp;&nbsp;&nbsp;&nbsp;<small>[dd/mm/yyyy]</small></span>
-                    <span class="input-group-text border-bottom-0 border-left-0 border-right-0 rounded-0" style="width:30%;"></span>
+                    <span class="input-group-text border-bottom-0 border-right-0 rounded-0" style="width:100%;"><b>From</b>&nbsp;&nbsp;&nbsp;&nbsp;<small>[dd/mm/yyyy]</small></span>                    
                   </div>
                   <input type="text" style="width: 80px;" id="id_date_from" name="date_from" class="form-control datepicker border-bottom-1 rounded-0 bg-white" required="" readonly="readonly">
+                  -->
 
                   <!-- Date To -->
                   <div class="input-group-prepend col-6 bg-secondary p-0">
-                    <span class="input-group-text border-bottom-0 border-right-0 rounded-0" style="width:70%;"><b>To</b>&nbsp;&nbsp;&nbsp;&nbsp;<small>[dd/mm/yyyy]</small></span>
-                    <span class="input-group-text border-bottom-0 border-left-0 border-right-0 rounded-0" style="width:30%;"></span>
+                    <span class="input-group-text border-bottom-0 border-right-0 rounded-0" style="width:100%;"><b>To</b>&nbsp;&nbsp;&nbsp;&nbsp;<small>[dd/mm/yyyy]</small></span>
                   </div>
                   <input type="text" style="width: 80px;" name="date_to" class="form-control datepicker border-bottom-1 rounded-0 bg-white" placeholder="dd/mm/yyyy" required="" id="id_date_to" readonly="readonly">
 
 
                   <!-- Status -->
+                  <!--
                   <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Status</b></span></div>
                   <select id="id_pr_status" name="pr_status" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
-                    <option value="0">All Status</option>
+                    <option value="0">Select All</option>
                     {% for item in pr_status_list %}
                     <option value="{{item.stid}}">{{ item.stname }}</option>
                     {% endfor %}                                   
                   </select>
+                  -->
                 </div>
 
+                <!--
                 <div class="col-12 pt-2 float-right text-right">
-                  <button class="btn btn-md btn-primary" id="id_search_button"><i class="fas fa-search fa-sm"></i>&nbsp;&nbsp;Search&nbsp;</button>
+                  <button class="btn btn-sm btn-secondary" id="id_search_button"><i class="fas fa-search fa-sm"></i>&nbsp;&nbsp;Search&nbsp;</button>
                 </div>
-                                
+                -->            
               </div>
             </div>
           </form>
@@ -102,7 +139,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><button class="btn btn-md btn-primary" id="id_add_new_company_button" onclick="add_pr();"><b>&nbsp;<i class='fas fa-plus fa-xs'></i>&nbsp;New</b>&nbsp;</button></li>
+              <li class="breadcrumb-item"><button class="btn btn-sm btn-primary" id="id_add_new_company_button" onclick="add_pr();"><b>&nbsp;<i class='fas fa-plus fa-xs'></i>&nbsp;New</b>&nbsp;</button></li>
             </ol>
           </div>
         </div>
@@ -111,16 +148,14 @@
 
 
         <div class="col-md-12">
-          <div class="card card-primary">
-            <!--
+          <div class="card card-light">
             <div class="card-header">
-              <h3 class="card-title">Primary Outline</h3>
+              <h3 class="card-title pt-2"><b>PR List</b></h3>
               <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                </button>
+                <!--<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>-->
+                <button class="btn btn-sm btn-success" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;&nbsp;<b>New PR</b>&nbsp;</button>
               </div>            
             </div>
-            -->
             
             <div class="card-body">
 
@@ -128,16 +163,16 @@
               <form action="/prpo/pr-entry/" method="post" name="pr_entry_form">
               {% csrf_token %}
               <input type="hidden" id="id_selected_pr_id" name="selected_pr_id" value="0" />
-              <table id="id_pr_list_table" name="pr_list_table" class="table table-striped dataTable">
+              <table id="id_pr_list_table" name="pr_list_table" class="table table-sm table-striped dataTable">
                 <thead>
                   <tr>
-                    <th scope="col">PR#</th>
-                    <th scope="col">PO#</th>
-                    <th scope="col">Project#</th>
+                    <th scope="col">PR #</th>
+                    <th scope="col">PO #</th>
+                    <th scope="col">Project #</th>
                     <th scope="col" class="text-nowrap">Requested Date</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Division</th>
-                    <th scope="col">CUR</th>
+                    <!--<th scope="col">Division</th>-->
+                    <!--<th scope="col">CUR</th>-->
                     <th scope="col">Amount</th>
                     <!--<th scope="col">Consigner</th>-->
                     <th scope="col">&nbsp;</th>
@@ -150,8 +185,8 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <!--<td>&nbsp;</td>-->                    
+                    <!--<td>&nbsp;</td>-->
                     <td>&nbsp;</td>
                     <!--<td>&nbsp;</td>-->
                     <td>&nbsp;</td>
@@ -191,11 +226,11 @@
 $(document).ready(function () {
   $('#id_date_from').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,01,05));
+  }).datepicker("setDate", new Date(2021,04,01));
 
   $('#id_date_to').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,01,08));
+  }).datepicker("setDate", new Date(2021,04,05));
 
 });
 
@@ -203,8 +238,8 @@ var table = $('#id_pr_list_table').DataTable({
   "paging": true,
   "pageLength": 15,
   "scrollCollapse": true,
-  "lengthChange": true,
-  "searching": true,
+  "lengthChange": false,
+  "searching": false,
   "ordering": true,
   "info": false,
   "autoWidth": true,
@@ -215,7 +250,7 @@ var table = $('#id_pr_list_table').DataTable({
   "columnDefs": [
     {
       "orderable": false,
-      "targets": [2,3,4,5,6,7,8],      
+      "targets": [2,3,4,6],      
     },
     { 
       "searchable": true, 
@@ -242,7 +277,7 @@ function category_change() {
         } else {
           var $el = $("#id_subcategory_option");
           $el.empty();
-          $el.append("<option value='0' selected>All Subcategories</option>");
+          //$el.append("<option value='0' selected>All Subcategories</option>");
           for(var i=0; i<data.subcategory_list.length; i++) {
             scid = data.subcategory_list[i]["scid"];
             scname = data.subcategory_list[i]["scname"];
@@ -268,7 +303,7 @@ function subcategory_change() {
         } else {
           var $el = $("#id_item_option");
           $el.empty();
-          $el.append("<option value='0' selected>All Items</option>");
+          //$el.append("<option value='0' selected>All Items</option>");
           for(var i=0; i<data.item_list.length; i++) {
             itid = data.item_list[i]["itid"];
             itname = data.item_list[i]["itname"];
@@ -312,11 +347,11 @@ $('#id_search_pr_form').on('submit', function(event){
               result += "<tr>";
               result += "<td>" + pr_id + "</td>";
               result += "<td>&nbsp;</td>";
-              result += "<td>&nbsp;</td>";            
+              result += "<td>" + json.pr_list[i]["prcpa"] + "</td>";            
               result += "<td>" + json.pr_list[i]["prreqdate"] + "</td>";                        
               result += "<td>" + json.pr_list[i]["prcplstatus"] + "</td>";
-              result += "<td>&nbsp;</td>";
-              result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
+              //result += "<td>&nbsp;</td>";
+              //result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
               result += "<td>" + json.pr_list[i]["prtotalamt"] + "</td>";
               //result += "<td>" + json.pr_list[i]["prconsigner"] + "</td>";                            
               result += "<td class='text-right' nowrap>";
@@ -333,8 +368,8 @@ $('#id_search_pr_form').on('submit', function(event){
             "paging": true,
             "pageLength": 15,
             "scrollCollapse": true,
-            "lengthChange": true,
-            "searching": true,
+            "lengthChange": false,
+            "searching": false,
             "ordering": true,
             "info": false,
             "autoWidth": true,
@@ -344,7 +379,7 @@ $('#id_search_pr_form').on('submit', function(event){
             },    
             "columnDefs": [
               {
-                "targets": [2,3,4,5,6,7,8],
+                "targets": [2,3,4,6],
                 "orderable": false
               },
               { 
