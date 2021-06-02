@@ -221,10 +221,11 @@
                                 <th scope="col">Currency</th>
 
                                 <th scope="col" nowrap>Est. Unit Price</th>
-                                <th scope="col" nowrap>Included Tax</th>
+                                <th scope="col" nowrap>+Tax</th>
                                 <th scope="col" nowrap>Tax Rate %</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col" nowrap>Requested Delivery Date</th>
+                                <th>&nbsp;</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -234,14 +235,17 @@
                                 <th scope="row">{{ forloop.counter }}</th>
                                 <td>{{ item.rditem }}</td>
                                 <td>{{ item.rditemdesc }}</td>
-                                <td>{{ item.rditemqty }}</td>
+                                <td>{{ item.rditemqty|floatformat:0 }}</td>
                                 <td>{{ item.rditemum }}</td>
                                 <td>THB</td>
-                                <td>{{ item.rditemprice }}</td>
+                                <td>{{ item.rditemprice|floatformat:2|intcomma }}</td>
                                 <td>{{ item.rdtaxflag }}</td>
                                 <td>{{ item.rdtaxrate }}</td>
-                                <td>{{ item.rdactualprice }}</td>
-                                <td>{{ item.rddlvrydate }}</td>
+                                <td>{{ item.rdactualprice|floatformat:2|intcomma }}</td>
+                                <td>{{ item.rddlvrydate|date:"d/m/Y" }}</td>
+                                <td>                                    
+                                    <button type="submit" onclick="edit_item('{{item.rdid}}');" class="btn btn-outline-secondary btn-xs text-info btn-block">&nbsp;<i class="fas fa-pen fa-xs"></i>&nbsp;</button>
+                                </td>
                               </tr>
                               {% endfor %}
 
@@ -315,8 +319,8 @@ $(document).ready( function () {
 
 });
 
-function edit_company(company_id) {  
-  alert("todo: edit");
+function edit_item(item_id) {  
+  alert(item_id);
 }
 
 function delete_company(company_id) {

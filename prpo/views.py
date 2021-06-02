@@ -948,6 +948,7 @@ def pr_entry(request):
                 rdpodetail = item[12]
                 rdactive = item[13]
                 rdreleasedate = item[14]
+                prreqdate = item[1]
                 rdactualprice = item[15]
 
                 record = {
