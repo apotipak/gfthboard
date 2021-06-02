@@ -759,7 +759,7 @@ def pr_entry(request):
     company_list = []
     project_list = []
     division_list = []
-    currency_list = []    
+    currency_list = []
     record = {}
 
     if user_language == "th":
@@ -843,27 +843,30 @@ def pr_entry(request):
         cursor.close()
 
     # Get PR information
-    # sql = "select * from prpo_pr where prid='" + str(pr_id) + "';"
-    sql = "select prid, prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,"
+    prid, prcompany,prapplicant = "","",""
+
+    sql = "select prid,prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,"
     sql += "prattstatus,prattlink,prattrcvddate,prvendortype,prrecmdvendor,prrecmdreason,prurgent,prtotalitem,prtotalamt,"
     sql += "prtotalamtusd,prcplstatus,prremarks,prrouting,prnexthandler,prconsigner,prnextstatus,prverifyamount,practualamount,practualamountusd "
     sql += "from prpo_pr where prid='" + str(pr_id) + "';"
-    print("SQL pr: ", sql)
-    
-    '''
+    print("SQL pr_list : ", sql)
     try:
         with connection.cursor() as cursor:     
             cursor.execute(sql)
             pr_obj = cursor.fetchone()
 
         if pr_obj is not None:
-            for item in pr_obj:
-                ctid = item[0]
-                ctname = item[1]
-                record = {"ctid":ctid, "ctname":ctname}
-                division_list.append(record)
-            is_error = False
-            message = "Able to get division list."
+            prid = pr_obj[0]
+            prcompany = pr_obj[1]
+            prapplicant = pr_obj[2]
+            prcpa = pr_obj[3]
+            prreqdate = pr_obj[4]
+            prcategory = pr_obj[5]
+            pritemtype = pr_obj[8]
+            prvendortype = pr_obj[13]
+
+        is_error = False
+        message = "Able to get pr information."
 
     except db.OperationalError as e: 
         is_error = True
@@ -872,8 +875,19 @@ def pr_entry(request):
         is_error = True
         message = "Error message: " + str(e)
     finally:
-        cursor.close()    
-    '''
+        cursor.close()
+
+    vendor_type_list = [
+        {'vendor_type_id': '1', 'vendor_type_name': 'Any Vendor'},
+        {'vendor_type_id': '2', 'vendor_type_name': 'Vendor Recommended'},
+        {'vendor_type_id': '3', 'vendor_type_name': 'Vendor Nominated'},
+    ]
+
+    item_type_list = [
+        {'item_type_id': 'New Item', 'item_type_name': 'New Item'},
+        {'item_type_id': 'Spare', 'item_type_name': 'Spare'},
+        {'item_type_id': 'Replacement', 'item_type_name': 'Replacement'},
+    ]
 
     return render(request,
         'prpo/pr_entry.html', {
@@ -883,9 +897,19 @@ def pr_entry(request):
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
-        'username_display': username_display,
-        'pr_id': pr_id,
+        'username_display': username_display,                
         'company_list': list(company_list),
         'project_list': list(project_list),
         'division_list': list(division_list),
+        'item_type_list': list(item_type_list),
+        'vendor_type_list': list(vendor_type_list),
+        'pr_id': pr_id,
+        'prcompany': prcompany,
+        'prapplicant': prapplicant,
+        'prcpa': prcpa,
+        'prreqdate': prreqdate,
+        'prcategory': prcategory,
+        'pritemtype': pritemtype,
+        'prvendortype': prvendortype,
+        
     })
