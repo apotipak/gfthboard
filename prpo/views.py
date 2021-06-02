@@ -890,9 +890,13 @@ def pr_entry(request):
             prcpa = pr_obj[3]
             prreqdate = pr_obj[4]
             prcategory = pr_obj[5]
+            prdeliveryto = pr_obj[7]
             pritemtype = pr_obj[8]
             prvendortype = pr_obj[13]
+            prrecmdvendor = pr_obj[14]
+            prrecmdreason = pr_obj[15]
             prurgent = pr_obj[16]
+            prremarks = pr_obj[21]
 
         is_error = False
         message = "Able to get pr information."
@@ -942,5 +946,8 @@ def pr_entry(request):
         'pritemtype': pritemtype,
         'prvendortype': prvendortype,
         'prurgent': prurgent,
-        
+        'prrecmdvendor': prrecmdvendor,
+        'prrecmdreason': prrecmdreason,
+        'prdeliveryto': prdeliveryto,
+        'prremarks': prremarks,
     })

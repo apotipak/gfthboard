@@ -136,11 +136,11 @@
                   <div class="input-group col-6 float-left">
                     <!-- Vendor Name -->
                     <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Vendor Name</b></span></div>
-                    <input type="text" class="form-control" id="id_vendor_name" name="vendor_name" />
+                    <input type="text" class="form-control" id="id_vendor_name" name="vendor_name" value={{prrecmdvendor}} />
 
-
+                    <!-- Ship To -->
                     <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Ship To</b></span></div>
-                    <input type="text" class="form-control" style="border-radius:0;" id="id_ship_to" name="ship_to" />
+                    <input type="text" class="form-control" style="border-radius:0;" id="id_ship_to" name="ship_to" value="{{prdeliveryto}}" />
 
                   </div>
   
@@ -148,7 +148,7 @@
                   <div class="input-group col-6 float-right">
                     <!-- Reason -->
                     <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-1 rounded-0" style="width:100%;"><b>Reason</b></span></div>
-                    <input type="text" class="form-control" id="id_reason" name="reason" />
+                    <input type="text" class="form-control" id="id_reason" name="reason" value={{prrecmdreason}} />
 
                     <!-- Item Type -->
                     <div class="input-group-prepend col-6 p-0 bg-secondary"><span class="input-group-text border-1 rounded-0" style="width:100%;"><b>Item Type</b></span></div>
@@ -183,7 +183,7 @@
                   <div class="input-group col-12 pt-1 float-left">
                     <!-- Remark -->
                     <div class="input-group-prepend bg-secondary p-0"><span class="input-group-text rounded-0" style="width:100%;"><b>Remark</b></span></div>
-                    <input type="text" class="form-control" style="border-radius:0;" id="id_remark" name="remark" />
+                    <input type="text" class="form-control" style="border-radius:0;" id="id_remark" name="remark" value="{{prremarks}}" />
                   </div>
 
 
