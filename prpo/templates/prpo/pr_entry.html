@@ -13,7 +13,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-6">
-            <h3 class="m-0 text-dark">{{ pr_id }} <small><i>(edit)</i></small></h3>
+            <h3 class="m-0 text-dark"><b>{{ pr_id }}</b> <small>| edit</small></h3>
           </div>
           <div class="col-6">
             <ol class="breadcrumb float-right">
@@ -35,9 +35,22 @@
             {% csrf_token %}
             <div class="card-header">
               <h2 id="company_title" class="card-title pt-1"><b>{{ prpo_company_list.3 }}</b></h2>
-              <div class="card-tools">                
-                <button type="reset" class="btn btn-sm btn-default" id="id_cancel_button">&nbsp;<b>Cancel</b>&nbsp;</button>
-                <button class="btn btn-sm btn-primary" id="id_save_button">&nbsp;<b>Save</b>&nbsp;</button>
+              
+              <!-- Urgent Flag -->
+              <div class="card-tools float-left">  
+                  
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label text-danger" for="flexCheckDefault">
+                      Urgent
+                    </label>
+                </div>
+                              
+              </div>
+              
+              <div class="card-tools">
+                <button type="reset" class="btn btn-md btn-default" id="id_cancel_button">&nbsp;<b>Cancel</b>&nbsp;</button>
+                <button class="btn btn-md btn-primary" id="id_save_button">&nbsp;<b>Save</b>&nbsp;</button>
               </div>
             </div>
 
@@ -63,17 +76,18 @@
                     </div>
 
                     <div class="col-6 float-right">
+                        
+                        <!-- Project -->
                         <div class="col-lg-3 float-left">
                             <label for="company_name_en" class="pb-2">Project #</label>
-                          </div>
-                          <div class="col-lg-9 float-right">
-                            <!-- Project -->
+                        </div>                        
+                        <div class="col-lg-9 float-right">                            
                             <select id="id_project_option" name="project_option" class="form-control form-control-md" style="border-radius: 0; width: 100%;" onchange="category_change();">
                                 {% for item in project_list %}
                                 <option value="{{item.cpaid}}">{{ item.cpanumber }}</option>
                                 {% endfor %}                        
                             </select>
-                          </div>
+                        </div>                
                     </div>
 
                 </div>
@@ -107,37 +121,85 @@
                     </div>
 
                 </div>
+            
+                <div class="col-12">    
+                    <hr>                
+                    <!-- Vendor Type -->
+                    <div class="col-10 float-left">
 
-                <div class="col-12">
-                
+                        <div class="col-lg-2 float-left">
+                            <label for="company_name_en" class="pb-2">Vendor Type</label>
+                        </div>
+
+                        <div class="col-lg-10 float-left text-left">
+                            <div class="form-check form-check-inline pl-10">
+                                <input class="form-check-input" type="radio" name="vendor_options" id="inlineRadio1" value="option1" checked>
+                                <label class="form-check-label" for="inlineRadio1">Any Vendor</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="vendor_options" id="inlineRadio2" value="option2">
+                                <label class="form-check-label" for="inlineRadio2">Vendor Recommended</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="vendor_options" id="inlineRadio3" value="option3">
+                                <label class="form-check-label" for="inlineRadio3">Vendor Nominated</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+
+                <div class="col-12">                    
+                    <!-- Vendor Name -->
                     <div class="col-6 float-left">
                         <div class="col-lg-3 float-left">
-                            <label for="company_name_en" class="pb-2">Vendor</label>
+                            <label for="id_vendor_name" class="pb-2">Vendor Name</label>
                           </div>
                           <div class="col-lg-9 float-right">
-                            <!-- Vendor -->
-                            <select id="id_division_option" name="division_option" class="form-control form-control-md" style="border-radius: 0; width: 100%;" onchange="category_change();">
-                                {% for item in division_list %}
-                                <option value="{{item.ctid}}">{{ item.ctname }}</option>
-                                {% endfor %}                        
+                            <input type="text" class="form-control" id="id_vendor_name" name="vendor_name" />
+                          </div>
+                    </div>
+
+                    <!-- Reason -->
+                    <div class="col-6 float-right">
+                        <div class="col-lg-3 float-left">
+                            <label for="id_reason" class="pb-2">Reason</label>
+                          </div>
+                          <div class="col-lg-9 float-right">
+                            <input type="text" class="form-control" id="id_reason" name="reason" />
+                          </div>
+                    </div>
+                </div>
+
+
+                <div class="col-12">                    
+                    <!-- Ship To -->
+                    <div class="col-6 float-left">
+                        <div class="col-lg-3 float-left">
+                            <label for="id_vendor_name" class="pb-2">Ship To</label>
+                          </div>
+                          <div class="col-lg-9 float-right">
+                            <input type="text" class="form-control" id="id_ship_to" name="ship_to" />
+                          </div>
+                    </div>
+
+                    <!-- Item Type -->
+                    <div class="col-6 float-right">
+                        <div class="col-lg-3 float-left">
+                            <label for="id_reason" class="pb-2">Item Type</label>
+                          </div>
+                          <div class="col-lg-9 float-right">
+                            <select id="id_item_type_options" name="item_type_options" class="form-control form-control-md" style="border-radius: 0; width: 100%;" onchange="category_change();">
+                                <option value="0" selected>None</option>
+                                <option value="1">New Item</option>
+                                <option value="2">Replacement</option>
+                                <option value="3">Hard Copy & Soft Copy</option>
                             </select>
                           </div>
                     </div>
 
-                    <div class="col-6 float-right">
-                        <!--
-                        <div class="col-lg-3 float-left">
-                            <label for="company_name_en" class="pb-2">Currency</label>
-                        </div>
-                        <div class="col-lg-9 float-right">                            
-                            <select id="id_currency_option" name="currency_option" class="form-control form-control-md" style="border-radius: 0; width: 100%;" onchange="category_change();">
-                                <option value="THB" selected>THB</option>
-                            </select>                            
-                        </div>
-                        -->
-                    </div>
-
                 </div>
+
+
 
                 <input type="hidden" value="{{ prpo_company_list.0 }}" name="company_id" id="company_id" />
               </div>
