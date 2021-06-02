@@ -232,7 +232,7 @@
 
                               {% for item in pr_detail_list %}
                               <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
+                                <td><b>{{ forloop.counter }}</b></td>
                                 <td>{{ item.rditem }}</td>
                                 <td>{{ item.rditemdesc }}</td>
                                 <td>{{ item.rditemqty|floatformat:0 }}</td>
@@ -244,7 +244,7 @@
                                 <td>{{ item.rdactualprice|floatformat:2|intcomma }}</td>
                                 <td>{{ item.rddlvrydate|date:"d/m/Y" }}</td>
                                 <td class="nowrap text-right">                                    
-                                    <button type="button" onclick="edit_item('{{item.rdid}}');" class="btn btn-outline-secondary btn-xs text-info">&nbsp;<i class="fas fa-pen fa-xs"></i>&nbsp;</button>
+                                    <button type="button" onclick="edit_item('{{item.rdid}}');" class="btn btn-outline-secondary btn-xs text-info"><i class="fas fa-pen fa-xs"></i></button>
                                 </td>
                               </tr>
                               {% endfor %}
