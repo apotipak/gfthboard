@@ -903,8 +903,10 @@ def pr_entry(request):
             prdeliveryto = pr_obj[7]
             pritemtype = pr_obj[8]
             prvendortype = pr_obj[13]
-            prrecmdvendor = pr_obj[14]
-            prrecmdreason = pr_obj[15]
+            
+            prrecmdvendor = pr_obj[14] if pr_obj[14] else ""
+            prrecmdreason = pr_obj[15] if pr_obj[15] else ""
+
             prurgent = pr_obj[16]
             prremarks = pr_obj[21]
 
