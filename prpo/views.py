@@ -761,12 +761,25 @@ def pr_entry(request):
     division_list = []
     currency_list = []
     attention_to_list = []
+    pr_detail_list = []
     record = {}
 
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
+
+    vendor_type_list = [
+        {'vendor_type_id': '1', 'vendor_type_name': 'Any Vendor'},
+        {'vendor_type_id': '2', 'vendor_type_name': 'Vendor Recommended'},
+        {'vendor_type_id': '3', 'vendor_type_name': 'Vendor Nominated'},
+    ]
+
+    item_type_list = [
+        {'item_type_id': 'New Item', 'item_type_name': 'New Item'},
+        {'item_type_id': 'Spare', 'item_type_name': 'Spare'},
+        {'item_type_id': 'Replacement', 'item_type_name': 'Replacement'},
+    ]
                        
     # Get Company List
     sql = "select cpid,cpname from PRPO_Company;"
@@ -870,14 +883,11 @@ def pr_entry(request):
         cursor.close()
 
 
-    # Get PR information
-    prid, prcompany,prapplicant = "","",""
-
+    # Get PR information    
     sql = "select prid,prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,"
     sql += "prattstatus,prattlink,prattrcvddate,prvendortype,prrecmdvendor,prrecmdreason,prurgent,prtotalitem,prtotalamt,"
     sql += "prtotalamtusd,prcplstatus,prremarks,prrouting,prnexthandler,prconsigner,prnextstatus,prverifyamount,practualamount,practualamountusd "
     sql += "from prpo_pr where prid='" + str(pr_id) + "';"
-    print("SQL pr_list : ", sql)
     try:
         with connection.cursor() as cursor:     
             cursor.execute(sql)
@@ -910,17 +920,67 @@ def pr_entry(request):
     finally:
         cursor.close()
 
-    vendor_type_list = [
-        {'vendor_type_id': '1', 'vendor_type_name': 'Any Vendor'},
-        {'vendor_type_id': '2', 'vendor_type_name': 'Vendor Recommended'},
-        {'vendor_type_id': '3', 'vendor_type_name': 'Vendor Nominated'},
-    ]
+    # Get PR Detail
+    sql = "select rdid,rdpr,rdsubcategory,rditem,rditemdesc,rditemprice,rdtaxflag,rdtaxrate,rditemqty,rditemum,rdamount,"
+    sql += "rddlvrydate,rdpodetail,rdactive,rdreleasedate,rdactualprice "
+    sql += "from prpo_prdetail "
+    sql += "where rdpr='" + str(pr_id) + "';" 
 
-    item_type_list = [
-        {'item_type_id': 'New Item', 'item_type_name': 'New Item'},
-        {'item_type_id': 'Spare', 'item_type_name': 'Spare'},
-        {'item_type_id': 'Replacement', 'item_type_name': 'Replacement'},
-    ]
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            pr_detail_obj = cursor.fetchall()
+
+        if pr_detail_obj is not None:
+            for item in pr_detail_obj:
+                rdid = item[0]
+                rdpr = item[1]
+                rdsubcategory = item[2]
+                rditem = item[3]
+                rditemdesc = item[4]
+                rditemprice = item[5]
+                rdtaxflag = "Yes" if item[6] else "No"
+                rdtaxrate = item[7]
+                rditemqty = item[8]
+                rditemum = item[9]
+                rdamount = item[10]
+                rddlvrydate = item[11]
+                rdpodetail = item[12]
+                rdactive = item[13]
+                rdreleasedate = item[14]
+                rdactualprice = item[15]
+
+                record = {
+                    'rdid': rdid,
+                    'rdpr': rdpr,
+                    'rdsubcategory': rdsubcategory,
+                    'rditem': rditem,
+                    'rditemdesc': rditemdesc,
+                    'rditemprice': rditemprice,
+                    'rdtaxflag': rdtaxflag,
+                    'rdtaxrate': rdtaxrate,
+                    'rditemqty': rditemqty,
+                    'rditemum': rditemum,
+                    'rdamount': rdamount,
+                    'rddlvrydate': rddlvrydate,
+                    'rdpodetail': rdpodetail,
+                    'rdactive': rdactive,
+                    'rdreleasedate': rdreleasedate,
+                    'rdactualprice': rdactualprice,
+                }
+                pr_detail_list.append(record)
+
+        is_error = False
+        message = "Able to get pr detail."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
 
     return render(request,
         'prpo/pr_entry.html', {
@@ -937,6 +997,7 @@ def pr_entry(request):
         'item_type_list': list(item_type_list),
         'vendor_type_list': list(vendor_type_list),
         'attention_to_list': list(attention_to_list),
+        'pr_detail_list': list(pr_detail_list),
         'pr_id': pr_id,
         'prcompany': prcompany,
         'prapplicant': prapplicant,
