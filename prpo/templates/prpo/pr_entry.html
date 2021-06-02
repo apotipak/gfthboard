@@ -35,7 +35,7 @@
         <div class="col-md-12">
 
             <!--<form method="post" action="/prop/ajax-pr-inquiry/" autocomplete="off" name="search_pr_form" id="id_search_pr_form">-->
-            <form id="save_company_form" method="post" autocomplete="off">
+            <form id="save_pr_form" method="post" autocomplete="off">
               {% csrf_token %}
   
               <div class="card">
@@ -183,9 +183,11 @@
 <script>
 $(document).ready( function () {
 
-  $("#save_company_form").submit(function(e) {
-	  e.preventDefault();
-
+  $("#save_pr_form").submit(function(e) {
+	e.preventDefault();
+    alert("TODO");
+    return false;
+    
     formData = new FormData();
     data = new FormData($('#save_company_form').get(0));
 

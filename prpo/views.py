@@ -759,7 +759,7 @@ def pr_entry(request):
     company_list = []
     project_list = []
     division_list = []
-    currency_list = []
+    currency_list = []    
     record = {}
 
     if user_language == "th":
@@ -780,7 +780,6 @@ def pr_entry(request):
                 cpname = item[1]
                 record = {"cpid":cpid, "cpname":cpname}
                 company_list.append(record)
-                print("company: ", cpname)
             is_error = False
             message = "Able to get company list."
 
@@ -843,8 +842,38 @@ def pr_entry(request):
     finally:
         cursor.close()
 
-    # TODO
+    # Get PR information
+    # sql = "select * from prpo_pr where prid='" + str(pr_id) + "';"
+    sql = "select prid, prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,"
+    sql += "prattstatus,prattlink,prattrcvddate,prvendortype,prrecmdvendor,prrecmdreason,prurgent,prtotalitem,prtotalamt,"
+    sql += "prtotalamtusd,prcplstatus,prremarks,prrouting,prnexthandler,prconsigner,prnextstatus,prverifyamount,practualamount,practualamountusd "
+    sql += "from prpo_pr where prid='" + str(pr_id) + "';"
+    print("SQL pr: ", sql)
+    
+    '''
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            pr_obj = cursor.fetchone()
 
+        if pr_obj is not None:
+            for item in pr_obj:
+                ctid = item[0]
+                ctname = item[1]
+                record = {"ctid":ctid, "ctname":ctname}
+                division_list.append(record)
+            is_error = False
+            message = "Able to get division list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()    
+    '''
 
     return render(request,
         'prpo/pr_entry.html', {
