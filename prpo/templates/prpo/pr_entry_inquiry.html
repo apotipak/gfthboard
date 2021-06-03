@@ -20,8 +20,8 @@
             {% csrf_token %}
 
             <!-- Search Card -->
-            <!--<div class="card card-primary" style="background-color: #edeeef;">-->
-            <div class="card card-primary">
+            <div class="card card-primary" style="background-color: #edeeef;">
+            <!--<div class="card card-primary">-->
 
               {% comment %}
               <!--<div class="card-header" style="background-color: #257638;">-->
@@ -64,7 +64,7 @@
 
                   <!-- Item -->
                   <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Item</b></span></div>
-                  <select id="id_item_option" name="item_option" class="form-control form-control-md" style="border-radius: 0; width: 125px;">
+                  <select id="id_item_options" name="item_options" class="form-control form-control-md" style="border-radius: 0; width: 125px;">
                     <option value="0">All Items</option>
                   </select>                  
 
@@ -92,7 +92,7 @@
 
                   <!-- Subcategory -->
                   <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Sub Category</b></span></div>
-                  <select id="id_subcategory_option" name="subcategory_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="subcategory_change();">
+                  <select id="id_subcategory_options" name="subcategory_options" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="subcategory_change();">
                     <option value="0">All Sub Categories</option>
                   </select>
 
@@ -185,7 +185,7 @@
                     <th scope="col">Originator</th>
                     <th scope="col">PR #</th>
                     <th scope="col">PO #</th>
-                    <th scope="col">Project #</th>
+                    <!--<th scope="col">Project #</th>-->
                     <th scope="col" class="text-nowrap">Requested Date</th>
                     <th scope="col">Status</th>
                     <th scope="col">Category</th>
@@ -201,7 +201,7 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <!--<td>&nbsp;</td>-->
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -245,11 +245,11 @@
 $(document).ready(function () {
   $('#id_date_from').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,04,04));
+  }).datepicker("setDate", new Date(2021,04,06));
 
   $('#id_date_to').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,04,04));
+  }).datepicker("setDate", new Date(2021,04,06));
 
 });
 
@@ -259,7 +259,7 @@ var table = $('#id_pr_list_table').DataTable({
   "scrollCollapse": true,
   "lengthChange": false,
   "searching": false,
-  "ordering": true,
+  "ordering": false,
   "info": false,
   "autoWidth": true,
   "language": {
@@ -269,7 +269,7 @@ var table = $('#id_pr_list_table').DataTable({
   "columnDefs": [
     {
       "orderable": false,
-      "targets": [0,1,2,3,4,5,6,7,8,9],
+      "targets": [0,1,2,3,4,5,6,7,8]
     },
     { 
       "searchable": true, 
@@ -284,6 +284,15 @@ function pr_entry(pr_id) {
   $("#id_selected_pr_id").val(pr_id);
   $("#pr_entry_form").submit();
 
+}
+
+function view_pr(pr_id) {
+  alert(pr_id);
+  return false;
+
+  //window.location.href = '/prpo/pr-entry/';
+  //$("#id_selected_pr_id").val(pr_id);
+  //$("#pr_entry_form").submit();
 }
 
 function category_change() {
@@ -380,7 +389,7 @@ $('#id_search_pr_form').on('submit', function(event){
               result += "<td>&nbsp;</td>";
               result += "<td>" + pr_id + "</td>";
               result += "<td>&nbsp;</td>";
-              result += "<td>" + json.pr_list[i]["prcpa"] + "</td>";            
+              //result += "<td>" + json.pr_list[i]["prcpa"] + "</td>";            
               result += "<td>" + json.pr_list[i]["prreqdate"] + "</td>";                        
               result += "<td>" + json.pr_list[i]["stname"] + "</td>";
               result += "<td>" + json.pr_list[i]["pr_category_name"] + "</td>";
@@ -391,7 +400,7 @@ $('#id_search_pr_form').on('submit', function(event){
               result += "<td class='text-right' nowrap>";
               //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info btn-block">&nbsp;<i class="fas fa-pen fa-xs"></i>&nbsp;</button>';
               //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info"><i class="fas fa-eye"></i></button>';
-              result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info">View</button>';
+              result += '<button type="button" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info">View</button>';
 
               result += "</td>";
 
@@ -411,7 +420,7 @@ $('#id_search_pr_form').on('submit', function(event){
             "scrollCollapse": true,
             "lengthChange": false,
             "searching": false,
-            "ordering": true,
+            "ordering": false,
             "info": false,
             "autoWidth": true,
             "language": {
@@ -421,7 +430,7 @@ $('#id_search_pr_form').on('submit', function(event){
             "columnDefs": [
               {
                 "orderable": false,
-                "targets": [0,1,2,3,4,5,6,7,8,9]
+                "targets": [0,1,2,3,4,5,6,7,8]
               },
               { 
                 "searchable": true, 

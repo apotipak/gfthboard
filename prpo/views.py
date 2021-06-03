@@ -672,15 +672,16 @@ def po_inbox(request):
     })
 
 
+
 @login_required(login_url='/accounts/login/')
 def ajax_pr_inquiry_list(request):
     is_error = True
     message = ""
 
     pr_number = request.POST.get("pr_number")
-    category_id = request.POST.get("category_option")
-    subcategory_id = request.POST.get("subcategory_option")
-    item_id = request.POST.get("item_option")
+    category_id = request.POST.get("category_options")
+    subcategory_id = request.POST.get("subcategory_options")
+    item_id = request.POST.get("item_options")
     date_from = datetime.strptime(request.POST.get("date_from"), "%d/%m/%Y").date()
     date_to = datetime.strptime(request.POST.get("date_to"), "%d/%m/%Y").date()
     pr_status_id = request.POST.get("pr_status")
