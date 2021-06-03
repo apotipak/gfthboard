@@ -698,22 +698,24 @@ def ajax_pr_inquiry_list(request):
     print("pr_status : ", pr_status_id)
 
     if pr_number!="":
-        # sql = "select prID,prReqDate,prCurrency,prTotalAmt,prCplStatus,prRouting,prNextHandler,prurgent,prConsigner from prpo_pr "
-        sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner,pr.prcpa,"
-        sql += "pr.prnextstatus,s.stname,pr.prcategory,c.ctname "
+        sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner,pr.prcpa,"        
+        sql += "pr.prcpa,pr.prnextstatus,s.stname,pr.prcategory,c.ctname,pr.prapplicant,uapp.usName,pr.prattentionto,uatt.usName "
         sql += "from prpo_pr pr "
         sql += "join prpo_exchangerate ex on pr.prcurrency=ex.erid "
         sql += "join prpo_status s on pr.prnextstatus=s.stid "
         sql += "join prpo_category c on pr.prcategory=c.ctid "
+        sql += "join prpo_user uapp on pr.prapplicant=uapp.usID "
+        sql += "join prpo_user uatt on pr.prAttentionTo=uatt.usID "
         sql += "where pr.prid='" + str(pr_number) + "'"        
     else:
-        # sql = "select prID,prReqDate,prCurrency,prTotalAmt,prCplStatus,prRouting,prNextHandler,prurgent,prConsigner from prpo_pr "
         sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner,pr.prcpa,"
-        sql += "pr.prnextstatus,s.stname,pr.prcategory,c.ctname "
+        sql += "pr.prcpa,pr.prnextstatus,s.stname,pr.prcategory,c.ctname,pr.prapplicant,uapp.usName,pr.prattentionto,uatt.usName "
         sql += "from prpo_pr pr "
         sql += "join prpo_exchangerate ex on pr.prcurrency=ex.erid "
         sql += "join prpo_status s on pr.prnextstatus=s.stid "
         sql += "join prpo_category c on pr.prcategory=c.ctid "
+        sql += "join prpo_user uapp on pr.prapplicant=uapp.usid "
+        sql += "join prpo_user uatt on pr.prAttentionTo=uatt.usid "        
         sql += "where pr.prReqDate between '" + str(date_from) + "' and '" + str(date_to) + " 23:59:00'"
         
         if category_id != "" and category_id != "0":
@@ -749,6 +751,8 @@ def ajax_pr_inquiry_list(request):
                     stname = item[12]
                     prcategory = item[13]
                     pr_category_name = item[14]
+                    prapplicant = item[15]
+                    prattentionto = item[16]
 
                     record = {
                         "prid": prid.strip(),
@@ -766,6 +770,8 @@ def ajax_pr_inquiry_list(request):
                         "stname": stname,
                         "prcategory": prcategory,
                         "pr_category_name": pr_category_name,
+                        "prapplicant": prapplicant,
+                        "prattentionto": prattentionto,
                     }
 
                     pr_list.append(record)

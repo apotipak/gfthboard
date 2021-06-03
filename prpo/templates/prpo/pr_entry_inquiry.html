@@ -245,11 +245,11 @@
 $(document).ready(function () {
   $('#id_date_from').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,04,06));
+  }).datepicker("setDate", new Date(2021,02,01));
 
   $('#id_date_to').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,04,06));
+  }).datepicker("setDate", new Date(2021,02,10));
 
 });
 
@@ -385,8 +385,8 @@ $('#id_search_pr_form').on('submit', function(event){
             for(i=0;i<json.pr_list.length;i++) {
               pr_id = json.pr_list[i]["prid"];
               result += "<tr>";
-              result += "<td>&nbsp;</td>";
-              result += "<td>&nbsp;</td>";
+              result += "<td>?</td>";
+              result += "<td>" + json.pr_list[i]["prapplicant"] + "</td>";              
               result += "<td>" + pr_id + "</td>";
               result += "<td>&nbsp;</td>";
               //result += "<td>" + json.pr_list[i]["prcpa"] + "</td>";            
