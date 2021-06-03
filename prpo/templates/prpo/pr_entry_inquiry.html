@@ -181,12 +181,14 @@
               <table id="id_pr_list_table" name="pr_list_table" class="table table-sm table-striped dataTable">
                 <thead>
                   <tr>
+                    <th scope="col">Department</th>
+                    <th scope="col">Originator</th>
                     <th scope="col">PR #</th>
                     <th scope="col">PO #</th>
                     <th scope="col">Project #</th>
                     <th scope="col" class="text-nowrap">Requested Date</th>
                     <th scope="col">Status</th>
-                    <!--<th scope="col">Division</th>-->
+                    <th scope="col">Category</th>
                     <!--<th scope="col">CUR</th>-->
                     <th scope="col">Amount</th>
                     <!--<th scope="col">Consigner</th>-->
@@ -200,7 +202,9 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <!--<td>&nbsp;</td>-->                    
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                     <!--<td>&nbsp;</td>-->
                     <td>&nbsp;</td>
                     <!--<td>&nbsp;</td>-->
@@ -241,11 +245,11 @@
 $(document).ready(function () {
   $('#id_date_from').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,04,01));
+  }).datepicker("setDate", new Date(2021,04,04));
 
   $('#id_date_to').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,04,05));
+  }).datepicker("setDate", new Date(2021,04,04));
 
 });
 
@@ -265,7 +269,7 @@ var table = $('#id_pr_list_table').DataTable({
   "columnDefs": [
     {
       "orderable": false,
-      "targets": [2,3,4,6],      
+      "targets": [0,1,2,3,4,5,6,7,8,9],
     },
     { 
       "searchable": true, 
@@ -346,6 +350,9 @@ function subcategory_change() {
 }
 
 $('#id_search_pr_form').on('submit', function(event){
+
+    showLoading();
+
     event.preventDefault();
 
     formData = new FormData();
@@ -369,26 +376,36 @@ $('#id_search_pr_form').on('submit', function(event){
             for(i=0;i<json.pr_list.length;i++) {
               pr_id = json.pr_list[i]["prid"];
               result += "<tr>";
+              result += "<td>&nbsp;</td>";
+              result += "<td>&nbsp;</td>";
               result += "<td>" + pr_id + "</td>";
               result += "<td>&nbsp;</td>";
               result += "<td>" + json.pr_list[i]["prcpa"] + "</td>";            
               result += "<td>" + json.pr_list[i]["prreqdate"] + "</td>";                        
               result += "<td>" + json.pr_list[i]["stname"] + "</td>";
-              //result += "<td>&nbsp;</td>";
+              result += "<td>" + json.pr_list[i]["pr_category_name"] + "</td>";
               //result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
               result += "<td>" + json.pr_list[i]["prtotalamt"] + "</td>";
               //result += "<td>" + json.pr_list[i]["prconsigner"] + "</td>";                            
+              
               result += "<td class='text-right' nowrap>";
-              result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info btn-block">&nbsp;<i class="fas fa-pen fa-xs"></i>&nbsp;</button>';
+              //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info btn-block">&nbsp;<i class="fas fa-pen fa-xs"></i>&nbsp;</button>';
+              //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info"><i class="fas fa-eye"></i></button>';
+              result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info">View</button>';
+
               result += "</td>";
+
               result += "</tr>";
 
+              $.LoadingOverlay("hide");
             }
+          } else {
+            $.LoadingOverlay("hide");
           }
           
           table.destroy();
           $('#id_pr_list_table tbody').empty().append(result);          
-          table = $('#id_pr_list_table').DataTable({
+          table = $('#id_pr_list_table').DataTable({ 
             "paging": true,
             "pageLength": 15,
             "scrollCollapse": true,
@@ -403,8 +420,8 @@ $('#id_search_pr_form').on('submit', function(event){
             },    
             "columnDefs": [
               {
-                "targets": [2,3,4,6],
-                "orderable": false
+                "orderable": false,
+                "targets": [0,1,2,3,4,5,6,7,8,9]
               },
               { 
                 "searchable": true, 
@@ -419,6 +436,16 @@ $('#id_search_pr_form').on('submit', function(event){
       }
     })
 });
+
+function showLoading() {
+  $.LoadingOverlaySetup({
+      background      : "rgba(0, 0, 0, 0.5)",
+      image           : "/static/img/logo-small.png",        
+      imageAnimation  : "1.5s fadein",
+      imageColor      : "#ffcc00"
+  });  
+  $.LoadingOverlay("show"); 
+}
 
 </script>
 {% endblock %}  
