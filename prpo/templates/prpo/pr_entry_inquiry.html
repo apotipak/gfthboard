@@ -23,84 +23,66 @@
             <!--<div class="card card-primary" style="background-color: #edeeef;">-->
             <div class="card card-primary">
 
+              {% comment %}
               <!--<div class="card-header" style="background-color: #257638;">-->
               <div class="card-header bg-light">
                 <h3 class="card-title pt-2"><b>PR Inquiry</b></h3>
                 <div class="card-tools text-dark">
-                  <!--<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>-->
-                  <button class="btn btn-sm btn-secondary" id="id_search_button"><i class="fas fa-search fa-sm"></i>&nbsp;&nbsp;Search&nbsp;</button>
+                  <!--<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>-->                  
                 </div>
               </div>
+              {% endcomment %}
 
               <div class="card-body">
                 <div class="input-group col-6 float-left">
+
+                  <!-- Department -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width:100%;"><b>Department</b></span></div>
+                  <select id="id_category_option" name="category_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
+                    <option value="0">All Departments</option>
+                    {% for item in department_list %}
+                    <option value="{{item.dpid}}">{{ item.dpname }}</option>
+                    {% endfor %}                                    
+                  </select>
 
                   <!-- PR Number -->
                   <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width: 100%;"><b>PR #</b></span></div>
                   <input type="text" class="form-control form-control-md" placeholder="Enter PR Number" id="id_pr_number" name="pr_number" />
 
-                  <!-- Date From -->
-                  <div class="input-group-prepend col-6 bg-secondary p-0">
-                    <span class="input-group-text border-bottom-0 border-right-0 rounded-0" style="width:100%;"><b>From</b>&nbsp;&nbsp;&nbsp;&nbsp;<small>[dd/mm/yyyy]</small></span>                    
-                  </div>
-                  <input type="text" style="width: 80px;" id="id_date_from" name="date_from" class="form-control datepicker border-bottom-1 rounded-0 bg-white" required="" readonly="readonly">
+                  <!-- PO Number -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width: 100%;"><b>PO #</b></span></div>
+                  <input type="text" class="form-control form-control-md" placeholder="Enter PO Number" id="id_po_number" name="po_number" />
 
                   <!-- Category -->
-                  <!--
                   <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width:100%;"><b>Category</b></span></div>
-                  <select id="id_category_option" name="category_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="category_change();">
-                    <option value="0">Select All</option>
+                  <select id="id_category_options" name="category_options" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="category_change();">
+                    <option value="0">All Categories</option>
                     {% for item in category_list %}
                     <option value="{{item.ctid}}">{{ item.ctname }}</option>
                     {% endfor %}                                    
                   </select>
-                  -->
-
-                  <!-- Subcategory -->
-                  <!--
-                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Sub Category</b></span></div>
-                  <select id="id_subcategory_option" name="subcategory_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="subcategory_change();">
-                    <option value="0">Select All</option>
-                  </select>
-                  -->
 
                   <!-- Item -->
-                  <!--
                   <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Item</b></span></div>
                   <select id="id_item_option" name="item_option" class="form-control form-control-md" style="border-radius: 0; width: 125px;">
-                    <option value="0">Select All</option>
+                    <option value="0">All Items</option>
                   </select>                  
-                  -->
 
-                  <!-- Status -->
-                  <!--
-                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Status</b></span></div>
-                  <select id="id_pr_status" name="pr_status" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
-                    <option value="0">Select All</option>
-                    {% for item in pr_status_list %}
-                    <option value="{{item.stid}}">{{ item.stname }}</option>
-                    {% endfor %}                                   
-                  </select>
-                  -->
                 </div>
 
                 <div class="input-group col-6 float-right">
-                  <!-- Category -->
-                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width:100%;"><b>Category</b></span></div>
-                  <select id="id_category_option" name="category_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="category_change();">
-                    <option value="0">Select All</option>
-                    {% for item in category_list %}
-                    <option value="{{item.ctid}}">{{ item.ctname }}</option>
-                    {% endfor %}                                    
+
+                  <!-- Username -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>User</b></span></div>
+                  <select id="id_username_options" name="username_options" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
+                    <option value="0">All Users</option>
                   </select>
 
                   <!-- Date From -->
-                  <!--
                   <div class="input-group-prepend col-6 bg-secondary p-0">
                     <span class="input-group-text border-bottom-0 border-right-0 rounded-0" style="width:100%;"><b>From</b>&nbsp;&nbsp;&nbsp;&nbsp;<small>[dd/mm/yyyy]</small></span>                    
                   </div>
                   <input type="text" style="width: 80px;" id="id_date_from" name="date_from" class="form-control datepicker border-bottom-1 rounded-0 bg-white" required="" readonly="readonly">
-                  -->
 
                   <!-- Date To -->
                   <div class="input-group-prepend col-6 bg-secondary p-0">
@@ -108,6 +90,39 @@
                   </div>
                   <input type="text" style="width: 80px;" name="date_to" class="form-control datepicker border-bottom-1 rounded-0 bg-white" placeholder="dd/mm/yyyy" required="" id="id_date_to" readonly="readonly">
 
+                  <!-- Subcategory -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Sub Category</b></span></div>
+                  <select id="id_subcategory_option" name="subcategory_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="subcategory_change();">
+                    <option value="0">All Sub Categories</option>
+                  </select>
+
+                  <!-- Status -->
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Status</b></span></div>
+                  <select id="id_pr_status" name="pr_status" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
+                    <option value="0">All Status</option>
+                    {% for item in pr_status_list %}
+                    <option value="{{item.stid}}">{{ item.stname }}</option>
+                    {% endfor %}                                   
+                  </select>
+                  
+                  <!-- Category -->
+                  <!--
+                  <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width:100%;"><b>Category</b></span></div>
+                  <select id="id_category_option" name="category_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;" onchange="category_change();">
+                    <option value="0">Select All</option>
+                    {% for item in category_list %}
+                    <option value="{{item.ctid}}">{{ item.ctname }}</option>
+                    {% endfor %}                                    
+                  </select>
+                  -->
+
+                  <!-- Date From -->
+                  <!--
+                  <div class="input-group-prepend col-6 bg-secondary p-0">
+                    <span class="input-group-text border-bottom-0 border-right-0 rounded-0" style="width:100%;"><b>From</b>&nbsp;&nbsp;&nbsp;&nbsp;<small>[dd/mm/yyyy]</small></span>                    
+                  </div>
+                  <input type="text" style="width: 80px;" id="id_date_from" name="date_from" class="form-control datepicker border-bottom-1 rounded-0 bg-white" required="" readonly="readonly">
+                  -->
 
                   <!-- Status -->
                   <!--
@@ -121,11 +136,11 @@
                   -->
                 </div>
 
-                <!--
+                
                 <div class="col-12 pt-2 float-right text-right">
                   <button class="btn btn-sm btn-secondary" id="id_search_button"><i class="fas fa-search fa-sm"></i>&nbsp;&nbsp;Search&nbsp;</button>
                 </div>
-                -->            
+                
               </div>
             </div>
           </form>
@@ -153,7 +168,7 @@
               <h3 class="card-title pt-2"><b>PR List</b></h3>
               <div class="card-tools">
                 <!--<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>-->
-                <button class="btn btn-sm btn-success" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;&nbsp;<b>New PR</b>&nbsp;</button>
+                <button class="btn btn-md btn-success" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;&nbsp;<b>New PR</b>&nbsp;</button>
               </div>            
             </div>
             
@@ -268,7 +283,10 @@ function pr_entry(pr_id) {
 }
 
 function category_change() {
-  category_id = $("#id_category_option").val();
+  category_id = $("#id_category_options").val();
+  //alert(category_id);
+  //return false;
+
   $.ajax({
       url: "/prpo/ajax-get-subcategory-list/" + category_id + "/",
       success : function(data) {        
@@ -308,13 +326,19 @@ function subcategory_change() {
             itid = data.item_list[i]["itid"];
             itname = data.item_list[i]["itname"];
             itdescription = data.item_list[i]["itdescription"];
-
+            item_short_description = data.item_list[i]["item_short_description"];
             if(itdescription!="") {
               itdescription = " | " + itdescription
             }
                           
-            $el.append($("<option></option>").attr("value", itid).text(itname + itdescription));
-          }          
+            //$el.append($("<option></option>").attr("value", itid).text(itname + itdescription));
+            if(item_short_description!="") {
+              $el.append($("<option></option>").attr("value", itid).text(itname + " | " + item_short_description + "..."));
+            } else {
+              $el.append($("<option></option>").attr("value", itid).text(itname));
+            }
+            
+          }       
         }
       },
   });
@@ -349,7 +373,7 @@ $('#id_search_pr_form').on('submit', function(event){
               result += "<td>&nbsp;</td>";
               result += "<td>" + json.pr_list[i]["prcpa"] + "</td>";            
               result += "<td>" + json.pr_list[i]["prreqdate"] + "</td>";                        
-              result += "<td>" + json.pr_list[i]["prcplstatus"] + "</td>";
+              result += "<td>" + json.pr_list[i]["stname"] + "</td>";
               //result += "<td>&nbsp;</td>";
               //result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
               result += "<td>" + json.pr_list[i]["prtotalamt"] + "</td>";

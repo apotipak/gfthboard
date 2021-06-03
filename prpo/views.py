@@ -418,6 +418,29 @@ def pr_entry_inquiry(request):
     pr_status_list = []
     record = {}
 
+    # Get user list
+    sql = "select dpid, dpname department_name from prpo_department order by dpname;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            prpo_department_obj = cursor.fetchall()
+
+        if prpo_department_obj is not None:
+            for item in prpo_department_obj:
+                dpid = item[0]
+                dpname = item[1]
+                record = {"dpid":dpid, "dpname":dpname}
+                department_list.append(record)
+    except db.OperationalError as e:
+        is_error = True
+        error_message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        error_message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+            
     # Get department list
     sql = "select dpid, dpname department_name from prpo_department order by dpname;"
     try:
@@ -463,7 +486,7 @@ def pr_entry_inquiry(request):
         cursor.close()
 
     # Get PR Status List    
-    sql = "select stid status_id, stname from prpo_status where stID in (1,2,3,10) order by stid;"
+    sql = "select stid status_id, stname from prpo_status where stID in (1,2,3,10,11,13) order by stid;"
     try:
         with connection.cursor() as cursor:     
             cursor.execute(sql)
@@ -521,7 +544,8 @@ def ajax_get_item_list_by_subcategory_id(request, *args, **kwargs):
                     itid = item[0]
                     itname = item[1]
                     itdescription = item[2]
-                    record = {"itid":itid, "itname":itname, "itdescription":itdescription}
+                    item_short_description = itdescription[0:20]                    
+                    record = {"itid":itid, "itname":itname, "itdescription":itdescription, "item_short_description":item_short_description}
                     item_list.append(record)
                 is_error = False
                 message = "Able to get item list."
@@ -552,12 +576,14 @@ def ajax_get_subcategory_list(request, *args, **kwargs):
     subcategory_list = []
     record = {}
 
+    print("category_id : ", category_id)
+
     if category_id=="" or category_id is None:
         is_error = True
         message = "There is no Category ID provided."
     else:
         sql = "select scid, scname subcategory_name from prpo_subcategory where sccategory=" + str(category_id) + " order by scname;"
-        print("SQL ", sql)
+        print("SQL get_subcat : ", sql)
         try:
             with connection.cursor() as cursor:     
                 cursor.execute(sql)
@@ -647,7 +673,7 @@ def po_inbox(request):
 
 
 @login_required(login_url='/accounts/login/')
-def ajax_pr_inquiry(request):
+def ajax_pr_inquiry_list(request):
     is_error = True
     message = ""
 
@@ -657,7 +683,7 @@ def ajax_pr_inquiry(request):
     item_id = request.POST.get("item_option")
     date_from = datetime.strptime(request.POST.get("date_from"), "%d/%m/%Y").date()
     date_to = datetime.strptime(request.POST.get("date_to"), "%d/%m/%Y").date()
-    
+    pr_status_id = request.POST.get("pr_status")
     pr_list_obj = []
     pr_list = []
     record = {}
@@ -668,24 +694,33 @@ def ajax_pr_inquiry(request):
     print("item_id : ", item_id)
     print("date_from : ", date_from)
     print("date_to : ", date_to)
+    print("pr_status : ", pr_status_id)
 
     if pr_number!="":
         # sql = "select prID,prReqDate,prCurrency,prTotalAmt,prCplStatus,prRouting,prNextHandler,prurgent,prConsigner from prpo_pr "
-        sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner,pr.prcpa "
+        sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner,pr.prcpa,"
+        sql += "pr.prnextstatus,s.stname "
         sql += "from prpo_pr pr "
-        sql += "join PRPO_ExchangeRate ex on pr.prCurrency=ex.erID "
+        sql += "join prpo_exchangerate ex on pr.prcurrency=ex.erid "
+        sql += "join prpo_status s on pr.prnextstatus=s.stid "
         sql += "where pr.prid='" + str(pr_number) + "'"        
     else:
         # sql = "select prID,prReqDate,prCurrency,prTotalAmt,prCplStatus,prRouting,prNextHandler,prurgent,prConsigner from prpo_pr "
-        sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner,pr.prcpa "
+        sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner,pr.prcpa,"
+        sql += "pr.prnextstatus,s.stname "
         sql += "from prpo_pr pr "
-        sql += "join PRPO_ExchangeRate ex on pr.prCurrency=ex.erID "
+        sql += "join prpo_exchangerate ex on pr.prcurrency=ex.erid "
+        sql += "join prpo_status s on pr.prnextstatus=s.stid "
         sql += "where pr.prReqDate between '" + str(date_from) + "' and '" + str(date_to) + " 23:59:00'"
+        
         if category_id != "" and category_id != "0":
             sql += " and prcategory=" + str(category_id)        
 
+        if pr_status_id != "" and pr_status_id != "0":
+            sql += " and prnextstatus=" + str(pr_status_id)
+
     sql += ";"
-    print("sql: ", sql)
+    # print("sql: ", sql)
 
     try:
         cursor = connection.cursor()
@@ -707,6 +742,8 @@ def ajax_pr_inquiry(request):
                     prurgent = item[8]
                     prconsigner = "" if item[9] is None else item[10]
                     prcpa = item[10]
+                    prnextstatus = item[11]
+                    stname = item[12]
 
                     record = {
                         "prid": prid.strip(),
@@ -720,6 +757,8 @@ def ajax_pr_inquiry(request):
                         "prurgent": prurgent,
                         "prconsigner": prconsigner,
                         "prcpa": prcpa,
+                        "prnextstatus": prnextstatus,
+                        "stname": stname,
                     }
 
                     pr_list.append(record)
