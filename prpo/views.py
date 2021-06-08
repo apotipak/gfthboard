@@ -699,32 +699,40 @@ def ajax_pr_inquiry_list(request):
 
     if pr_number!="":
         sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner,pr.prcpa,"        
-        sql += "pr.prcpa,pr.prnextstatus,s.stname,pr.prcategory,c.ctname,pr.prapplicant,uapp.usName,pr.prattentionto,uatt.usName "
+        sql += "pr.prcpa,pr.prnextstatus,s.stname,pr.prcategory,c.ctname,pr.prapplicant,uapp.usName applicant_name,pr.prattentionto,uatt.usName attention_to_name,d.dpnumber,d.dpname,uhan.usname next_handler_name,po.ponumber "
         sql += "from prpo_pr pr "
         sql += "join prpo_exchangerate ex on pr.prcurrency=ex.erid "
         sql += "join prpo_status s on pr.prnextstatus=s.stid "
         sql += "join prpo_category c on pr.prcategory=c.ctid "
         sql += "join prpo_user uapp on pr.prapplicant=uapp.usID "
         sql += "join prpo_user uatt on pr.prAttentionTo=uatt.usID "
+        sql += "join prpo_user uhan on pr.prnexthandler=uhan.usid "
+        sql += "join prpo_department d on uapp.usdepartment=d.dpid "
+        sql += "left outer join prpo_po po on pr.prid=po.popr "
         sql += "where pr.prid='" + str(pr_number) + "'"        
     else:
         sql = "select pr.prID,pr.prReqDate,pr.prCurrency,ex.erCurrency,pr.prTotalAmt,pr.prCplStatus,pr.prRouting,pr.prNextHandler,pr.prurgent,pr.prConsigner,pr.prcpa,"
-        sql += "pr.prcpa,pr.prnextstatus,s.stname,pr.prcategory,c.ctname,pr.prapplicant,uapp.usName,pr.prattentionto,uatt.usName "
+        sql += "pr.prcpa,pr.prnextstatus,s.stname,pr.prcategory,c.ctname,pr.prapplicant,uapp.usName applicant_name,pr.prattentionto,uatt.usName attention_to_name,d.dpnumber,d.dpname,uhan.usname next_handler_name,po.ponumber "
         sql += "from prpo_pr pr "
         sql += "join prpo_exchangerate ex on pr.prcurrency=ex.erid "
         sql += "join prpo_status s on pr.prnextstatus=s.stid "
         sql += "join prpo_category c on pr.prcategory=c.ctid "
         sql += "join prpo_user uapp on pr.prapplicant=uapp.usid "
-        sql += "join prpo_user uatt on pr.prAttentionTo=uatt.usid "        
+        sql += "join prpo_user uatt on pr.prAttentionTo=uatt.usid "
+        sql += "join prpo_user uhan on pr.prnexthandler=uhan.usid "
+        sql += "join prpo_department d on uapp.usdepartment=d.dpid "
+        sql += "left outer join prpo_po po on pr.prid=po.popr "
         sql += "where pr.prReqDate between '" + str(date_from) + "' and '" + str(date_to) + " 23:59:00'"
         
         if category_id != "" and category_id != "0":
-            sql += " and prcategory=" + str(category_id)        
+            sql += " and pr.prcategory=" + str(category_id) + " "
 
         if pr_status_id != "" and pr_status_id != "0":
-            sql += " and prnextstatus=" + str(pr_status_id)
+            sql += " and pr.prnextstatus=" + str(pr_status_id) + " "
 
-    sql += ";"
+    sql += "order by pr.prid;"
+    # sql += ";"
+
     print("sql pr list: ", sql)
 
     try:
@@ -748,11 +756,15 @@ def ajax_pr_inquiry_list(request):
                     prconsigner = "" if item[9] is None else item[10]
                     prcpa = item[10]
                     prnextstatus = item[11]
-                    stname = item[12]
+                    stname = item[13]
                     prcategory = item[13]
-                    pr_category_name = item[14]
-                    prapplicant = item[15]
-                    prattentionto = item[16]
+                    pr_category_name = item[15]
+                    prapplicant_name = item[17]
+                    prattentionto_name = item[19]                    
+                    dpnumber = item[20]
+                    dpname = item[21]
+                    nexthandler_name = item[22]
+                    ponumber = item[23] if item[23] is not None else ""
 
                     record = {
                         "prid": prid.strip(),
@@ -770,8 +782,12 @@ def ajax_pr_inquiry_list(request):
                         "stname": stname,
                         "prcategory": prcategory,
                         "pr_category_name": pr_category_name,
-                        "prapplicant": prapplicant,
-                        "prattentionto": prattentionto,
+                        "prapplicant_name": prapplicant_name,
+                        "prattentionto_name": prattentionto_name,
+                        "nexthandler_name": nexthandler_name,
+                        "dpnumber": dpnumber,
+                        "dpname": dpname,
+                        "ponumber": ponumber,
                     }
 
                     pr_list.append(record)
@@ -821,6 +837,19 @@ def pr_entry(request):
     pr_detail_list = []
     record = {}
 
+    prcompany = ""
+    prapplicant = ""
+    prcpa = ""
+    prreqdate = ""
+    prcategory = ""
+    pritemtype = ""
+    prvendortype = ""
+    prurgent = ""
+    prrecmdvendor = ""
+    prrecmdreason = ""
+    prdeliveryto = ""
+    prremarks = ""
+    
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
@@ -940,108 +969,113 @@ def pr_entry(request):
         cursor.close()
 
 
-    # Get PR information    
-    sql = "select prid,prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,"
-    sql += "prattstatus,prattlink,prattrcvddate,prvendortype,prrecmdvendor,prrecmdreason,prurgent,prtotalitem,prtotalamt,"
-    sql += "prtotalamtusd,prcplstatus,prremarks,prrouting,prnexthandler,prconsigner,prnextstatus,prverifyamount,practualamount,practualamountusd "
-    sql += "from prpo_pr where prid='" + str(pr_id) + "';"
-    try:
-        with connection.cursor() as cursor:     
-            cursor.execute(sql)
-            pr_obj = cursor.fetchone()
+    if request.method == 'POST':
+        # Get PR information     
+        sql = "select prid,prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,"
+        sql += "prattstatus,prattlink,prattrcvddate,prvendortype,prrecmdvendor,prrecmdreason,prurgent,prtotalitem,prtotalamt,"
+        sql += "prtotalamtusd,prcplstatus,prremarks,prrouting,prnexthandler,prconsigner,prnextstatus,prverifyamount,practualamount,practualamountusd "
+        sql += "from prpo_pr where prid='" + str(pr_id) + "';"
+        try:
+            with connection.cursor() as cursor:     
+                cursor.execute(sql)
+                pr_obj = cursor.fetchone()
 
-        if pr_obj is not None:
-            prid = pr_obj[0]
-            prcompany = pr_obj[1]
-            prapplicant = pr_obj[2]
-            prcpa = pr_obj[3]
-            prreqdate = pr_obj[4]
-            prcategory = pr_obj[5]
-            prdeliveryto = pr_obj[7]
-            pritemtype = pr_obj[8]
-            prvendortype = pr_obj[13]
-            
-            prrecmdvendor = pr_obj[14] if pr_obj[14] else ""
-            prrecmdreason = pr_obj[15] if pr_obj[15] else ""
+            if pr_obj is not None:
+                prid = pr_obj[0]
+                prcompany = pr_obj[1]
+                prapplicant = pr_obj[2]
+                prcpa = pr_obj[3]
+                prreqdate = pr_obj[4]
+                prcategory = pr_obj[5]
+                prdeliveryto = pr_obj[7]
+                pritemtype = pr_obj[8]
+                prvendortype = pr_obj[13]
+                
+                prrecmdvendor = pr_obj[14] if pr_obj[14] else ""
+                prrecmdreason = pr_obj[15] if pr_obj[15] else ""
 
-            prurgent = pr_obj[16]
-            prremarks = pr_obj[21]
+                prurgent = pr_obj[16]
+                prremarks = pr_obj[21]
 
-        is_error = False
-        message = "Able to get pr information."
+            is_error = False
+            message = "Able to get pr information."
 
-    except db.OperationalError as e: 
-        is_error = True
-        message = "Error message: " + str(e)
-    except db.Error as e:
-        is_error = True
-        message = "Error message: " + str(e)
-    finally:
-        cursor.close()
+        except db.OperationalError as e: 
+            is_error = True
+            message = "Error message: " + str(e)
+        except db.Error as e:
+            is_error = True
+            message = "Error message: " + str(e)
+        finally:
+            cursor.close()
 
-    # Get PR Detail
-    sql = "select rdid,rdpr,rdsubcategory,rditem,rditemdesc,rditemprice,rdtaxflag,rdtaxrate,rditemqty,rditemum,rdamount,"
-    sql += "rddlvrydate,rdpodetail,rdactive,rdreleasedate,rdactualprice "
-    sql += "from prpo_prdetail "
-    sql += "where rdpr='" + str(pr_id) + "';" 
+        # Get PR Detail
+        sql = "select rdid,rdpr,rdsubcategory,rditem,rditemdesc,rditemprice,rdtaxflag,rdtaxrate,rditemqty,rditemum,rdamount,"
+        sql += "rddlvrydate,rdpodetail,rdactive,rdreleasedate,rdactualprice "
+        sql += "from prpo_prdetail "
+        sql += "where rdpr='" + str(pr_id) + "';" 
 
-    try:
-        with connection.cursor() as cursor:     
-            cursor.execute(sql)
-            pr_detail_obj = cursor.fetchall()
+        try:
+            with connection.cursor() as cursor:     
+                cursor.execute(sql)
+                pr_detail_obj = cursor.fetchall()
 
-        if pr_detail_obj is not None:
-            for item in pr_detail_obj:
-                rdid = item[0]
-                rdpr = item[1]
-                rdsubcategory = item[2]
-                rditem = item[3]
-                rditemdesc = item[4]
-                rditemprice = item[5]
-                rdtaxflag = "Yes" if item[6] else "No"
-                rdtaxrate = item[7]
-                rditemqty = item[8]
-                rditemum = item[9]
-                rdamount = item[10]
-                rddlvrydate = item[11]
-                rdpodetail = item[12]
-                rdactive = item[13]
-                rdreleasedate = item[14]
-                prreqdate = item[1]
-                rdactualprice = item[15]
+            if pr_detail_obj is not None:
+                for item in pr_detail_obj:
+                    rdid = item[0]
+                    rdpr = item[1]
+                    rdsubcategory = item[2]
+                    rditem = item[3]
+                    rditemdesc = item[4]
+                    rditemprice = item[5]
+                    rdtaxflag = "Yes" if item[6] else "No"
+                    rdtaxrate = item[7]
+                    rditemqty = item[8]
+                    rditemum = item[9]
+                    rdamount = item[10]
+                    rddlvrydate = item[11]
+                    rdpodetail = item[12]
+                    rdactive = item[13]
+                    rdreleasedate = item[14]
+                    prreqdate = item[1]
+                    rdactualprice = item[15]
 
-                record = {
-                    'rdid': rdid,
-                    'rdpr': rdpr,
-                    'rdsubcategory': rdsubcategory,
-                    'rditem': rditem,
-                    'rditemdesc': rditemdesc,
-                    'rditemprice': rditemprice,
-                    'rdtaxflag': rdtaxflag,
-                    'rdtaxrate': rdtaxrate,
-                    'rditemqty': rditemqty,
-                    'rditemum': rditemum,
-                    'rdamount': rdamount,
-                    'rddlvrydate': rddlvrydate,
-                    'rdpodetail': rdpodetail,
-                    'rdactive': rdactive,
-                    'rdreleasedate': rdreleasedate,
-                    'rdactualprice': rdactualprice,
-                }
-                pr_detail_list.append(record)
+                    record = {
+                        'rdid': rdid,
+                        'rdpr': rdpr,
+                        'rdsubcategory': rdsubcategory,
+                        'rditem': rditem,
+                        'rditemdesc': rditemdesc,
+                        'rditemprice': rditemprice,
+                        'rdtaxflag': rdtaxflag,
+                        'rdtaxrate': rdtaxrate,
+                        'rditemqty': rditemqty,
+                        'rditemum': rditemum,
+                        'rdamount': rdamount,
+                        'rddlvrydate': rddlvrydate,
+                        'rdpodetail': rdpodetail,
+                        'rdactive': rdactive,
+                        'rdreleasedate': rdreleasedate,
+                        'rdactualprice': rdactualprice,
+                    }
+                    pr_detail_list.append(record)
 
-        is_error = False
-        message = "Able to get pr detail."
+            is_error = False
+            message = "Able to get pr detail."
 
-    except db.OperationalError as e: 
-        is_error = True
-        message = "Error message: " + str(e)
-    except db.Error as e:
-        is_error = True
-        message = "Error message: " + str(e)
-    finally:
-        cursor.close()
+        except db.OperationalError as e: 
+            is_error = True
+            message = "Error message: " + str(e)
+        except db.Error as e:
+            is_error = True
+            message = "Error message: " + str(e)
+        finally:
+            cursor.close()    
 
+    if pr_id == "" or pr_id is None:
+        pr_id_display = "Add"
+    else:
+        pr_id_display = str(pr_id) + " | edit"
     return render(request,
         'prpo/pr_entry.html', {
         'page_title': settings.PROJECT_NAME,
@@ -1059,6 +1093,7 @@ def pr_entry(request):
         'attention_to_list': list(attention_to_list),
         'pr_detail_list': list(pr_detail_list),
         'pr_id': pr_id,
+        'pr_id_display': pr_id_display,
         'prcompany': prcompany,
         'prapplicant': prapplicant,
         'prcpa': prcpa,

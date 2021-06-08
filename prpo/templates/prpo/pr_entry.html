@@ -13,7 +13,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-6">
-            <h3 class="m-0 text-dark"><b>{{ pr_id }}</b> <small>| edit</small></h3>
+            <h3 class="m-0 text-dark" id="id_title">{{ pr_id_display }}</h3>
           </div>
           <div class="col-6">
             <ol class="breadcrumb float-right">
@@ -340,7 +340,15 @@
 
 {% block javascript %}
 <script>
+
+
 $(document).ready( function () {
+
+  
+  $('input[type=radio][name="vendor_type_options"]').change(function() {
+    //alert($(this).val());
+    
+  });
 
   $("#save_pr_form").submit(function(e) {
 	e.preventDefault();

@@ -105,13 +105,16 @@
 					    <tr>
 					      <th scope="col">#</th>
 					      <th scope="col">รหัส</th>
-					      <th scope="col">ชื่อพนักงาน</th>
+					      <th scope="col" class="text-nowrap">ชื่อพนักงาน</th>
 					      <th scope="col">แผนก</th>					      
-					      <th scope="col">ลาประเภท</th>
-					      <th scope="col">ลาวันที่</th>
-					      <th scope="col">ถึงวันที่</th>
-					      <th scope="col">วันสร้าง</th>
-					      <th scope="col">วันอนุมัติ</th>
+					      <th scope="col" class="text-nowrap">ลาประเภท</th>
+					      <th scope="col" class="text-nowrap">ลาวันที่</th>
+					      <th scope="col" class="text-nowrap">ถึงวันที่</th>						  
+						  <!--<th scope="col" class="text-nowrap">ไฟล์แนบ</th>-->
+					      <th scope="col" class="text-nowrap">วันสร้าง</th>
+					      <th scope="col" class="text-nowrap">วันอนุมัติ</th>
+						  <th scope="col" class="text-nowrap text-center">จำนวนวัน</th>
+						  <th scope="col" class="text-nowrap text-center">จำนวนชั่วโมง</th>
 					    </tr>
 					  </thead>
 					  <tbody>
@@ -119,15 +122,21 @@
 					    <tr>
 					      <th scope="row">{{ item.row_count }}</th>			      
 					      <td>{{ item.emp_id }}</td>
-					      <td>{{item.emp_fname_th}} {{item.emp_lname_th}}</td>
+					      <td class="text-nowrap">{{item.emp_fname_th}} {{item.emp_lname_th}}</td>
 					      <td>{{ item.div_th }}</td>
 					      <td>{{ item.leave_type_id}} | {{item.leave_type_th}}</td>
+
+						  {% comment %}
+						  {% if item.attach_file != "" %}
+					      <td class="text-center"><a href="/media/documents/{{ item.attach_file}}"><i class="fas fa-paperclip"></i></a></td>
+						  {% else %}
+						  <td>&nbsp;</td>
+						  {% endif %}
+						  {% endcomment %}
+
 					      <td>{{ item.start_date|date:"d/n/Y H:i" }}</td>
 					      <td>{{ item.end_date|date:"d/n/Y H:i" }}</td>
-
-					      <!--<td>{{ item.created_date|date:"d/n/Y H:i"}}</td>-->
-					      <td>{{ item.created_date|date:"d/n/Y"}}</td>
-
+						  <td>{{ item.created_date|date:"d/n/Y"}}</td>
 					      {% if item.updated_date is not None %}
 					      <td>{{ item.updated_date|date:"d/n/Y"}}</td>
 					      {% else %}
@@ -137,6 +146,10 @@
 						      	<td>รออนุมัติ</td>
 						      {% endif %}					      
 					      {% endif %}
+
+						  <td class="text-center">{{ item.lve_act }}</td>
+						  <td class="text-center">{{ item.lve_act_hr }}</td>
+
 					    </tr>
 					    {% endfor %}
 					  </tbody>
@@ -218,14 +231,14 @@
 			      extend: 'print',
 			      title: '',
 			      exportOptions: {
-			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 			      }
 			  },
 			  {
 			      extend: 'excelHtml5',        
 			      title: '',
 			      exportOptions: {
-			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 			      }
 			  },
 			]          	      
