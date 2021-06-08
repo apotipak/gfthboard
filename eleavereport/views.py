@@ -40,7 +40,8 @@ def ViewM3Report(request):
 	leave_request_pending_object = None	
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 
-	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date "
+	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,"
+	sql += "l.lve_act,l.lve_act_hr "
 	sql += "from leave_employeeinstance l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
@@ -131,7 +132,8 @@ def ViewM3LeaveReport(request):
 	leave_request_approved_object = None	
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 
-	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status "
+	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
+	sql += "l.lve_act,l.lve_act_hr "
 	sql += "from leave_employeeinstance l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
@@ -176,6 +178,8 @@ def ViewM3LeaveReport(request):
 				"updated_date": item[10],
 				"updated_by": item[11],
 				"status": item[12],
+				"lve_act": item[13],
+				"lve_act_hr": item[13],
 			}
 			leave_request_approved_list.append(record)
 			row_count = row_count + 1	
@@ -230,7 +234,8 @@ def ViewM5Report(request):
 	leave_request_pending_object = None	
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 
-	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date "
+	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,"
+	sql += "l.lve_act,l.lve_act_hr "
 	sql += "from leave_employeeinstance l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
@@ -321,7 +326,8 @@ def ViewM5LeaveReport(request):
 	leave_request_approved_object = None	
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 
-	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status "
+	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
+	sql += "l.lve_act,l.lve_act_hr "
 	sql += "from leave_employeeinstance l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
@@ -398,6 +404,7 @@ def ViewM5LeaveReport(request):
 
 @permission_required('eleavereport.can_view_m1_report', login_url='/accounts/login/')
 def ViewM1Report(request):
+	print("DEBUG1")
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)	
 	page_title = settings.PROJECT_NAME
@@ -420,7 +427,10 @@ def ViewM1Report(request):
 	leave_request_pending_object = None	
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 
-	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date "
+	# sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,"
+	# sql += "l.lve_act,l.lve_act_hr "
+	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
+	sql += "l.lve_act,l.lve_act_hr,l.document "
 	sql += "from leave_employeeinstance l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
@@ -462,7 +472,11 @@ def ViewM1Report(request):
 				"start_date": item[7],
 				"end_date": item[8],
 				"created_date": item[9],
-
+				"updated_date": item[10],
+				"updated_by": item[11],
+				"status": item[12],
+				"lve_act": item[13],
+				"lve_act_hr": item[14],
 			}
 			leave_request_pending_list.append(record)
 			row_count = row_count + 1	
@@ -489,7 +503,7 @@ def ViewM1Report(request):
 
 @permission_required('eleavereport.can_view_m1_leave_report', login_url='/accounts/login/')
 def ViewM1LeaveReport(request):
-	print("DEBUG")
+	print("DEBUG2")
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)	
 	page_title = settings.PROJECT_NAME
@@ -512,8 +526,10 @@ def ViewM1LeaveReport(request):
 	leave_request_approved_object = None	
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 
-	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status "
-	sql += "from leave_employeeinstance l "
+	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
+	sql += "l.lve_act,l.lve_act_hr,l.document "
+	# sql += "from leave_employeeinstance l "
+	sql += "from leave_act l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status in ('a','C','p') "
@@ -541,7 +557,8 @@ def ViewM1LeaveReport(request):
 	if leave_request_approved_object is not None:
 		print("Total=", len(leave_request_approved_object))
 		row_count = 1
-		for item in leave_request_approved_object:				
+		for item in leave_request_approved_object:
+			attach_file = item[15] if item[15] is not None else ""
 			record = {
 				"row_count": row_count,
 				"emp_id": item[0],
@@ -557,6 +574,9 @@ def ViewM1LeaveReport(request):
 				"updated_date": item[10],
 				"updated_by": item[11],
 				"status": item[12],
+				"lve_act": item[13],
+				"lve_act_hr": item[14],
+				"attach_file": attach_file,
 			}
 			leave_request_approved_list.append(record)
 			row_count = row_count + 1	

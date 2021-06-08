@@ -965,9 +965,9 @@ def EmployeeInstanceApprove(request, pk):
                 message = 'E-Leave: แจ้งอนุมัติวันลา'
                 html_message = 'เรียน คุณ <strong>' + employee_full_name + '</strong><br><br>'
                 html_message += "ผู้จัดการของท่านแจ้ง <strong>อนุมัติ</strong> การใช้สิทธิ์วันลาตามรายละเอียดด้านล่าง<br><br>"
-                html_message += "ประเภทการลา: <strong>' + str(leave_type) + '</strong><br>"
-                html_message += "วันที่: <strong>' + start_date + '</strong> ถึง <strong>' + end_date + '</strong><br>"
-                html_message += "จำนวน: <strong>' + day_hour_display + '</strong><br>"
+                html_message += "ประเภทการลา: <strong>" + str(leave_type) + "</strong><br>"
+                html_message += "วันที่: <strong>" + start_date + "</strong> ถึง <strong>" + end_date + "</strong><br>"
+                html_message += "จำนวน: <strong>" + day_hour_display + "</strong><br>"
                 html_message += "สถานะ: <strong>อนุมัติ</strong><br><br>"
                 html_message += 'สามารถเข้าสู่ระบบเพื่อดูรายละเอียดเพิ่มเติมได้ <a href="http://27.254.207.51:8080">ที่นี่</a><br>'
                 html_message += "<br><br>--This email was sent from E-Leave System<br>"
@@ -1489,13 +1489,14 @@ def send_custom_mail(emp_type, recipients, subject, message, html_message):
     message = message
     html_message = html_message
 
-    '''
+    
     print("Send mail : ", subject)
     print("Send from : ", send_from)
     print("Send to : ", recipients)
     print("Subject : ", subject)
     print("Message : ", message)
-    '''
+    print("HTML Message : ", html_message)
+    
 
     # init()
     if is_email_existed(recipients):    
