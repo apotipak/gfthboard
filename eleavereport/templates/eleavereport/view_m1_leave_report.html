@@ -108,9 +108,10 @@
 					      <th scope="col" class="text-nowrap">ชื่อพนักงาน</th>
 					      <th scope="col">แผนก</th>					      
 					      <th scope="col" class="text-nowrap">ลาประเภท</th>
+						  <th scope="col" class="text-nowrap">ไฟล์แนบ</th>
 					      <th scope="col" class="text-nowrap">ลาวันที่</th>
 					      <th scope="col" class="text-nowrap">ถึงวันที่</th>						  
-						  <!--<th scope="col" class="text-nowrap">ไฟล์แนบ</th>-->
+						  
 					      <th scope="col" class="text-nowrap">วันสร้าง</th>
 					      <th scope="col" class="text-nowrap">วันอนุมัติ</th>
 						  <th scope="col" class="text-nowrap text-center">จำนวนวัน</th>
@@ -126,13 +127,11 @@
 					      <td>{{ item.div_th }}</td>
 					      <td>{{ item.leave_type_id}} | {{item.leave_type_th}}</td>
 
-						  {% comment %}
 						  {% if item.attach_file != "" %}
-					      <td class="text-center"><a href="/media/documents/{{ item.attach_file}}"><i class="fas fa-paperclip"></i></a></td>
+					      <td class="text-center"><a href="/media/{{ item.attach_file}}" target="_blank"><i class="fas fa-paperclip"></i></a></td>
 						  {% else %}
 						  <td>&nbsp;</td>
 						  {% endif %}
-						  {% endcomment %}
 
 					      <td>{{ item.start_date|date:"d/n/Y H:i" }}</td>
 					      <td>{{ item.end_date|date:"d/n/Y H:i" }}</td>
@@ -231,14 +230,14 @@
 			      extend: 'print',
 			      title: '',
 			      exportOptions: {
-			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+			        columns: [ 0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11]
 			      }
 			  },
 			  {
 			      extend: 'excelHtml5',        
 			      title: '',
 			      exportOptions: {
-			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+			        columns: [ 0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11]
 			      }
 			  },
 			]          	      

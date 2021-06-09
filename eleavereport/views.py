@@ -537,7 +537,7 @@ def ViewM1LeaveReport(request):
 	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
 	sql += "l.emp_type='M1' "
 	sql += "order by created_date desc;"
-	print("SQL:", sql)
+	print("SQL 1 : ", sql)
 
 	try:				
 		cursor = connection.cursor()
