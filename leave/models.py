@@ -185,6 +185,12 @@ class EmployeeInstance(models.Model):
         default='p',
         help_text='Leave Request Status')
     emp_type = models.CharField(max_length=2, blank=True, null=True)
+
+    leave_no = models.TextField(max_length=20,blank=True, null=True)
+    op1 = models.TextField(max_length=10,blank=True, null=True)
+    op2 = models.TextField(max_length=10,blank=True, null=True)
+    opn1 = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    opn2 = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     
     class Meta:
         #ordering = ['-created_date', '-start_date']

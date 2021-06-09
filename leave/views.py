@@ -437,9 +437,31 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        # return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).exclude(status__exact='d').order_by('-created_date')        
+        '''
+        sql = "select * from sch_plan where emp_id=" + self.request.user.username + " and sch_active=1 and upd_flag!='D'"
+        try:
+            with connection.cursor() as cursor:		
+                cursor.execute(sql)
+                leave_act_obj = cursor.fetchall()
+
+        except db.OperationalError as e:
+            is_found = False
+            message = "<b>Please send this error to IT team or try again.</b><br>" + str(e)
+        except db.Error as e:
+            is_found = False
+            message = "<b>Please send this error to IT team or try again.</b><br>" + str(e)
+        finally:
+            cursor.close()
+        print("SQL : ", sql)
+        '''
+
+        # amnaj        
+        # return EmployeeInstance.objects.raw("select * from leave_act where emp_id='" + self.request.user.username + "' and year(end_date)='2021' and status!='d' order by created_date desc;")        
+        # return EmployeeInstance.objects.raw("select * from leave_act as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') and year(end_date)='2021'")
         return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).filter(end_date__year='2021').exclude(status__exact='d').order_by('-created_date')
-        #return EmployeeInstance.objects.filter(emp_id__exact=self.request.user.username).order_by('-created_date')
+        
+
+
 
 
 class EmployeeInstanceDetailView(generic.DetailView):
@@ -1389,7 +1411,11 @@ def LeaveTimeline(request):
 
     username = request.user.username
 
-    leave_approved_items = EmployeeInstance.objects.filter(emp_id__exact=username).filter(status__in=('a','C','F')).filter(end_date__year='2021').order_by('-start_date') or None
+    # leave_approved_items = EmployeeInstance.objects.filter(emp_id__exact=username).filter(status__in=('a','C','F')).filter(end_date__year='2021').order_by('-start_date') or None
+    # amnaj
+    # print("current year : ", settings.TODAY_DATE.year)
+    leave_approved_items = EmployeeInstance.objects.raw("select * from leave_act where emp_id='" + request.user.username + "' and year(end_date)='" + str(settings.TODAY_DATE.year) + "' and status='C' order by created_date desc;") or None
+
 
     # Check leave approval right    
     if checkLeaveRequestApproval(request.user.username):
