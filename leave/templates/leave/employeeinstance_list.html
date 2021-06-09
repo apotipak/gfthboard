@@ -102,6 +102,8 @@
                                 <span class="badge badge-success"><i class="fa fa-check fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Approved' %}</span>
                             {% elif leave.status == 'F' %}
                                 <span class="badge badge-success"><i class="fa fa-check fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Approved' %}</span>
+                            {% elif leave.status == 'J' %}
+                                <span class="badge badge-warning"><i class="fa fa-ban fa-xs" aria-hidden="true"></i>&nbsp;&nbsp;{% trans 'Rejected by HR' %}</span>
                             {% else %}
                                 <small class="text-danger">ตรวจสอบข้อมูล</small>
                             {% endif %}
