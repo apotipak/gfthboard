@@ -9,8 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 
 class UserForm(ModelForm):
 	password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านเก่า'}, widget=forms.PasswordInput(attrs={'autocomplete':'off'}))
-	new_password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านใหม่'}, widget=forms.TextInput(attrs={'autocomplete':'off'}))
-	confirm_new_password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านใหม่อีกครั้ง'}, widget=forms.TextInput(attrs={'autocomplete':'off'}))
+	new_password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านใหม่'}, widget=forms.PasswordInput(attrs={'autocomplete':'off'}))
+	confirm_new_password = forms.CharField(max_length=128, error_messages={'required': 'กรุณาป้อนรหัสผ่านใหม่อีกครั้ง'}, widget=forms.PasswordInput(attrs={'autocomplete':'off'}))
 
 	class Meta:
 		model = User
@@ -38,12 +38,15 @@ class UserForm(ModelForm):
 		if userobj.check_password(password):
 			if re.match(r"^(?=.*[\d])(?=.*[a-z])(?=.*[@#$])[\w\d@#$]{6,12}$", new_password):							
 				if new_password != confirm_new_password:
-					raise forms.ValidationError(_("New password is name same"))
+					raise forms.ValidationError(_("New password is not same"))
 				else:
 					if new_password == password:
 						raise forms.ValidationError("รหัสผ่านใหม่ซ้ำกับรหัสผ่านเก่า")	
 					else:
-						return cleaned_data
+						if new_password == "123@gfth":
+							raise forms.ValidationError("ไม่อนุญาติให้ใช้รหัสผ่านตั้งต้น")	
+						else:
+							return cleaned_data
 
 			else:
 				raise forms.ValidationError("รหัสใหม่ควรยาวอย่างน้อย 6 ตัวอักษร และประกอบด้วย ตัวเลข ตัวหนังสือ สัญลักษณ์")			
