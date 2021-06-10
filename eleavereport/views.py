@@ -672,12 +672,14 @@ def ViewM1LeaveReport(request):
 
 			leave_request_approved_list.append(record)
 			row_count = row_count + 1
-		
+
+			'''
 			if leave_act_id != leave_act_id_temp:
 				leave_request_approved_list.append(record)
 				row_count = row_count + 1
 				leave_act_id_temp = leave_act_id
-
+			'''
+			
 	if user_language == "th":
 	    if request.user.username == "999999":
 	        username_display = request.user.first_name
