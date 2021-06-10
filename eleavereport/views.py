@@ -169,8 +169,8 @@ def ViewM3LeaveReport(request):
 			record = {
 				"row_count": row_count,
 				"emp_id": item[0],
-				'emp_fname_th': item[1],
-				'emp_lname_th': item[2],
+				'emp_fname_th': item[1].strip(),
+				'emp_lname_th': item[2].strip(),
 				'pos_th': item[3],
 				'div_th': item[4],
 				"leave_type_id": item[5],
@@ -367,8 +367,8 @@ def ViewM5LeaveReport(request):
 			record = {
 				"row_count": row_count,
 				"emp_id": item[0],
-				'emp_fname_th': item[1],
-				'emp_lname_th': item[2],
+				'emp_fname_th': item[1].strip(),
+				'emp_lname_th': item[2].strip(),
 				'pos_th': item[3],
 				'div_th': item[4],
 				"leave_type_id": item[5],
@@ -574,8 +574,8 @@ def ViewM1LeaveReport(request):
 			record = {
 				"row_count": row_count,
 				"emp_id": item[0],
-				'emp_fname_th': item[1],
-				'emp_lname_th': item[2],
+				'emp_fname_th': item[1].strip(),
+				'emp_lname_th': item[2].strip(),
 				'pos_th': item[3],
 				'div_th': item[4],
 				"leave_type_id": item[5],
