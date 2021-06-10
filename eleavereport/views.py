@@ -131,7 +131,7 @@ def ViewM3LeaveReport(request):
 	print("end_date:", end_date)
 
 	leave_request_approved_object = None
-	'''
+
 	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
 	sql += "l.lve_act,l.lve_act_hr,l.document "
 	sql += "from leave_act l "
@@ -142,8 +142,9 @@ def ViewM3LeaveReport(request):
 	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
 	sql += "l.emp_type='M3' "
 	sql += "order by created_date desc;"
-	'''
 
+
+	'''
 	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
 	sql += "l.lve_act,l.lve_act_hr,le.document "
 	sql += "from leave_act l "
@@ -153,7 +154,10 @@ def ViewM3LeaveReport(request):
 	sql += "where year(l.start_date)=year(getdate()) and l.status in ('a','C','p') "
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
 	sql += "l.emp_type='M3' "
-	sql += "order by l.created_date desc, l.id;"	
+	sql += "order by l.created_date desc, l.id;"
+	'''
+
+
 	print("SQL:", sql)
 
 	try:				
@@ -203,13 +207,15 @@ def ViewM3LeaveReport(request):
 				"attach_file": attach_file,
 			}
 			
-			# leave_request_approved_list.append(record)
-			# row_count = row_count + 1
+			leave_request_approved_list.append(record)
+			row_count = row_count + 1
 
+			'''
 			if leave_act_id != leave_act_id_temp:
 				leave_request_approved_list.append(record)
 				row_count = row_count + 1
 				leave_act_id_temp = leave_act_id
+			'''
 
 	if user_language == "th":
 	    if request.user.username == "999999":
@@ -353,7 +359,6 @@ def ViewM5LeaveReport(request):
 
 	leave_request_approved_object = None	
 
-	'''
 	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"	
 	sql += "l.lve_act,l.lve_act_hr,l.document "
 	sql += "from leave_act l "
@@ -364,8 +369,8 @@ def ViewM5LeaveReport(request):
 	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
 	sql += "l.emp_type='M5' "
 	sql += "order by created_date desc;"
-	'''
 
+	'''
 	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
 	sql += "l.lve_act,l.lve_act_hr,le.document "
 	sql += "from leave_act l "
@@ -375,7 +380,9 @@ def ViewM5LeaveReport(request):
 	sql += "where year(l.start_date)=year(getdate()) and l.status in ('a','C','p') "
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
 	sql += "l.emp_type='M5' "
-	sql += "order by l.created_date desc, l.id;"		
+	sql += "order by l.created_date desc, l.id;"
+	'''
+
 	print("SQL:", sql)
 
 	try:				
@@ -424,13 +431,16 @@ def ViewM5LeaveReport(request):
 				"lve_act_hr": item[14],
 				"attach_file": attach_file,				
 			}
-			# leave_request_approved_list.append(record)
-			# row_count = row_count + 1
+			
+			leave_request_approved_list.append(record)
+			row_count = row_count + 1
 
+			'''
 			if leave_act_id != leave_act_id_temp:
 				leave_request_approved_list.append(record)
 				row_count = row_count + 1
 				leave_act_id_temp = leave_act_id			
+			'''
 
 	if user_language == "th":
 	    if request.user.username == "999999":
@@ -582,7 +592,7 @@ def ViewM1LeaveReport(request):
 
 	leave_request_approved_object = None	
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
-	'''
+	
 	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
 	sql += "l.lve_act,l.lve_act_hr,l.document "
 	# sql += "from leave_employeeinstance l "
@@ -592,11 +602,12 @@ def ViewM1LeaveReport(request):
 	sql += "where year(start_date)=year(getdate()) and status in ('a','C','p') "
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and "
 	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
-	sql += "l.emp_type='M3' "
+	sql += "l.emp_type='M1' "
 	sql += "order by created_date desc;"
-	'''
+	
 
 	# amnaj
+	'''
 	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
 	sql += "l.lve_act,l.lve_act_hr,le.document "
 	sql += "from leave_act l "
@@ -607,6 +618,8 @@ def ViewM1LeaveReport(request):
 	sql += "and l.start_date between CONVERT(datetime,'" + convertDateToYYYYMMDD(start_date) + "') and CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
 	sql += "l.emp_type='M1' "
 	sql += "order by l.created_date desc, l.id;"
+	'''
+
 	print("SQL 1 : ", sql)
 
 	try:				
@@ -657,9 +670,9 @@ def ViewM1LeaveReport(request):
 				"attach_file": attach_file,
 			}
 
-			# leave_request_approved_list.append(record)
-			# row_count = row_count + 1
-
+			leave_request_approved_list.append(record)
+			row_count = row_count + 1
+		
 			if leave_act_id != leave_act_id_temp:
 				leave_request_approved_list.append(record)
 				row_count = row_count + 1
