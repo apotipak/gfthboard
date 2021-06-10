@@ -129,14 +129,15 @@
           {% else %}
           <div class="col-lg-12">
             <div class="alert alert-success" role="alert">
-                <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{% trans 'There is no record in E-Leave system. If you would like to take leave, please' %}&nbsp;
+                <!--<i class="fa fa-info-circle"></i>&nbsp;&nbsp;{% trans 'There is no record in E-Leave system. If you would like to take leave, please' %}-->
+                <i class="fa fa-info-circle"></i>&nbsp;&nbsp;ยังไม่มีรายการลาอยู่ในระบบ <b>E-Leave</b> หากต้องการใช้วันลา&nbsp;
                 <a href="{% url 'employee_create' %}">{% trans 'click here' %}</a>
                 &nbsp;<a href="{% url 'employee_create' %}"><i class="nav-icon fas fa-plus"></i></a>
             </div>           
           </div> 
         {% endif %}
 
-          <div class="pb-2"><small>Note:&nbsp;{% trans 'All displayed items below have been approved via E-Leave system only.' %}</small><br>
+          <!--<div class="pb-2"><small>Note:&nbsp;{% trans 'All displayed items below have been approved via E-Leave system only.' %}</small><br>-->
 
             <!--
             <small><b>{% trans 'SYMBOLS' %}</b> : </small>
