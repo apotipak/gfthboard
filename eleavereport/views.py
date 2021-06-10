@@ -166,11 +166,14 @@ def ViewM3LeaveReport(request):
 		row_count = 1
 		for item in leave_request_approved_object:				
 			attach_file = item[15] if item[15] is not None else ""
+			emp_fname_th = item[1].strip() if item[1] is not None else ""
+			emp_lname_th = item[2].strip() if item[2] is not None else ""
+
 			record = {
 				"row_count": row_count,
 				"emp_id": item[0],
-				'emp_fname_th': item[1].strip(),
-				'emp_lname_th': item[2].strip(),
+				'emp_fname_th': emp_fname_th,
+				'emp_lname_th': emp_lname_th,
 				'pos_th': item[3],
 				'div_th': item[4],
 				"leave_type_id": item[5],
@@ -364,11 +367,14 @@ def ViewM5LeaveReport(request):
 		row_count = 1
 		for item in leave_request_approved_object:
 			attach_file = item[15] if item[15] is not None else ""
+			emp_fname_th = item[1].strip() if item[1] is not None else ""
+			emp_lname_th = item[2].strip() if item[2] is not None else ""
+
 			record = {
 				"row_count": row_count,
 				"emp_id": item[0],
-				'emp_fname_th': item[1].strip(),
-				'emp_lname_th': item[2].strip(),
+				'emp_fname_th': emp_fname_th,
+				'emp_lname_th': emp_lname_th,
 				'pos_th': item[3],
 				'div_th': item[4],
 				"leave_type_id": item[5],
@@ -571,11 +577,14 @@ def ViewM1LeaveReport(request):
 		row_count = 1
 		for item in leave_request_approved_object:
 			attach_file = item[15] if item[15] is not None else ""
+			emp_fname_th = item[1].strip() if item[1] is not None else ""
+			emp_lname_th = item[2].strip() if item[2] is not None else ""
+
 			record = {
 				"row_count": row_count,
 				"emp_id": item[0],
-				'emp_fname_th': item[1].strip(),
-				'emp_lname_th': item[2].strip(),
+				'emp_fname_th': emp_fname_th,
+				'emp_lname_th': emp_lname_th,
 				'pos_th': item[3],
 				'div_th': item[4],
 				"leave_type_id": item[5],
