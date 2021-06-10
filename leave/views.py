@@ -1412,8 +1412,8 @@ def LeaveTimeline(request):
     username = request.user.username
 
     # amnaj
-    leave_approved_items = EmployeeInstance.objects.filter(emp_id__exact=username).filter(status__in=('a','C','F')).filter(end_date__year='2021').order_by('-start_date') or None
-    # leave_approved_items = EmployeeInstance.objects.raw("select * from leave_act where emp_id='" + request.user.username + "' and year(end_date)='" + str(settings.TODAY_DATE.year) + "' and status='C' order by created_date desc;") or None
+    # leave_approved_items = EmployeeInstance.objects.filter(emp_id__exact=username).filter(status__in=('a','C','F')).filter(end_date__year='2021').order_by('-start_date') or None
+    leave_approved_items = EmployeeInstance.objects.raw("select * from leave_act where emp_id='" + request.user.username + "' and year(end_date)='" + str(settings.TODAY_DATE.year) + "' and status='C' order by created_date desc;") or None
 
     # Check leave approval right    
     if checkLeaveRequestApproval(request.user.username):
