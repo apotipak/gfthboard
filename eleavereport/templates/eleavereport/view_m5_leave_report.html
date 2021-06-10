@@ -101,47 +101,57 @@
 	    	<div class="table-responsive table-striped">
 				<font size='2em;'>
 					<table class="table table-sm" id="employee_list_table">
-					  <thead>
-					    <tr>
-					      <th scope="col">#</th>
-					      <th scope="col">รหัส</th>
-					      <th scope="col">ชื่อพนักงาน</th>
-					      <th scope="col">แผนก</th>					      
-					      <th scope="col">ลาประเภท</th>
-					      <th scope="col">ลาวันที่</th>
-					      <th scope="col">ถึงวันที่</th>
-						  <th scope="col" class="text-nowrap">จำนวนวัน</th>
-						  <th scope="col" class="text-nowrap">จำนวนชั่วโมง</th>						  
-					      <th scope="col">วันสร้าง</th>
-					      <th scope="col">วันอนุมัติ</th>
-					    </tr>
-					  </thead>
-					  <tbody>
-					  {% for item in leave_request_approved_list %}
-					    <tr>
-					      <th scope="row">{{ item.row_count }}</th>			      
-					      <td>{{ item.emp_id }}</td>
-					      <td>{{item.emp_fname_th}} {{item.emp_lname_th}}</td>
-					      <td>{{ item.div_th }}</td>
-					      <td>{{ item.leave_type_id}} | {{item.leave_type_th}}</td>
-					      <td>{{ item.start_date|date:"d/n/Y H:i" }}</td>
-					      <td>{{ item.end_date|date:"d/n/Y H:i" }}</td>
-						  <td class="text-center">{{ item.lve_act }}</td>
-						  <td class="text-center">{{ item.lve_act_hr }}</td>						  
-					      <td>{{ item.created_date|date:"d/n/Y"}}</td>
-
-					      {% if item.updated_date is not None %}
-					      <td>{{ item.updated_date|date:"d/n/Y"}}</td>
-					      {% else %}
-						      {% if item.status == 'a' %}
-						      	<td>รอซิงค์ข้อมูล</td>
-						      {% else %}
-						      	<td>รออนุมัติ</td>
-						      {% endif %}					      
-					      {% endif %}
-					    </tr>
-					    {% endfor %}
-					  </tbody>
+						<thead>
+							<tr>
+							  <th scope="col">#</th>
+							  <th scope="col">รหัส</th>
+							  <th scope="col" class="text-nowrap">ชื่อพนักงาน</th>
+							  <th scope="col">แผนก</th>					      
+							  <th scope="col" class="text-nowrap">ลาประเภท</th>
+							  <th scope="col" class="text-nowrap">ไฟล์แนบ</th>
+							  <th scope="col" class="text-nowrap">ลาวันที่</th>
+							  <th scope="col" class="text-nowrap">ถึงวันที่</th>						  
+							  
+							  <th scope="col" class="text-nowrap">วันสร้าง</th>
+							  <th scope="col" class="text-nowrap">วันอนุมัติ</th>
+							  <th scope="col" class="text-nowrap text-center">จำนวนวัน</th>
+							  <th scope="col" class="text-nowrap text-center">จำนวนชั่วโมง</th>
+							</tr>
+						  </thead>
+						  <tbody>
+							{% for item in leave_request_approved_list %}
+							  <tr>
+								<th scope="row">{{ item.row_count }}</th>			      
+								<td>{{ item.emp_id }}</td>
+								<td class="text-nowrap">{{item.emp_fname_th}} {{item.emp_lname_th}}</td>
+								<td>{{ item.div_th }}</td>
+								<td>{{ item.leave_type_id}} | {{item.leave_type_th}}</td>
+	  
+								{% if item.attach_file != "" %}
+								<td class="text-center"><a href="{{ MEDIA_URL }}/media/{{ item.attach_file}}" target="_blank"><i class="fas fa-paperclip"></i></a></td>						  
+								{% else %}
+								<td>&nbsp;</td>
+								{% endif %}
+	  
+								<td>{{ item.start_date|date:"d/n/Y H:i" }}</td>
+								<td>{{ item.end_date|date:"d/n/Y H:i" }}</td>
+								<td>{{ item.created_date|date:"d/n/Y"}}</td>
+								{% if item.updated_date is not None %}
+								<td>{{ item.updated_date|date:"d/n/Y"}}</td>
+								{% else %}
+									{% if item.status == 'a' %}
+										<td>รอซิงค์ข้อมูล</td>
+									{% else %}
+										<td>รออนุมัติ</td>
+									{% endif %}					      
+								{% endif %}
+	  
+								<td class="text-center">{{ item.lve_act }}</td>
+								<td class="text-center">{{ item.lve_act_hr }}</td>
+	  
+							  </tr>
+							  {% endfor %}
+							</tbody>
 					</table>
 				</font>
 			</div>
@@ -220,14 +230,14 @@
 			      extend: 'print',
 			      title: '',
 			      exportOptions: {
-			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+					columns: [ 0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11]
 			      }
 			  },
 			  {
 			      extend: 'excelHtml5',        
 			      title: '',
 			      exportOptions: {
-			        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+					columns: [ 0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11]
 			      }
 			  },
 			]          	      

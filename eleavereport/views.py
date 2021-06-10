@@ -41,8 +41,9 @@ def ViewM3Report(request):
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 
 	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,"
-	sql += "l.lve_act,l.lve_act_hr "
-	sql += "from leave_employeeinstance l "
+	sql += "l.lve_act,l.lve_act_hr,l.document "
+	# sql += "from leave_employeeinstance l "
+	sql += "from leave_act l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status='p' "
@@ -133,8 +134,9 @@ def ViewM3LeaveReport(request):
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 
 	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
-	sql += "l.lve_act,l.lve_act_hr "
-	sql += "from leave_employeeinstance l "
+	sql += "l.lve_act,l.lve_act_hr,l.document "
+	# sql += "from leave_employeeinstance l "
+	sql += "from leave_act l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status in ('a','C','p') "
@@ -163,6 +165,7 @@ def ViewM3LeaveReport(request):
 		print("Total=", len(leave_request_approved_object))
 		row_count = 1
 		for item in leave_request_approved_object:				
+			attach_file = item[15] if item[15] is not None else ""
 			record = {
 				"row_count": row_count,
 				"emp_id": item[0],
@@ -180,6 +183,7 @@ def ViewM3LeaveReport(request):
 				"status": item[12],
 				"lve_act": item[13],
 				"lve_act_hr": item[13],
+				"attach_file": attach_file,
 			}
 			leave_request_approved_list.append(record)
 			row_count = row_count + 1	
@@ -234,9 +238,10 @@ def ViewM5Report(request):
 	leave_request_pending_object = None	
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 
-	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,"
-	sql += "l.lve_act,l.lve_act_hr "
-	sql += "from leave_employeeinstance l "
+	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,"	
+	sql += "l.lve_act,l.lve_act_hr,l.document "
+	# sql += "from leave_employeeinstance l "
+	sql += "from leave_act l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status='p' "
@@ -244,7 +249,7 @@ def ViewM5Report(request):
 	sql += "CONVERT(datetime,'" + convertDateToYYYYMMDD(end_date) + " 23:59:59:999') and "
 	sql += "l.emp_type='M5' "
 	sql += "order by created_date desc;"
-	print("SQL:", sql)
+	print("SQL M5 :", sql)
 
 	try:				
 		cursor = connection.cursor()
@@ -326,9 +331,10 @@ def ViewM5LeaveReport(request):
 	leave_request_approved_object = None	
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 
-	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
-	sql += "l.lve_act,l.lve_act_hr "
-	sql += "from leave_employeeinstance l "
+	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"	
+	sql += "l.lve_act,l.lve_act_hr,l.document "
+	# sql += "from leave_employeeinstance l "
+	sql += "from leave_act l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status in ('a','C','p') "
@@ -356,7 +362,8 @@ def ViewM5LeaveReport(request):
 	if leave_request_approved_object is not None:
 		print("Total=", len(leave_request_approved_object))
 		row_count = 1
-		for item in leave_request_approved_object:				
+		for item in leave_request_approved_object:
+			attach_file = item[15] if item[15] is not None else ""
 			record = {
 				"row_count": row_count,
 				"emp_id": item[0],
@@ -372,6 +379,9 @@ def ViewM5LeaveReport(request):
 				"updated_date": item[10],
 				"updated_by": item[11],
 				"status": item[12],
+				"lve_act": item[13],
+				"lve_act_hr": item[14],
+				"attach_file": attach_file,				
 			}
 			leave_request_approved_list.append(record)
 			row_count = row_count + 1	
@@ -431,7 +441,8 @@ def ViewM1Report(request):
 	# sql += "l.lve_act,l.lve_act_hr "
 	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
 	sql += "l.lve_act,l.lve_act_hr,l.document "
-	sql += "from leave_employeeinstance l "
+	# sql += "from leave_employeeinstance l "
+	sql += "from leave_act l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "
 	sql += "left join leave_type lt on l.leave_type_id=lt.lve_id "
 	sql += "where year(start_date)=year(getdate()) and status='p' "
