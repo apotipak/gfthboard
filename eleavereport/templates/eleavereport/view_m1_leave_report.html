@@ -178,6 +178,9 @@
 	  dateFormat: "dd-mm-yy",
 	  //minDate: -45,
 	  //maxDate: lastDate,
+	  changeYear: true,
+	  changeMonth: true,
+	  yearRange: "-1:+0",
 	  onSelect: function () {
 	      var dt2 = $('#id_end_date');
 	      var startDate = $(this).datepicker('getDate');
@@ -213,7 +216,10 @@
 	  //dateFormat: "yy-mm-dd",
 	  dateFormat: "dd-mm-yy",
 	  //minDate: 0,
-	  //maxDate: lastDate
+	  //maxDate: lastDate,
+	  changeYear: true,
+	  changeMonth: true,
+	  yearRange: "-1:+0",
 	}).attr('readonly', 'readonly');
 
 
