@@ -124,8 +124,15 @@
 					      <th scope="row">{{ item.row_count }}</th>			      
 					      <td>{{ item.emp_id }}</td>
 					      <td class="text-nowrap">{{item.emp_fname_th}} {{item.emp_lname_th}}</td>
-					      <td>{{ item.div_th }}</td>
-					      <td>{{ item.leave_type_id}} | {{item.leave_type_th}}</td>
+
+						  {% if item.div_th|length >= 15 %}
+						  <!--<td>{{ item.div_th|slice:"0:15" }}...</td>-->
+						  <td>{{ item.div_th }}</td>
+						  {% else %}
+						  <td>{{ item.div_th }}</td>
+						  {% endif %}
+					      
+					      <td nowrap>{{ item.leave_type_id}} | {{item.leave_type_th}}</td>
 
 						  {% if item.attach_file != "" %}
 					      <td class="text-center"><a href="{{ MEDIA_URL }}/media/{{ item.attach_file}}" target="_blank"><i class="fas fa-paperclip"></i></a></td>						  
@@ -133,8 +140,8 @@
 						  <td>&nbsp;</td>
 						  {% endif %}
 
-					      <td>{{ item.start_date|date:"d/n/Y H:i" }}</td>
-					      <td>{{ item.end_date|date:"d/n/Y H:i" }}</td>
+					      <td class="text-center" nowrap>{{ item.start_date|date:"d/n/Y H:i" }}</td>
+					      <td class="text-center" nowrap>{{ item.end_date|date:"d/n/Y H:i" }}</td>
 						  <td>{{ item.created_date|date:"d/n/Y"}}</td>
 					      {% if item.updated_date is not None %}
 					      <td>{{ item.updated_date|date:"d/n/Y"}}</td>
