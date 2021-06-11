@@ -21,6 +21,7 @@ from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from django.core import serializers
 import django.db as db
+from django.db import connection
 import json
 import os
 
@@ -779,4 +780,69 @@ def CovidVaccineUpdate(request):
         'project_version': project_version, 
         'db_server': db_server, 'today_date': today_date,        
     })
+
+
+def AjaxCovidVaccineUpdateSearchEmployee(request):
+    is_error = True
+    message = "Error"    
+    emp_id = request.POST.get('emp_id')
+
+    employee_instance = None
+    name_th = ""
+    print("emp_id : ", emp_id)
+
+    if emp_id is None or emp_id=="":
+        response = JsonResponse(data={
+            "success": True,
+            "is_error": True,
+            "message": "ไม่พบข้อมูล",
+            "name_th": name_th,
+        })
+    else:
+        sql = "select * from covid_employee where emp_id=" + str(emp_id) + ";";
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            employee_instance = cursor.fetchone()
+            if employee_instance is not None:            
+                name_th = employee_instance[2]
+            
+            print("name_th : ", name_th)
+
+        except db.OperationalError as e:
+            is_error = True
+            message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+        except db.Error as e:
+            is_error = True
+            message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+        finally:
+            cursor.close()
+        
+        print("message : ", message)
+
+        response = JsonResponse(data={
+            "success": True,
+            "is_error": False,
+            "message": "Success",
+            "name_th": name_th,
+        })
+
+    response.status_code = 200
+    return response
+
+
+def AjaxCovidVaccineUpdateSaveEmployee(request):
+    is_error = True
+    message = "Error"    
+    # emp_id = request.POST.get('emp_id')
+    # print("emp_id : ", emp_id)
+
+    response = JsonResponse(data={
+        "success": True,
+        "is_error": False,
+        "message": "Success",
+    })
+
+    response.status_code = 200
+    return response
 
