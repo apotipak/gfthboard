@@ -32,7 +32,7 @@ class CovidEmployeeVaccineUpdate(models.Model):
     emp_id = models.DecimalField(max_digits=7, decimal_places=0, blank=True, null=True)
     full_name = models.CharField(max_length=200, blank=True, null=True)
     
-    get_vaccine_count = models.DecimalField(max_digits=1, decimal_places=0, blank=True, null=True)
+    get_vaccine_status = models.DecimalField(max_digits=1, decimal_places=0, blank=True, null=True)
     get_vaccine_date = models.DateTimeField(blank=True, null=True)
     get_vaccine_place = upd_by = models.CharField(max_length=100, blank=True, null=True)    
     file_attch = models.FileField(upload_to='documents/covid/', null=True)

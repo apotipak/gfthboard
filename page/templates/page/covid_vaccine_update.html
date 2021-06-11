@@ -87,14 +87,13 @@
                         <div class="input-group col-6 float-left pt-2">
                             <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>สถานะ</b></span></div>
                             
-                            <select id="id_get_vaccine_count" name="get_vaccine_count" class="form-control form-control-md" style="border-radius: 0;">
+                            <select id="id_get_vaccine_status" name="get_vaccine_status" class="form-control form-control-md" style="border-radius: 0;">
                                 <option value="1">นัดหมายเข็มที่ 1</option>
                                 <option value="2">รับวัคซีนเข็มที่ 1</option>
-                                <option value="1">นัดหมายเข็มที่ 2</option>
-                                <option value="2">รับวัคซีนเข็มที่ 2</option>
+                                <option value="3">นัดหมายเข็มที่ 2</option>
+                                <option value="4">รับวัคซีนเข็มที่ 2</option>
                               </select>      
                         </div>
-
 
                         <div class="input-group col-6 float-left pt-2">
                             <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>วันที่</b></span></div>
@@ -136,7 +135,7 @@
                                 <option value="31">31</option>
                             </select>
 
-                            <select id="id_get_vaccine_day" name="get_vaccine_day" class="form-control form-control-md" style="border-radius: 0;">
+                            <select id="id_get_vaccine_month" name="get_vaccine_month" class="form-control form-control-md" style="border-radius: 0;">
                                 <option value="0">เลือกเดือน</option>
                                 <option value="1">มกราคม</option>
                                 <option value="2">กุมภาภันธ์</option>
@@ -152,7 +151,7 @@
                                 <option value="12">ธันวาคม</option>
                             </select>
 
-                            <select id="id_get_vaccine_day" name="get_vaccine_day" class="form-control form-control-md" style="border-radius: 0;">                                
+                            <select id="id_get_vaccine_year" name="get_vaccine_year" class="form-control form-control-md" style="border-radius: 0;">                                
                                 <option value="2564">2564</option>
                                 <option value="2565">2565</option>
                             </select>
@@ -161,7 +160,7 @@
                         
                         <div class="input-group col-6 float-left pt-2">
                             <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>เวลา</b></span></div>
-                            <select id="id_get_vaccine_time_options" name="get_vaccine_time_options" class="form-control form-control-md" style="border-radius: 0;">
+                            <select id="id_get_vaccine_time" name="get_vaccine_time" class="form-control form-control-md" style="border-radius: 0;">
                                 <option value="0">เลือกเวลา</option>
                                 <option value="7">7:00</option>
                                 <option value="8">8:00</option>
@@ -196,6 +195,10 @@
                         <button class="btn btn-md btn-primary" id="id_search_button">&nbsp;&nbsp;บันทึกข้อมูล&nbsp;</button>
                     </div>
                 </div>
+
+                <input type="hidden" id="id_selected_emp_id" name="selected_emp_id" value="" />
+                <input type="hidden" id="id_selected_emp_name_th" name="selected_emp_name_th" value="" />
+
                 </form>
 
             </div>
@@ -248,9 +251,20 @@
                     success: function(json) {
                         if(json.is_error) {
                             alert(json.message);
+                            $("#id_selected_emp_id").val("");
                         } else {          
                             name_th = json.name_th;
                             $("#id_name_th").val(name_th);
+                            $("#id_selected_emp_name_th").val(name_th);
+
+                            if(name_th=="") {
+                                $("#id_selected_emp_id").val("");
+                                $("#id_selected_emp_name_th").val("");
+                            } else {
+                                $("#id_selected_emp_id").val(json.emp_id);
+                                $("#id_selected_emp_name_th").val(name_th);
+                            }
+                                
                         }
                     },
                 });                 
@@ -258,29 +272,88 @@
 
             $('#id_save_emp_form').on('submit', function(event){                
                 event.preventDefault();
-                alert("TODO");
 
-                /*
-                formData = new FormData();
-                data = new FormData($('#id_search_emp_form').get(0));
-                $.ajax({      
-                    type: "POST",
-                    url: '{% url "ajax-covid-vaccine-update-search-employee" %}',
-                    dataType: 'json',
-                    data: data,
-                    cache: false,
-                    processData: false,
-                    contentType: false, 
-                    success: function(json) {
-                        if(json.is_error) {
-                            alert(json.message);
-                        } else {          
-                            name_th = json.name_th;
-                            $("#id_name_th").val(name_th);
-                        }
-                    },
-                });
-                */
+                selected_emp_id = $("#id_selected_emp_id").val();
+                phone_number = $("#id_phone_number").val();
+                get_vaccine_status = $("#id_get_vaccine_status").val();
+                get_vaccine_day = $("#id_get_vaccine_day").val();
+                get_vaccine_month = $("#id_get_vaccine_month").val();
+                get_vaccine_year = $("#id_get_vaccine_year").val();
+                get_vaccine_time = $("#id_get_vaccine_time").val();
+                get_vaccine_place = $("#id_get_vaccine_place").val();
+                
+                //alert(selected_emp_id);
+
+                if(selected_emp_id=='') {
+                    alert("กรุณาเลือกรหัสพนักงานก่อนทำรายการ");
+                    return false;
+                } else {
+                    
+                    if(phone_number=="") {
+                        alert("กรุณาป้อนเบอร์ติดต่อ");
+                        return false;                        
+                    }
+
+                    if(get_vaccine_status=="") {
+                        alert("กรุณาเลือกสถานะ");
+                        return false;                        
+                    }
+
+                    if(get_vaccine_day=="0") {
+                        alert("กรุณาเลือกวันที่");
+                        return false;                        
+                    }
+
+                    if(get_vaccine_month=="0") {
+                        alert("กรุณาเลือกเดือน");
+                        return false;                        
+                    }                    
+
+                    if(get_vaccine_year=="0") {
+                        alert("กรุณาเลือกปี");
+                        return false;                        
+                    }                    
+
+                    if(get_vaccine_time=="0") {
+                        alert("กรุณาเลือกเวลา");
+                        return false;                        
+                    }                    
+
+                    if(get_vaccine_place=="") {
+                        alert("กรุณาเลือกสถานที่");
+                        return false;                        
+                    }                    
+
+                    formData = new FormData();
+                    data = new FormData($('#id_save_emp_form').get(0));
+                    $.ajax({      
+                        type: "POST",
+                        url: '{% url "ajax-covid-vaccine-update-save-employee" %}',
+                        dataType: 'json',
+                        data: data,
+                        cache: false,
+                        processData: false,
+                        contentType: false, 
+                        success: function(json) {
+                            if(json.is_error) {
+                                alert(json.message);
+                            } else {
+                                $("#id_emp_id").val("");
+                                $("#id_selected_emp_id").val("");
+                                $("#id_name_th").val("");                                
+                                $("#id_phone_number").val("");
+                                $("#id_get_vaccine_status").val("");
+                                $("#id_get_vaccine_day").val("0");
+                                $("#id_get_vaccine_month").val("0");
+                                $("#id_get_vaccine_year").val("2564");
+                                $("#id_get_vaccine_time").val("0");
+                                $("#id_get_vaccine_place").val("");                                
+
+                                alert("บันทึกข้อมูลสำเร็จ");
+                            }
+                        },
+                    });                      
+                }              
                           
             });
 
