@@ -11066,3 +11066,18 @@ html, body {height: 100%;}
 }​
 
 
+/* File input style */
+.custom-file-input ~ .custom-file-label::after {
+    content: '\f15c \0020 แนบไฟล์ (Attached File)' !important;
+    font-family: "Font Awesome 5 Free";
+    font-style: normal;
+    font-size: 13px;
+}
+
+.custom-file-input-2 ~ .custom-file-label-2::after {
+    content: '\f15c \0020 แนบไฟล์ (Attached File)' !important;
+    font-family: "Font Awesome 5 Free";
+    font-style: normal;
+    font-size: 13px;
+}
+
