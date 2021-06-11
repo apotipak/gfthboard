@@ -29,11 +29,11 @@
         <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
             <div class="container">                
                 <img src="{% static 'img/logo.png' %}" style="height:30px;">                
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#"></a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#"></a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#"></a></li>
+                <div id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">                        
+                        <li class="nav-item">
+                            <button class="btn btn-md btn-warning" id="id_search_button">&nbsp;&nbsp;ยกเลิก&nbsp;</button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -115,15 +115,20 @@
                         </div>
                         
                         <div class="input-group col-6 float-left pt-2">
-                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>สถานที่</b></span></div>
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>ระบุสถานที่</b></span></div>
                             <input type="text" class="form-control form-control-md" id="id_get_vaccine_place" name="get_vaccine_place" placeholder="เลือกสถานที่" />
+                        </div>
+
+                        <div class="input-group col-6 float-left pt-2">
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>แนบไฟล์</b></span></div>
+                            <input type="text" style="width: 80px;" id="id_attached_file" name="get_vaccine_date" class="form-control border-bottom-1 rounded-0 bg-white">
                         </div>
 
                         <div class="input-group col-12 float-right text-right pt-2">
                             
                         </div>
                     </div>
-                    <div class="card-footer text-center">
+                    <div class="card-footer text-center">                        
                         <button class="btn btn-md btn-primary" id="id_search_button">&nbsp;&nbsp;บันทึกข้อมูล&nbsp;</button>
                     </div>
                 </div>
