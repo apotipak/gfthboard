@@ -33,7 +33,7 @@
                 <div id="navbarResponsive">
                     <ul class="navbar-nav ms-auto">                        
                         <li class="nav-item">
-                            <button class="btn btn-md btn-warning" id="id_search_button">&nbsp;&nbsp;ปิดโปรแกรม&nbsp;</button>
+                            <button class="btn btn-sm btn-warning" id="id_search_button">&nbsp;ปิดโปรแกรม&nbsp;</button>
                         </li>
                     </ul>
                 </div>
@@ -58,7 +58,7 @@
 
                             <!--<div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>รหัสพนักงาน</b></span></div>-->
                             <input type="text" class="form-control form-control-md" placeholder="ป้อนรหัสพนักงาน" id="id_emp_id" name="emp_id" />
-                            <button type="submit" class="btn btn-sm btn-secondary float-right text-right" id="id_search_button">&nbsp;&nbsp;ค้นหา&nbsp;</button>
+                            <button type="submit" class="btn btn-md btn-secondary float-right text-right" id="id_search_button">&nbsp;&nbsp;ค้นหา&nbsp;</button>
                         </div>
                     
                     </div>                      
@@ -80,12 +80,12 @@
                         </div>
 
                         <div class="input-group col-6 float-left pt-2">
-                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>เบอร์ติดต่อ</b></span></div>                            
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><small class="text-danger">*</small>&nbsp;<b>เบอร์โทร</b></span></div>
                             <input type="text" style="width: 80px;" id="id_phone_number" name="phone_number" class="form-control border-bottom-1 rounded-0 bg-white" />
                         </div>
 
                         <div class="input-group col-6 float-left pt-2">
-                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>สถานะ</b></span></div>
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><small class="text-danger">*</small>&nbsp;<b>สถานะ</b></span></div>
                             
                             <select id="id_get_vaccine_status" name="get_vaccine_status" class="form-control form-control-md" style="border-radius: 0;">
                                 <option value="1">นัดหมายเข็มที่ 1</option>
@@ -96,7 +96,7 @@
                         </div>
 
                         <div class="input-group col-6 float-left pt-2">
-                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>วันที่</b></span></div>
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><small class="text-danger">*</small>&nbsp;<b>วันที่</b></span></div>
                             <!--<input type="text" style="width: 80px;" id="id_get_vaccine_date" name="get_vaccine_date" class="form-control border-bottom-1 rounded-0 bg-white" required="" placeholder="เลือกวันที่่">-->
                             <select id="id_get_vaccine_day" name="get_vaccine_day" class="form-control form-control-md" style="border-radius: 0;">
                                 <option value="0">เลือกวัน</option>
@@ -159,7 +159,7 @@
                         </div>
                         
                         <div class="input-group col-6 float-left pt-2">
-                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>เวลา</b></span></div>
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><small class="text-danger">*</small>&nbsp;<b>เวลา</b></span></div>
                             <select id="id_get_vaccine_time" name="get_vaccine_time" class="form-control form-control-md" style="border-radius: 0;">
                                 <option value="0">เลือกเวลา</option>
                                 <option value="7">7:00</option>
@@ -178,7 +178,7 @@
                         </div>
                         
                         <div class="input-group col-6 float-left pt-2">
-                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>สถานที่</b></span></div>
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><small class="text-danger">*</small>&nbsp;<b>สถานที่</b></span></div>
                             <input type="text" style="width: 80px;" id="id_get_vaccine_place" name="get_vaccine_place" class="form-control border-bottom-1 rounded-0 bg-white" placeholder="ระบุสถานที่" />
                         </div>
 
@@ -189,7 +189,7 @@
                         </div>
                         -->
                         <div class="input-group col-6 float-left pt-2">
-                            <input type="file" class="custom-file-input" id="id_file_attach" name="file_attach">
+                            <input type="file" class="custom-file-input" id="id_file_attach" name="file_attach">                            
                             <!--<label class="custom-file-label" for="id_document">แนบไฟล์</label>-->
                         </div>
       
