@@ -26,6 +26,7 @@ import json
 import os
 from .models import CovidEmployeeVaccineUpdate
 from datetime import datetime
+from django.core.files.storage import FileSystemStorage
 
 
 @login_required(login_url='/accounts/login/')
@@ -850,10 +851,24 @@ def AjaxCovidVaccineUpdateSaveEmployee(request):
     get_vaccine_time = request.POST.get('get_vaccine_time')
     get_vaccine_place = request.POST.get('get_vaccine_place')
 
-    get_vaccine_year = int(get_vaccine_year) - 564
+    get_vaccine_year = int(get_vaccine_year) - 543
     date_time_str = get_vaccine_day + "/" + get_vaccine_month + "/" + str(get_vaccine_year) +  " " + get_vaccine_time + ":00:00"
     get_vaccine_date = datetime.strptime(date_time_str, '%d/%m/%Y %H:%M:%S')
 
+    '''
+    myfile = request.FILES['document']
+    fs = FileSystemStorage()
+    filename = fs.save(myfile.name, myfile)
+    uploaded_file_url = fs.url(filename)
+    '''
+
+    '''
+    files = request.FILES.getlist('document')
+    fs = FileSystemStorage(location="/data/upload/")
+    for fl in files:
+        fs.save(fl.name, fl)
+    '''
+    
     print("DEBUG")
     print("selected_emp_id : ", selected_emp_id)
     print("selected_emp_name_th : ", selected_emp_name_th)
