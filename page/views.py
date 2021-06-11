@@ -24,6 +24,8 @@ import django.db as db
 from django.db import connection
 import json
 import os
+from .models import CovidEmployeeVaccineUpdate
+from datetime import datetime
 
 
 @login_required(login_url='/accounts/login/')
@@ -789,13 +791,15 @@ def AjaxCovidVaccineUpdateSearchEmployee(request):
 
     employee_instance = None
     name_th = ""
-    print("emp_id : ", emp_id)
+
+    # print("emp_id : ", emp_id)
 
     if emp_id is None or emp_id=="":
         response = JsonResponse(data={
             "success": True,
             "is_error": True,
             "message": "ไม่พบข้อมูล",
+            "emp_id": emp_id,
             "name_th": name_th,
         })
     else:
@@ -824,6 +828,7 @@ def AjaxCovidVaccineUpdateSearchEmployee(request):
             "success": True,
             "is_error": False,
             "message": "Success",
+            "emp_id": emp_id,
             "name_th": name_th,
         })
 
@@ -834,10 +839,45 @@ def AjaxCovidVaccineUpdateSearchEmployee(request):
 def AjaxCovidVaccineUpdateSaveEmployee(request):
     is_error = True
     message = "Error"    
-    # emp_id = request.POST.get('emp_id')
-    # print("emp_id : ", emp_id)
-
     
+    selected_emp_id = request.POST.get('selected_emp_id')
+    selected_emp_name_th = request.POST.get('selected_emp_name_th')
+    phone_number = request.POST.get('phone_number')
+    get_vaccine_status = request.POST.get('get_vaccine_status')
+    get_vaccine_day = request.POST.get('get_vaccine_day')
+    get_vaccine_month = request.POST.get('get_vaccine_month')
+    get_vaccine_year = request.POST.get('get_vaccine_year')
+    get_vaccine_time = request.POST.get('get_vaccine_time')
+    get_vaccine_place = request.POST.get('get_vaccine_place')
+
+    get_vaccine_year = int(get_vaccine_year) - 564
+    date_time_str = get_vaccine_day + "/" + get_vaccine_month + "/" + str(get_vaccine_year) +  " " + get_vaccine_time + ":00:00"
+    get_vaccine_date = datetime.strptime(date_time_str, '%d/%m/%Y %H:%M:%S')
+
+    print("DEBUG")
+    print("selected_emp_id : ", selected_emp_id)
+    print("selected_emp_name_th : ", selected_emp_name_th)
+    print("phone_number : ", phone_number)
+    print("get_vaccine_status : ", get_vaccine_status)
+    print("get_vaccine_day : ", get_vaccine_day)
+    print("get_vaccine_month : ", get_vaccine_month)
+    print("get_vaccine_year : ", get_vaccine_year)
+    print("get_vaccine_time : ", get_vaccine_time)
+    print("get_vaccine_place : ", get_vaccine_place)
+    print("get_vaccine_date : ", get_vaccine_date)
+
+    covid_obj = CovidEmployeeVaccineUpdate(
+        emp_id = selected_emp_id,         
+        full_name = selected_emp_name_th,
+        get_vaccine_status = get_vaccine_status,
+        get_vaccine_date = get_vaccine_date,
+        get_vaccine_place = get_vaccine_place,
+        phone_number = phone_number,
+        upd_date = datetime.now(),
+        upd_by = "system"
+    )
+    covid_obj.save()    
+
     response = JsonResponse(data={
         "success": True,
         "is_error": False,
