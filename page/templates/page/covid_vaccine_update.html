@@ -55,7 +55,7 @@
                         <!--<h3>อัพเดทข้อมูลการฉีดวัคซีน</h3>-->
                         <div class="input-group col-6 float-left pt-2">
 
-                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>รหัสพนักงาน</b></span></div>
+                            <!--<div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>รหัสพนักงาน</b></span></div>-->
                             <input type="text" class="form-control form-control-md" placeholder="ป้อนรหัสพนักงาน" id="id_emp_id" name="emp_id" />
                             <button type="submit" class="btn btn-sm btn-secondary float-right text-right" id="id_search_button">&nbsp;&nbsp;ค้นหา&nbsp;</button>
                         </div>
@@ -70,6 +70,7 @@
                     {% csrf_token %}
   
                 <div class="card card-primary" style="background-color: #edeeef;">
+                    
                     <div class="card-body">
                         <h3>อัพเดทข้อมูลการฉีดวัคซีน</h3>
                         <div class="input-group col-6 float-left pt-2">
@@ -78,34 +79,44 @@
                         </div>
 
                         <div class="input-group col-6 float-left pt-2">
-                        <div class="input-group-prepend col-3 bg-secondary pt-0"><span class="input-group-text rounded-0" style="width:100%;"><b>สถานะ</b></span></div>
-                        <select id="id_category_options" name="category_options" class="form-control form-control-md" style="border-radius: 0;">
-                          <option value="1">นัดหมายเข็มที่ 1</option>
-                          <option value="2">รับวัคซีนเข็มที่ 1</option>
-                          <option value="1">นัดหมายเข็มที่ 2</option>
-                          <option value="2">รับวัคซีนเข็มที่ 2</option>
-                        </select>
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>สถานะ</b></span></div>
+                            
+                            <select id="id_get_vaccine_count" name="get_vaccine_count" class="form-control form-control-md" style="border-radius: 0;">
+                                <option value="1">นัดหมายเข็มที่ 1</option>
+                                <option value="2">รับวัคซีนเข็มที่ 1</option>
+                                <option value="1">นัดหมายเข็มที่ 2</option>
+                                <option value="2">รับวัคซีนเข็มที่ 2</option>
+                              </select>      
+                        </div>
+
+
+                        <div class="input-group col-6 float-left pt-2">
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>วันที่</b></span></div>
+                            <input type="text" style="width: 80px;" id="id_get_vaccine_date" name="get_vaccine_date" class="form-control border-bottom-1 rounded-0 bg-white" required="" placeholder="เลือกวันที่่">
+                        </div>
                         
-                        <input type="text" style="width: 80px;" id="id_get_vaccine_date" name="get_vaccine_date" class="form-control border-bottom-1 rounded-0 bg-white" required="" placeholder="เลือกวันที่่">
-
-                        <select id="id_get_vaccine_time_options" name="get_vaccine_time_options" class="form-control form-control-md" style="border-radius: 0;">
-                            <option value="0">เลือกเวลา</option>
-                            <option value="7">7:00</option>
-                            <option value="8">8:00</option>
-                            <option value="9">9:00</option>
-                            <option value="10">10:00</option>
-                            <option value="11">11:00</option>
-                            <option value="12">12:00</option>
-                            <option value="13">13:00</option>
-                            <option value="14">14:00</option>
-                            <option value="15">15:00</option>
-                            <option value="16">16:00</option>
-                            <option value="17">17:00</option>
-                            <option value="18">18:00</option>
-                          </select>
-  
-                        <input type="text" class="form-control form-control-md" name="full_name" placeholder="เลือกสถานที่" />
-
+                        <div class="input-group col-6 float-left pt-2">
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>เวลา</b></span></div>
+                            <select id="id_get_vaccine_time_options" name="get_vaccine_time_options" class="form-control form-control-md" style="border-radius: 0;">
+                                <option value="0">เลือกเวลา</option>
+                                <option value="7">7:00</option>
+                                <option value="8">8:00</option>
+                                <option value="9">9:00</option>
+                                <option value="10">10:00</option>
+                                <option value="11">11:00</option>
+                                <option value="12">12:00</option>
+                                <option value="13">13:00</option>
+                                <option value="14">14:00</option>
+                                <option value="15">15:00</option>
+                                <option value="16">16:00</option>
+                                <option value="17">17:00</option>
+                                <option value="18">18:00</option>
+                              </select>
+                        </div>
+                        
+                        <div class="input-group col-6 float-left pt-2">
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>สถานที่</b></span></div>
+                            <input type="text" class="form-control form-control-md" id="id_get_vaccine_place" name="get_vaccine_place" placeholder="เลือกสถานที่" />
                         </div>
 
                         <div class="input-group col-12 float-right text-right pt-2">
