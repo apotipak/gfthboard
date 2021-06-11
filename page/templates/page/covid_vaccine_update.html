@@ -14,10 +14,15 @@
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+
+        <!-- Datepicker -->
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />                
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css" rel="stylesheet" type="text/css">
+
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/covid_styles.css' %}" rel="stylesheet" />
         
-    </head>
+    </head> 
     <body id="page-top" style="background-color: #198754;">    
         
         <!-- Navigation-->        
@@ -67,21 +72,37 @@
                 <div class="card card-primary" style="background-color: #edeeef;">
                     <div class="card-body">
                         <div class="input-group col-6 float-left pt-2">
-                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>ชื่อ-สกุล</b></span></div>
+                            <div class="input-group-prepend col-2 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>ชื่อ-สกุล</b></span></div>
                             <input type="text" class="form-control form-control-md" name="full_name" readonly />
                         </div>
 
                         <div class="input-group col-6 float-left pt-2">
-                        <div class="input-group-prepend col-3 bg-secondary pt-0"><span class="input-group-text rounded-0" style="width:100%;"><b>สถานะ</b></span></div>
+                        <div class="input-group-prepend col-2 bg-secondary pt-0"><span class="input-group-text rounded-0" style="width:100%;"><b>สถานะ</b></span></div>
                         <select id="id_category_options" name="category_options" class="form-control form-control-md" style="border-radius: 0;" onchange="category_change();">
-                          <option value="0">เลือกรายการ</option>
-                          <option value="1">ฉีดเข็มที่ 1 ไปแล้ว</option>
-                          <option value="2">ฉีดเข็มที่ 2 ไปแล้ว</option>
+                          <option value="0">เลือกครั้งที่ฉีด</option>
+                          <option value="1">ฉีดเข็มที่ 1</option>
+                          <option value="2">ฉีดเข็มที่ 2</option>
                           <option value="99">ฉีดครบ 2 เข็ม</option>
                         </select>
                         
-                        <input type="text" class="form-control form-control-md" name="full_name" placeholder="วันที่่ฉีด" />
-                        <input type="text" class="form-control form-control-md" name="full_name" placeholder="เวลาที่่ฉีด" />
+                        <input type="text" style="width: 80px;" id="id_get_vaccine_date" name="get_vaccine_date" class="form-control border-bottom-1 rounded-0 bg-white" required="" readonly="readonly" placeholder="วันที่่ฉีด">
+
+                        <select id="id_get_vaccine_time_options" name="get_vaccine_time_options" class="form-control form-control-md" style="border-radius: 0;">
+                            <option value="0">เลือกเวลา</option>
+                            <option value="7">7:00</option>
+                            <option value="8">8:00</option>
+                            <option value="9">9:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                          </select>
+  
                         <input type="text" class="form-control form-control-md" name="full_name" placeholder="สถานที่" />
 
                         </div>
@@ -104,8 +125,29 @@
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
         <script src="js/scripts.js"></script>
-        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-        
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>        
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js"></script>-->
 
+        <script>
+
+        $(document).ready(function () {
+            /*
+            $('#id_date_from').datepicker(
+                {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
+            }).datepicker("setDate", new Date(2021,02,01));
+            */
+        });
+
+        function getDate(){
+            var todaydate = new Date();
+            var day = todaydate.getDate();
+            var month = todaydate.getMonth() + 1;
+            var year = todaydate.getFullYear();
+            var datestring = day + "/" + month + "/" + year;
+            document.getElementById("id_get_vaccine_date").value = datestring;
+        } 
+        getDate(); 
+
+        </script>
     </body>
 </html>
