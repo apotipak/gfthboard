@@ -760,3 +760,23 @@ def openCarForm(request):
 # END
 
 
+
+def CovidVaccineUpdate(request):
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = getDateFormatDisplay(user_language) 
+
+    print("test")
+
+    return render(request, 'page/covid_vaccine_update.html', {
+        'page_title': page_title, 
+        'project_name': project_name, 
+        'project_version': project_version, 
+        'db_server': db_server, 'today_date': today_date,        
+    })
+

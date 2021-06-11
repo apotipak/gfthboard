@@ -13,6 +13,7 @@ urlpatterns = [
     path('news', views.news, name='news'),
     path('help-eleave', views.HelpEleave, name='help-eleave'),
 
+    path('covid-vaccine-update', views.CovidVaccineUpdate, name='covid-vaccine-update'),
 ]
 
 # For Testing
