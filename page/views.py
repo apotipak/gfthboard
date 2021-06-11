@@ -893,6 +893,7 @@ def AjaxCovidVaccineUpdateSaveEmployee(request):
     )
     covid_obj.save()    
 
+    
     response = JsonResponse(data={
         "success": True,
         "is_error": False,
