@@ -837,6 +837,7 @@ def AjaxCovidVaccineUpdateSaveEmployee(request):
     # emp_id = request.POST.get('emp_id')
     # print("emp_id : ", emp_id)
 
+    
     response = JsonResponse(data={
         "success": True,
         "is_error": False,

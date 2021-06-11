@@ -49,6 +49,8 @@ class CovidEmployeeVaccineUpdate(models.Model):
     opd1 = models.DateTimeField(blank=True, null=True)
     opd2 = models.DateTimeField(blank=True, null=True)
 
+    phone_number = models.TextField(max_length=50,blank=True, null=True)
+
     class Meta:
         managed = True
         db_table = 'covid_employee_vaccine_update'
