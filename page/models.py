@@ -42,6 +42,12 @@ class CovidEmployeeVaccineUpdate(models.Model):
     upd_by = models.CharField(max_length=10, blank=True, null=True)
     upd_flag = models.CharField(max_length=1, blank=True, null=True)
     
+    op1 = models.TextField(max_length=10,blank=True, null=True)
+    op2 = models.TextField(max_length=10,blank=True, null=True)
+    opn1 = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    opn2 = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    opd1 = models.DateTimeField(blank=True, null=True)
+    opd2 = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = True
