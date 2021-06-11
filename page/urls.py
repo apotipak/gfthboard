@@ -14,6 +14,8 @@ urlpatterns = [
     path('help-eleave', views.HelpEleave, name='help-eleave'),
 
     path('covid-vaccine-update', views.CovidVaccineUpdate, name='covid-vaccine-update'),
+    path('ajax-covid-vaccine-update-search-employee', views.AjaxCovidVaccineUpdateSearchEmployee, name='ajax-covid-vaccine-update-search-employee'),
+    path('ajax-covid-vaccine-update-save-employee', views.AjaxCovidVaccineUpdateSaveEmployee, name='ajax-covid-vaccine-update-save-employee'),
 ]
 
 # For Testing
