@@ -53,12 +53,12 @@
       
                     <div class="card-body">
                       
-                        <h3>อัพเดทข้อมูลการฉีดวัคซีน</h3>
+                        <!--<h3>อัพเดทข้อมูลการฉีดวัคซีน</h3>-->
                         <div class="input-group col-6 float-left pt-2">
 
                             <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>รหัสพนักงาน</b></span></div>
                             <input type="text" class="form-control form-control-md" placeholder="ป้อนรหัสพนักงาน" id="id_pr_number" name="pr_number" />
-                            <button class="btn btn-sm btn-secondary float-right text-right" id="id_search_button">&nbsp;&nbsp;ตกลง&nbsp;</button>
+                            <button class="btn btn-sm btn-secondary float-right text-right" id="id_search_button">&nbsp;&nbsp;ค้นหา&nbsp;</button>
                         </div>
                     
                     </div>
@@ -71,24 +71,25 @@
 
                 <div class="card card-primary" style="background-color: #edeeef;">
                     <div class="card-body">
+                        <h3>อัพเดทข้อมูลการฉีดวัคซีน</h3>
                         <div class="input-group col-6 float-left pt-2">
                             <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>ชื่อ-สกุล</b></span></div>
                             <input type="text" class="form-control form-control-md" name="full_name" readonly />
                         </div>
 
                         <div class="input-group col-6 float-left pt-2">
-                        <div class="input-group-prepend col-3 bg-secondary pt-0"><span class="input-group-text rounded-0" style="width:100%;"><b>สถานะการฉีดวัคซีน</b></span></div>
-                        <select id="id_category_options" name="category_options" class="form-control form-control-md" style="border-radius: 0;" onchange="category_change();">
+                        <div class="input-group-prepend col-3 bg-secondary pt-0"><span class="input-group-text rounded-0" style="width:100%;"><b>ประวัติการฉีดวัคซีน</b></span></div>
+                        <select id="id_category_options" name="category_options" class="form-control form-control-md" style="border-radius: 0;">
                           <option value="0">เลือกครั้งที่ฉีด</option>
                           <option value="1">ฉีดเข็มที่ 1</option>
                           <option value="2">ฉีดเข็มที่ 2</option>
                           <option value="99">ฉีดครบ 2 เข็ม</option>
                         </select>
                         
-                        <input type="text" style="width: 80px;" id="id_get_vaccine_date" name="get_vaccine_date" class="form-control border-bottom-1 rounded-0 bg-white" required="" placeholder="วันที่่">
+                        <input type="text" style="width: 80px;" id="id_get_vaccine_date" name="get_vaccine_date" class="form-control border-bottom-1 rounded-0 bg-white" required="" placeholder="เลือกวันที่่">
 
                         <select id="id_get_vaccine_time_options" name="get_vaccine_time_options" class="form-control form-control-md" style="border-radius: 0;">
-                            <option value="0">เวลา</option>
+                            <option value="0">เลือกเวลา</option>
                             <option value="7">7:00</option>
                             <option value="8">8:00</option>
                             <option value="9">9:00</option>
@@ -103,7 +104,7 @@
                             <option value="18">18:00</option>
                           </select>
   
-                        <input type="text" class="form-control form-control-md" name="full_name" placeholder="สถานที่" />
+                        <input type="text" class="form-control form-control-md" name="full_name" placeholder="เลือกสถานที่" />
 
                         </div>
 
@@ -112,7 +113,7 @@
                         </div>
                     </div>
                     <div class="card-footer text-center">
-                        <button class="btn btn-sm btn-primary" id="id_search_button">&nbsp;&nbsp;บันทึกข้อมูล&nbsp;</button>
+                        <button class="btn btn-md btn-primary" id="id_search_button">&nbsp;&nbsp;บันทึกข้อมูล&nbsp;</button>
                     </div>
                 </div>
             
