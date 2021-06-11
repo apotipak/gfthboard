@@ -869,6 +869,15 @@ def AjaxCovidVaccineUpdateSaveEmployee(request):
         fs.save(fl.name, fl)
     '''
 
+    if request.FILES:
+        file_attach = request.FILES["file_attach"].name            
+        file_attach_data = request.FILES['file_attach'].read()
+        file_attach_type = file_attach.split(".")[-1]
+    else:
+        file_attach = ""
+        file_attach_data = None
+        file_attach_type = ""
+
     print("DEBUG")
     print("selected_emp_id : ", selected_emp_id)
     print("selected_emp_name_th : ", selected_emp_name_th)
@@ -889,7 +898,10 @@ def AjaxCovidVaccineUpdateSaveEmployee(request):
         get_vaccine_place = get_vaccine_place,
         phone_number = phone_number,
         upd_date = datetime.now(),
-        upd_by = "system"
+        upd_by = "system",
+        file_attach = file_attach,
+        file_attach_data = file_attach_data,
+        file_attach_type = file_attach_type,
     )
     covid_obj.save()    
 

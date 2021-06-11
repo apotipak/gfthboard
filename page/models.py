@@ -36,7 +36,7 @@ class CovidEmployeeVaccineUpdate(models.Model):
     get_vaccine_status = models.DecimalField(max_digits=1, decimal_places=0, blank=True, null=True)
     get_vaccine_date = models.DateTimeField(blank=True, null=True)
     get_vaccine_place = upd_by = models.CharField(max_length=100, blank=True, null=True)    
-    file_attch = models.FileField(upload_to='documents/covid/', null=True)
+    file_attach = models.FileField(upload_to='documents/covid/', null=True)
     file_attach_data = models.BinaryField(null=True)
     file_attach_type = models.CharField(max_length=10, blank=True, null=True)
 
