@@ -868,7 +868,7 @@ def AjaxCovidVaccineUpdateSaveEmployee(request):
     for fl in files:
         fs.save(fl.name, fl)
     '''
-    
+
     print("DEBUG")
     print("selected_emp_id : ", selected_emp_id)
     print("selected_emp_name_th : ", selected_emp_name_th)
