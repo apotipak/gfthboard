@@ -72,12 +72,12 @@
                 <div class="card card-primary" style="background-color: #edeeef;">
                     <div class="card-body">
                         <div class="input-group col-6 float-left pt-2">
-                            <div class="input-group-prepend col-2 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>ชื่อ-สกุล</b></span></div>
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>ชื่อ-สกุล</b></span></div>
                             <input type="text" class="form-control form-control-md" name="full_name" readonly />
                         </div>
 
                         <div class="input-group col-6 float-left pt-2">
-                        <div class="input-group-prepend col-2 bg-secondary pt-0"><span class="input-group-text rounded-0" style="width:100%;"><b>สถานะ</b></span></div>
+                        <div class="input-group-prepend col-3 bg-secondary pt-0"><span class="input-group-text rounded-0" style="width:100%;"><b>สถานะการฉีดวัคซีน</b></span></div>
                         <select id="id_category_options" name="category_options" class="form-control form-control-md" style="border-radius: 0;" onchange="category_change();">
                           <option value="0">เลือกครั้งที่ฉีด</option>
                           <option value="1">ฉีดเข็มที่ 1</option>
@@ -85,10 +85,10 @@
                           <option value="99">ฉีดครบ 2 เข็ม</option>
                         </select>
                         
-                        <input type="text" style="width: 80px;" id="id_get_vaccine_date" name="get_vaccine_date" class="form-control border-bottom-1 rounded-0 bg-white" required="" readonly="readonly" placeholder="วันที่่ฉีด">
+                        <input type="text" style="width: 80px;" id="id_get_vaccine_date" name="get_vaccine_date" class="form-control border-bottom-1 rounded-0 bg-white" required="" placeholder="วันที่่">
 
                         <select id="id_get_vaccine_time_options" name="get_vaccine_time_options" class="form-control form-control-md" style="border-radius: 0;">
-                            <option value="0">เลือกเวลา</option>
+                            <option value="0">เวลา</option>
                             <option value="7">7:00</option>
                             <option value="8">8:00</option>
                             <option value="9">9:00</option>
