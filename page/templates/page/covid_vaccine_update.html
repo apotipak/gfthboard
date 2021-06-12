@@ -259,11 +259,10 @@
                     contentType: false, 
                     success: function(json) {
                         if(json.is_error) {
-                            // alert(json.message);
                             Swal.fire({
                                 title: 'เกิดข้อผิดพลาด',
-                                // text: 'กรุณาป้อนรหัสพนักงานก่อนทำรายการ',
-                                html: "ไม่พบข้อมูล กรุณาตรวจสอบรหัสพนักงานใหม่อีกครั้ง",
+                                // text: '',
+                                html: "กรุณาตรวจสอบรหัสพนักงานใหม่อีกครั้ง",
                                 icon: '',
                                 confirmButtonText: '&nbsp;ปิด&nbsp;',
                                 confirmButtonColor: "#198754",
@@ -280,7 +279,7 @@
                                 Swal.fire({
                                     title: 'เกิดข้อผิดพลาด',
                                     //text: '',
-                                    html: "ไม่พบข้อมูล กรุณาตรวจสอบรหัสพนักงานใหม่อีกครั้ง",
+                                    html: "กรุณาตรวจสอบรหัสพนักงานใหม่อีกครั้ง",
                                     icon: '',
                                     confirmButtonText: '&nbsp;ปิด&nbsp;',
                                     confirmButtonColor: "#198754",
@@ -312,11 +311,10 @@
                 //alert(selected_emp_id);
 
                 if(selected_emp_id=='') {
-                    //alert("กรุณาป้อนรหัสพนักงานก่อนทำรายการ");
                     Swal.fire({
                         title: 'เกิดข้อผิดพลาด',
-                        // text: 'กรุณาป้อนรหัสพนักงานก่อนทำรายการ',
-                        html: "ไม่พบข้อมูล กรุณาตรวจสอบรหัสพนักงานใหม่อีกครั้ง",
+                        // text: '',
+                        html: "กรุณาตรวจสอบรหัสพนักงานใหม่อีกครั้ง",
                         icon: '',
                         confirmButtonText: '&nbsp;ปิด&nbsp;',
                         confirmButtonColor: "#198754",
@@ -327,7 +325,7 @@
                     if(phone_number=="") {                        
                         Swal.fire({
                             title: 'เกิดข้อผิดพลาด',
-                            //text: 'กรุณาระบุเบอร์โทรที่สามารถติดต่อได้',
+                            //text: '',
                             html: "กรุณาระบุ <strong class='text-success'>เบอร์โทรที่สามารถติดต่อได้</strong>",
                             icon: '',
                             confirmButtonText: '&nbsp;ปิด&nbsp;',
