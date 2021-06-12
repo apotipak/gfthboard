@@ -8,7 +8,7 @@
         <meta name="author" content="" />
         <meta http-equiv="Pragma" content="no-cache">
         <meta name="robots" content="noindex">
-        
+
         <title>Guardforce - Covide Vaccine Update Page</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}" />
@@ -51,7 +51,7 @@
                 <form method="post" autocomplete="off" name="search_emp_form" id="id_search_emp_form">
                   {% csrf_token %}
       
-                <div class="card card-primary pb-2" style="background-color: #edeeef;">
+                <div class="card card-primary" style="background-color: #edeeef;">
       
                     <div class="card-body">
                       
@@ -59,22 +59,23 @@
                         <div class="input-group col-6 float-left pt-2">
 
                             <input type="number" min=0 maxlength="6" class="form-control form-control-md" placeholder="ป้อนรหัสพนักงาน" id="id_emp_id" name="emp_id" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
-                            <button type="submit" class="btn btn-md btn-secondary float-right text-right" id="id_search_button">&nbsp;&nbsp;ค้นหา&nbsp;</button>
+                            <button type="submit" class="btn btn-md btn-secondary float-right text-right" id="id_search_button"><i class="fas fa-search"></i>&nbsp;&nbsp;ค้นหา&nbsp;</button>
                         </div>
                     
                     </div>                      
                 </div>
                 </form>
 
-                <div class="pt-1">&nbsp;</div>
+                
 
-                <form method="post" autocomplete="off" name="save_emp_form" id="id_save_emp_form" enctype="multipart/form-data">                
-                {% csrf_token %}
-  
+                <br>
+
                 <div class="card card-primary" style="background-color: #edeeef;">
-                    
+                    <form method="post" autocomplete="off" name="save_emp_form" id="id_save_emp_form" enctype="multipart/form-data">                
+                        {% csrf_token %}
+                            
                     <div class="card-body">
-                        <h3>แจ้งข้อมูลการฉีดวัคซีนโควิด-19</h3>
+                        <h3><i class="fas fa-syringe"></i>&nbsp;แจ้งข้อมูลการฉีดวัคซีนโควิด-19</h3>
                         <div class="input-group col-6 float-left pt-2">
                             <div class="input-group-prepend col-3 bg-secondary p-0">
                                 <span class="input-group-text rounded-0"><b>ชื่อ-สกุล</b></span>
@@ -194,7 +195,7 @@
                         -->
                         <div class="input-group col-6 float-left pt-2">
                             <!--<input type="file" class="filestyle" id="id_file_attach" name="file_attach" data-input="true" data-buttonText="เลือกไฟล์แนบ">-->
-                            <input type="file" id="id_file_attach" name="file_attach" class="filestyle border-bottom-1 rounded-0 bg-white" data-classButton="btn btn-primary" data-input="true" data-classIcon="icon-plus" data-buttonText="เลือกไฟล์แนบ">
+                            <input type="file" id="id_file_attach" name="file_attach" class="filestyle border-bottom-1 rounded-0 bg-white" data-classButton="btn btn-primary" data-input="true" data-classIcon="icon-plus" data-buttonText="<i class='fas fa-paperclip'></i>&nbsp;&nbsp;เลือกไฟล์แนบ">
                             <!--<label class="custom-file-label" for="id_document">แนบไฟล์</label>-->
                         </div>
       
@@ -205,14 +206,16 @@
                     </div>
                     <div class="card-footer text-center">
                         <button type="reset" class="btn btn-md btn-secondary" id="id_search_button">&nbsp;ยกเลิก&nbsp;</button>
-                        <button class="btn btn-md btn-primary" id="id_search_button">&nbsp;บันทึกข้อมูล&nbsp;</button>
+                        <button class="btn btn-md btn-primary" id="id_search_button"><i class="fas fa-save"></i>&nbsp;&nbsp;บันทึกข้อมูล&nbsp;</button>
                     </div>
+
+                    <input type="hidden" id="id_selected_emp_id" name="selected_emp_id" value="" />
+                    <input type="hidden" id="id_selected_emp_name_th" name="selected_emp_name_th" value="" />
+    
+                    </form>
+    
                 </div>
 
-                <input type="hidden" id="id_selected_emp_id" name="selected_emp_id" value="" />
-                <input type="hidden" id="id_selected_emp_name_th" name="selected_emp_name_th" value="" />
-
-                </form>
 
             </div>
 
