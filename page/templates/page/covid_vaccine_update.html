@@ -75,12 +75,12 @@
                         {% csrf_token %}
                             
                     <div class="card-body">
-                        <h3><i class="fas fa-syringe"></i>&nbsp;แจ้งข้อมูลการฉีดวัคซีนโควิด-19</h3>
+                        <h4>แจ้งข้อมูลการฉีดวัคซีนโควิด-19</h4>
                         <div class="input-group col-6 float-left pt-2">
                             <div class="input-group-prepend col-3 bg-secondary p-0">
                                 <span class="input-group-text rounded-0"><b>ชื่อ-สกุล</b></span>
                             </div>
-                            <input type="text" stlye="font-size: 14pt;" id="id_name_th" name="name_th" class="form-control border-bottom-1 rounded-0" readonly />
+                            <input type="text" stlye="font-size: 14pt;" id="id_name_th" name="name_th" class="form-control border-bottom-1 rounded-0" readonly disabled />
                         </div>
 
                         <div class="input-group col-6 float-left pt-2">
@@ -101,9 +101,9 @@
                         </div>
 
                         <div class="input-group col-6 float-left pt-2">
-                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0" style="width: 100%;"><small class="text-danger">*</small>&nbsp;<b>วันที่</b></span></div>
+                            <div class="input-group-prepend col-3 bg-secondary p-0"><span class="input-group-text rounded-0"><small class="text-danger">*</small>&nbsp;<b>วันที่</b></span></div>
                             <!--<input type="text" style="width: 80px;" id="id_get_vaccine_date" name="get_vaccine_date" class="form-control border-bottom-1 rounded-0 bg-white" required="" placeholder="เลือกวันที่่">-->
-                            <select id="id_get_vaccine_day" name="get_vaccine_day" class="form-control form-control-md" style="border-radius: 0;">
+                            <select id="id_get_vaccine_day" name="get_vaccine_day" class="form-control form-control-md" style="border-radius: 0; width:22%;">
                                 <option value="0">เลือกวัน</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -140,7 +140,7 @@
                                 <option value="31">31</option>
                             </select>
 
-                            <select id="id_get_vaccine_month" name="get_vaccine_month" class="form-control form-control-md" style="border-radius: 0;">
+                            <select id="id_get_vaccine_month" name="get_vaccine_month" class="form-control form-control-md" style="border-radius: 0; width:27%;">
                                 <option value="0">เลือกเดือน</option>
                                 <option value="1">มกราคม</option>
                                 <option value="2">กุมภาภันธ์</option>
@@ -156,7 +156,7 @@
                                 <option value="12">ธันวาคม</option>
                             </select>
 
-                            <select id="id_get_vaccine_year" name="get_vaccine_year" class="form-control form-control-md" style="border-radius: 0;">                                
+                            <select id="id_get_vaccine_year" name="get_vaccine_year" class="form-control form-control-md" style="border-radius: 0; width:18%;">
                                 <option value="2564">2564</option>
                                 <option value="2565">2565</option>
                             </select>
