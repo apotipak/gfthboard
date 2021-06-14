@@ -9,7 +9,7 @@
         <meta http-equiv="Pragma" content="no-cache">
         <meta name="robots" content="noindex">
 
-        <title>Guardforce - Covide Vaccine Update Page</title>
+        <title>Guardforce - Covide Vaccine Update</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}" />
         <!-- Font Awesome icons (free version)-->
@@ -442,7 +442,6 @@
 
                                 Swal.fire({
                                     title: 'สำเร็จ',
-                                    // text: 'ทำรายการสำเร็จ',
                                     html: "รายการของท่านอัพเดทเข้าสู่ระบบแล้ว",
                                     icon: '',
                                     confirmButtonText: '&nbsp;ปิด&nbsp;',
@@ -457,8 +456,6 @@
 
             $('#id_save_emp_form').on('reset', function(e)
             {
-                //setTimeout(function() { /* ... */ });
-                // alert("aa");
                 $("#id_emp_id").val("");
                 $("#id_selected_emp_id").val("");
                 $("#id_emp_id").setfocus();
