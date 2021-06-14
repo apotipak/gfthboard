@@ -415,6 +415,25 @@
                         return false;                        
                     }                    
 
+                    var file_attach = document.getElementById('id_file_attach');
+                    var filePath = file_attach.value;
+
+                    var allowedExtensions = /(\.jpg|\.png|\.gif|\.jpeg)$/i;
+                    if (!allowedExtensions.exec(filePath)) {
+                        //alert('Invalid file type');
+                        Swal.fire({
+                            title: 'เกิดข้อผิดพลาด',
+                            html: "กรุณาแนบไฟล์ประเภท <strong>JPG, JPEG, PNG, GIF</strong>",
+                            icon: '',
+                            confirmButtonText: '&nbsp;ปิด&nbsp;',
+                            confirmButtonColor: "#198754",
+                        })
+                        
+                        file_attach.value = '';
+
+                        return false;
+                    } 
+
                     formData = new FormData();
                     data = new FormData($('#id_save_emp_form').get(0));
                     $.ajax({      
@@ -427,7 +446,14 @@
                         contentType: false, 
                         success: function(json) {
                             if(json.is_error) {
-                                alert(json.message);
+                                //alert(json.message);
+                                Swal.fire({
+                                    title: 'เกิดข้อผิดพลาด',
+                                    html: json.message,
+                                    icon: '',
+                                    confirmButtonText: '&nbsp;ปิด&nbsp;',
+                                    confirmButtonColor: "#198754",
+                                })
                             } else {
                                 $("#id_emp_id").val("");
                                 $("#id_selected_emp_id").val("");
@@ -439,6 +465,9 @@
                                 $("#id_get_vaccine_year").val("2564");
                                 $("#id_get_vaccine_time").val("0");
                                 $("#id_get_vaccine_place").val("");                                
+
+                                //$("#id_file_attach").val("");
+                                $('#id_save_emp_form')[0].reset();
 
                                 Swal.fire({
                                     title: 'สำเร็จ',
