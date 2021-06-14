@@ -58,7 +58,7 @@
                         <!--<h3>อัพเดทข้อมูลการฉีดวัคซีน</h3>-->
                         <div class="input-group col-6 float-left pt-2">
 
-                            <input type="number" min=0 maxlength="6" class="form-control form-control-md" placeholder="ป้อนรหัสพนักงาน" id="id_emp_id" name="emp_id" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
+                            <input type="number" min=0 maxlength="6" class="form-control form-control-md" placeholder="ใส่รหัสพนักงาน" id="id_emp_id" name="emp_id" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                             <button type="submit" class="btn btn-md btn-secondary float-right text-right" id="id_search_button"><i class="fas fa-search"></i>&nbsp;&nbsp;ค้นหา&nbsp;</button>
                         </div>
                     
@@ -423,7 +423,7 @@
                         //alert('Invalid file type');
                         Swal.fire({
                             title: 'เกิดข้อผิดพลาด',
-                            html: "กรุณาแนบไฟล์ประเภท <strong>JPG, JPEG, PNG, GIF</strong>",
+                            html: "กรุณาเลือกไฟล์แนบประเภท<br><hr><strong>JPG, JPEG, PNG, GIF</strong>",
                             icon: '',
                             confirmButtonText: '&nbsp;ปิด&nbsp;',
                             confirmButtonColor: "#198754",
