@@ -417,22 +417,22 @@
 
                     var file_attach = document.getElementById('id_file_attach');
                     var filePath = file_attach.value;
-
                     var allowedExtensions = /(\.jpg|\.png|\.gif|\.jpeg)$/i;
-                    if (!allowedExtensions.exec(filePath)) {
-                        //alert('Invalid file type');
-                        Swal.fire({
-                            title: 'เกิดข้อผิดพลาด',
-                            html: "กรุณาเลือกไฟล์แนบประเภท<br><hr><strong>JPG, JPEG, PNG, GIF</strong>",
-                            icon: '',
-                            confirmButtonText: '&nbsp;ปิด&nbsp;',
-                            confirmButtonColor: "#198754",
-                        })
+                    
+                    if(document.getElementById("id_file_attach").files.length != 0) {
+                        if (!allowedExtensions.exec(filePath)) {
+                            Swal.fire({
+                                title: 'เกิดข้อผิดพลาด',
+                                html: "กรุณาเลือกไฟล์แนบประเภท<br><hr><strong>JPG, JPEG, PNG, GIF</strong>",
+                                icon: '',
+                                confirmButtonText: '&nbsp;ปิด&nbsp;',
+                                confirmButtonColor: "#198754",
+                            })
                         
-                        file_attach.value = '';
-
-                        return false;
-                    } 
+                            file_attach.value = '';
+                            return false;
+                        } 
+                    }
 
                     formData = new FormData();
                     data = new FormData($('#id_save_emp_form').get(0));
