@@ -62,6 +62,10 @@ class ContractPolicyListView(PermissionRequiredMixin, generic.ListView):
 
 @permission_required('system.add_outlookemailactiveuserlist', login_url='/accounts/login/')
 def ManageOutlookEmailActiveUserList(request):
+	if not isPasswordChanged(request):
+		template_name = 'page/force_change_password.html'
+		return render(request, template_name, {})
+			
 	dummy_data = False
 
 	user_language = getDefaultLanguage(request.user.username)

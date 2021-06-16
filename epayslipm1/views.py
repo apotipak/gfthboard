@@ -28,6 +28,10 @@ from django.core.mail import EmailMultiAlternatives
 
 @permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
 def EPaySlipM1(request):
+	if not isPasswordChanged(request):
+		template_name = 'page/force_change_password.html'
+		return render(request, template_name, {})
+		
 	dummy_data = False
 
 	user_language = getDefaultLanguage(request.user.username)
