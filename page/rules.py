@@ -63,25 +63,3 @@ def isStillUseDefaultPassword(request):
 		return True
 	else:
 		return False
-
-
-'''
-@login_required(login_url='/accounts/login/')
-def ForceChangePassword(request):
-	emp_id = request.user.username
-
-	is_password_changed = False
-	is_password_expired = False
-
-	employee_info = UserPasswordLog.objects.filter(emp_id=emp_id).get() or None
-	if employee_info is not None:
-		is_password_changed = employee_info.is_password_changed
-		is_password_expired = employee_info.is_password_expired
-
-		if is_password_changed:
-			return redirect('/')
-		else:
-			return redirect('system-force-change-password/')
-	else:
-		return redirect('/')
-'''

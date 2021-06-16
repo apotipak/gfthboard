@@ -1109,6 +1109,8 @@ def AjaxForceChangePassword(request):
     if employee_info is not None:
         # Update password log
         employee_info.is_password_changed = True
+        employee_info.upd_by = emp_id
+        employee_info.update_date = datetime.now()
         employee_info.save()
 
         # Update password

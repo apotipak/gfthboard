@@ -66,8 +66,8 @@ class CovidEmployeeVaccineUpdate(models.Model):
 
 class UserPasswordLog(models.Model):
     emp_id = models.DecimalField(primary_key=True, max_digits=7, decimal_places=0)
-    is_password_changed = models.BooleanField(default=False)
-    is_password_expired = models.BooleanField(default=False)
+    is_password_changed = models.BooleanField(default=False,blank=True, null=True)
+    is_password_expired = models.BooleanField(default=False,blank=True, null=True)
     created_date = models.DateTimeField(blank=True, null=True, default=datetime.date.today)
     created_by = models.CharField(max_length=10, blank=True, null=True, default='system')
     update_date = models.DateTimeField(blank=True, null=True)
