@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from page.models import UserProfile
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
-from .models import UserPasswordLog
+from .models import UserPasswordLog, UserLoginLog
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 
@@ -63,3 +63,17 @@ def isStillUseDefaultPassword(request):
 		return True
 	else:
 		return False
+
+
+def getLastLogin(request):
+	try:
+		user_login_log_obj = UserLoginLog.objects.values_list('login_date', flat=True).filter(emp_id=request.user.username).order_by('-login_date')[1:2] or None
+	except:
+		user_login_log_obj = None
+
+	if user_login_log_obj is not None:
+		last_login = user_login_log_obj[0].strftime("%d/%B/%Y %H:%M:%S")
+	else:
+		last_login = ""
+
+	return last_login

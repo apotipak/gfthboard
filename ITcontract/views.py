@@ -130,6 +130,9 @@ def ITcontractPolicy(request):
 
     today_date = getDateFormatDisplay(user_language)
 
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'ITcontract/ITcontract_policy.html', {
         'page_title': settings.PROJECT_NAME,
@@ -141,6 +144,7 @@ def ITcontractPolicy(request):
         'username_display': username_display,
         'ITcontractList': it_contract_list,
         'today_date': today_date,
+        'last_login': last_login,
     })
 
 
@@ -653,6 +657,9 @@ def ITcontractAlertSetting(request):
 
     itcontract_email_alert_list = ITContractEmailAlert.objects.filter(app_name='ITcontract').get()
 
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'ITcontract/it_contract_alert_setting.html', {
         'page_title': settings.PROJECT_NAME,
@@ -664,6 +671,7 @@ def ITcontractAlertSetting(request):
         'username_display': username_display,
         'today_date': today_date,
         'schedule_alert_setting_list': itcontract_email_alert_list,
+        'last_login': last_login,
     })
 
 

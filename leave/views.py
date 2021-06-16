@@ -359,6 +359,9 @@ def EmployeeNew(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request, render_template_name, {
         'form': form,
         'page_title': settings.PROJECT_NAME,
@@ -370,6 +373,7 @@ def EmployeeNew(request):
         'able_to_approve_leave_request': able_to_approve_leave_request,
         'user_language': user_language,
         'username_display': username_display,
+        'last_login': last_login,
     })
 
 
@@ -423,6 +427,9 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         # today_date = settings.TODAY_DATE
         today_date = getDateFormatDisplay(user_language)
 
+        # get last login
+        last_login = getLastLogin(self.request)
+
         context.update({
             'page_title': settings.PROJECT_NAME,
             'today_date': today_date,
@@ -433,6 +440,7 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
             'able_to_approve_leave_request': able_to_approve_leave_request,
             'user_language': user_language,
             'username_display': username_display,
+            'last_login': last_login,            
         })
         return context
 
@@ -519,6 +527,9 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
         # today_date = settings.TODAY_DATE
         today_date = getDateFormatDisplay(user_language)
 
+        # get last login
+        last_login = getLastLogin(self.request)
+
         context.update({
             'page_title': settings.PROJECT_NAME,
             'today_date': today_date,
@@ -526,6 +537,7 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
             'db_server': settings.DATABASES['default']['HOST'],
             'project_name': settings.PROJECT_NAME,
             'username_display': username_display,
+            'last_login': last_login,
         })
 
         return context
@@ -701,6 +713,8 @@ def LeavePolicy(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
 
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
@@ -713,6 +727,7 @@ def LeavePolicy(request):
         'able_to_approve_leave_request': able_to_approve_leave_request,
         'user_language': user_language,
         'username_display': username_display,
+        'last_login': last_login,
     })
 
 
@@ -728,6 +743,9 @@ def LeaveApproval(request):
     # today_date = settings.TODAY_DATE
     today_date = getDateFormatDisplay(user_language)
 
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request, 'leave/leave_policy.html', {
         'page_title': settings.PROJECT_NAME,
         'today_date': today_date,
@@ -735,6 +753,7 @@ def LeaveApproval(request):
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,        
         'leave_policy': leave_policy,
+        'last_login': last_login,
     })
 
 
@@ -789,6 +808,8 @@ class LeavePendingApproveListView(PermissionRequiredMixin, generic.ListView):
             else:                    
                 username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
+        # get last login
+        last_login = getLastLogin(request)
 
         context.update({
             'page_title': settings.PROJECT_NAME,
@@ -799,6 +820,7 @@ class LeavePendingApproveListView(PermissionRequiredMixin, generic.ListView):
             'waiting_for_approval_item': waiting_for_approval_item,
             'able_to_approve_leave_request': able_to_approve_leave_request,
             'username_display': username_display,
+            'last_login': last_login
         })
         return context
 
@@ -853,6 +875,8 @@ class LeaveApprovedListView(PermissionRequiredMixin, generic.ListView):
             else:                    
                 username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
+        # get last login
+        last_login = getLastLogin(request)
 
         context.update({
             'page_title': settings.PROJECT_NAME,
@@ -863,6 +887,7 @@ class LeaveApprovedListView(PermissionRequiredMixin, generic.ListView):
             'waiting_for_approval_item': waiting_for_approval_item,
             'able_to_approve_leave_request': able_to_approve_leave_request,
             'username_display': username_display,
+            'last_login': last_login,
         })
         return context
 
@@ -918,6 +943,8 @@ class LeaveRejectedListView(PermissionRequiredMixin, generic.ListView):
             else:                    
                 username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
+        # get last login
+        last_login = getLastLogin(request)
 
         context.update({
             'page_title': settings.PROJECT_NAME,
@@ -928,6 +955,7 @@ class LeaveRejectedListView(PermissionRequiredMixin, generic.ListView):
             'waiting_for_approval_item': waiting_for_approval_item,
             'able_to_approve_leave_request': able_to_approve_leave_request,
             'username_display': username_display,
+            'last_login': last_login,
         })
         return context
 
@@ -1038,6 +1066,9 @@ def EmployeeInstanceApprove(request, pk):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
+
     context = {
         'leave_employee': leaveEmployee,
         'employee_leave_instance': employee_leave_instance,
@@ -1048,6 +1079,7 @@ def EmployeeInstanceApprove(request, pk):
         'today_date' : today_date,
         'waiting_for_approval_item': waiting_for_approval_item,
         'username_display': username_display,
+        'last_login': last_login,
     }
 
     return render(request, 'leave/employeeinstance_approve.html', context)
@@ -1170,7 +1202,10 @@ def EmployeeInstanceReject(request, pk):
     leaveEmployee = LeaveEmployee.objects.get(emp_id=employee_leave_instance.emp_id)
     # waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p')"))
     waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + request.user.username + ") and ei.status in ('p') and year(end_date)='2021'"))
-    
+
+    # get last login
+    last_login = getLastLogin(request)
+
     context = {
         'leave_employee': leaveEmployee,
         'employee_leave_instance': employee_leave_instance,
@@ -1181,6 +1216,7 @@ def EmployeeInstanceReject(request, pk):
         'today_date' : today_date,
         'waiting_for_approval_item': waiting_for_approval_item,
         'username_display': username_display,
+        'last_login': last_login,
     }
 
     return render(request, 'leave/employeeinstance_reject.html', context)
@@ -1439,6 +1475,9 @@ def LeaveTimeline(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
+
     context = {
         'page_title': settings.PROJECT_NAME,
         'db_server': settings.DATABASES['default']['HOST'],
@@ -1450,6 +1489,7 @@ def LeaveTimeline(request):
         'user_language': user_language,
         'username_display': username_display,
         'waiting_for_approval_item': waiting_for_approval_item,
+        'last_login': last_login,
     }
 
     return render(request, 'leave/leave_timeline.html', context)

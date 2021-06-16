@@ -111,6 +111,9 @@ def EPaySlipM1(request):
 			}
 			available_period_list.append(record)			
 
+	# get last login
+	last_login = getLastLogin(request)
+
 	return render(request, render_template_name, {
 		'page_title': settings.PROJECT_NAME,
 		'today_date': today_date,
@@ -121,6 +124,7 @@ def EPaySlipM1(request):
 		'username_display': username_display,
 		'available_period_obj': available_period_obj,
 		'available_period_list': list(available_period_list),
+		'last_login': last_login,
 	})
 
 

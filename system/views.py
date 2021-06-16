@@ -133,6 +133,9 @@ def ManageOutlookEmailActiveUserList(request):
 			office_365_email_list.append(record)
 			count = count + 1
 
+	# get last login
+	last_login = getLastLogin(request)
+
 	return render(request, render_template_name, {
 		'page_title': settings.PROJECT_NAME,
 		'today_date': today_date,
@@ -146,6 +149,7 @@ def ManageOutlookEmailActiveUserList(request):
 		"created_date": csv_file_created_date,
 		'office_365_email_list': office_365_email_list,
 		'total': count,
+		'last_login': last_login,
 	})
 
 
