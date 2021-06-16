@@ -50,6 +50,10 @@ current_year = datetime.now().year
 
 @permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
 def ITcontractPolicy(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     if not isPasswordChanged(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
@@ -619,6 +623,10 @@ def export_it_contract_to_excel(request):
 
 @permission_required('ITcontract.view_itcontractdb', login_url='/accounts/login/')
 def ITcontractAlertSetting(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+            
     if not isPasswordChanged(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})

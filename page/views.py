@@ -34,6 +34,10 @@ from django.contrib.auth.hashers import make_password
 @login_required(login_url='/accounts/login/')
 def index(request):    
     
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     if not isPasswordChanged(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
@@ -76,6 +80,10 @@ def index(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffProfile11(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     if not isPasswordChanged(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
@@ -134,6 +142,10 @@ def StaffProfile11(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffPassword(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     if not isPasswordChanged(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
@@ -191,6 +203,10 @@ def StaffPassword(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffLanguage(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     if not isPasswordChanged(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
@@ -256,6 +272,10 @@ def StaffLanguage(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffProfile(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     if not isPasswordChanged(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
@@ -455,6 +475,10 @@ def StaffProfile(request):
 
 @login_required(login_url='/accounts/login/')
 def viewallstaff(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     if not isPasswordChanged(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
@@ -665,6 +689,10 @@ def ajaxviewallstaff(request):
 
 @login_required(login_url='/accounts/login/')
 def HelpEleave(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     if not isPasswordChanged(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
@@ -708,6 +736,10 @@ def HelpEleave(request):
 
 @login_required(login_url='/accounts/login/')
 def faq(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     if not isPasswordChanged(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
@@ -751,10 +783,14 @@ def faq(request):
 
 @login_required(login_url='/accounts/login/')
 def news(request):
-    if not isPasswordChanged(request):
+    if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
             
+    if not isPasswordChanged(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -958,6 +994,12 @@ def AjaxCovidVaccineUpdateSaveEmployee(request):
 
 @login_required(login_url='/accounts/login/')
 def ForceChangePassword(request):
+    print("***********************")
+    print("ForceChangePassword();")
+    print("***********************")
+
+    default_password = "123@gfth"
+
     emp_id = request.user.username
     is_password_changed = False
     is_password_expired = False
@@ -965,9 +1007,14 @@ def ForceChangePassword(request):
     db_server = settings.DATABASES['default']['HOST']
     project_name = settings.PROJECT_NAME
     project_version = settings.PROJECT_VERSION
-    today_date = settings.TODAY_DATE	
+    today_date = settings.TODAY_DATE
 
+    # Check if user still use default password
     template_name = 'page/force_change_password.html'
+    password = request.POST.get("password")
+    user_info = User.objects.filter(username=emp_id).get()
+    if user_info.check_password(default_password):
+        return render(request, template_name, {})
 
     try:
         employee_info = UserPasswordLog.objects.get(emp_id=emp_id)
@@ -982,18 +1029,9 @@ def ForceChangePassword(request):
             print("change password")
             return redirect("/")
         else:
-            return render(request, template_name, {
-                'page_title': page_title,
-                'project_name': project_name,
-                'project_version': project_version,
-                'db_server': db_server,
-                'today_date': today_date,
-                'database': settings.DATABASES['default']['NAME'],
-                'host': settings.DATABASES['default']['HOST'],
-            })
+            return render(request, template_name, {})
     else:
         return redirect("/")
-
 
 @login_required(login_url='/accounts/login/')
 def AjaxForceChangePassword(request):

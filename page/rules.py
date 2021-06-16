@@ -55,6 +55,16 @@ def isPasswordChanged(request):
 		return True
 
 
+@login_required(login_url='/accounts/login/')
+def isStillUseDefaultPassword(request):	
+	default_password = "123@gfth"
+	user_info = User.objects.filter(username=request.user.username).get()
+	if user_info.check_password(default_password):
+		return True
+	else:
+		return False
+
+
 '''
 @login_required(login_url='/accounts/login/')
 def ForceChangePassword(request):
