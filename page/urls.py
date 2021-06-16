@@ -16,12 +16,8 @@ urlpatterns = [
     path('covid-vaccine-update', views.CovidVaccineUpdate, name='covid-vaccine-update'),
     path('ajax-covid-vaccine-update-search-employee', views.AjaxCovidVaccineUpdateSearchEmployee, name='ajax-covid-vaccine-update-search-employee'),
     path('ajax-covid-vaccine-update-save-employee', views.AjaxCovidVaccineUpdateSaveEmployee, name='ajax-covid-vaccine-update-save-employee'),
+
+    path('force-change-password/', views.ForceChangePassword, name='system-force-change-password'),
+    path('ajax-force-change-password/', views.AjaxForceChangePassword, name='ajax-force-change-password'),
 ]
 
-# For Testing
-# START
-urlpatterns += [
-    path('open-car-form-page', views.openCarFormPage, name='open-car-form-page'),    
-    path('open-car-form', views.openCarForm, name='open-car-form'),
-]
-# END
