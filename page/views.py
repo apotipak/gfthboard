@@ -134,6 +134,10 @@ def StaffProfile11(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffPassword(request):
+    if not isPasswordChanged(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -187,6 +191,10 @@ def StaffPassword(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffLanguage(request):
+    if not isPasswordChanged(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+                
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -447,6 +455,10 @@ def StaffProfile(request):
 
 @login_required(login_url='/accounts/login/')
 def viewallstaff(request):
+    if not isPasswordChanged(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     item_per_page = 20  
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
@@ -653,6 +665,10 @@ def ajaxviewallstaff(request):
 
 @login_required(login_url='/accounts/login/')
 def HelpEleave(request):
+    if not isPasswordChanged(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -692,6 +708,10 @@ def HelpEleave(request):
 
 @login_required(login_url='/accounts/login/')
 def faq(request):
+    if not isPasswordChanged(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -731,6 +751,10 @@ def faq(request):
 
 @login_required(login_url='/accounts/login/')
 def news(request):
+    if not isPasswordChanged(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+            
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
