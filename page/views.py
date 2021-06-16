@@ -27,6 +27,8 @@ import os
 from .models import CovidEmployeeVaccineUpdate, UserPasswordLog
 from datetime import datetime
 from django.core.files.storage import FileSystemStorage
+import re
+from django.contrib.auth.hashers import make_password
 
 
 @login_required(login_url='/accounts/login/')
@@ -971,33 +973,94 @@ def ForceChangePassword(request):
 
 @login_required(login_url='/accounts/login/')
 def AjaxForceChangePassword(request):
+    is_password_changed = False
+    is_password_expired = False
+
     emp_id = request.user.username
     new_password1 = request.POST.get("new_password1")
     new_password2 = request.POST.get("new_password2")
+    print("emp_id : ", emp_id)
+    print("new_password1 : ", new_password1)
+    print("new_password2 : ", new_password2)
 
+    excluded_password = {'123@gfth'}
+
+    # Passwore Rules!
     if(new_password1!=new_password2):
         response = JsonResponse(data={
             "success": True,
             "is_error": True,
             "message": "รหัสผ่านไม่ตรงกัน กรุณาตรวจสอบอีกครั้ง",
         })
-
+        response.status_code = 200
+        return response        
+    elif(len(new_password1)<8):
+        message = """    
+        <div class='text-left'>
+        <b>รหัสผ่านใหม่สั้นเกินไป ควรตั้งตามกฏเบื้องต้นดังนี้</b><br>
+        1. ควรมีความยาว <span class='text-success'>อย่างน้อย 8 ตัวอักษร</span><br>
+        2. ควรประกอบด้วยภาษาอังกฤษ <span class='text-success'>ตัวเล็กปนตัวใหญ่</span><br>
+        3. ควรประกอบด้วย <span class='text-success'>สัญลักษณ์พิเศษ เช่น @ ! # %</span>
+        </div>
+        """
+        response = JsonResponse(data={
+            "success": True,
+            "is_error": True,
+            "message": message,
+        })
+        response.status_code = 200
+        return response
+    elif(re.search('[A-Z]+', new_password1) is None):
+        response = JsonResponse(data={
+            "success": True,
+            "is_error": True,
+            "message": "รหัสผ่านควรประกอบด้วยอักษรภาษาอังกฤษตัวใหญ่",
+        })
+        response.status_code = 200
+        return response 
+    elif(re.search('[a-z]+', new_password1) is None):
+        response = JsonResponse(data={
+            "success": True,
+            "is_error": True,
+            "message": "รหัสผ่านควรประกอบด้วยอักษรภาษาอังกฤษตัวเล็ก",
+        })
+        response.status_code = 200
+        return response
+    elif(re.search('[^A-Za-z0-9]+', new_password1) is None):
+        response = JsonResponse(data={
+            "success": True,
+            "is_error": True,
+            "message": "รหัสผ่านควรประกอบด้วยอักษรพิเศษ",
+        })
+        response.status_code = 200
+        return response
+    elif(new_password1 in excluded_password):
+        response = JsonResponse(data={
+            "success": True,
+            "is_error": True,
+            "message": "ไม่ควรใช้รหัสผ่านตั้งต้น",
+        })
         response.status_code = 200
         return response
 
-    print("emp_id : ", emp_id)
-    print("new_password1 : ", new_password1)
-    print("new_password2 : ", new_password2)
-    
-    is_password_changed = False
-    is_password_expired = False
-
-    employee_info = UserPasswordLog.objects.filter(emp_id=emp_id).get()
+    employee_info = UserPasswordLog.objects.filter(emp_id=emp_id).get()    
     if employee_info is not None:
+        # Update password log
         employee_info.is_password_changed = True
         employee_info.save()
+
+        # Update password
+        # print "Hashed password is:", make_password("plain_text")        
+        try:            
+            user_info = User.objects.filter(username=emp_id).get()
+        except User.DoesNotExist:
+            user_info = None
+        if user_info is not None:
+            user_info.password = make_password(new_password1)
+            user_info.save()
+
         is_error = False
-        message = "Change password success."
+        message = "ตั้งรหัสผ่านใหม่สำเร็จ กรุณาเข้าระบบใหม่อีกครั้ง"
     else:
         is_error = True
         message = "No record found."
