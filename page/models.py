@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
 
 class UserProfile(models.Model):
@@ -46,6 +47,9 @@ class CovidEmployeeVaccineUpdate(models.Model):
     
     op1 = models.TextField(max_length=10,blank=True, null=True)
     op2 = models.TextField(max_length=10,blank=True, null=True)
+    op3 = models.TextField(max_length=10,blank=True, null=True)
+    op4 = models.TextField(max_length=10,blank=True, null=True)
+    op5 = models.TextField(max_length=10,blank=True, null=True)
     opn1 = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     opn2 = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     opd1 = models.DateTimeField(blank=True, null=True)
@@ -59,3 +63,17 @@ class CovidEmployeeVaccineUpdate(models.Model):
     def __str__(self):
         return '{0}'.format(self.div_en)
     '''
+
+class UserPasswordLog(models.Model):
+    emp_id = models.DecimalField(primary_key=True, max_digits=7, decimal_places=0)
+    is_password_changed = models.BooleanField(default=False)
+    is_password_expired = models.BooleanField(default=False)
+    created_date = models.DateTimeField(blank=True, null=True, default=datetime.date.today)
+    created_by = models.CharField(max_length=10, blank=True, null=True, default='system')
+    update_date = models.DateTimeField(blank=True, null=True)
+    upd_by = models.CharField(max_length=10, blank=True, null=True)
+    upd_flag = models.CharField(max_length=1, blank=True, null=True, default='A')
+
+    class Meta:
+        managed = True
+        db_table = 'auth_user_password_log'

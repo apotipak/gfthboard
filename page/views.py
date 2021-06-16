@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.http import HttpResponseRedirect
@@ -24,13 +24,18 @@ import django.db as db
 from django.db import connection
 import json
 import os
-from .models import CovidEmployeeVaccineUpdate
+from .models import CovidEmployeeVaccineUpdate, UserPasswordLog
 from datetime import datetime
 from django.core.files.storage import FileSystemStorage
 
 
 @login_required(login_url='/accounts/login/')
 def index(request):    
+    
+    if not isPasswordChanged(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
     
@@ -69,6 +74,10 @@ def index(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffProfile11(request):
+    if not isPasswordChanged(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -237,6 +246,10 @@ def StaffLanguage(request):
 
 @login_required(login_url='/accounts/login/')
 def StaffProfile(request):
+    if not isPasswordChanged(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+        
     item_per_page = 12
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
@@ -915,3 +928,85 @@ def AjaxCovidVaccineUpdateSaveEmployee(request):
     response.status_code = 200
     return response
 
+
+
+@login_required(login_url='/accounts/login/')
+def ForceChangePassword(request):
+    emp_id = request.user.username
+    is_password_changed = False
+    is_password_expired = False
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    today_date = settings.TODAY_DATE	
+
+    template_name = 'page/force_change_password.html'
+
+    try:
+        employee_info = UserPasswordLog.objects.get(emp_id=emp_id)
+    except UserPasswordLog.DoesNotExist:
+        employee_info = None
+
+    if employee_info is not None:
+        is_password_changed = employee_info.is_password_changed
+        is_password_expired = employee_info.is_password_expired
+
+        if is_password_changed:
+            print("change password")
+            return redirect("/")
+        else:
+            return render(request, template_name, {
+                'page_title': page_title,
+                'project_name': project_name,
+                'project_version': project_version,
+                'db_server': db_server,
+                'today_date': today_date,
+                'database': settings.DATABASES['default']['NAME'],
+                'host': settings.DATABASES['default']['HOST'],
+            })
+    else:
+        return redirect("/")
+
+
+@login_required(login_url='/accounts/login/')
+def AjaxForceChangePassword(request):
+    emp_id = request.user.username
+    new_password1 = request.POST.get("new_password1")
+    new_password2 = request.POST.get("new_password2")
+
+    if(new_password1!=new_password2):
+        response = JsonResponse(data={
+            "success": True,
+            "is_error": True,
+            "message": "รหัสผ่านไม่ตรงกัน กรุณาตรวจสอบอีกครั้ง",
+        })
+
+        response.status_code = 200
+        return response
+
+    print("emp_id : ", emp_id)
+    print("new_password1 : ", new_password1)
+    print("new_password2 : ", new_password2)
+    
+    is_password_changed = False
+    is_password_expired = False
+
+    employee_info = UserPasswordLog.objects.filter(emp_id=emp_id).get()
+    if employee_info is not None:
+        employee_info.is_password_changed = True
+        employee_info.save()
+        is_error = False
+        message = "Change password success."
+    else:
+        is_error = True
+        message = "No record found."
+    
+    response = JsonResponse(data={
+        "success": True,
+        "is_error": is_error,
+        "message": message,
+    })
+
+    response.status_code = 200
+    return response
