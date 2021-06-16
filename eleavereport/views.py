@@ -594,7 +594,7 @@ def ViewM1LeaveReport(request):
 	# sql = "select emp_id,leave_type_id,start_date,end_date,created_date from leave_employeeinstance where year(start_date)=year(getdate()) and status='p' "	
 	
 	sql = "select l.emp_id,e.emp_fname_th,e.emp_lname_th,e.pos_th,e.div_th,l.leave_type_id,lt.lve_th,l.start_date,l.end_date,l.created_date,l.updated_date,l.updated_by,l.status,"
-	sql += "l.lve_act,l.lve_act_hr,l.document "
+	sql += "l.lve_act,l.lve_act_hr,l.document,l.leave_reason "
 	# sql += "from leave_employeeinstance l "
 	sql += "from leave_act l "
 	sql += "left join leave_employee e on l.emp_id=e.emp_id "

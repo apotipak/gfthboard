@@ -135,7 +135,7 @@
 					      <td nowrap>{{ item.leave_type_id}} | {{item.leave_type_th}}</td>
 
 						  {% if item.attach_file != "" %}
-						  <td>&nbsp;</td>
+						  <td><a href="{{ MEDIA_URL}}/media/{{item.attach_file}}" target="_blank"><i class="fas fa-paperclip"></i></a></td>
 						  {% else %}
 						  <td>&nbsp;</td>
 						  {% endif %}
