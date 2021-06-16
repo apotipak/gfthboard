@@ -76,6 +76,7 @@ def index(request):
         'username_display' : username_display,
         'turn_announcement_on': TURN_ANNOUNCEMENT_ON,
         'announcement_message': ANNOUNCEMENT_MESSAGE,
+        "last_login": request.user.last_login,
     })
 
 @login_required(login_url='/accounts/login/')
