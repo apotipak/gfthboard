@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.http import HttpResponseRedirect
+from django.template.defaultfilters import last
 from leave.models import LeaveEmployee
 from page.models import UserProfile, ComDivision
 from system.models import OutlookEmailActiveUserList
@@ -24,7 +25,7 @@ import django.db as db
 from django.db import connection
 import json
 import os
-from .models import CovidEmployeeVaccineUpdate, UserPasswordLog
+from .models import CovidEmployeeVaccineUpdate, UserPasswordLog, UserLoginLog
 from datetime import datetime
 from django.core.files.storage import FileSystemStorage
 import re
@@ -67,6 +68,9 @@ def index(request):
     # today_date = settings.TODAY_DATE
     today_date = getDateFormatDisplay(user_language)
 
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request, 'index.html', {
         'page_title': page_title, 
         'project_name': project_name, 
@@ -76,7 +80,7 @@ def index(request):
         'username_display' : username_display,
         'turn_announcement_on': TURN_ANNOUNCEMENT_ON,
         'announcement_message': ANNOUNCEMENT_MESSAGE,
-        "last_login": request.user.last_login,
+        "last_login": last_login,
     })
 
 @login_required(login_url='/accounts/login/')
@@ -126,6 +130,8 @@ def StaffProfile11(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
 
     return render(request, 'page/staff_profile.html', {
         'page_title': page_title, 
@@ -138,6 +144,7 @@ def StaffProfile11(request):
         'able_to_approve_leave_request': able_to_approve_leave_request,
         'user_language': user_language,
         'username_display': username_display,
+        "last_login": last_login,
     })
 
 
@@ -191,6 +198,8 @@ def StaffPassword(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
 
     return render(request, 'page/staff_password_form.html', {
         'form': form,
@@ -199,6 +208,7 @@ def StaffPassword(request):
         'project_version': project_version, 
         'db_server': db_server, 'today_date': today_date,
         'username_display': username_display,
+        "last_login": last_login,
     })
 
 
@@ -261,6 +271,10 @@ def StaffLanguage(request):
             username_display = request.user.first_name
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request, 'page/staff_language.html', {
         'form': form,
         'page_title': page_title, 
@@ -268,6 +282,7 @@ def StaffLanguage(request):
         'project_version': project_version, 
         'db_server': db_server, 'today_date': today_date,
         'username_display': username_display,
+        "last_login": last_login,
     })
 
 
@@ -351,6 +366,9 @@ def StaffProfile(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
+
     if request.method == "POST":
         form = ViewAllStaffForm(request.POST, user=request.user)
         department_id = request.POST.get('department_list')
@@ -404,6 +422,7 @@ def StaffProfile(request):
             'dept': department_name_en,
             'emp_name': first_name,
             'email': email,
+            'last_login': last_login,
         }        
     else:
         form = ViewAllStaffForm(user=request.user)
@@ -469,7 +488,9 @@ def StaffProfile(request):
             'dept': department_name_en,
             'emp_name': first_name,
             'email': email,
+            'last_login': last_login,
         }
+
 
     return render(request, 'page/staff_profile.html', context)
 
@@ -513,6 +534,9 @@ def viewallstaff(request):
     project_version = settings.PROJECT_VERSION
     today_date = getDateFormatDisplay(user_language)
 
+    # get last login
+    last_login = getLastLogin(request)
+
     if request.method == "POST":
         form = ViewAllStaffForm(request.POST, user=request.user)
         
@@ -550,6 +574,7 @@ def viewallstaff(request):
             'username_display': username_display,
             'form': form,
             'dept': department_name_en,
+            'last_login': last_login,
         }
 
     else:
@@ -591,6 +616,7 @@ def viewallstaff(request):
             'username_display': username_display,
             'form': form,
             'dept': department_name_en,
+            'last_login': last_login,
         }
 
     return render(request, 'page/view_all_staff.html', context)
@@ -725,6 +751,8 @@ def HelpEleave(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
 
     return render(request, 'page/help_eleave.html', {
         'page_title': page_title, 
@@ -732,6 +760,7 @@ def HelpEleave(request):
         'project_version': project_version, 
         'db_server': db_server, 'today_date': today_date,
         'username_display' : username_display,
+        "last_login": last_login,
     })
 
 
@@ -772,6 +801,8 @@ def faq(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
 
     return render(request, 'page/faq.html', {
         'page_title': page_title, 
@@ -819,6 +850,8 @@ def news(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
 
     return render(request, 'page/news.html', {
         'page_title': page_title, 
@@ -826,6 +859,7 @@ def news(request):
         'project_version': project_version, 
         'db_server': db_server, 'today_date': today_date,
         'username_display' : username_display,
+        "last_login": last_login,
     })
 
 
@@ -851,13 +885,15 @@ def CovidVaccineUpdate(request):
     project_version = settings.PROJECT_VERSION
     today_date = getDateFormatDisplay(user_language) 
 
-    print("test")
+    # get last login
+    last_login = getLastLogin(request)
 
     return render(request, 'page/covid_vaccine_update.html', {
         'page_title': page_title, 
         'project_name': project_name, 
         'project_version': project_version, 
-        'db_server': db_server, 'today_date': today_date,        
+        'db_server': db_server, 'today_date': today_date,
+        "last_login": last_login,       
     })
 
 
@@ -1027,12 +1063,24 @@ def ForceChangePassword(request):
         is_password_expired = employee_info.is_password_expired
 
         if is_password_changed:
-            print("change password")
+            # Log user login time
+            new_record = UserLoginLog(
+                emp_id = emp_id, 
+                login_date = datetime.now(),
+                ip_address = None,
+                device = None,
+                created_by = 'system',
+                upd_by = None,
+                upd_flag = 'A'
+            )
+            new_record.save()
+            
             return redirect("/")
         else:
             return render(request, template_name, {})
     else:
         return redirect("/")
+
 
 @login_required(login_url='/accounts/login/')
 def AjaxForceChangePassword(request):

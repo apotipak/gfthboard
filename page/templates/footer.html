@@ -1,19 +1,29 @@
   <!-- Main Footer -->
   <footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-        {{ today_date }}
-    </div>
-<!-- Default to the left -->
-    v. <b><a href="{% url 'news' %}">{{ project_version }}</a></b> | 
 
-    {% if db_server == 'GFDEMOSQL01' %}
-    	Live
-    {% elif db_server == '27.254.207.51' %}
-    	Live Server | <b>Last login</b> {{ last_login }}
-    {% elif db_server == '10.176.68.27' %}
-        Staging
-    {% else %}
-    	Dev
-    {% endif %}
-    </footer>
+    <div class="row">
+        <div class="col-sm float-left">
+          v. <b><a href="{% url 'news' %}">{{ project_version }}</a></b> | 
+          {% if db_server == 'GFDEMOSQL01' %}
+          Live
+          {% elif db_server == '27.254.207.51' %}
+              Live
+          {% elif db_server == '10.176.68.27' %}
+              Staging
+          {% else %}
+              Dev
+          {% endif %}            
+        </div>
+        <div class="col-sm text-center">
+            {% if last_login != "" %}
+            <b>เข้าสู่ระบบล่าสุด</b>&nbsp;{{last_login}}
+            {% else %}
+            &nbsp;
+            {% endif %}
+        </div>
+        <div class="col-sm float-right text-right">
+          {{ today_date }}
+        </div>
+    </div>
+        
+</footer>

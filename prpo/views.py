@@ -1,5 +1,6 @@
 from re import sub
 import sys
+from django.template.defaultfilters import last
 from django.utils import timezone
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -52,7 +53,10 @@ def welcome(request):
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
-                       
+
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/welcome.html', {
         'page_title': settings.PROJECT_NAME,
@@ -62,6 +66,7 @@ def welcome(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
+        'last_login': last_login,
     })
 
 
@@ -80,7 +85,10 @@ def currency(request):
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
-                       
+
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/currency.html', {
         'page_title': settings.PROJECT_NAME,
@@ -90,6 +98,7 @@ def currency(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
+        'last_login': last_login,
     })
 
 
@@ -127,6 +136,9 @@ def company_list(request):
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/company_list.html', {
         'page_title': settings.PROJECT_NAME,
@@ -137,6 +149,7 @@ def company_list(request):
         'user_language': user_language,
         'username_display': username_display,
         'prpo_company_list':  list(prpocompany_instance),
+        'last_login': last_login,
     })
 
 @login_required(login_url='/accounts/login/')
@@ -209,6 +222,9 @@ def company_manage(request):
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
+    # get last login
+    last_login = getLastLogin(request)
+
     if company_id is None:
         return render(request,
             'prpo/company_manage.html', {
@@ -221,6 +237,7 @@ def company_manage(request):
             'username_display': username_display,
             'prpo_company_list': None,
             'company_id': None,
+            'last_login': last_login,
         })
     else:        
         sql = "select cpid,cpnumber,cpcountry,cpname,cpshortcut,cpaltername,cpaddress,cpalteraddr, ";
@@ -254,6 +271,7 @@ def company_manage(request):
             'username_display': username_display,
             'prpo_company_list':  list(prpocompany_instance),
             'company_id': company_id,
+            'last_login': last_login,
         })
 
 
@@ -272,7 +290,10 @@ def department(request):
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
-                       
+
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/department.html', {
         'page_title': settings.PROJECT_NAME,
@@ -282,6 +303,7 @@ def department(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
+        'last_login': last_login,
     })
 
 
@@ -300,7 +322,10 @@ def category(request):
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
-                       
+
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/category.html', {
         'page_title': settings.PROJECT_NAME,
@@ -310,6 +335,7 @@ def category(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
+        'last_login': last_login,
     })
 
 
@@ -328,7 +354,10 @@ def item(request):
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
-                       
+
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/item.html', {
         'page_title': settings.PROJECT_NAME,
@@ -338,6 +367,7 @@ def item(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
+        'last_login': last_login,
     })
 
 
@@ -356,7 +386,10 @@ def vendor(request):
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
-                       
+
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/vendor.html', {
         'page_title': settings.PROJECT_NAME,
@@ -366,6 +399,7 @@ def vendor(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
+        'last_login': last_login,
     })
 
 
@@ -384,7 +418,10 @@ def user(request):
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
-                       
+
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/user.html', {
         'page_title': settings.PROJECT_NAME,
@@ -394,6 +431,7 @@ def user(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
+        'last_login': last_login,
     })
 
 @login_required(login_url='/accounts/login/')
@@ -507,6 +545,9 @@ def pr_entry_inquiry(request):
     finally:
         cursor.close()    
 
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/pr_entry_inquiry.html', {
         'page_title': settings.PROJECT_NAME,
@@ -519,6 +560,7 @@ def pr_entry_inquiry(request):
         "department_list": list(department_list),
         "category_list": list(category_list),
         "pr_status_list": list(pr_status_list),
+        'last_login': last_login,
     })
 
  
@@ -632,7 +674,10 @@ def pr_inbox(request):
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
-                       
+
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/pr_inbox.html', {
         'page_title': settings.PROJECT_NAME,
@@ -642,6 +687,7 @@ def pr_inbox(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
+        'last_login': last_login,
     })
 
 @login_required(login_url='/accounts/login/')
@@ -659,7 +705,10 @@ def po_inbox(request):
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
-                       
+
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/po_inbox.html', {
         'page_title': settings.PROJECT_NAME,
@@ -669,6 +718,7 @@ def po_inbox(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
+        'last_login': last_login,
     })
 
 
@@ -1076,6 +1126,10 @@ def pr_entry(request):
         pr_id_display = "Add"
     else:
         pr_id_display = str(pr_id) + " | edit"
+
+    # get last login
+    last_login = getLastLogin(request)
+
     return render(request,
         'prpo/pr_entry.html', {
         'page_title': settings.PROJECT_NAME,
@@ -1106,4 +1160,5 @@ def pr_entry(request):
         'prrecmdreason': prrecmdreason,
         'prdeliveryto': prdeliveryto,
         'prremarks': prremarks,
+        'last_login': last_login,
     })
