@@ -90,8 +90,25 @@ def getLastLogin(request):
 		user_login_log_obj = None
 
 	if user_login_log_obj is not None:
-		last_login = user_login_log_obj[0].strftime("%d/%B/%Y %H:%M:%S")
+		last_login = user_login_log_obj[0].strftime("%d-%B-%Y %H:%M:%S")
 	else:
 		last_login = ""
 
 	return last_login
+
+
+def checkLoginDevice(device):
+	device_name = ""
+	print("device : ", device)
+	if device.find("iPhone") != -1:
+		device_name = "Mobile (iPhone)"
+	elif device.find("Android") != -1:
+		device_name = "Mobile (Android)"
+	elif device.find("Windows") != -1:
+		device_name = "PC (Windows)"
+	elif device.find("Linux") != -1:
+		device_name = "PC (Linux)"
+	else:
+		device_name = "Unknown device"
+
+	return device_name

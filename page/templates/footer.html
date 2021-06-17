@@ -16,7 +16,8 @@
         </div>
         <div class="col-sm text-center">
             {% if last_login != "" %}
-            <b>เข้าสู่ระบบล่าสุด</b>&nbsp;{{last_login}}
+            
+            <b><a href="{% url 'staff-profile' %}" class="text-secondary">Last login</a></b>&nbsp;{{last_login}}
             {% else %}
             &nbsp;
             {% endif %}
