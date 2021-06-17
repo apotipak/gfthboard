@@ -89,10 +89,11 @@ def StaffProfile11(request):
     if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
-
-    if not isPasswordChanged(request):
-        template_name = 'page/force_change_password.html'
-        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
 
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
@@ -154,10 +155,11 @@ def StaffPassword(request):
     if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
-
-    if not isPasswordChanged(request):
-        template_name = 'page/force_change_password.html'
-        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
 
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
@@ -218,11 +220,12 @@ def StaffLanguage(request):
     if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
 
-    if not isPasswordChanged(request):
-        template_name = 'page/force_change_password.html'
-        return render(request, template_name, {})
-                
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -292,11 +295,12 @@ def StaffProfile(request):
     if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
 
-    if not isPasswordChanged(request):
-        template_name = 'page/force_change_password.html'
-        return render(request, template_name, {})
-        
     item_per_page = 12
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
@@ -501,10 +505,11 @@ def viewallstaff(request):
     if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
-
-    if not isPasswordChanged(request):
-        template_name = 'page/force_change_password.html'
-        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
 
     item_per_page = 20  
     user_language = getDefaultLanguage(request.user.username)
@@ -720,10 +725,11 @@ def HelpEleave(request):
     if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
-
-    if not isPasswordChanged(request):
-        template_name = 'page/force_change_password.html'
-        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
 
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
@@ -770,10 +776,11 @@ def faq(request):
     if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
-
-    if not isPasswordChanged(request):
-        template_name = 'page/force_change_password.html'
-        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
 
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
@@ -819,10 +826,11 @@ def news(request):
     if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
-            
-    if not isPasswordChanged(request):
-        template_name = 'page/force_change_password.html'
-        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
 
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
