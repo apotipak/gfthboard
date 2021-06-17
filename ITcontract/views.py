@@ -53,10 +53,11 @@ def ITcontractPolicy(request):
     if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
-
-    if not isPasswordChanged(request):
-        template_name = 'page/force_change_password.html'
-        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
     
     username = request.user.username
     user_language = getDefaultLanguage(request.user.username)
@@ -630,11 +631,12 @@ def ITcontractAlertSetting(request):
     if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
-            
-    if not isPasswordChanged(request):
-        template_name = 'page/force_change_password.html'
-        return render(request, template_name, {})
-        
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
+
     username = request.user.username
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
