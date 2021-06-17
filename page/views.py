@@ -323,15 +323,12 @@ def StaffProfile(request):
     email = ""
     email_object = None
     try:
-
         emp_id = request.user.username
         first_name = request.user.first_name
         last_name = request.user.last_name
         email = request.user.email
-        # print("--- a --- : ", email)
         # email_object = OutlookEmailActiveUserList.objects.filter(first_name=first_name).filter(last_name=last_name).first()
         email_object = OutlookEmailActiveUserList.objects.filter(email=email).first()
-
     except db.OperationalError as e:
         message = str(e)
     except db.Error as e:
@@ -339,14 +336,10 @@ def StaffProfile(request):
     except Exception as e:                
         message = str(e)
     if email_object is not None:
-        # print("a")
         email = email_object.email
     else:
         email = ""
-        # print("b")
     
-    # print("--- b --- : ", email)
-
     # Check leave approval right
     if checkLeaveRequestApproval(request.user.username):
         able_to_approve_leave_request = True
@@ -371,8 +364,28 @@ def StaffProfile(request):
         else:                    
             username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
 
-    # get last login
+    # Get last login
     last_login = getLastLogin(request)
+
+    # Get login history
+    login_history_log_list = []
+    record = {}
+    try:
+        user_login_log_obj = UserLoginLog.objects.filter(emp_id=request.user.username).order_by('-login_date')[1:10]        
+    except:
+        user_login_log_obj = None
+
+    if user_login_log_obj is not None:
+        for item in user_login_log_obj:
+            login_date = item.login_date
+            device = item.device
+            device_name = checkLoginDevice(device)
+            record = {
+                "login_date": login_date.strftime('%a %d, %m %Y %H:%M'),
+                "device": device_name,
+            }
+            login_history_log_list.append(record)
+    
 
     if request.method == "POST":
         form = ViewAllStaffForm(request.POST, user=request.user)
@@ -428,6 +441,7 @@ def StaffProfile(request):
             'emp_name': first_name,
             'email': email,
             'last_login': last_login,
+            'login_history_log_list': login_history_log_list,
         }        
     else:
         form = ViewAllStaffForm(user=request.user)
@@ -487,15 +501,15 @@ def StaffProfile(request):
             'SuperVisorInstance': SuperVisorInstance,
             'TeamMemberList': TeamMemberList,
             'able_to_approve_leave_request': able_to_approve_leave_request,
-            'user_language': user_language,            
+            'user_language': user_language,       
             'username_display': username_display,
             'form': form,
             'dept': department_name_en,
             'emp_name': first_name,
             'email': email,
             'last_login': last_login,
+            'login_history_log_list': login_history_log_list,
         }
-
 
     return render(request, 'page/staff_profile.html', context)
 

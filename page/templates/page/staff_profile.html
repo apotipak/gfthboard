@@ -42,40 +42,42 @@
             {% if EmployeeInstance %}
             {% for employee in EmployeeInstance %}                    
                 <div class="card card-primary card-outline">
-                  <div class="card-body box-profile">
+                  <div class="card-body box-profile pt-0" style="font-size: 11pt;">
                     <div class="text-center">
                       <!--<img class="profile-user-img img-fluid img-circle" src="{% static 'img/profile-128x128.png' %}" alt="User profile picture">-->
                     </div>
                     {% if user_language == "th" %}
                     <h3 class="profile-username text-center">
                     {{ employee.emp_fname_th }} {{ employee.emp_lname_th }}<br>
-                    <small>{{ employee.emp_fname_en }} {{ employee.emp_lname_en }}</small><br>
-
+                    {{ employee.emp_fname_en }} {{ employee.emp_lname_en }}<br>
+                    <small>{{ employee.pos_th }}</small>
                     </h3>
 
                     <!--<p class="text-muted text-center">{{ employee.pos_en }}</p>-->
 
                     <ul class="list-group list-group-unbordered mb-3">
-
-                      {% if email %}
-                      <li class="list-group-item">
-                        <b><i class="far fa-envelope"></i></b> <a class="float-right">{{ email }}</a>
-                      </li>
-                      {% endif %}
-
-                      <li class="list-group-item">
-                        <b>ตำแหน่ง</b> <a class="float-right">{{ employee.pos_th }}</a>
-                      </li>                      
                       <li class="list-group-item">
                         <b>{% trans 'ID' %}</b> <a class="float-right">{{ employee.emp_id }}</a>
                       </li>                        
+
                       <li class="list-group-item">
                         <b>{% trans 'Type' %}</b> <a class="float-right">{{ employee.emp_type }}</a>
                       </li>                      
                       <li class="list-group-item">
                         <b>{% trans 'Department' %}</b> <a class="float-right">{{ employee.div_th }}</a>
                       </li>
-                      
+
+                      {% if email %}
+                      <li class="list-group-item">
+                        <b>อีเมล</b>
+                        <a class="float-right">{{ email }}&nbsp;&nbsp;<i class="fas fa-pen fa-xs text-primary"></i></a>
+                      </li>
+                      {% endif %}
+
+                      <li class="list-group-item">
+                        <b>เบอร์มือถือ</b>
+                        <a class="float-right">098 012 1234&nbsp;&nbsp;<i class="fas fa-pen fa-xs text-primary"></i></a>
+                      </li>                      
 
                     </ul>
                     {% else %}
@@ -113,6 +115,40 @@
                     <i class="fa fa-info-circle"></i>  ไม่พบข้อมูลในระบบ กรุณาตรวจสอบข้อมูลจากเจ้าหน้าที่ฝ่ายบุคคล
                 </div>            
             {% endif %}
+
+            <div class="card card-primary card-outline">
+              <div class="card-body box-profile p-0">
+                <h5 class="profile-username text-center"><i class="fas fa-history fa-xs text-secondary"></i>&nbsp;&nbsp;Login history</h5>
+                <div style="font-size: 10pt;">
+                  <table class="table table-striped table-bordered table-sm">
+                    <thead>
+                      <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Device</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if login_history_log_list %}
+                      {% for item in login_history_log_list %}
+                      <tr>
+                        <!--<td>{{ item.login_date|date:"L M d, y"|upper }}</td>-->
+                        <td>{{ item.login_date }}</td>
+                        <td>{{ item.device }}</td>
+                      </tr>
+                      {% endfor %}
+                      {% else %}
+                      <tr>
+                        <td colspan="2" class="">
+                          </div><i class="fas fa-info-circle text-info"></i>&nbsp;&nbsp;อย่าลืม Logout ออกจากระบบทุกครั้งหลังจากใช้งานเสร็จแล้วเพื่อให้มีประวัติการการเข้าใช้งาน</div>
+                        </td>
+                      </tr>                      
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
             <p>&nbsp;</p>            
             <!-- /.card -->
         </div>
