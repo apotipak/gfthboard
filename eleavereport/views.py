@@ -18,6 +18,15 @@ from page.rules import *
 
 @permission_required('eleavereport.can_view_m3_report', login_url='/accounts/login/')
 def ViewM3Report(request):
+	if isStillUseDefaultPassword(request):
+		template_name = 'page/force_change_password.html'
+		return render(request, template_name, {})
+	else:
+		if isPasswordExpired(request):
+			if isPasswordChanged(request):
+				template_name = 'page/force_change_password.html'
+				return render(request, template_name, {})
+
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)	
 	page_title = settings.PROJECT_NAME
@@ -111,6 +120,15 @@ def ViewM3Report(request):
 
 @permission_required('eleavereport.can_view_m3_leave_report', login_url='/accounts/login/')
 def ViewM3LeaveReport(request):
+	if isStillUseDefaultPassword(request):
+		template_name = 'page/force_change_password.html'
+		return render(request, template_name, {})
+	else:
+		if isPasswordExpired(request):
+			if isPasswordChanged(request):
+				template_name = 'page/force_change_password.html'
+				return render(request, template_name, {})
+
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)	
 	page_title = settings.PROJECT_NAME
@@ -157,10 +175,9 @@ def ViewM3LeaveReport(request):
 	sql += "order by l.created_date desc, l.id;"
 	'''
 
-
 	print("SQL:", sql)
 
-	try:				
+	try:
 		cursor = connection.cursor()
 		cursor.execute(sql)
 		leave_request_approved_object = cursor.fetchall()
@@ -245,6 +262,15 @@ def ViewM3LeaveReport(request):
 
 @permission_required('eleavereport.can_view_m5_report', login_url='/accounts/login/')
 def ViewM5Report(request):
+	if isStillUseDefaultPassword(request):
+		template_name = 'page/force_change_password.html'
+		return render(request, template_name, {})
+	else:
+		if isPasswordExpired(request):
+			if isPasswordChanged(request):
+				template_name = 'page/force_change_password.html'
+				return render(request, template_name, {})
+					
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)	
 	page_title = settings.PROJECT_NAME
@@ -338,6 +364,15 @@ def ViewM5Report(request):
 
 @permission_required('eleavereport.can_view_m5_leave_report', login_url='/accounts/login/')
 def ViewM5LeaveReport(request):
+	if isStillUseDefaultPassword(request):
+		template_name = 'page/force_change_password.html'
+		return render(request, template_name, {})
+	else:
+		if isPasswordExpired(request):
+			if isPasswordChanged(request):
+				template_name = 'page/force_change_password.html'
+				return render(request, template_name, {})
+
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)	
 	page_title = settings.PROJECT_NAME
@@ -470,7 +505,15 @@ def ViewM5LeaveReport(request):
 
 @permission_required('eleavereport.can_view_m1_report', login_url='/accounts/login/')
 def ViewM1Report(request):
-	print("DEBUG1")
+	if isStillUseDefaultPassword(request):
+		template_name = 'page/force_change_password.html'
+		return render(request, template_name, {})
+	else:
+		if isPasswordExpired(request):
+			if isPasswordChanged(request):
+				template_name = 'page/force_change_password.html'
+				return render(request, template_name, {})
+
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)	
 	page_title = settings.PROJECT_NAME
@@ -570,7 +613,15 @@ def ViewM1Report(request):
 
 @permission_required('eleavereport.can_view_m1_leave_report', login_url='/accounts/login/')
 def ViewM1LeaveReport(request):
-	print("DEBUG2")
+	if isStillUseDefaultPassword(request):
+		template_name = 'page/force_change_password.html'
+		return render(request, template_name, {})
+	else:
+		if isPasswordExpired(request):
+			if isPasswordChanged(request):
+				template_name = 'page/force_change_password.html'
+				return render(request, template_name, {})	
+	
 	user_language = getDefaultLanguage(request.user.username)
 	translation.activate(user_language)	
 	page_title = settings.PROJECT_NAME
@@ -619,8 +670,6 @@ def ViewM1LeaveReport(request):
 	sql += "l.emp_type='M1' "
 	sql += "order by l.created_date desc, l.id;"
 	'''
-
-	print("SQL 1 : ", sql)
 
 	try:				
 		cursor = connection.cursor()

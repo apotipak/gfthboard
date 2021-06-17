@@ -143,6 +143,15 @@ def m1247_check_leave_request_day(request):
 
 @login_required(login_url='/accounts/login/')
 def EmployeeNew(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
+                    
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
     
@@ -378,7 +387,6 @@ def EmployeeNew(request):
 
 
 class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):    
-
     #template_name = 'leave/employeeinstance_list.html'
     permission_required = ('leave.view_employeeinstance')
     page_title = settings.PROJECT_NAME
@@ -397,7 +405,6 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         # Check number of waiting leave request
         # waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p')"))    
         waiting_for_approval_item = len(EmployeeInstance.objects.raw("select * from leave_employeeinstance as ei inner join leave_employee e on ei.emp_id = e.emp_id where ei.emp_id in (select emp_id from leave_employee where emp_spid=" + self.request.user.username + ") and ei.status in ('p') and year(end_date)='2021'"))
-        
         
         # Check leave approval right
         if checkLeaveRequestApproval(self.request.user.username):
@@ -445,6 +452,8 @@ class EmployeeInstanceListView(PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
+
+
         '''
         sql = "select * from sch_plan where emp_id=" + self.request.user.username + " and sch_active=1 and upd_flag!='D'"
         try:
@@ -622,6 +631,15 @@ class EmployeeInstanceDelete(PermissionRequiredMixin, DeleteView):
 
 @login_required(login_url='/accounts/login/')
 def LeavePolicy(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
+
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -733,6 +751,15 @@ def LeavePolicy(request):
 
 @permission_required('leave.approve_leaveplan', login_url='/accounts/login/')
 def LeaveApproval(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
+                    
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -966,6 +993,15 @@ class LeaveRejectedListView(PermissionRequiredMixin, generic.ListView):
 
 #@permission_required('leave.approve_leaveplan')
 def EmployeeInstanceApprove(request, pk):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
+                    
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -1087,6 +1123,15 @@ def EmployeeInstanceApprove(request, pk):
 
 #@permission_required('leave.approve_leaveplan')
 def EmployeeInstanceReject(request, pk):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
+                    
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
@@ -1429,7 +1474,16 @@ def get_employee_leave_history(request, emp_id):
 
 
 @login_required(login_url='/accounts/login/')
-def LeaveTimeline(request):
+def LeaveTimeline(request):    
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
+
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
 
