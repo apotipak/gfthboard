@@ -65,11 +65,12 @@ def ManageOutlookEmailActiveUserList(request):
 	if isStillUseDefaultPassword(request):
 		template_name = 'page/force_change_password.html'
 		return render(request, template_name, {})
-		
-	if not isPasswordChanged(request):
-		template_name = 'page/force_change_password.html'
-		return render(request, template_name, {})
-			
+	else:
+		if isPasswordExpired(request):
+			if isPasswordChanged(request):
+				template_name = 'page/force_change_password.html'
+				return render(request, template_name, {})
+							
 	dummy_data = False
 
 	user_language = getDefaultLanguage(request.user.username)
