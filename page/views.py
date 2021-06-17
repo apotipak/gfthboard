@@ -1073,6 +1073,15 @@ def ForceChangePassword(request):
     device = request.META['HTTP_USER_AGENT'][0:1000]
     print("DEVICE : ", device)
 
+
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    
+    print("IP : ", ip)
+
     # Check if user still use default password
     template_name = 'page/force_change_password.html'
     password = request.POST.get("password")
@@ -1098,7 +1107,7 @@ def ForceChangePassword(request):
                 new_record = UserLoginLog(
                     emp_id = emp_id, 
                     login_date = datetime.now(),
-                    ip_address = None,
+                    ip_address = ip,
                     device = device,
                     created_by = 'system',
                     upd_by = None,
