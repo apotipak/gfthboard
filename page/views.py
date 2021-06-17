@@ -38,10 +38,11 @@ def index(request):
     if isStillUseDefaultPassword(request):
         template_name = 'page/force_change_password.html'
         return render(request, template_name, {})
-
-    if not isPasswordChanged(request):
-        template_name = 'page/force_change_password.html'
-        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
 
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
@@ -1056,18 +1057,54 @@ def ForceChangePassword(request):
     user_info = User.objects.filter(username=emp_id).get()
     if user_info.check_password(default_password):
         return render(request, template_name, {})
+    else:
+        try:
+            employee_info = UserPasswordLog.objects.get(emp_id=emp_id)
+        except UserPasswordLog.DoesNotExist:
+            employee_info = None
 
-    try:
-        employee_info = UserPasswordLog.objects.get(emp_id=emp_id)
-    except UserPasswordLog.DoesNotExist:
-        employee_info = None
+        if employee_info is not None:
+            print("Debug 1")
+            is_password_changed = employee_info.is_password_changed
+            is_password_expired = employee_info.is_password_expired
 
-    if employee_info is not None:
-        is_password_changed = employee_info.is_password_changed
-        is_password_expired = employee_info.is_password_expired
+            if is_password_expired:
+                print("Debug 3")
+                return render(request, template_name, {})
+            else:
+                print("Debug 4")
+                new_record = UserLoginLog(
+                    emp_id = emp_id, 
+                    login_date = datetime.now(),
+                    ip_address = None,
+                    device = device,
+                    created_by = 'system',
+                    upd_by = None,
+                    upd_flag = 'A'
+                )
+                new_record.save()                
+                return redirect("/")
 
-        if is_password_changed:
-            # Log user login time
+                '''
+                if is_password_changed:
+                    # Log user login time
+                    new_record = UserLoginLog(
+                        emp_id = emp_id, 
+                        login_date = datetime.now(),
+                        ip_address = None,
+                        device = device,
+                        created_by = 'system',
+                        upd_by = None,
+                        upd_flag = 'A'
+                    )
+                    new_record.save()
+                    
+                    return redirect("/")
+                else:
+                    return render(request, template_name, {})
+                '''
+        else:
+            print("Debug 2")
             new_record = UserLoginLog(
                 emp_id = emp_id, 
                 login_date = datetime.now(),
@@ -1077,23 +1114,8 @@ def ForceChangePassword(request):
                 upd_by = None,
                 upd_flag = 'A'
             )
-            new_record.save()
-            
+            new_record.save()        
             return redirect("/")
-        else:
-            return render(request, template_name, {})
-    else:
-        new_record = UserLoginLog(
-            emp_id = emp_id, 
-            login_date = datetime.now(),
-            ip_address = None,
-            device = device,
-            created_by = 'system',
-            upd_by = None,
-            upd_flag = 'A'
-        )
-        new_record.save()        
-        return redirect("/")
 
 
 @login_required(login_url='/accounts/login/')
@@ -1108,9 +1130,6 @@ def AjaxForceChangePassword(request):
     emp_id = request.user.username
     new_password1 = request.POST.get("new_password1")
     new_password2 = request.POST.get("new_password2")
-    print("emp_id : ", emp_id)
-    print("new_password1 : ", new_password1)
-    print("new_password2 : ", new_password2)
 
     excluded_password = {'123@gfth'}
 
