@@ -2,7 +2,7 @@
   <footer class="main-footer">
 
     <div class="row">
-        <div class="col-sm float-left">
+        <div class="d-none d-sm-block float-left">
           v. <b><a href="{% url 'news' %}">{{ project_version }}</a></b> | 
           {% if db_server == 'GFDEMOSQL01' %}
           Live
@@ -21,7 +21,7 @@
             &nbsp;
             {% endif %}
         </div>
-        <div class="col-sm float-right text-right">
+        <div class="d-none d-sm-block float-right text-right">
           {{ today_date }}
         </div>
     </div>
