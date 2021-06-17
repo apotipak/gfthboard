@@ -83,7 +83,7 @@ class UserLoginLog(models.Model):
     emp_id = models.DecimalField(max_digits=7, decimal_places=0, blank=True, null=True)
     login_date = models.DateTimeField(blank=True, null=True, default=datetime.date.today)
     ip_address = models.CharField(max_length=20, blank=True, null=True)
-    device = models.CharField(max_length=100, blank=True, null=True)
+    device = models.CharField(max_length=1000, blank=True, null=True)
     created_by = models.CharField(max_length=10, blank=True, null=True, default='system')
     upd_by = models.CharField(max_length=10, blank=True, null=True)
     upd_flag = models.CharField(max_length=1, blank=True, null=True, default='A')

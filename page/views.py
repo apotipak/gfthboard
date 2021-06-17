@@ -1046,6 +1046,10 @@ def ForceChangePassword(request):
     project_version = settings.PROJECT_VERSION
     today_date = settings.TODAY_DATE
 
+    # Get user device
+    device = request.META['HTTP_USER_AGENT'][0:1000]
+    print("DEVICE : ", device)
+
     # Check if user still use default password
     template_name = 'page/force_change_password.html'
     password = request.POST.get("password")
@@ -1068,7 +1072,7 @@ def ForceChangePassword(request):
                 emp_id = emp_id, 
                 login_date = datetime.now(),
                 ip_address = None,
-                device = None,
+                device = device,
                 created_by = 'system',
                 upd_by = None,
                 upd_flag = 'A'
@@ -1079,11 +1083,25 @@ def ForceChangePassword(request):
         else:
             return render(request, template_name, {})
     else:
+        new_record = UserLoginLog(
+            emp_id = emp_id, 
+            login_date = datetime.now(),
+            ip_address = None,
+            device = device,
+            created_by = 'system',
+            upd_by = None,
+            upd_flag = 'A'
+        )
+        new_record.save()        
         return redirect("/")
 
 
 @login_required(login_url='/accounts/login/')
 def AjaxForceChangePassword(request):
+    print("***********************")
+    print("AjaxForceChangePassword();")
+    print("***********************")
+
     is_password_changed = False
     is_password_expired = False
 
