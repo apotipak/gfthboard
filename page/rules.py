@@ -56,6 +56,24 @@ def isPasswordChanged(request):
 
 
 @login_required(login_url='/accounts/login/')
+def isPasswordExpired(request):
+	emp_id = request.user.username
+	try:
+		employee_info = UserPasswordLog.objects.get(emp_id=emp_id)
+	except UserPasswordLog.DoesNotExist:
+		employee_info = None
+
+	if employee_info is not None:
+		is_password_expired = employee_info.is_password_expired
+		if is_password_expired:
+			return True
+		else:
+			return False
+	else:
+		return True
+
+
+@login_required(login_url='/accounts/login/')
 def isStillUseDefaultPassword(request):	
 	default_password = "123@gfth"
 	user_info = User.objects.filter(username=request.user.username).get()
