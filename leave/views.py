@@ -809,7 +809,7 @@ class LeavePendingApproveListView(PermissionRequiredMixin, generic.ListView):
                 username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
         # get last login
-        last_login = getLastLogin(request)
+        last_login = getLastLogin(self.request)
 
         context.update({
             'page_title': settings.PROJECT_NAME,
@@ -876,7 +876,7 @@ class LeaveApprovedListView(PermissionRequiredMixin, generic.ListView):
                 username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
         # get last login
-        last_login = getLastLogin(request)
+        last_login = getLastLogin(self.request)
 
         context.update({
             'page_title': settings.PROJECT_NAME,
@@ -944,7 +944,7 @@ class LeaveRejectedListView(PermissionRequiredMixin, generic.ListView):
                 username_display = LeaveEmployee.objects.filter(emp_id=self.request.user.username).values_list('emp_fname_en', flat=True).get()
 
         # get last login
-        last_login = getLastLogin(request)
+        last_login = getLastLogin(self.request)
 
         context.update({
             'page_title': settings.PROJECT_NAME,
