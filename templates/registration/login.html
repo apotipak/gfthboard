@@ -52,11 +52,14 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">    
+
       <form method="post" action="{% url 'login' %}">
       {% csrf_token %}
   
         <div class="input-group mb-3">
-          <input type="text" name="username" id="username" class="form-control" placeholder="{% trans 'Employee ID' %}">
+          
+          <!--<input type="text" name="username" id="username" class="form-control" placeholder="{% trans 'Employee ID' %}">-->
+          <input class="form-control" type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" placeholder="{% trans 'Employee ID' %}">
 
           <div class="input-group-append">
             <div class="input-group-text">
@@ -64,8 +67,10 @@
             </div>
           </div>
         </div>
+        
         <div class="input-group mb-3">
-          <input type="password" name="password" id="password" class="form-control" placeholder="{% trans 'Password' %}">
+          <!--<input type="password" name="password" id="password" class="form-control" placeholder="{% trans 'Password' %}">-->
+          <input class="form-control" type="password" name="password" autocomplete="current-password" required="" id="id_password" placeholder="{% trans 'Password' %}">
 
           <div class="input-group-append">
             <div class="input-group-text">
@@ -73,6 +78,18 @@
             </div>
           </div>
         </div>
+
+        <!--
+        <div class="input-group mb-3">
+          <input class="form-control" type="text" name="otp_token" autocomplete="off" id="id_otp_token" placeholder="{% trans 'OTP Number' %}">
+          <div class="input-group-append">
+            <div class="input-group-text">              
+              <span class="fas fa-stopwatch"></span>
+            </div>
+          </div>
+        </div>      
+        -->
+        
         <div class="row">
           <div class="col-12">
             <!--<input type="submit" class="btn btn-success btn-block" value="Sign in" />-->
@@ -93,6 +110,28 @@
           
         </div>
       </form>
+
+
+
+{% comment %}
+<form action="." method="POST">
+  {% csrf_token %}
+    <div class="form-row"> {{ form.username.errors }}{{ form.username.label_tag }}{{ form.username }} </div>
+    <div class="form-row"> {{ form.password.errors }}{{ form.password.label_tag }}{{ form.password }} </div>
+
+
+    {% if form.get_user %}
+    <div class="form-row"> {{ form.otp_device.errors }}{{ form.otp_device.label_tag }}{{ form.otp_device }} </div>
+    {% endif %}
+
+    <div class="form-row"> {{ form.otp_token.errors }}{{ form.otp_token.label_tag }}{{ form.otp_token }} </div>
+    <div class="submit-row">
+        <input type="submit" value="Log in"/>
+        {% if form.get_user %}<input type="submit" name="otp_challenge" value="Get Challenge" />{% endif %}
+    </div>
+</form>
+{% endcomment %}
+
 
     </div>
     <!-- /.login-card-body -->
