@@ -25,9 +25,19 @@ from django.core import mail
 from django.core.mail.backends.smtp import EmailBackend
 from django.core.mail import EmailMultiAlternatives
 
+# from django_otp.forms import OTPAuthenticationForm
+from functools import partial
+from django_otp.forms import OTPTokenForm
+from django.contrib.auth.views import LoginView
+from django_otp.forms import OTPTokenForm
 
-@permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
-def EPaySlipM1(request):
+
+
+@login_required
+#@permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
+def EPaySlipM1(request):	
+	
+
 	if isStillUseDefaultPassword(request):
 		template_name = 'page/force_change_password.html'
 		return render(request, template_name, {})
@@ -125,7 +135,7 @@ def EPaySlipM1(request):
 		'username_display': username_display,
 		'available_period_obj': available_period_obj,
 		'available_period_list': list(available_period_list),
-		'last_login': last_login,
+		'last_login': last_login,		
 	})
 
 
