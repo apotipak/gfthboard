@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.conf.urls import url
 
 
 urlpatterns = [
@@ -19,5 +20,7 @@ urlpatterns = [
 
     path('force-change-password/', views.ForceChangePassword, name='system-force-change-password'),
     path('ajax-force-change-password/', views.AjaxForceChangePassword, name='ajax-force-change-password'),
+
+    url(r'^logout/$', views.logout_request, name='logout')
 ]
 

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load i18n %}
+  <title>GFTH Board | ใส่รหัส OTP</title>  
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">  
+  {% load static %}
+  <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+  <!-- Add additional CSS in static file -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">  
+</head>
+
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="/"><img src="{% static 'img/logo-big.png' %}" width="200px;"></a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+
+      <p class="login-box-msg"><b>กรุณาใส่รหัส OTP ก่อนใช้งาน</b></p>
+      
+      <div class="mb-12" id="show-error">
+      {% if form.errors %}
+          {% for field in form %}
+              {% for error in field.errors %}
+                  <div class="alert alert-danger">
+                      <i class="fas fa-exclamation"></i>&nbsp;&nbsp;{{ error|escape }}
+                  </div>
+              {% endfor %}
+          {% endfor %}          
+      {% endif %}
+      </div> 
+
+      <form method="post" action="" id="id_token_form" name="token_form" autocomplete="off">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <input class="form-control" type="text" name="otp_token" autocomplete="off" id="id_otp_token" placeholder="{% trans 'Enter OTP Number' %}">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-stopwatch"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <input type="submit" id="change_password_button" name="change_password_button" class="btn btn-success btn-block" value="{% trans 'Confirm' %}" />
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+
+{% comment %}
+<form action="." method="POST">
+  {% csrf_token %}
+    <div class="form-row"> {{ form.username.errors }}{{ form.username.label_tag }}{{ form.username }} </div>
+    <div class="form-row"> {{ form.password.errors }}{{ form.password.label_tag }}{{ form.password }} </div>
+
+
+    {% if form.get_user %}
+    <div class="form-row"> {{ form.otp_device.errors }}{{ form.otp_device.label_tag }}{{ form.otp_device }} </div>
+    {% endif %}
+
+    <div class="form-row"> {{ form.otp_token.errors }}{{ form.otp_token.label_tag }}{{ form.otp_token }} </div>
+    <div class="submit-row">
+        <input type="submit" value="Log in"/>
+        {% if form.get_user %}<input type="submit" name="otp_challenge" value="Get Challenge" />{% endif %}
+    </div>
+</form>
+{% endcomment %}
+
+
+      
+
+      <div class="col-12 p-0">
+        <div class="col-8 p-0 float-left text-left">
+          <p class="pt-3"><a href="/">กลับหน้าเมนูหลัก</a></p>
+        </div>
+
+        <div class="col-4 p-0 float-right text-right">
+          <p class="pt-3">วิธีติดตั้งแอพ OTP</p>
+        </div>        
+      </div>
+
+
+    </div>
+    <!-- /.login-card-body -->
+
+  </div>
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).ready(function () {    
+      //$("#id_new_password1").focus();
+    });
+
+    /*
+    $(document).on('click', '#change_password_button', function(e) {
+        e.preventDefault();
+
+        formData = new FormData();
+        data = new FormData($('#id_change_password_form').get(0));
+
+        $.ajax({      
+            type: "POST",
+            url: '{% url "ajax-force-change-password" %}',
+            dataType: 'json',
+            data: data,
+            cache: false,
+            processData: false,
+            contentType: false, 
+            success: function(json) {
+                if(json.is_error) {
+                    Swal.fire({
+                        title: 'เกิดข้อผิดพลาด',
+                        html: json.message,
+                        icon: '',
+                        confirmButtonText: '&nbsp;ปิด&nbsp;',
+                        confirmButtonColor: "#198754",
+                    })                    
+                } else {
+                  window.location.href = "/";
+                }
+            },
+        })
+
+		return false;
+    });
+    */
+    
+</script>
+
+</body>
+</html>
+
