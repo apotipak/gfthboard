@@ -595,7 +595,7 @@ def AjaxSendPayslipM1(request):
 			message = "ระบบส่ง " + "<span class='text-success'><b>Payslip " + str(selected_period_name) + "</b></span> ไว้ในเมล์บ็อกซ์ของคุณแล้ว<br><br>"
 	else:
 		is_error = True
-		message = "ขออภัย ระบบไม่สามารถส่งไฟล์ Payslip ให้ท่านผ่านทางอีเมล์ได้ กรุณาติดต่อแผนกบุคคล"
+		message = "ขออภัย ระบบไม่สามารถส่งไฟล์ Payslip ให้ท่านผ่านทางอีเมล์ได้ กรุณาใช้โปรแกรม Payslip ที่ติดตั้งไว้ที่เครื่องของท่าน"
 
 	response = JsonResponse(data={        
 	    "is_error": is_error,
