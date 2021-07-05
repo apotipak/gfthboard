@@ -25,13 +25,11 @@ from django.core import mail
 from django.core.mail.backends.smtp import EmailBackend
 from django.core.mail import EmailMultiAlternatives
 
-# from functools import partial
+
 import base64
 from django.views import View
 from django_otp import devices_for_user
 from django_otp.plugins.otp_totp.models import TOTPDevice
-# from django_otp.middleware import OTPMiddleware, is_verified
-# import functools
 
 
 def get_user_totp_device(self, user, confirmed=None):
@@ -526,7 +524,7 @@ def EPaySlipM1_BK(request):
 def AjaxSendPayslipM1(request):
 	print("AjaxSendPayslipM1")
 
-	dummy_data = False
+	dummy_data = True
 
 	is_error = True
 	message = "Error #0 - default error"
@@ -558,9 +556,9 @@ def AjaxSendPayslipM1(request):
 	if dummy_data:
 		sql = "select * from sp_slip1 where eps_emp_id='" + str(emp_id) + "' and eps_prd_id='" + str(eps_prd_id) + "' and eps_emp_type='M1' order by prd_year desc, prd_month desc, pay_seq;"
 	else:
-		sql = "select * from sp_slip1 where eps_emp_id='" + str(emp_id) + "' and eps_prd_id='" + str(eps_prd_id) + "' and eps_emp_type='M1' order by prd_year desc, prd_month desc, pay_seq;"
+		sql = "select * from sp_slip where eps_emp_id='" + str(emp_id) + "' and eps_prd_id='" + str(eps_prd_id) + "' and eps_emp_type='M1' order by prd_year desc, prd_month desc, pay_seq;"
 
-	# print("SQLLL : ", sql)
+	print("SQLLL : ", sql)
 
 	try:
 		cursor = connection.cursor()
@@ -592,7 +590,7 @@ def AjaxSendPayslipM1(request):
 			is_error = True			
 		else:
 			is_error = False
-			message = "ระบบส่ง " + "<span class='text-success'><b>Payslip " + str(selected_period_name) + "</b></span> ไว้ในเมล์บ็อกซ์ของคุณแล้ว<br><br>"
+			message = "ระบบส่ง Payslip เดือน " + "<span class='text-success'><b>" + str(selected_period_name) + "</b></span> ไปที่อีเมล์ของท่านแล้ว<br><br>"
 	else:
 		is_error = True
 		message = "ขออภัย ระบบไม่สามารถส่งไฟล์ Payslip ให้ท่านผ่านทางอีเมล์ได้ กรุณาใช้โปรแกรม Payslip ที่ติดตั้งไว้ที่เครื่องของท่าน"
@@ -881,7 +879,8 @@ def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd
 		# amnaj
 		# Send Email
 		if citizen_id != "":
-			send_email_success = email_payslip(emp_full_name, primary_email, file_name, prd_year, prd_month, citizen_id)
+			print("send_email_success")
+			# send_email_success = email_payslip(emp_full_name, primary_email, file_name, prd_year, prd_month, citizen_id)
 		else:
 			is_error = True
 			message = "Your profile is not completed. Please contact HR department."
