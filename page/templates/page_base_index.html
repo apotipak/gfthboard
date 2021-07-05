@@ -26,7 +26,9 @@
 
 
   <!-- Navbar -->
-  <nav class="main-header navbar-expand-md navbar-light navbar-white container-fluid full" style="background-image: url({% static 'img/10.jpg' %});background-repeat: no-repeat;background-position:center;background-size:cover;min-height:12vh;">
+  <!--<nav class="main-header navbar-expand-md navbar-light navbar-white container-fluid full" style="background-image: url({% static 'img/10.jpg' %});background-repeat: no-repeat;background-position:center;background-size:cover;min-height:12vh;">-->
+
+  <nav class="main-header navbar-expand-md navbar-light navbar-white container-fluid full">
 
     <div class="container full">
 
@@ -89,6 +91,13 @@
                 </a>
               </div>
 
+            </li>
+
+
+            <li>
+                <a class="btn btn-sm btn-warning mt-1" href="{% url 'logout'%}?next=/accounts/login">
+                  <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;{% trans 'Sign Out' %}
+                </a>
             </li>
 
           </ul>

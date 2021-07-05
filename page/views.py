@@ -30,6 +30,8 @@ from datetime import datetime
 from django.core.files.storage import FileSystemStorage
 import re
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth import logout 
+
 
 
 @login_required(login_url='/accounts/login/')
@@ -1255,3 +1257,11 @@ def AjaxForceChangePassword(request):
 
     response.status_code = 200
     return response
+
+
+def logout_request(request):
+    logout(request)
+    if 'is_otp_verified' in request.session:            
+        del request.session['is_otp_verified']
+
+    return redirect("/")

@@ -25,19 +25,402 @@ from django.core import mail
 from django.core.mail.backends.smtp import EmailBackend
 from django.core.mail import EmailMultiAlternatives
 
-# from django_otp.forms import OTPAuthenticationForm
-from functools import partial
-from django_otp.forms import OTPTokenForm
-from django.contrib.auth.views import LoginView
-from django_otp.forms import OTPTokenForm
+# from functools import partial
+import base64
+from django.views import View
+from django_otp import devices_for_user
+from django_otp.plugins.otp_totp.models import TOTPDevice
+# from django_otp.middleware import OTPMiddleware, is_verified
+# import functools
 
 
+def get_user_totp_device(self, user, confirmed=None):
+	devices = devices_for_user(user, confirmed=confirmed)
+	for device in devices:
+		if isinstance(device, TOTPDevice):
+			return device
 
-@login_required
-#@permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
-def EPaySlipM1(request):	
+
+# class EPaySlipM1():	
+class EPaySlipM1(PermissionRequiredMixin, View):
+	permission_required = ('epayslipm1.can_access_e_payslip_m1')
+	template_name = 'epayslipm1/request_payslip.html'
+	message = "EPaySlipM1"
+	
 	
 
+	def get(self, request):
+		
+		# print("Method Get")
+
+		if 'is_otp_verified' in request.session:
+			is_otp_verified = request.session['is_otp_verified']
+		else:
+			is_otp_verified = False	
+
+		if not is_otp_verified:
+			request.session['is_otp_verified'] = False
+			template_name = 'page/require_otp.html'
+			return render(request, template_name, {})
+		else:
+			request.session['is_otp_verified'] = True
+			user_language = getDefaultLanguage(request.user.username)	
+			today_date = getDateFormatDisplay(user_language)
+			last_login = getLastLogin(request)
+
+
+			available_period_obj = None
+			available_period_list = []
+			record = {}
+
+			dummy_data = False
+
+			if user_language == "th":
+			    if request.user.username == "999999":
+			    	username_display = request.user.first_name
+			    else:
+			        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+			else:
+			    if request.user.username == "999999":
+			        username_display = request.user.first_name
+			    else:
+			        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+
+			if dummy_data:
+				sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
+			else:
+				sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
+
+			sql += "where eps_emp_type='M1' "
+			sql += "group by eps_prd_id,prd_year,prd_month,period "
+			sql += "order by eps_prd_id desc;"
+			# print("SQL : ", sql)
+
+			try:
+				cursor = connection.cursor()
+				cursor.execute(sql)
+				available_period_obj = cursor.fetchall()
+			except db.OperationalError as e:
+				is_error = True
+				error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+			except db.Error as e:
+				is_error = True
+				error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+			finally:
+				cursor.close()
+
+			if available_period_obj is not None:
+				for item in available_period_obj:
+					eps_prd_id = item[0]
+					prd_year = item[1]
+					prd_month = item[2]
+					period = item[3]
+					prd_month_name_en = datetime.strptime(str(item[2]), "%m").strftime("%B")
+					prd_month_name_th = convert_thai_month_name(prd_month)
+					record = {
+						"eps_prd_id": eps_prd_id,
+						"prd_year": prd_year,
+						"prd_month": prd_month,
+						"period": period,
+						"prd_month_name_en": prd_month_name_en,
+						"prd_month_name_th": prd_month_name_th,
+					}
+					available_period_list.append(record)			
+
+			return render(request, self.template_name, {
+				'page_title': settings.PROJECT_NAME,
+				'today_date': today_date,
+				'project_version': settings.PROJECT_VERSION,
+				'db_server': settings.DATABASES['default']['HOST'],
+				'project_name': settings.PROJECT_NAME,
+				'user_language': user_language,
+				'username_display': username_display,
+				'available_period_obj': available_period_obj,
+				'available_period_list': list(available_period_list),			
+				'last_login': last_login,			
+			})
+
+
+
+	def post(self, request, format=None):
+		# print("Method POST")
+
+		if 'is_otp_verified' in request.session:
+
+			if not request.session['is_otp_verified']:				
+				token = request.POST.get("otp_token")
+				user = request.user
+				device = get_user_totp_device(self, user)
+
+				'''
+				print("token: ", token)
+				print("user: ", user)
+				print("device: ", device)
+				'''
+
+				if not device == None and device.verify_token(token):
+					if not device.confirmed:
+						device.confirmed = True
+						device.save()
+					request.session['is_otp_verified'] = True
+
+					user_language = getDefaultLanguage(request.user.username)	
+					today_date = getDateFormatDisplay(user_language)
+					last_login = getLastLogin(request)
+
+					available_period_obj = None
+					available_period_list = []
+					record = {}
+
+					dummy_data = False
+
+					if user_language == "th":
+					    if request.user.username == "999999":
+					    	username_display = request.user.first_name
+					    else:
+					        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+					else:
+					    if request.user.username == "999999":
+					        username_display = request.user.first_name
+					    else:
+					        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+
+					if dummy_data:
+						sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
+					else:
+						sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
+
+					sql += "where eps_emp_type='M1' "
+					sql += "group by eps_prd_id,prd_year,prd_month,period "
+					sql += "order by eps_prd_id desc;"
+					# print("SQL : ", sql)
+
+					try:
+						cursor = connection.cursor()
+						cursor.execute(sql)
+						available_period_obj = cursor.fetchall()
+					except db.OperationalError as e:
+						is_error = True
+						error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+					except db.Error as e:
+						is_error = True
+						error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+					finally:
+						cursor.close()
+
+					if available_period_obj is not None:
+						for item in available_period_obj:
+							eps_prd_id = item[0]
+							prd_year = item[1]
+							prd_month = item[2]
+							period = item[3]
+							prd_month_name_en = datetime.strptime(str(item[2]), "%m").strftime("%B")
+							prd_month_name_th = convert_thai_month_name(prd_month)
+							record = {
+								"eps_prd_id": eps_prd_id,
+								"prd_year": prd_year,
+								"prd_month": prd_month,
+								"period": period,
+								"prd_month_name_en": prd_month_name_en,
+								"prd_month_name_th": prd_month_name_th,
+							}
+							available_period_list.append(record)			
+
+					return render(request, self.template_name, {
+						'page_title': settings.PROJECT_NAME,
+						'today_date': today_date,
+						'project_version': settings.PROJECT_VERSION,
+						'db_server': settings.DATABASES['default']['HOST'],
+						'project_name': settings.PROJECT_NAME,
+						'user_language': user_language,
+						'username_display': username_display,
+						'available_period_obj': available_period_obj,
+						'available_period_list': list(available_period_list),			
+						'last_login': last_login,			
+					})	
+
+				template_name = 'page/require_otp.html'
+				return render(request, template_name, {})
+			else:
+				user_language = getDefaultLanguage(request.user.username)	
+				today_date = getDateFormatDisplay(user_language)
+				last_login = getLastLogin(request)
+
+
+				available_period_obj = None
+				available_period_list = []
+				record = {}
+
+				dummy_data = False
+
+				if user_language == "th":
+				    if request.user.username == "999999":
+				    	username_display = request.user.first_name
+				    else:
+				        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+				else:
+				    if request.user.username == "999999":
+				        username_display = request.user.first_name
+				    else:
+				        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+
+				if dummy_data:
+					sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
+				else:
+					sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
+
+				sql += "where eps_emp_type='M1' "
+				sql += "group by eps_prd_id,prd_year,prd_month,period "
+				sql += "order by eps_prd_id desc;"
+				# print("SQL : ", sql)
+
+				try:
+					cursor = connection.cursor()
+					cursor.execute(sql)
+					available_period_obj = cursor.fetchall()
+				except db.OperationalError as e:
+					is_error = True
+					error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+				except db.Error as e:
+					is_error = True
+					error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+				finally:
+					cursor.close()
+
+				if available_period_obj is not None:
+					for item in available_period_obj:
+						eps_prd_id = item[0]
+						prd_year = item[1]
+						prd_month = item[2]
+						period = item[3]
+						prd_month_name_en = datetime.strptime(str(item[2]), "%m").strftime("%B")
+						prd_month_name_th = convert_thai_month_name(prd_month)
+						record = {
+							"eps_prd_id": eps_prd_id,
+							"prd_year": prd_year,
+							"prd_month": prd_month,
+							"period": period,
+							"prd_month_name_en": prd_month_name_en,
+							"prd_month_name_th": prd_month_name_th,
+						}
+						available_period_list.append(record)			
+
+				return render(request, self.template_name, {
+					'page_title': settings.PROJECT_NAME,
+					'today_date': today_date,
+					'project_version': settings.PROJECT_VERSION,
+					'db_server': settings.DATABASES['default']['HOST'],
+					'project_name': settings.PROJECT_NAME,
+					'user_language': user_language,
+					'username_display': username_display,
+					'available_period_obj': available_period_obj,
+					'available_period_list': list(available_period_list),			
+					'last_login': last_login,			
+				})			
+		else:
+			token = request.POST.get("otp_token")
+			user = request.user
+			device = get_user_totp_device(self, user)
+	
+			'''			
+			print("token : ", token)
+			print("user : ", user)
+			print("device : ", device)
+			'''
+
+			if not device == None and device.verify_token(token):
+				if not device.confirmed:
+					device.confirmed = True
+					device.save()
+				
+				request.session['is_otp_verified'] = True
+
+				user_language = getDefaultLanguage(request.user.username)	
+				today_date = getDateFormatDisplay(user_language)
+				last_login = getLastLogin(request)
+
+				if user_language == "th":
+				    if request.user.username == "999999":
+				    	username_display = request.user.first_name
+				    else:
+				        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+				else:
+				    if request.user.username == "999999":
+				        username_display = request.user.first_name
+				    else:
+				        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+
+				available_period_obj = None
+				available_period_list = []
+				record = {}
+				dummy_data = False
+
+				if dummy_data:
+					sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
+				else:
+					sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
+
+				sql += "where eps_emp_type='M1' "
+				sql += "group by eps_prd_id,prd_year,prd_month,period "
+				sql += "order by eps_prd_id desc;"
+				# print("SQL : ", sql)
+
+				try:
+					cursor = connection.cursor()
+					cursor.execute(sql)
+					available_period_obj = cursor.fetchall()
+				except db.OperationalError as e:
+					is_error = True
+					error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+				except db.Error as e:
+					is_error = True
+					error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+				finally:
+					cursor.close()
+
+				if available_period_obj is not None:
+					for item in available_period_obj:
+						eps_prd_id = item[0]
+						prd_year = item[1]
+						prd_month = item[2]
+						period = item[3]
+						prd_month_name_en = datetime.strptime(str(item[2]), "%m").strftime("%B")
+						prd_month_name_th = convert_thai_month_name(prd_month)
+						record = {
+							"eps_prd_id": eps_prd_id,
+							"prd_year": prd_year,
+							"prd_month": prd_month,
+							"period": period,
+							"prd_month_name_en": prd_month_name_en,
+							"prd_month_name_th": prd_month_name_th,
+						}
+						available_period_list.append(record)	
+												        						
+				return render(request, self.template_name, 
+				{
+					'page_title': settings.PROJECT_NAME,
+					'today_date': today_date,
+					'project_version': settings.PROJECT_VERSION,
+					'db_server': settings.DATABASES['default']['HOST'],
+					'project_name': settings.PROJECT_NAME,
+					'user_language': user_language,
+					'username_display': username_display,
+					'available_period_obj': available_period_obj,
+					'available_period_list': list(available_period_list),			
+					'last_login': last_login,
+				})		    
+			else:
+				request.session['is_otp_verified'] = False
+				print("B : Not verfied")
+				template_name = 'page/require_otp.html'
+				return render(request, template_name, {})				
+
+
+@permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
+def EPaySlipM1_BK(request):		
 	if isStillUseDefaultPassword(request):
 		template_name = 'page/force_change_password.html'
 		return render(request, template_name, {})
@@ -140,7 +523,9 @@ def EPaySlipM1(request):
 
 
 @permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
-def AjaxSendPayslipM1(request):	
+def AjaxSendPayslipM1(request):
+	print("AjaxSendPayslipM1")
+
 	dummy_data = False
 
 	is_error = True
