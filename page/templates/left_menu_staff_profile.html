@@ -1,0 +1,96 @@
+{% load static %}
+{% load i18n %}
+
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="/" class="brand-link">      
+      <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <span class="brand-text font-weight-light"><img src="{% static 'img/logo-big.png' %}" width="150px;"></span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">  
+
+
+          <!-- Profile -->
+          {% if request.path|slice:":6" == '/staff' %}
+            {% if request.path|slice:":14" == '/staff-profile' %}
+            <li class="nav-item has-treeview active menu-open">
+              <a href="{% url 'staff-profile' %}" class="nav-link active">
+                &nbsp;&nbsp;<i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;
+                <p>{% trans 'Profile' %}</p>
+              </a>
+            </li>
+            {% else%}
+            <li class="nav-item has-treeview active menu-open">
+              <a href="{% url 'staff-profile' %}" class="nav-link">
+                &nbsp;&nbsp;<i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;
+                <p>{% trans 'Profile' %}</p>
+              </a>
+            </li>          
+            {% endif %}
+
+            {% if request.path|slice:":15" == '/staff-password' %}
+            <li class="nav-item has-treeview active menu-open">
+              <a href="{% url 'staff-password' %}" class="nav-link active">
+                &nbsp;&nbsp;<i class="fas fa-key"></i>&nbsp;&nbsp;&nbsp;
+                <p>{% trans 'Change Password' %}</p>
+              </a>
+            </li>
+            {% else %}
+            <li class="nav-item has-treeview active menu-open">
+              <a href="{% url 'staff-password' %}" class="nav-link">
+                &nbsp;&nbsp;<i class="fas fa-key"></i>&nbsp;&nbsp;&nbsp;
+                <p>{% trans 'Change Password' %}</p>
+              </a>
+            </li>
+            {% endif %}
+
+            {% if request.path|slice:":15" == '/staff-language' %}
+            <li class="nav-item has-treeview active menu-open">
+              <a href="{% url 'staff-language' %}" class="nav-link active">
+                &nbsp;&nbsp;<i class="fa fa-language" aria-hidden="true"></i></i>&nbsp;&nbsp;&nbsp;
+                <p>{% trans 'Set Default Language' %}</p>
+              </a>
+            </li>
+            {% else %}
+            <li class="nav-item has-treeview active menu-open">
+              <a href="{% url 'staff-language' %}" class="nav-link">
+                &nbsp;&nbsp;<i class="fa fa-language" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;
+                <p>{% trans 'Set Default Language' %}</p>
+              </a>
+            </li>
+            {% endif %}
+
+
+            {% if request.path|slice:":10" == '/staff-otp' %}
+            <li class="nav-item has-treeview active menu-open">
+              <a href="{% url 'staff-otp' %}" class="nav-link active">
+                &nbsp;&nbsp;<i class="fas fa-stopwatch" aria-hidden="true"></i></i>&nbsp;&nbsp;&nbsp;
+                <p>{% trans 'My OTP' %}</p>
+              </a>
+            </li>
+            {% else %}
+            <li class="nav-item has-treeview active menu-open">
+              <a href="{% url 'staff-otp' %}" class="nav-link">
+                &nbsp;&nbsp;<i class="fas fa-stopwatch" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;
+                <p>{% trans 'My OTP' %}</p>
+              </a>
+            </li>
+            {% endif %}
+
+          {% endif %}
+          <!-- End Profile -->
+
+
+
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>

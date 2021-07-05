@@ -32,6 +32,13 @@ import re
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import logout 
 
+import io
+import base64
+from qrcode import make as qr_code_make
+from qrcode.image.svg import SvgPathFillImage
+
+from django_otp import devices_for_user
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 
 @login_required(login_url='/accounts/login/')
@@ -1265,3 +1272,96 @@ def logout_request(request):
         del request.session['is_otp_verified']
 
     return redirect("/")
+
+
+def get_user_totp_device(self, user, confirmed=None):
+    devices = devices_for_user(user, confirmed=confirmed)
+    for device in devices:
+        if isinstance(device, TOTPDevice):
+            return device
+
+
+@login_required(login_url='/accounts/login/')
+def StaffOTP(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
+
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION
+    # today_date = settings.TODAY_DATE
+    today_date = getDateFormatDisplay(user_language)   
+
+
+    '''
+    form = LanguageForm(request.POST, user=request.user)
+    if request.method == "POST":
+        if form.is_valid():
+            language_code = form.cleaned_data['language_code']
+            username = request.user.username
+            userid = request.user.id
+
+            if not UserProfile.objects.filter(username=username).exists():
+                UserProfile.objects.create(language=language_code, updated_by_id=userid, username=username)
+            else:
+                employee = UserProfile.objects.get(username=username)
+                employee.language = language_code
+                employee.updated_by_id = userid
+                employee.username = username
+                employee.save()
+            
+            messages.success(request, _('ตั้งค่าใหม่สำเร็จ'))
+            return HttpResponseRedirect('/staff-otp')
+    else:
+        form = LanguageForm(user=request.user)    
+    '''
+
+    if user_language == "th":
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:            
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        if request.user.username == "999999":
+            username_display = request.user.first_name
+        else:                    
+            username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
+    
+    # get last login
+    last_login = getLastLogin(request)
+
+
+    # Generate QRCode for OTP
+    base64_image = None
+    try:
+        device = get_user_totp_device(None, request.user)
+        uri = device.config_url    
+        print("uri : ", uri)
+        # uri_2 = "otpauth://totp/900662?secret=IMKNRCLHGF2E3CLVBK3YTDF3XRN4EKJB&algorithm=SHA1&digits=6&period=30"
+        # print("uri 2 : ", uri_2)
+        svg_image_obj = qr_code_make(uri, image_factory=SvgPathFillImage)
+        image = io.BytesIO()
+        svg_image_obj.save(stream=image)
+        base64_image = image.getvalue().decode()
+    except Exception as e:
+        error_message = str(e)
+
+    return render(request, 'page/staff_otp.html', {
+        # 'form': form,
+        'page_title': page_title, 
+        'project_name': project_name, 
+        'project_version': project_version, 
+        'db_server': db_server, 'today_date': today_date,
+        'username_display': username_display,
+        "last_login": last_login,
+        "qrcode": base64_image
+    })

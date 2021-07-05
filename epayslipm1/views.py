@@ -25,13 +25,11 @@ from django.core import mail
 from django.core.mail.backends.smtp import EmailBackend
 from django.core.mail import EmailMultiAlternatives
 
-# from functools import partial
+
 import base64
 from django.views import View
 from django_otp import devices_for_user
 from django_otp.plugins.otp_totp.models import TOTPDevice
-# from django_otp.middleware import OTPMiddleware, is_verified
-# import functools
 
 
 def get_user_totp_device(self, user, confirmed=None):
