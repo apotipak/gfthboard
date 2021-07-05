@@ -25,41 +25,13 @@ from django.core import mail
 from django.core.mail.backends.smtp import EmailBackend
 from django.core.mail import EmailMultiAlternatives
 
-
-'''
-from django_otp.forms import OTPAuthenticationForm
-from functools import partial
-# from django_otp.forms import OTPTokenForm
-from django.contrib.auth.views import LoginView
-from django_otp.forms import OTPTokenForm
-
-from django.views import View
-
-
-from django_otp.forms import OTPTokenForm
-from django_otp.forms import OTPAuthenticationFormMixin
-#from django_otp.forms import OTPAuthenticationForm
-from functools import partial
-
-# from django.contrib.auth.views import login
-from django.contrib.auth.views import LoginView
-from django_otp.decorators import otp_required
-from django.contrib.auth import views as auth_views
-from django.contrib.auth.models import Permission, User
-
-from .forms import CustomAuthForm
-import base64
-'''
-
-from functools import partial
+# from functools import partial
 import base64
 from django.views import View
 from django_otp import devices_for_user
 from django_otp.plugins.otp_totp.models import TOTPDevice
-from django_otp.middleware import OTPMiddleware, is_verified
-# from django_otp.decorators import otp_required
-import functools
-
+# from django_otp.middleware import OTPMiddleware, is_verified
+# import functools
 
 
 def get_user_totp_device(self, user, confirmed=None):
@@ -79,8 +51,7 @@ class EPaySlipM1(PermissionRequiredMixin, View):
 
 	def get(self, request):
 		
-
-		print("Method Get")
+		# print("Method Get")
 
 		if 'is_otp_verified' in request.session:
 			is_otp_verified = request.session['is_otp_verified']
@@ -88,12 +59,10 @@ class EPaySlipM1(PermissionRequiredMixin, View):
 			is_otp_verified = False	
 
 		if not is_otp_verified:
-			print("check 1")
 			request.session['is_otp_verified'] = False
 			template_name = 'page/require_otp.html'
 			return render(request, template_name, {})
 		else:
-			print("check 2")
 			request.session['is_otp_verified'] = True
 			user_language = getDefaultLanguage(request.user.username)	
 			today_date = getDateFormatDisplay(user_language)
@@ -126,7 +95,7 @@ class EPaySlipM1(PermissionRequiredMixin, View):
 			sql += "where eps_emp_type='M1' "
 			sql += "group by eps_prd_id,prd_year,prd_month,period "
 			sql += "order by eps_prd_id desc;"
-			print("SQL : ", sql)
+			# print("SQL : ", sql)
 
 			try:
 				cursor = connection.cursor()
@@ -175,38 +144,30 @@ class EPaySlipM1(PermissionRequiredMixin, View):
 
 
 	def post(self, request, format=None):
-		print("Method POST")
+		# print("Method POST")
 
 		if 'is_otp_verified' in request.session:
 
-			# is_verified = request.session['is_verified']
-			# print("debug is_verified : ", is_verified)
-
-
-			if not request.session['is_otp_verified']:
-				print("aaa")
+			if not request.session['is_otp_verified']:				
 				token = request.POST.get("otp_token")
 				user = request.user
 				device = get_user_totp_device(self, user)
 
+				'''
 				print("token: ", token)
 				print("user: ", user)
 				print("device: ", device)
+				'''
 
 				if not device == None and device.verify_token(token):
-				# if device.verify_token(token):
-					print("A")
 					if not device.confirmed:
 						device.confirmed = True
 						device.save()
-					
-					# is_verified = True
 					request.session['is_otp_verified'] = True
 
 					user_language = getDefaultLanguage(request.user.username)	
 					today_date = getDateFormatDisplay(user_language)
 					last_login = getLastLogin(request)
-
 
 					available_period_obj = None
 					available_period_list = []
@@ -234,7 +195,7 @@ class EPaySlipM1(PermissionRequiredMixin, View):
 					sql += "where eps_emp_type='M1' "
 					sql += "group by eps_prd_id,prd_year,prd_month,period "
 					sql += "order by eps_prd_id desc;"
-					print("SQL : ", sql)
+					# print("SQL : ", sql)
 
 					try:
 						cursor = connection.cursor()
@@ -280,15 +241,9 @@ class EPaySlipM1(PermissionRequiredMixin, View):
 						'last_login': last_login,			
 					})	
 
-
-
-
-
-
 				template_name = 'page/require_otp.html'
 				return render(request, template_name, {})
 			else:
-				print("ccc")
 				user_language = getDefaultLanguage(request.user.username)	
 				today_date = getDateFormatDisplay(user_language)
 				last_login = getLastLogin(request)
@@ -320,7 +275,7 @@ class EPaySlipM1(PermissionRequiredMixin, View):
 				sql += "where eps_emp_type='M1' "
 				sql += "group by eps_prd_id,prd_year,prd_month,period "
 				sql += "order by eps_prd_id desc;"
-				print("SQL : ", sql)
+				# print("SQL : ", sql)
 
 				try:
 					cursor = connection.cursor()
@@ -366,27 +321,27 @@ class EPaySlipM1(PermissionRequiredMixin, View):
 					'last_login': last_login,			
 				})			
 		else:
-			print("Check 1 2 3")
 			token = request.POST.get("otp_token")
 			user = request.user
 			device = get_user_totp_device(self, user)
-			
+	
+			'''			
 			print("token : ", token)
 			print("user : ", user)
 			print("device : ", device)
+			'''
 
 			if not device == None and device.verify_token(token):
-				print("A")
 				if not device.confirmed:
 					device.confirmed = True
 					device.save()
 				
-				# is_verified = True
 				request.session['is_otp_verified'] = True
 
 				user_language = getDefaultLanguage(request.user.username)	
 				today_date = getDateFormatDisplay(user_language)
 				last_login = getLastLogin(request)
+
 				if user_language == "th":
 				    if request.user.username == "999999":
 				    	username_display = request.user.first_name
@@ -456,200 +411,12 @@ class EPaySlipM1(PermissionRequiredMixin, View):
 					'available_period_obj': available_period_obj,
 					'available_period_list': list(available_period_list),			
 					'last_login': last_login,
-					# 'is_verified': is_verified,
 				})		    
 			else:
 				request.session['is_otp_verified'] = False
 				print("B : Not verfied")
 				template_name = 'page/require_otp.html'
 				return render(request, template_name, {})				
-
-
-
-	'''
-	def post11(self, request):
-		print("POST action")
-		user_language = getDefaultLanguage(request.user.username)	
-		today_date = getDateFormatDisplay(user_language)
-		last_login = getLastLogin(request)
-		token = request.POST.get("otp_token")
-		user = request.user
-
-		device = get_user_totp_device(self, user)
-
-		if user.otp_device is not None:
-			print("user.otp_device is not None")
-			if not device == None and device.verify_token(token):
-				if not device.confirmed:
-					device.confirmed = True
-					device.save()
-
-
-				# user.is_verified = True
-				# user.is_verified = partial(is_verified, user)
-
-				available_period_obj = None
-				available_period_list = []
-				record = {}
-
-				dummy_data = False
-
-				if user_language == "th":
-				    if request.user.username == "999999":
-				    	username_display = request.user.first_name
-				    else:
-				        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
-				else:
-				    if request.user.username == "999999":
-				        username_display = request.user.first_name
-				    else:
-				        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
-
-
-				if dummy_data:
-					sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
-				else:
-					sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
-
-				sql += "where eps_emp_type='M1' "
-				sql += "group by eps_prd_id,prd_year,prd_month,period "
-				sql += "order by eps_prd_id desc;"
-				# print("SQL : ", sql)
-
-				try:
-					cursor = connection.cursor()
-					cursor.execute(sql)
-					available_period_obj = cursor.fetchall()
-				except db.OperationalError as e:
-					is_error = True
-					error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
-				except db.Error as e:
-					is_error = True
-					error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
-				finally:
-					cursor.close()
-
-				if available_period_obj is not None:
-					for item in available_period_obj:
-						eps_prd_id = item[0]
-						prd_year = item[1]
-						prd_month = item[2]
-						period = item[3]
-						prd_month_name_en = datetime.strptime(str(item[2]), "%m").strftime("%B")
-						prd_month_name_th = convert_thai_month_name(prd_month)
-						record = {
-							"eps_prd_id": eps_prd_id,
-							"prd_year": prd_year,
-							"prd_month": prd_month,
-							"period": period,
-							"prd_month_name_en": prd_month_name_en,
-							"prd_month_name_th": prd_month_name_th,
-						}
-						available_period_list.append(record)			
-
-				return render(request, self.template_name, {
-					'page_title': settings.PROJECT_NAME,
-					'today_date': today_date,
-					'project_version': settings.PROJECT_VERSION,
-					'db_server': settings.DATABASES['default']['HOST'],
-					'project_name': settings.PROJECT_NAME,
-					'user_language': user_language,
-					'username_display': username_display,
-					'available_period_obj': available_period_obj,
-					'available_period_list': list(available_period_list),			
-					'last_login': last_login,			
-				})
-
-
-			else:
-				print("FALSE")
-
-				if not request.user.is_verified():
-					template_name = 'page/require_otp.html'
-					return render(request, template_name, {})		
-		else:
-			print("user.otp_device is None")
-			device = get_user_totp_device(self, user)
-			print("device :", device)
-			print("check : ", request.user.otp_device)
-
-			if device is None:
-				template_name = 'page/require_otp.html'
-				return render(request, template_name, {})			
-			else:
-				available_period_obj = None
-				available_period_list = []
-				record = {}
-
-				dummy_data = False
-
-				if user_language == "th":
-				    if request.user.username == "999999":
-				    	username_display = request.user.first_name
-				    else:
-				        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
-				else:
-				    if request.user.username == "999999":
-				        username_display = request.user.first_name
-				    else:
-				        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()
-
-
-				if dummy_data:
-					sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
-				else:
-					sql = "select top 12 eps_prd_id,prd_year,prd_month,period from sp_slip1 "
-
-				sql += "where eps_emp_type='M1' "
-				sql += "group by eps_prd_id,prd_year,prd_month,period "
-				sql += "order by eps_prd_id desc;"
-				# print("SQL : ", sql)
-
-				try:
-					cursor = connection.cursor()
-					cursor.execute(sql)
-					available_period_obj = cursor.fetchall()
-				except db.OperationalError as e:
-					is_error = True
-					error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
-				except db.Error as e:
-					is_error = True
-					error_message = "<b>Error: please send this error to IT team</b><br>" + str(e)
-				finally:
-					cursor.close()
-
-				if available_period_obj is not None:
-					for item in available_period_obj:
-						eps_prd_id = item[0]
-						prd_year = item[1]
-						prd_month = item[2]
-						period = item[3]
-						prd_month_name_en = datetime.strptime(str(item[2]), "%m").strftime("%B")
-						prd_month_name_th = convert_thai_month_name(prd_month)
-						record = {
-							"eps_prd_id": eps_prd_id,
-							"prd_year": prd_year,
-							"prd_month": prd_month,
-							"period": period,
-							"prd_month_name_en": prd_month_name_en,
-							"prd_month_name_th": prd_month_name_th,
-						}
-						available_period_list.append(record)			
-
-				return render(request, self.template_name, {
-					'page_title': settings.PROJECT_NAME,
-					'today_date': today_date,
-					'project_version': settings.PROJECT_VERSION,
-					'db_server': settings.DATABASES['default']['HOST'],
-					'project_name': settings.PROJECT_NAME,
-					'user_language': user_language,
-					'username_display': username_display,
-					'available_period_obj': available_period_obj,
-					'available_period_list': list(available_period_list),			
-					'last_login': last_login,			
-				})				
-
-	'''
 
 
 @permission_required('epayslipm1.can_access_e_payslip_m1', login_url='/accounts/login/')
