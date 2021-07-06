@@ -1281,6 +1281,19 @@ def get_user_totp_device(self, user, confirmed=None):
             return device
 
 
+
+@login_required(login_url='/accounts/login/')
+def ajax_staff_otp(request):
+    if isStillUseDefaultPassword(request):
+        template_name = 'page/force_change_password.html'
+        return render(request, template_name, {})
+    else:
+        if isPasswordExpired(request):
+            if isPasswordChanged(request):
+                template_name = 'page/force_change_password.html'
+                return render(request, template_name, {})
+
+
 @login_required(login_url='/accounts/login/')
 def StaffOTP(request):
     if isStillUseDefaultPassword(request):

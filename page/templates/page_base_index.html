@@ -155,10 +155,57 @@
 </div>
 <!-- ./wrapper -->
 
-<!-- REQUIRED SCRIPTS -->
 
+
+<!-- Modal -->
+<div class="modal fade" id="leaveReasonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{% trans 'Enter OTP Number' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal">{% trans 'Close' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /.modal -->
+
+
+<!-- REQUIRED SCRIPTS -->
 <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+
+<script>
+$("body").on("click", "a.get_e_payslip", function(event){
+  //alert("test");
+  $("#leaveReasonModal").modal("show");
+
+  /*
+  var obj = $(this);  
+  $.ajax({
+      url: obj.attr("data-url"),
+      type: 'get',          
+      dataType: 'json',
+      beforeSend: function () {
+        $("#leaveReasonModal").modal("show");
+      },
+      success: function (data) {              
+        $("#leaveReasonModal .modal-body").html(data.leave_reason);
+      }
+  });
+  */
+
+});
+</script>
+
 </body>
 </html>

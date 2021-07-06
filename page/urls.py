@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^logout/$', views.logout_request, name='logout'),
 
     path('staff-otp', views.StaffOTP, name='staff-otp'),
+    url(r'^ajax/staff-otp/$', views.ajax_staff_otp, name='ajax_staff_otp'),
 ]
 
