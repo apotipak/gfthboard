@@ -44,8 +44,45 @@
             <div class="card card-primary">
 
 
-                <div class="card-body">                  
-                  {{ qrcode|safe }}
+                <div class="card-body">
+
+                  
+
+        <div class="row mb-2">
+          <div class="col-sm-4 text-center">
+            {% if qrcode is None %}              
+              <div class="alert text-left" role="alert">
+                  <i class="fa fa-info-circle"></i>  ไม่พบข้อมูล QR Code ของท่านในระบบ กรุณาติดต่อฝ่ายบุคคลเพื่อตรวจสอบข้อมูลอีกครั้ง
+              </div>                          
+            {% else %}
+              {{ qrcode|safe }}
+              <p class="text-info"><b>My QR Code</b></p>
+            {% endif %}
+            
+          </div>
+          <div class="col-sm-8 p-0">            
+            <ul class="list-group">
+              <li class="list-group-item bg-success"><h5>วิธีใช้งานบนมือถือ Android</h5></li>
+              <li class="list-group-item">1. เข้า Play Store ดาวน์โหลดแอพพลิเคชัน <b>Microsoft Authenticator</b> <img src="/static/img/microsoft_authenticator.png" width="30" /> หรือ <b>Google Authenticator</b> <img src="/static/img/google_authenticator.png" width="30" /> อย่างใดอย่างหนึ่ง</li>
+              <li class="list-group-item">2. เปิดแอพพลิเคชันแล้วสแกน My QR Code</li>
+              <li class="list-group-item">3. ไปที่เมนู E-Payslip</li>
+              <li class="list-group-item">4. ป้อนรหัส OTP หลักที่แสดงบนมือถือเพื่อเข้าระบบ</li>
+            </ul>
+
+            <p>&nbsp;</p>
+
+            <ul class="list-group">
+              <li class="list-group-item bg-success"><h5>วิธีใช้งานบนมือถือ iPhone</h5></li>
+              <li class="list-group-item">1.เข้า App Store ดาวน์โหลดแอพพลิเคชัน <b>Microsoft Authenticator</b> <img src="/static/img/microsoft_authenticator.png" width="30" /> หรือ <b>Google Authenticator</b> <img src="/static/img/google_authenticator.png" width="30" /> อย่างใดอย่างหนึ่ง</li>
+              <li class="list-group-item">2. เปิดแอพพลิเคชันแล้วสแกน My QR Code</li>
+              <li class="list-group-item">3. ไปที่เมนู E-Payslip</li>
+              <li class="list-group-item">4. ป้อนรหัส OTP หลักที่แสดงบนมือถือเพื่อเข้าระบบ</li>              
+            </ul>                                
+
+          </div>
+        </div>
+
+
                 </div>
 
                 <!--
