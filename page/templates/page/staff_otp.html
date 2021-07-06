@@ -56,19 +56,34 @@
               </div>                          
             {% else %}
               {{ qrcode|safe }}
-              <p class="text-info"><b>My QR Code</b></p>
+              <p class="text-info"><b>My QR code</b></p>
             {% endif %}
             
           </div>
           <div class="col-sm-8 p-0">            
             <ul class="list-group">
-              <li class="list-group-item bg-success"><h5>วิธีใช้งานบนมือถือ Android</h5></li>
-              <li class="list-group-item">1. เข้า Play Store ดาวน์โหลดแอพพลิเคชัน <b>Microsoft Authenticator</b> <img src="/static/img/microsoft_authenticator.png" width="30" /> หรือ <b>Google Authenticator</b> <img src="/static/img/google_authenticator.png" width="30" /> อย่างใดอย่างหนึ่ง</li>
-              <li class="list-group-item">2. เปิดแอพพลิเคชันแล้วสแกน My QR Code</li>
-              <li class="list-group-item">3. ไปที่เมนู E-Payslip</li>
-              <li class="list-group-item">4. ป้อนรหัส OTP หลักที่แสดงบนมือถือเพื่อเข้าระบบ</li>
+              <li class="list-group-item bg-success"><h5>วิธีติดตั้งแอพ OTP บนมือถือ Android หรือ iPhone</h5></li>
+              <li class="list-group-item"><span class="btn btn-success"><b>1</b></span> <b>เข้า Play Store หรือ App Store เพื่อดาวน์โหลดแอพ Authenticator</b><br>
+                <p class='text-center'><img src="/static/img/microsoft_authenticator.png" width="30" />&nbsp;<b>Microsoft Authenticator</b> หรือ <img src="/static/img/google_authenticator.png" width="30" />&nbsp;<b>Google Authenticator</b></p>
+              </li>
+              <li class="list-group-item"><span class="btn btn-success"><b>2</b></span> <b>เพิ่มแอคเคาท์ใหม่ในแอพ Authenticator</b>
+              <li class="list-group-item">
+              &nbsp;<b>กรณีใช้ Microsoft Authenticator ให้ทำตามขั้นตอนนี้</b><br>
+              &nbsp;&nbsp;&nbsp;- เลือก Authenticator และคลิกปุ่ม Add account<br>
+              &nbsp;&nbsp;&nbsp;- เลือก Personal account<br>
+              &nbsp;&nbsp;&nbsp;- เลือก Scan a QR code<br>
+              &nbsp;&nbsp;&nbsp;- ให้ทำการสแกน My QR code ของท่านที่แสดงด้านซ้ายมือ
+              <br><br>
+              &nbsp;<b>กรณีใช้ Google Authenticator ให้ทำตามขั้นตอนนี้</b><br>
+              &nbsp;&nbsp;&nbsp;- คลิกปุ่มเพิ่มแอคเคาท์ (ปุ่มเครื่องหมาย +)<br>
+              &nbsp;&nbsp;&nbsp;- เลือกเมนู Scan a QR code<br>
+              &nbsp;&nbsp;&nbsp;- ให้ทำการสแกน My QR code ของท่านที่แสดงด้านซ้ายมือ
+              </li>
+
+              <li class="list-group-item"><span class="btn btn-success"><b>3</b></span> <b>ไปหน้า E-Payslip แล้วป้อนรหัส OTP 6 หลักที่แสดงบนมือถือของท่าน</b></li>
             </ul>
 
+            <!--
             <p>&nbsp;</p>
 
             <ul class="list-group">
@@ -76,8 +91,9 @@
               <li class="list-group-item">1.เข้า App Store ดาวน์โหลดแอพพลิเคชัน <b>Microsoft Authenticator</b> <img src="/static/img/microsoft_authenticator.png" width="30" /> หรือ <b>Google Authenticator</b> <img src="/static/img/google_authenticator.png" width="30" /> อย่างใดอย่างหนึ่ง</li>
               <li class="list-group-item">2. เปิดแอพพลิเคชันแล้วสแกน My QR Code</li>
               <li class="list-group-item">3. ไปที่เมนู E-Payslip</li>
-              <li class="list-group-item">4. ป้อนรหัส OTP หลักที่แสดงบนมือถือเพื่อเข้าระบบ</li>              
+              <li class="list-group-item">4. ป้อนรหัส OTP 6 หลักที่แสดงบนมือถือเพื่อเข้าระบบ</li>              
             </ul>                                
+            -->
 
           </div>
         </div>

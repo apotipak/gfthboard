@@ -64,28 +64,6 @@
           <!-- /.col -->
         </div>
       </form>
-
-
-{% comment %}
-<form action="." method="POST">
-  {% csrf_token %}
-    <div class="form-row"> {{ form.username.errors }}{{ form.username.label_tag }}{{ form.username }} </div>
-    <div class="form-row"> {{ form.password.errors }}{{ form.password.label_tag }}{{ form.password }} </div>
-
-
-    {% if form.get_user %}
-    <div class="form-row"> {{ form.otp_device.errors }}{{ form.otp_device.label_tag }}{{ form.otp_device }} </div>
-    {% endif %}
-
-    <div class="form-row"> {{ form.otp_token.errors }}{{ form.otp_token.label_tag }}{{ form.otp_token }} </div>
-    <div class="submit-row">
-        <input type="submit" value="Log in"/>
-        {% if form.get_user %}<input type="submit" name="otp_challenge" value="Get Challenge" />{% endif %}
-    </div>
-</form>
-{% endcomment %}
-
-
       
 
       <div class="col-12 p-0">
@@ -116,43 +94,8 @@
 
 <script>
     $(document).ready(function () {    
-      //$("#id_new_password1").focus();
-    });
-
-    /*
-    $(document).on('click', '#change_password_button', function(e) {
-        e.preventDefault();
-
-        formData = new FormData();
-        data = new FormData($('#id_change_password_form').get(0));
-
-        $.ajax({      
-            type: "POST",
-            url: '{% url "ajax-force-change-password" %}',
-            dataType: 'json',
-            data: data,
-            cache: false,
-            processData: false,
-            contentType: false, 
-            success: function(json) {
-                if(json.is_error) {
-                    Swal.fire({
-                        title: 'เกิดข้อผิดพลาด',
-                        html: json.message,
-                        icon: '',
-                        confirmButtonText: '&nbsp;ปิด&nbsp;',
-                        confirmButtonColor: "#198754",
-                    })                    
-                } else {
-                  window.location.href = "/";
-                }
-            },
-        })
-
-		return false;
-    });
-    */
-    
+      $("#id_otp_token").focus();
+    });    
 </script>
 
 </body>
