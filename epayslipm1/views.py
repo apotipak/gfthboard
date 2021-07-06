@@ -879,8 +879,8 @@ def generate_payslip_pdf_file_m1(emp_id, primary_email, pay_slip_object, eps_prd
 		# amnaj
 		# Send Email
 		if citizen_id != "":
-			print("send_email_success")
-			# send_email_success = email_payslip(emp_full_name, primary_email, file_name, prd_year, prd_month, citizen_id)
+			# print("send_email_success")
+			send_email_success = email_payslip(emp_full_name, primary_email, file_name, prd_year, prd_month, citizen_id)
 		else:
 			is_error = True
 			message = "Your profile is not completed. Please contact HR department."
