@@ -450,7 +450,7 @@ def pr_entry_inquiry(request):
     else:
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
 
-
+    user_list = []
     department_list = []
     category_list = []
     pr_status_list = []
@@ -545,6 +545,33 @@ def pr_entry_inquiry(request):
     finally:
         cursor.close()    
 
+
+    # Get User List
+    sql = "select usid,usname from prpo_user;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            user_obj = cursor.fetchall()
+
+        if user_obj is not None:
+            for item in user_obj:
+                usid = item[0]
+                usname = item[1]
+                record = {"usid":usid, "usname":usname}
+                user_list.append(record)
+            is_error = False
+            message = "Able to get user list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+
     # get last login
     last_login = getLastLogin(request)
 
@@ -560,6 +587,7 @@ def pr_entry_inquiry(request):
         "department_list": list(department_list),
         "category_list": list(category_list),
         "pr_status_list": list(pr_status_list),
+        "user_list": list(user_list),
         'last_login': last_login,
     })
 
@@ -725,6 +753,9 @@ def po_inbox(request):
 
 @login_required(login_url='/accounts/login/')
 def ajax_pr_inquiry_list(request):
+    print("**************************")
+    print("ajax_pr_inquiry_list()")
+    print("**************************")
     is_error = True
     message = ""
 
@@ -885,6 +916,7 @@ def pr_entry(request):
     currency_list = []
     attention_to_list = []
     pr_detail_list = []
+    user_list = []
     record = {}
 
     prcompany = ""
@@ -1019,6 +1051,32 @@ def pr_entry(request):
         cursor.close()
 
 
+    # Get User List
+    sql = "select usid,usname from prpo_user;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            user_obj = cursor.fetchall()
+
+        if user_obj is not None:
+            for item in user_obj:
+                usid = item[0]
+                usname = item[1]
+                record = {"usid":usid, "usname":usname}
+                user_list.append(record)
+            is_error = False
+            message = "Able to get user list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+
     if request.method == 'POST':
         # Get PR information     
         sql = "select prid,prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,"
@@ -1123,7 +1181,7 @@ def pr_entry(request):
             cursor.close()    
 
     if pr_id == "" or pr_id is None:
-        pr_id_display = "Add"
+        pr_id_display = "Create new PR"
     else:
         pr_id_display = str(pr_id) + " | edit"
 
@@ -1146,6 +1204,7 @@ def pr_entry(request):
         'vendor_type_list': list(vendor_type_list),
         'attention_to_list': list(attention_to_list),
         'pr_detail_list': list(pr_detail_list),
+        'user_list': list(user_list),
         'pr_id': pr_id,
         'pr_id_display': pr_id_display,
         'prcompany': prcompany,

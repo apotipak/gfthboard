@@ -10,13 +10,19 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
+
+            <div class="card-header">
+                <a href="/prpo/pr-entry/" class="btn btn-md btn-success text-light" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;&nbsp;<b>New PR</b>&nbsp;</a>
+            </div>
   
     <div class="content-header">
+
       <div class="container-fluid">
 
         <div class="col-md-12">
+                      
 
-          <form method="post" action="/prop/ajax-pr-inquiry/" autocomplete="off" name="search_pr_form" id="id_search_pr_form">
+          <form method="post" autocomplete="off" name="search_pr_form" id="id_search_pr_form">
             {% csrf_token %}
 
             <!-- Search Card -->
@@ -74,9 +80,17 @@
 
                   <!-- Username -->
                   <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>User</b></span></div>
+                  <!--
                   <select id="id_username_options" name="username_options" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
                     <option value="0">All Users</option>
                   </select>
+                  -->
+                  <select id="id_username_options" name="username_options" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
+                    <option value="0">All Users</option>
+                    {% for item in user_list %}
+                    <option value="{{item.usid}}">{{ item.usid }} | {{ item.usname }}</option>
+                    {% endfor %}                                    
+                  </select>                  
 
                   <!-- Date From -->
                   <div class="input-group-prepend col-6 bg-secondary p-0">
@@ -162,13 +176,13 @@
 
 
 
-        <div class="col-md-12">
+        <div class="col-md-12 pt-2">
+
           <div class="card card-light">
             <div class="card-header">
-              <h3 class="card-title pt-2"><b>PR List</b></h3>
-              <div class="card-tools">
-                <!--<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>-->
-                <a href="/prpo/pr-entry/" class="btn btn-md btn-success text-light" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;&nbsp;<b>New PR</b>&nbsp;</a>
+              <h3 class="card-title pt-2"><b>Search Result</b></h3>
+              <div class="card-tools">                
+                <!--<a href="/prpo/pr-entry/" class="btn btn-md btn-success text-light" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;&nbsp;<b>New PR</b>&nbsp;</a>-->
               </div>            
             </div>
             
@@ -188,11 +202,11 @@
                     <!--<th scope="col">Project #</th>-->
                     <th scope="col" class="text-nowrap">Requested Date</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Category</th>
+                    <!--<th scope="col">Category</th>-->
                     <!--<th scope="col">CUR</th>-->
                     <th scope="col">Amount</th>
                     <!--<th scope="col">Consigner</th>-->
-                    <th scope="col">&nbsp;</th>
+                    <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -204,7 +218,7 @@
                     <!--<td>&nbsp;</td>-->
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <!--<td>&nbsp;</td>-->
                     <!--<td>&nbsp;</td>-->
                     <td>&nbsp;</td>
                     <!--<td>&nbsp;</td>-->
@@ -268,8 +282,8 @@ var table = $('#id_pr_list_table').DataTable({
   },
   "columnDefs": [
     {
-      "orderable": false,
-      "targets": [0,1,2,3,4,5,6,7,8]
+      //"orderable": false,
+      //"targets": [0,1,2,3,4,5,7,8]
     },
     { 
       "searchable": true, 
@@ -389,17 +403,17 @@ $('#id_search_pr_form').on('submit', function(event){
               result += "<tr>";
               result += "<td>" + json.pr_list[i]["dpnumber"] + "</td>";
               result += "<td>" + json.pr_list[i]["prapplicant_name"] + "</td>";              
-              result += "<td>" + pr_id + "</td>";
-              result += "<td>" + ponumber + "</td>";
+              result += "<td><a href='#'>" + pr_id + "</a></td>";
+              result += "<td><a href='#'>" + ponumber + "</a></td>";
               //result += "<td>" + json.pr_list[i]["prcpa"] + "</td>";            
               result += "<td>" + json.pr_list[i]["prreqdate"] + "</td>";                        
               result += "<td>" + json.pr_list[i]["stname"] + " by " + json.pr_list[i]["nexthandler_name"] + "</td>";
-              result += "<td>" + json.pr_list[i]["pr_category_name"] + "</td>";
+              //result += "<td>" + json.pr_list[i]["pr_category_name"] + "</td>";
               //result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
               result += "<td>" + json.pr_list[i]["prtotalamt"] + "</td>";
               //result += "<td>" + json.pr_list[i]["prconsigner"] + "</td>";                            
               
-              result += "<td class='text-right' nowrap>";
+              result += "<td class='text-left' nowrap>";
               //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info btn-block">&nbsp;<i class="fas fa-pen fa-xs"></i>&nbsp;</button>';
               //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info"><i class="fas fa-eye"></i></button>';
               result += '<button type="button" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info">View</button>';
@@ -431,8 +445,8 @@ $('#id_search_pr_form').on('submit', function(event){
             },    
             "columnDefs": [
               {
-                "orderable": false,
-                "targets": [0,1,2,3,4,5,6,7,8]
+                //"orderable": false,
+                //"targets": [0,1,2,3,4,5,7,8]
               },
               { 
                 "searchable": true, 
