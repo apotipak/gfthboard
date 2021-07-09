@@ -44,7 +44,7 @@
 
                   <!-- Department -->
                   <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-0 rounded-0" style="width:100%;"><b>Department</b></span></div>
-                  <select id="id_category_option" name="category_option" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
+                  <select id="id_department_options" name="department_options" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
                     <option value="0">All Departments</option>
                     {% for item in department_list %}
                     <option value="{{item.dpid}}">{{ item.dpname }}</option>
@@ -152,7 +152,7 @@
 
                 
                 <div class="col-12 pt-2 float-right text-right">
-                  <button class="btn btn-sm btn-secondary" id="id_search_button"><i class="fas fa-search fa-sm"></i>&nbsp;&nbsp;Search&nbsp;</button>
+                  <button class="btn btn-md btn-primary" id="id_search_button"><i class="fas fa-search fa-sm"></i>&nbsp;&nbsp;<b>Search</b>&nbsp;</button>
                 </div>
                 
               </div>

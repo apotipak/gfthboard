@@ -753,13 +753,16 @@ def po_inbox(request):
 
 @login_required(login_url='/accounts/login/')
 def ajax_pr_inquiry_list(request):
-    print("**************************")
-    print("ajax_pr_inquiry_list()")
-    print("**************************")
+    print("*********************************")
+    print("ajax_pr_inquiry_list() function")
+    print("*********************************")
+
     is_error = True
     message = ""
 
     pr_number = request.POST.get("pr_number")
+    user_id = request.POST.get("username_options")
+    department_id = request.POST.get("department_options")
     category_id = request.POST.get("category_options")
     subcategory_id = request.POST.get("subcategory_options")
     item_id = request.POST.get("item_options")
@@ -771,6 +774,8 @@ def ajax_pr_inquiry_list(request):
     record = {}
 
     print("pr_number : ", pr_number)
+    print("user_id : ", user_id)
+    print("department_id : ", department_id)
     print("category_id : ", category_id)
     print("subcategory_id : ", subcategory_id)
     print("item_id : ", item_id)
@@ -803,8 +808,9 @@ def ajax_pr_inquiry_list(request):
         sql += "join prpo_user uhan on pr.prnexthandler=uhan.usid "
         sql += "join prpo_department d on uapp.usdepartment=d.dpid "
         sql += "left outer join prpo_po po on pr.prid=po.popr "
-        sql += "where pr.prReqDate between '" + str(date_from) + "' and '" + str(date_to) + " 23:59:00'"
-        
+        sql += "where pr.prReqDate between '" + str(date_from) + "' and '" + str(date_to) + " 23:59:00' "
+        sql += "and pr.prApplicant=" + str(user_id) + " "
+
         if category_id != "" and category_id != "0":
             sql += " and pr.prcategory=" + str(category_id) + " "
 
@@ -812,6 +818,7 @@ def ajax_pr_inquiry_list(request):
             sql += " and pr.prnextstatus=" + str(pr_status_id) + " "
 
     sql += "order by pr.prid;"
+
     # sql += ";"
 
     print("sql pr list: ", sql)
@@ -824,7 +831,7 @@ def ajax_pr_inquiry_list(request):
         if pr_list_obj is not None:
             if len(pr_list_obj) > 0:
                 for item in pr_list_obj:
-                    prid = item[0].strip()
+                    prid = item[0].strip()                    
                     # print("prid :" + prid.strip())
                     prreqdate = item[1].strftime("%d/%m/%Y")
                     prcurrency = item[2]
