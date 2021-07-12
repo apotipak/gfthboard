@@ -110,7 +110,7 @@
                   </div>
   
 
-                  <!-- Vendor Type -->                  
+                  <!-- Vendor Type -->          
                   <div class="input-group col-12 pt-1 pb-1 float-left">
                     <div class="input-group-prepend p-0"><span class="input-group-text rounded-0" style="width: 100%;"><b>Vendor Type</b></span></div>
 
@@ -120,20 +120,27 @@
 
                           {% if forloop.first %}
                           <div class="form-check form-check-inline pl-10">
-                              <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}" checked>
-                              <label class="form-check-label" for="vendor_type_options">{{item.vendor_type_name}}</label>
+                              
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}" checked>
+                                {{item.vendor_type_name}}
+                              </label>
                           </div>
                           {% else %}
 
                             {% if selected_vendor_type_option is not None %}
-                            <div class="form-check form-check-inline pl-10">
-                                <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}" checked>
-                                <label class="form-check-label" for="vendor_type_options">{{item.vendor_type_name}}</label>
+                            <div class="form-check form-check-inline pl-10">                                
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}" checked>
+                                  {{item.vendor_type_name}}
+                                </label>
                             </div>
                             {% else %}
-                            <div class="form-check form-check-inline pl-10">
-                                <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}">
-                                <label class="form-check-label" for="vendor_type_options">{{item.vendor_type_name}}</label>
+                            <div class="form-check form-check-inline pl-10">                                
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}">
+                                  {{item.vendor_type_name}}
+                                </label>
                             </div>
                             {% endif %}
 
