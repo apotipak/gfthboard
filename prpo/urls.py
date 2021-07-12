@@ -32,7 +32,7 @@ urlpatterns = [
     # Get item list based on subcategory id
     url(r'^ajax-get-item-list-by-subcategory-id/(?P<subcategory_id>\w+)/$', views.ajax_get_item_list_by_subcategory_id, name='prpo-ajax-get-item-list-by-subcategory-id'),
 
-    # PR Inquiry
+    # Ajax PR Entry Inquiry
     path('ajax-pr-inquiry/', views.ajax_pr_inquiry_list, name='ajax-pr-inquiry'),
 
     # PR Entry

@@ -444,6 +444,7 @@ def pr_entry_inquiry(request):
     project_version = settings.PROJECT_VERSION    
     today_date = getDateFormatDisplay(user_language)
     username = request.user.username
+    is_manager = False
 
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
@@ -575,6 +576,28 @@ def pr_entry_inquiry(request):
     # get last login
     last_login = getLastLogin(request)
 
+
+    # check is manager
+    sql = "select usID from PRPO_USER WHERE usSupervisor=" + str(username) + ";"
+    print("SQL 11: ", sql)
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            user_obj = cursor.fetchall()
+
+        if len(user_obj) > 0:
+            is_manager = True
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+
     return render(request,
         'prpo/pr_entry_inquiry.html', {
         'page_title': settings.PROJECT_NAME,
@@ -584,11 +607,12 @@ def pr_entry_inquiry(request):
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
         'username_display': username_display,
-        "department_list": list(department_list),
-        "category_list": list(category_list),
-        "pr_status_list": list(pr_status_list),
-        "user_list": list(user_list),
+        'department_list': list(department_list),
+        'category_list': list(category_list),
+        'pr_status_list': list(pr_status_list),
+        'user_list': list(user_list),
         'last_login': last_login,
+        'is_manager': is_manager,
     })
 
  
@@ -772,6 +796,11 @@ def ajax_pr_inquiry_list(request):
     pr_list_obj = []
     pr_list = []
     record = {}
+
+
+    if user_id is None:
+        user_id = request.user.username
+        user_id = 522;
 
     print("pr_number : ", pr_number)
     print("user_id : ", user_id)

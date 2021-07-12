@@ -30,7 +30,9 @@
       <div class="container-fluid">
         
         <div class="col-md-12">            
-            <!--<form method="post" action="/prop/ajax-pr-inquiry/" autocomplete="off" name="search_pr_form" id="id_search_pr_form">-->
+            
+
+            {% if is_manager %}
             <form id="save_pr_form" method="post" autocomplete="off">
               {% csrf_token %}
   
@@ -191,6 +193,11 @@
 
               </div>
             </form>
+            {% else %}
+
+              aaa
+
+            {% endif %}
   
           </div>
 
