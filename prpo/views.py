@@ -993,7 +993,7 @@ def pr_entry(request):
     ]
                        
     # Get Company List
-    sql = "select cpid,cpname from PRPO_Company;"
+    sql = "select cpid,cpname,cpaddress from PRPO_Company;"
     try:
         with connection.cursor() as cursor:     
             cursor.execute(sql)
@@ -1003,7 +1003,8 @@ def pr_entry(request):
             for item in company_obj:
                 cpid = item[0]
                 cpname = item[1]
-                record = {"cpid":cpid, "cpname":cpname}
+                cpaddress = item[2]
+                record = {"cpid":cpid, "cpname":cpname, "cpaddress":cpaddress}
                 company_list.append(record)
             is_error = False
             message = "Able to get company list."

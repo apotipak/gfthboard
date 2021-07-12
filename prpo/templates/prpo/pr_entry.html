@@ -159,7 +159,8 @@
 
                     <!-- Ship To -->
                     <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Ship To</b></span></div>
-                    <input type="text" class="form-control" style="border-radius:0;" id="id_ship_to" name="ship_to" value="{{prdeliveryto}}" />
+
+                    <input type="text" class="form-control" style="border-radius:0;" id="id_ship_to" name="ship_to" value="" />
 
                   </div>
   
@@ -200,7 +201,7 @@
                   <div class="input-group col-6 float-right">
                     <!-- Attachment -->
                     <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text rounded-0" style="width:100%;"><b>Attachment</b></span></div>
-                    <input type="text" class="form-control" style="border-radius:0;" id="id_reason" name="reason" />
+                    <input type="text" class="form-control" style="border-radius:0;" id="id_attachment" name="attachment" />
                   </div>
 
                   <div class="input-group col-12 pt-1 float-left">
@@ -369,9 +370,29 @@ $(document).ready( function () {
 
   
   $('input[type=radio][name="vendor_type_options"]').change(function() {
-    //alert($(this).val());
-    
+    //alert($(this).val());    
   });
+
+  var company_list = {{ company_list|safe }};
+  for(var i=0; i<company_list.length; i++) {
+    company_address = company_list[i].cpaddress;
+    if(company_list[i].cpid==$('#id_company_options').val()) { 
+      $('#id_ship_to').val(company_address);
+      break;
+    }
+  }
+
+
+  $('#id_company_options').change(function() {
+    
+    if($('#id_company_options').val()=='25') {
+      $('#id_ship_to').val('test');
+    } else {
+      $('#id_ship_to').val('aa');
+    }
+
+  });
+
 
   $("#save_pr_form").submit(function(e) {
 	e.preventDefault();
