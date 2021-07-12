@@ -862,7 +862,10 @@ def ajax_pr_inquiry_list(request):
                 for item in pr_list_obj:
                     prid = item[0].strip()                    
                     # print("prid :" + prid.strip())
-                    prreqdate = item[1].strftime("%d/%m/%Y")
+                    
+                    # prreqdate = item[1].strftime("%d/%m/%Y")
+                    prreqdate = item[1].strftime("%b %d, %Y")
+
                     prcurrency = item[2]
                     ercurrency = item[3]                                        
                     prtotalamt = "{:,.2f}".format(item[4])

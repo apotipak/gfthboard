@@ -344,14 +344,16 @@
               <form action="/prpo/pr-entry/" method="post" name="pr_entry_form">
               {% csrf_token %}
               <input type="hidden" id="id_selected_pr_id" name="selected_pr_id" value="0" />
-              <table id="id_user_pr_list_table" name="user_pr_list_table" class="table table-sm table-striped dataTable">
+              <table id="id_user_pr_list_table" name="user_pr_list_table" class="table table-sm table-striped table-bordered dataTable">
                 <thead>
                   <tr>
+                    <!--
                     <th scope="col">Department</th>
                     <th scope="col">Originator</th>
+                    -->
                     <th scope="col" nowrap>PR #</th>
                     <th scope="col" class="text-nowrap">PO #</th>
-                    <!--<th scope="col">Project #</th>-->
+                    <th scope="col">Project #</th>
                     <th scope="col" class="text-nowrap">Requested Date</th>
                     <th scope="col">Status</th>
                     <!--<th scope="col">Category</th>-->
@@ -363,11 +365,13 @@
                 </thead>
                 <tbody>
                   <tr>
+                    <!--
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    -->
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <!--<td>&nbsp;</td>-->
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <!--<td>&nbsp;</td>-->
@@ -414,7 +418,7 @@
 $(document).ready(function () {
   $('#id_date_from').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,1-1,1));
+  }).datepicker("setDate", new Date(2021,1-1,15));
 
   $('#id_date_to').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
@@ -648,6 +652,8 @@ $('#id_search_pr_form').on('submit', function(event){
 });
 
 
+
+
 $('#id_user_search_pr_form').on('submit', function(event){
 
     showLoading();
@@ -677,11 +683,14 @@ $('#id_user_search_pr_form').on('submit', function(event){
               ponumber = json.pr_list[i]["ponumber"];
 
               result += "<tr>";
-              result += "<td>" + json.pr_list[i]["dpnumber"] + "</td>";
-              result += "<td>" + json.pr_list[i]["prapplicant_name"] + "</td>";              
+              
+              //result += "<td>" + json.pr_list[i]["dpnumber"] + "</td>";
+              //result += "<td>" + json.pr_list[i]["prapplicant_name"] + "</td>";
+
               result += "<td><a href='#'>" + pr_id + "</a></td>";
               result += "<td><a href='#'>" + ponumber + "</a></td>";
-              //result += "<td>" + json.pr_list[i]["prcpa"] + "</td>";            
+              //result += "<td>" + json.pr_list[i]["prcpa"] + "</td>";
+              result += "<td>&nbsp;</td>";
               result += "<td>" + json.pr_list[i]["prreqdate"] + "</td>";                        
               result += "<td>" + json.pr_list[i]["stname"] + " by " + json.pr_list[i]["nexthandler_name"] + "</td>";
               //result += "<td>" + json.pr_list[i]["pr_category_name"] + "</td>";
