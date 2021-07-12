@@ -117,7 +117,15 @@
                     <div class="float-left text-left pt-2">
                         &nbsp;&nbsp;&nbsp;
                         {% for item in vendor_type_list %}
-                            {% if item.vendor_type_id|stringformat:'s' == prvendortype|stringformat:'s' %}
+
+                          {% if forloop.first %}
+                          <div class="form-check form-check-inline pl-10">
+                              <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}" checked>
+                              <label class="form-check-label" for="vendor_type_options">{{item.vendor_type_name}}</label>
+                          </div>
+                          {% else %}
+
+                            {% if selected_vendor_type_option is not None %}
                             <div class="form-check form-check-inline pl-10">
                                 <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}" checked>
                                 <label class="form-check-label" for="vendor_type_options">{{item.vendor_type_name}}</label>
@@ -128,6 +136,9 @@
                                 <label class="form-check-label" for="vendor_type_options">{{item.vendor_type_name}}</label>
                             </div>
                             {% endif %}
+
+                          {% endif %}
+
                         {% endfor %}
 
                     </div>                    
@@ -170,7 +181,11 @@
 
                     <select id="id_attention_to_options" name="attention_to_options" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
                     {% for item in attention_to_list %}
-                    <option value="{{item.usid}}">{{ item.usname }}</option>
+                      {% ifequal item.usid|stringformat:"i" username %}
+                      <option value="{{item.usid}}" selected="">{{ item.usname }}</option>
+                      {% else %}
+                      <option value="{{item.usid}}">{{ item.usname }}</option>
+                      {% endifequal %}
                     {% endfor %}
                     </select>
                   </div>

@@ -948,7 +948,11 @@ def pr_entry(request):
     
     is_error = True
     message = ""
+    
     pr_id = request.POST.get("selected_pr_id")
+    selected_vendor_type_option = request.POST.get("vendor_type_options")
+    print("selected_vendor_type_option : ", selected_vendor_type_option)
+
     company_list = []
     project_list = []
     division_list = []
@@ -1235,6 +1239,7 @@ def pr_entry(request):
         'db_server': settings.DATABASES['default']['HOST'],
         'project_name': settings.PROJECT_NAME,
         'user_language': user_language,
+        'username': username,
         'username_display': username_display,                
         'company_list': list(company_list),
         'project_list': list(project_list),
@@ -1259,4 +1264,5 @@ def pr_entry(request):
         'prdeliveryto': prdeliveryto,
         'prremarks': prremarks,
         'last_login': last_login,
+        'selected_vendor_type_option': selected_vendor_type_option,
     })
