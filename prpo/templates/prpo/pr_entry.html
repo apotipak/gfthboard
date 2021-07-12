@@ -368,12 +368,8 @@
 
 $(document).ready( function () {
 
-  
-  $('input[type=radio][name="vendor_type_options"]').change(function() {
-    //alert($(this).val());    
-  });
-
   var company_list = {{ company_list|safe }};
+
   for(var i=0; i<company_list.length; i++) {
     company_address = company_list[i].cpaddress;
     if(company_list[i].cpid==$('#id_company_options').val()) { 
@@ -385,12 +381,19 @@ $(document).ready( function () {
 
   $('#id_company_options').change(function() {
     
-    if($('#id_company_options').val()=='25') {
-      $('#id_ship_to').val('test');
-    } else {
-      $('#id_ship_to').val('aa');
+    for(var i=0; i<company_list.length; i++) {
+      company_address = company_list[i].cpaddress;
+      if(company_list[i].cpid==$('#id_company_options').val()) { 
+        $('#id_ship_to').val(company_address);
+        break;
+      }
     }
 
+  });
+
+
+  $('input[type=radio][name="vendor_type_options"]').change(function() {
+    //alert($(this).val());    
   });
 
 
