@@ -801,7 +801,7 @@ def ajax_pr_inquiry_list(request):
 
     if user_id is None:
         user_id = request.user.username
-        user_id = 522;
+        # user_id = 522;
 
     print("pr_number : ", pr_number)
     print("user_id : ", user_id)
@@ -1280,7 +1280,7 @@ def ajax_save_pr_entry(request):
     if request.method == "POST":
         print("POST")
 
-        # today = timezone.now().strftime("%d/%m/%Y")
+        today = timezone.now().strftime("%Y-%m-%d")
         current_year = timezone.now().strftime("%y")
         current_month = timezone.now().strftime("%m")
 
@@ -1288,55 +1288,105 @@ def ajax_save_pr_entry(request):
         message = ""
 
         prid = request.POST.get('prid')
-        print("prid : ", prid)
+        applicant_id = request.user.username
+        attention_to = request.POST.get('attention_to_options')
+        company_id = request.POST.get('company_options')
+        division_id = request.POST.get('division_options')
+        currency_id = request.POST.get('currency_options')
+        ship_to = request.POST.get('ship_to')
+        item_type_option = request.POST.get('item_type_options')
+        item_type_attribute_option = request.POST.get('item_type_attribute_options')
+        remark = request.POST.get('remark')
 
         if (prid is None or prid==""):
-            print("Generate new id")
-            prid = generate_new_prid(current_year, current_month)
+            print("Generate a new id and save")
+            prid = generate_new_prid(current_year, current_month)     
+            try:
+                sql = "insert into prpo_pr ("
+                sql += "prid,prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,prAttStatus,"
+                sql += "prvendortype,prurgent,prtotalitem,prtotalamt,prtotalamtusd,prcplstatus,prremarks,"
+                sql += "prverifyamount,practualamount,practualamountusd) "
+                sql += "values "
+                sql += "('" + str(prid) + "'," + str(company_id) + "," + str(applicant_id) + ",null,'" + str(today) + "'," + str(division_id) + "," + str(currency_id) + ",'" + str(ship_to) + "','" + str(item_type_option) + "'," + str(attention_to) + ",'" + str(item_type_attribute_option) + "',"
+                sql += "1,0,0.0,0.0,0.0,0,'" + str(remark) + "',"
+                sql += "0,0.0,0.0);"
+
+                cursor = connection.cursor()
+                cursor.execute(sql)
+                cursor.close()
+                is_error = False
+                message = "สร้างใบสั่งซื้อใหม่สำเร็จ"
+            except db.OperationalError as e:
+                is_error = True
+                message = "<b>Error: please send this error to IT team</b><br>" + str(e)      
+            except db.Error as e:
+                is_error = True
+                message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+            except Exception as e:
+                is_error = True
+                message = "<b>Error: please send this error to IT team</b><br>" + str(e)        
+            finally:
+                cursor.close()
+
+            response = JsonResponse(data={
+                "success": True,
+                "is_error": is_error,
+                "message": message,
+                "prid": prid,
+
+            })
+
+            response.status_code = 200
+            return response
+
         else:
             print("Not generate")
+            # Save
+            print("Save existing record : ", prid)
 
+            '''
+            try:
+                sql = "insert into prpo_pr ("
+                sql += "prid,prcompany,prapplicant,prreqdate,prcategory,prcurrency,prattentionto,prAttStatus, "
+                sql += "prvendortype,prurgent,prtotalitem,prtotalamt,prtotalamtusd,prcplstatus, "
+                sql += "prverifyamount,practualamount,practualamountusd) "
+                sql += "values "
+                sql += "('" + str(prid) + "',30,522,'2021-07-12',249,15,511,'-',"
+                sql += "1,0,0.0,0.0,0.0,0,"
+                sql += "0,0.0,0.0);"
 
-        # Save
-        print("save ", prid)
+                cursor = connection.cursor()
+                cursor.execute(sql)
+                cursor.close()
+                is_error = False
+                message = "ทำรายการสำเร็จ"
+            except db.OperationalError as e:
+                is_error = True
+                message = "<b>Error: please send this error to IT team</b><br>" + str(e)      
+            except db.Error as e:
+                is_error = True
+                message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+            except Exception as e:
+                is_error = True
+                message = "<b>Error: please send this error to IT team</b><br>" + str(e)        
+            finally:
+                cursor.close()
+            '''
 
-        try:
-            sql = "insert into prpo_pr ("
-            sql += "prid,prcompany,prapplicant,prreqdate,prcategory,prcurrency,prattentionto,prAttStatus, "
-            sql += "prvendortype,prurgent,prtotalitem,prtotalamt,prtotalamtusd,prcplstatus, "
-            sql += "prverifyamount,practualamount,practualamountusd) "
-            sql += "values "
-            sql += "('" + str(prid) + "',30,522,'2021-07-12',249,15,511,'-',"
-            sql += "1,0,0.0,0.0,0.0,0,"
-            sql += "0,0.0,0.0);"
-
-            cursor = connection.cursor()
-            cursor.execute(sql)
-            cursor.close()
+            message = "แก้ไขใบสั่งซื้อสำเร็จ"
             is_error = False
-            message = "ทำรายการสำเร็จ"
-        except db.OperationalError as e:
-            is_error = True
-            message = "<b>Error: please send this error to IT team</b><br>" + str(e)      
-        except db.Error as e:
-            is_error = True
-            message = "<b>Error: please send this error to IT team</b><br>" + str(e)
-        except Exception as e:
-            is_error = True
-            message = "<b>Error: please send this error to IT team</b><br>" + str(e)        
-        finally:
-            cursor.close()
+            response = JsonResponse(data={
+                "success": True,
+                "is_error": is_error,
+                "message": message,
+                "prid": prid,
 
-        response = JsonResponse(data={
-            "success": True,
-            "is_error": is_error,
-            "message": message,
-            "prid": prid,
+            })
 
-        })
+            response.status_code = 200
+            return response
 
-        response.status_code = 200
-        return response
+
 
     else:
         print("GET")
@@ -1418,7 +1468,8 @@ def generate_new_prid(current_year, current_month):
     if probj is not None:    
         latest_prid = probj[0]        
         last_4_number = int(latest_prid[-4:]) + 1
-        new_prid = "PR" + str(current_year) + str(current_month) + str(last_4_number).zfill(3)        
+        new_prid = "PR" + str(current_year) + str(current_month) + str(last_4_number).zfill(4)
         return new_prid;
     else:        
-        return None
+        new_prid = "PR" + str(current_year) + str(current_month) + "0001"
+        return new_prid

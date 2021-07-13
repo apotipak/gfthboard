@@ -107,8 +107,9 @@
 
                     <!-- Currency -->
                     <div class="input-group-prepend col-6 p-0 bg-secondary"><span class="input-group-text border-1 rounded-0" style="width:100%;"><b>Currency</b></span></div>
-                    <select id="id_currency_option" name="currency_option" class="form-control form-control-md" style="border-radius: 0;">
-                        <option value="THB" selected>THB</option>
+                    <select id="id_currency_options" name="currency_options" class="form-control form-control-md" style="border-radius: 0;">
+                        <option value="14">USD</option>
+                        <option value="15" selected>THB</option>
                     </select>                                      
                   </div>
   
@@ -175,7 +176,7 @@
 
                     <!-- Item Type -->
                     <div class="input-group-prepend col-6 p-0 bg-secondary"><span class="input-group-text border-1 rounded-0" style="width:100%;"><b>Item Type</b></span></div>
-                    <select id="id_item_type_options" name="item_type_options" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
+                    <select id="id_item_type_options" name="item_type_options" class="form-control form-control-md" style="border-radius: 0; width: 25%;">
                         {% for item in item_type_list %}
                             {% if item.item_type_id|stringformat:'s' == pritemtype|stringformat:'s' %}
                             <option value="{{item.item_type_id}}" selected>{{ item.item_type_name }}</option>
@@ -183,6 +184,13 @@
                             <option value="{{item.item_type_id}}">{{ item.item_type_name }}</option>
                             {% endif %}
                         {% endfor %}
+                    </select>
+
+                    <select id="id_item_type_attribute_options" name="item_type_attribute_options" class="form-control form-control-md" style="border-radius: 0; width: 25%;">
+                      <option value="-">None</option>
+                      <option value="H">Hard Copy</option>
+                      <option value="S">Soft Copy</option>
+                      <option value="HS">Hard & Soft Copy</option>
                     </select>
                   </div>                  
 
@@ -434,7 +442,7 @@ $(document).ready( function () {
         if(data.is_error) {          
           $(document).Toasts('create', {
             class: "bg-danger", 
-            title: "{% trans 'Error' %}",
+            title: "{% trans 'ข้อความ' %}",
             subtitle: '',
             autohide: true,
             delay: 2000,
@@ -450,11 +458,11 @@ $(document).ready( function () {
 
           $(document).Toasts('create', {
             class: "bg-success", 
-            title: "{% trans 'Success' %}",
+            title: "{% trans 'ข้อความ' %}",
             subtitle: '',
             autohide: true,
             delay: 2000,
-            body: prid,
+            body: data.message,
             autoDismiss: true,
             close: true,
             autoremove: true,
