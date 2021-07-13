@@ -44,11 +44,11 @@
                     <div class="card-tools float-left pt-2">
                         <div class="form-check">
                             {% if prurgent %}
-                            <input class="form-check-input" type="checkbox" value="" id="id_pr_urgent" checked>
+                            <input class="form-check-input" type="checkbox" id="id_pr_urgent" value="1" name="pr_urgent" checked>
                             {% else %}
-                            <input class="form-check-input" type="checkbox" value="" id="id_pr_urgent">
+                            <input class="form-check-input" type="checkbox" id="id_pr_urgent" value="0" name="pr_urgent">
                             {% endif %}
-                            <label class="form-check-label text-danger" for="flexCheckDefault"><b>Urgent</b></label>
+                            <label class="form-check-label text-danger" for="id_pr_urgent"><b>Urgent</b></label>
                         </div>                              
                     </div>
 
@@ -426,9 +426,16 @@ $(document).ready( function () {
     
     //alert("TODO");
     //return false;
-
+    if($("#id_pr_urgent").is(":checked")) {
+      pr_urgent_status = 1;
+    } else {
+      pr_urgent_status = 0;
+    }
+      
     formData = new FormData();
     data = new FormData($('#save_pr_form').get(0));
+    data.append("pr_urgent_status", pr_urgent_status);
+    
 
     $.ajax({
       url: '{% url "ajax-save-pr-entry" %}',

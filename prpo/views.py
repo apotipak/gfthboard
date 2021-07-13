@@ -1288,6 +1288,7 @@ def ajax_save_pr_entry(request):
         message = ""
 
         prid = request.POST.get('prid')
+        pr_urgent_status = request.POST.get('pr_urgent_status')
         applicant_id = request.user.username
         attention_to = request.POST.get('attention_to_options')
         company_id = request.POST.get('company_options')
@@ -1297,6 +1298,12 @@ def ajax_save_pr_entry(request):
         item_type_option = request.POST.get('item_type_options')
         item_type_attribute_option = request.POST.get('item_type_attribute_options')
         remark = request.POST.get('remark')
+
+        vendor_type = request.POST.get('vendor_type_options');
+        vendor_name = request.POST.get('vendor_name');
+        vendor_reason = request.POST.get('reason');
+
+        print(vendor_type, vendor_name, vendor_reason)
 
         if (prid is None or prid==""):
             print("Generate a new id and save")
@@ -1308,7 +1315,7 @@ def ajax_save_pr_entry(request):
                 sql += "prverifyamount,practualamount,practualamountusd) "
                 sql += "values "
                 sql += "('" + str(prid) + "'," + str(company_id) + "," + str(applicant_id) + ",null,'" + str(today) + "'," + str(division_id) + "," + str(currency_id) + ",'" + str(ship_to) + "','" + str(item_type_option) + "'," + str(attention_to) + ",'" + str(item_type_attribute_option) + "',"
-                sql += "1,0,0.0,0.0,0.0,0,'" + str(remark) + "',"
+                sql += str(vendor_type) + "," + str(pr_urgent_status) + ",0.0,0.0,0.0,0,'" + str(remark) + "',"
                 sql += "0,0.0,0.0);"
 
                 cursor = connection.cursor()
@@ -1343,18 +1350,28 @@ def ajax_save_pr_entry(request):
             print("Not generate")
             # Save
             print("Save existing record : ", prid)
+            print(vendor_type, vendor_name, vendor_reason)
 
-            '''
             try:
-                sql = "insert into prpo_pr ("
-                sql += "prid,prcompany,prapplicant,prreqdate,prcategory,prcurrency,prattentionto,prAttStatus, "
-                sql += "prvendortype,prurgent,prtotalitem,prtotalamt,prtotalamtusd,prcplstatus, "
-                sql += "prverifyamount,practualamount,practualamountusd) "
-                sql += "values "
-                sql += "('" + str(prid) + "',30,522,'2021-07-12',249,15,511,'-',"
-                sql += "1,0,0.0,0.0,0.0,0,"
-                sql += "0,0.0,0.0);"
+                sql = "update PRPO_PR set "
+                sql += "prCompany=" + str(company_id) + ","
+                sql += "prapplicant=" + str(applicant_id) + ","
+                sql += "prcpa=null" + ","
+                sql += "prreqdate='" + str(today) + "',"
+                sql += "prcategory=" + str(division_id) + ","
+                sql += "prcurrency=" + str(currency_id) + ","
+                sql += "prdeliveryto='" + str(ship_to) + "',"
+                sql += "pritemtype='" + str(item_type_option) + "',"
+                sql += "prattentionto=" + str(attention_to) + ","
+                sql += "prAttStatus='" + str(item_type_attribute_option) + "',"
+                sql += "prvendortype=" + str(vendor_type) + ","
+                sql += "prurgent=" + str(pr_urgent_status) + " "
+                
+                #prtotalitem,prtotalamt,prtotalamtusd,prcplstatus,prremarks,prverifyamount,practualamount,practualamountusd
+                sql += "where prID='" + str(prid) + "';"
 
+
+                print("sql : ", sql)
                 cursor = connection.cursor()
                 cursor.execute(sql)
                 cursor.close()
@@ -1371,7 +1388,6 @@ def ajax_save_pr_entry(request):
                 message = "<b>Error: please send this error to IT team</b><br>" + str(e)        
             finally:
                 cursor.close()
-            '''
 
             message = "แก้ไขใบสั่งซื้อสำเร็จ"
             is_error = False
