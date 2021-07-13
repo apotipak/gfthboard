@@ -38,6 +38,7 @@ from django.db import connection
 excluded_username = {}
 current_year = datetime.now().year
 
+
 @login_required(login_url='/accounts/login/')
 def welcome(request):
     user_language = getDefaultLanguage(request.user.username)
@@ -1267,3 +1268,157 @@ def pr_entry(request):
         'last_login': last_login,
         'selected_vendor_type_option': selected_vendor_type_option,
     })
+
+
+# @permission_required('prpo.view_itcontractdb', login_url='/accounts/login/')
+@login_required(login_url='/accounts/login/')
+def ajax_save_pr_entry(request):
+    print("*************************")
+    print("ajax_save_pr_entry()")
+    print("*************************")
+    
+    if request.method == "POST":
+        print("POST")
+
+        # today = timezone.now().strftime("%d/%m/%Y")
+        current_year = timezone.now().strftime("%y")
+        current_month = timezone.now().strftime("%m")
+
+        is_error = True
+        message = ""
+
+        prid = request.POST.get('prid')
+        print("prid : ", prid)
+
+        if (prid is None or prid==""):
+            print("Generate new id")
+            prid = generate_new_prid(current_year, current_month)
+        else:
+            print("Not generate")
+
+
+        # Save
+        print("save ", prid)
+
+        try:
+            sql = "insert into prpo_pr ("
+            sql += "prid,prcompany,prapplicant,prreqdate,prcategory,prcurrency,prattentionto,prAttStatus, "
+            sql += "prvendortype,prurgent,prtotalitem,prtotalamt,prtotalamtusd,prcplstatus, "
+            sql += "prverifyamount,practualamount,practualamountusd) "
+            sql += "values "
+            sql += "('" + str(prid) + "',30,522,'2021-07-12',249,15,511,'-',"
+            sql += "1,0,0.0,0.0,0.0,0,"
+            sql += "0,0.0,0.0);"
+
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            cursor.close()
+            is_error = False
+            message = "ทำรายการสำเร็จ"
+        except db.OperationalError as e:
+            is_error = True
+            message = "<b>Error: please send this error to IT team</b><br>" + str(e)      
+        except db.Error as e:
+            is_error = True
+            message = "<b>Error: please send this error to IT team</b><br>" + str(e)
+        except Exception as e:
+            is_error = True
+            message = "<b>Error: please send this error to IT team</b><br>" + str(e)        
+        finally:
+            cursor.close()
+
+        response = JsonResponse(data={
+            "success": True,
+            "is_error": is_error,
+            "message": message,
+            "prid": prid,
+
+        })
+
+        response.status_code = 200
+        return response
+
+    else:
+        print("GET")
+        response = JsonResponse(data={
+            "success": True,
+            "is_error": True,
+            "message": "ไม่สามารถทำรายการได้ กรุณาแจ้งฝ่ายไอที",
+        })
+
+        response.status_code = 200
+        return response
+
+
+
+    '''    
+    updated_by = request.user.username    
+    company_id = request.POST.get('company_id')
+    company_name_en = request.POST.get('company_name_en')
+    company_name_th = request.POST.get('company_name_th')
+    company_address = request.POST.get('company_address') 
+    company_telephone = request.POST.get('company_telephone')
+    company_fax = request.POST.get('company_fax')
+    print(updated_by, company_id)
+
+    if company_id is not None:
+        try:
+            company = PrpoCompany.objects.filter(pk=company_id).get()
+            company.cpname = company_name_en
+            company.cpaltername = company_name_th
+            company.cpaddress = company_address
+            company.cptel = company_telephone
+            company.cpfax = company_fax
+            company.optime = datetime.now()
+            company.save()  
+            
+            company_title = company_name_en
+            is_error = False
+            error_message = "บันทึกรายการสำเร็จ"
+        except db.OperationalError as e:
+            is_error = True
+            error_message = str(e)
+        except db.Error as e:
+            is_error = True
+            error_message = str(e)        
+        except Exception as e:            
+            is_error = True
+            error_message = str(e)
+    else:
+        is_error = True
+        error_message = "ไม่พบข้อมูลบริษัทที่ต้องการแก้ไข"
+
+    response = JsonResponse(data={
+        "success": True,
+        "is_error": is_error,
+        "error_message": error_message,
+        "company_title": company_title,
+    })
+
+    response.status_code = 200
+    return response
+    '''
+
+def generate_new_prid(current_year, current_month):
+    
+    current_maxid = "PR" + str(current_year) + str(current_month) + "%"
+    sql = "select top 1 prid from prpo_pr where prID like '" + str(current_maxid) + "' order by prID desc;"
+    try:
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        probj = cursor.fetchone()
+
+    except db.OperationalError as e:        
+        return None
+    except db.Error as e:
+        return None
+    finally:
+        cursor.close()    
+
+    if probj is not None:    
+        latest_prid = probj[0]        
+        last_4_number = int(latest_prid[-4:]) + 1
+        new_prid = "PR" + str(current_year) + str(current_month) + str(last_4_number).zfill(3)        
+        return new_prid;
+    else:        
+        return None

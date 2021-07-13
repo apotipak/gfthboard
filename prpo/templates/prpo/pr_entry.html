@@ -19,6 +19,7 @@
             <ol class="breadcrumb float-right">
               <li class="breadcrumb-item">
                   <i class="fas fa-reply fa-sm text-secondary"></i>&nbsp;Back to <a href="{% url 'pr-entry-inquiry' %}">PR Inquiry</a>
+                  <!--<a href="/prpo/pr-entry/" class="btn btn-md btn-success text-light" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;&nbsp;<b>New PR</b>&nbsp;</a>-->
               </li>
             </ol>
           </div>
@@ -52,7 +53,8 @@
                     </div>
 
                     <div class="card-tools">
-                      <button type="button" class="btn btn-md btn-warning" id="id_send_button">&nbsp;<b>Send</b>&nbsp;</button> | 
+                      <button type="button" class="btn btn-md btn-warning" id="id_send_button">&nbsp;<b>Send</b>&nbsp;</button>
+                      &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
                       <button type="reset" class="btn btn-md btn-default" id="id_cancel_button">&nbsp;<b>Cancel</b>&nbsp;</button>
                       <button type="submit" class="btn btn-md btn-primary" id="id_save_button">&nbsp;<b>Save</b>&nbsp;</button>
                     </div>
@@ -214,6 +216,7 @@
 
                 </div>
 
+                <input type="hidden" id="id_prid" name="prid">
               </div>
             </form>
   
@@ -230,7 +233,7 @@
                         </div>
 
                         <div class="card-tools">
-                            <button class="btn btn-md btn-success" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;<b>Add new</b>&nbsp;</button>
+                            <button class="btn btn-md btn-success" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;<b>Add item</b>&nbsp;</button>
                         </div>
                     </div>
 
@@ -412,14 +415,15 @@ $(document).ready( function () {
 
   $("#save_pr_form").submit(function(e) {
     e.preventDefault();
-    alert("TODO");
-    return false;
+    
+    //alert("TODO");
+    //return false;
 
     formData = new FormData();
-    data = new FormData($('#save_company_form').get(0));
+    data = new FormData($('#save_pr_form').get(0));
 
     $.ajax({
-      url: '{% url "prpo-ajax-save-company" %}',
+      url: '{% url "ajax-save-pr-entry" %}',
       type: 'post',
       dataType: 'json',
       data: data,
@@ -434,13 +438,15 @@ $(document).ready( function () {
             subtitle: '',
             autohide: true,
             delay: 2000,
-            body: data.error_message,
+            body: data.message,
             autoDismiss: true,
             close: true,
             autoremove: true,
           });     
-        } else {
-          $("#company_title").html("<b>" + data.company_title + "</b>");
+        } else {          
+          prid = data.prid;
+          $("#id_prid").val(prid);
+          $("#id_title").html("<b>" + prid + "</b>");
 
           $(document).Toasts('create', {
             class: "bg-success", 
@@ -448,7 +454,7 @@ $(document).ready( function () {
             subtitle: '',
             autohide: true,
             delay: 2000,
-            body: data.error_message,
+            body: prid,
             autoDismiss: true,
             close: true,
             autoremove: true,

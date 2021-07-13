@@ -37,5 +37,5 @@ urlpatterns = [
 
     # PR Entry
     path('pr-entry/', views.pr_entry, name='pr-entry'),
-    
+    path('ajax-save-pr-entry/', views.ajax_save_pr_entry, name='ajax-save-pr-entry'),
 ]
