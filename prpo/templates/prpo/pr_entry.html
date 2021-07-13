@@ -52,8 +52,9 @@
                     </div>
 
                     <div class="card-tools">
-                        <button type="reset" class="btn btn-md btn-default" id="id_cancel_button">&nbsp;<b>Cancel</b>&nbsp;</button>
-                        <button class="btn btn-md btn-primary" id="id_save_button">&nbsp;<b>Save</b>&nbsp;</button>
+                      <button type="button" class="btn btn-md btn-warning" id="id_send_button">&nbsp;<b>Send</b>&nbsp;</button> | 
+                      <button type="reset" class="btn btn-md btn-default" id="id_cancel_button">&nbsp;<b>Cancel</b>&nbsp;</button>
+                      <button type="submit" class="btn btn-md btn-primary" id="id_save_button">&nbsp;<b>Save</b>&nbsp;</button>
                     </div>
                 </div>
   
@@ -393,12 +394,24 @@ $(document).ready( function () {
 
 
   $('input[type=radio][name="vendor_type_options"]').change(function() {
-    //alert($(this).val());    
+    //alert($(this).val());
+    
+    var selected_vendor_type_option = $(this).val();
+    if(selected_vendor_type_option=="1") {
+      $("#id_vendor_name").attr("readonly", true);
+      $("#id_reason").attr("readonly", true);
+    } else {
+      $("#id_vendor_name").prop("readonly", false);
+      $("#id_reason").prop("readonly", false);
+
+      $("#id_vendor_name").focus();
+    }
+
   });
 
 
   $("#save_pr_form").submit(function(e) {
-	e.preventDefault();
+    e.preventDefault();
     alert("TODO");
     return false;
 
