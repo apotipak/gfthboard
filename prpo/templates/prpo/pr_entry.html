@@ -189,7 +189,7 @@
 
                     <!-- Ship To -->
                     <div class="input-group-prepend col-4 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Ship To</b></span></div>
-                    <input type="text" class="form-control" style="border-radius:0;" id="id_ship_to" name="ship_to" value="" readonly="" style="border-radius: 0; width: 50%;">
+                    <input type="text" class="form-control" style="border-radius:0;" id="id_ship_to" name="ship_to" value="{{prdeliveryto}}" readonly="" style="border-radius: 0; width: 50%;">
 
                   </div>
   
@@ -407,20 +407,24 @@
 
 function send_pr() {
   //alert("TODO");
+
   Swal.fire({
-      title: 'Message',
-      text: 'aa',
-      html: "TODO",
-      icon: '',
-      confirmButtonText: '&nbsp;ปิด&nbsp;',
+      title: '',
+      text: '',
+      html: "...",
+      icon: 'success',
+      confirmButtonText: '&nbsp;Close&nbsp;',
       confirmButtonColor: "#68696b",
-  })  
+  })        
+        
+
 } 
 
 function form_reset(){
 
   var id_vendor_name_temp = $("#id_vendor_name").val();
   var id_reason_temp = $("#id_reason").val();
+  var id_ship_to = $("#id_ship_to").val();
 
   //alert($('input[name=vendor_type_options]:checked').val());
   document.getElementById("save_pr_form").reset();
@@ -513,7 +517,9 @@ $(document).ready( function () {
             icon: 'error',
             confirmButtonText: '&nbsp;ปิด&nbsp;',
             confirmButtonColor: "#68696b",
-        })  
+            imageWidth: 600,
+            imageHeight: 600,            
+        })
 
         return false;
       }
@@ -529,6 +535,8 @@ $(document).ready( function () {
             icon: 'error',
             confirmButtonText: '&nbsp;ปิด&nbsp;',
             confirmButtonColor: "#68696b",
+            imageWidth: 600,
+            imageHeight: 600,            
         })        
         
         return false;
