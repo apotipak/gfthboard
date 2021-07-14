@@ -53,9 +53,9 @@
                     </div>
 
                     <div class="card-tools">
-                      <button type="button" class="btn btn-md btn-warning" id="id_send_button">&nbsp;<i class="fas fa-envelope"></i>&nbsp;&nbsp;Send&nbsp;</button>
+                      <button type="button" class="btn btn-md btn-warning" onclick="send_pr();" id="id_send_button">&nbsp;<i class="far fa-envelope"></i>&nbsp;&nbsp;<b>Send</b>&nbsp;</button>
                       &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
-                      <button type="button" onclick="form_reset();" class="btn btn-md btn-default" id="id_cancel_button">&nbsp;<b>Cancel</b>&nbsp;</button>
+                      <button type="button" onclick="form_reset();" class="btn btn-md btn-default" id="id_cancel_button">&nbsp;Cancel&nbsp;</button>
                       <button type="submit" class="btn btn-md btn-primary" id="id_save_button">&nbsp;<i class="fas fa-save"></i>&nbsp;&nbsp;Save&nbsp;</button>
                     </div>
                 </div>
@@ -396,6 +396,18 @@
 {% block javascript %}
 <script>
 
+function send_pr() {
+  //alert("TODO");
+  Swal.fire({
+      title: 'Message',
+      text: 'aa',
+      html: "TODO",
+      icon: '',
+      confirmButtonText: '&nbsp;ปิด&nbsp;',
+      confirmButtonColor: "#68696b",
+  })  
+} 
+
 function form_reset(){
 
   var id_vendor_name_temp = $("#id_vendor_name").val();
@@ -403,7 +415,7 @@ function form_reset(){
 
   //alert($('input[name=vendor_type_options]:checked').val());
   document.getElementById("save_pr_form").reset();
-  
+
   if($('input[name=vendor_type_options]:checked').val()=="1") {
     $("#id_vendor_name").val("");
     $("#id_reason").val("");
@@ -482,14 +494,34 @@ $(document).ready( function () {
       vendor_name = $("#id_vendor_name").val();
       vendor_reason = $("#id_reason").val();
       if(vendor_name=="") {
-        alert("Error: Please enter a vendor name.");
+        //alert("Error: Please enter a vendor name.");
         $("#id_vendor_name").focus();
+
+        Swal.fire({
+            title: '',
+            text: '',
+            html: "Please enter a vendor name.",
+            icon: 'error',
+            confirmButtonText: '&nbsp;ปิด&nbsp;',
+            confirmButtonColor: "#68696b",
+        })  
+
         return false;
       }
 
       if(vendor_reason=="") {
-        alert("Error: Please enter a reason.");
         $("#id_reason").focus();
+
+        //alert("Error: Please enter a reason.");
+        Swal.fire({
+            title: '',
+            text: '',
+            html: "Please enter a reason.",
+            icon: 'error',
+            confirmButtonText: '&nbsp;ปิด&nbsp;',
+            confirmButtonColor: "#68696b",
+        })        
+        
         return false;
       }
 
