@@ -397,23 +397,25 @@
 <script>
 
 function form_reset(){
+
   var id_vendor_name_temp = $("#id_vendor_name").val();
   var id_reason_temp = $("#id_reason").val();
 
+  //alert($('input[name=vendor_type_options]:checked').val());
   document.getElementById("save_pr_form").reset();
-
+  
   if($('input[name=vendor_type_options]:checked').val()=="1") {
     $("#id_vendor_name").val("");
     $("#id_reason").val("");
     $("#id_vendor_name").attr("readonly", true);
     $("#id_reason").attr("readonly", true);      
   } else {
-    $("#id_vendor_name").val(id_vendor_name_temp);
-    $("#id_reason").val(id_reason_temp);
+    //$("#id_vendor_name").val(id_vendor_name_temp);
+    //$("#id_reason").val(id_reason_temp);
     $("#id_vendor_name").prop("readonly", false);
     $("#id_reason").prop("readonly", false);
   }
-
+  
 }   
 
 $(document).ready( function () {
