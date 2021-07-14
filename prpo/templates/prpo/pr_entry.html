@@ -108,8 +108,9 @@
                     <!-- Currency -->
                     <div class="input-group-prepend col-6 p-0 bg-secondary"><span class="input-group-text border-1 rounded-0" style="width:100%;"><b>Currency</b></span></div>
                     <select id="id_currency_options" name="currency_options" class="form-control form-control-md" style="border-radius: 0;">
-                        <option value="14">USD</option>
-                        <option value="15" selected>THB</option>
+                        {% for item in currency_list %}
+                          <option value="{{item.currency_id}}">{{item.currency_name}}</option>  
+                        {% endfor %}
                     </select>                                      
                   </div>
   

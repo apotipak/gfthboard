@@ -996,6 +996,11 @@ def pr_entry(request, *args, **kwargs):
         {'item_type_id': 'Replacement', 'item_type_name': 'Replacement'},
     ]
 
+    currency_list = [
+        {'currency_id': '14', 'currency_name': 'USD'},
+        {'currency_id': '15', 'currency_name': 'THB'},
+    ]
+
                        
     # Get Company List
     sql = "select cpid,cpname,cpaddress from PRPO_Company;"
@@ -1254,6 +1259,7 @@ def pr_entry(request, *args, **kwargs):
             'username': username,
             'username_display': username_display,                
             'company_list': list(company_list),
+            'currency_list': list(currency_list),
             'project_list': list(project_list),
             'division_list': list(division_list),
             'item_type_list': list(item_type_list),
@@ -1406,6 +1412,7 @@ def pr_entry(request, *args, **kwargs):
             'username': username,
             'username_display': username_display,                
             'company_list': list(company_list),
+            'currency_list': list(currency_list),
             'project_list': list(project_list),
             'division_list': list(division_list),
             'item_type_list': list(item_type_list),
@@ -1739,6 +1746,11 @@ def new_pr(request):
         {'item_type_id': 'Replacement', 'item_type_name': 'Replacement'},
     ]
 
+    currency_list = [
+        {'currency_id': '14', 'currency_name': 'USD'},
+        {'currency_id': '15', 'currency_name': 'THB'},
+    ]
+    
                        
     # Get Company List
     sql = "select cpid,cpname,cpaddress from PRPO_Company;"
@@ -1884,6 +1896,7 @@ def new_pr(request):
         'username': username,
         'username_display': username_display,                
         'company_list': list(company_list),
+        'currency_list': list(currency_list),
         'project_list': list(project_list),
         'division_list': list(division_list),
         'item_type_list': list(item_type_list),
