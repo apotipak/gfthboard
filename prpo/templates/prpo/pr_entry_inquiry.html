@@ -422,7 +422,7 @@ $(document).ready(function () {
 
   $('#id_date_to').datepicker(
     {dateFormat: 'dd/mm/yy', altField: '#thealtdate', autoclose: true, todayHighlight: true
-  }).datepicker("setDate", new Date(2021,1-1,31));
+  }).datepicker("setDate", new Date(2021,6,14));
 
 });
 
@@ -605,7 +605,8 @@ $('#id_search_pr_form').on('submit', function(event){
               //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info"><i class="fas fa-eye"></i></button>';
               
               //result += '<button type="button" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info">View</button>';
-              result += '<a href="#" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">view</a>';
+              result += '<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">view</a>';
+              result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">edit</a>';
 
               result += "</td>";
 
@@ -703,7 +704,8 @@ $('#id_user_search_pr_form').on('submit', function(event){
               //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info"><i class="fas fa-eye"></i></button>';
               
               //result += '<button type="button" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info">View</button>';
-              result += '<a href="#" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">view</a>';
+              result += '<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">view</a>';
+              result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">edit</a>';
 
               result += "</td>";
 

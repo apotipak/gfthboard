@@ -1280,7 +1280,8 @@ def ajax_save_pr_entry(request):
     if request.method == "POST":
         print("POST")
 
-        today = timezone.now().strftime("%Y-%m-%d")
+        today = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+        
         current_year = timezone.now().strftime("%y")
         current_month = timezone.now().strftime("%m")
 
@@ -1303,6 +1304,15 @@ def ajax_save_pr_entry(request):
         vendor_name = request.POST.get('vendor_name');
         vendor_reason = request.POST.get('reason');
 
+        prtotalitem = 0
+        prtotalamt = 0
+        prtotalamtusd = 0
+        prverifyamount = 0
+        practualamount = 0
+        practualamountusd = 0
+        
+        prcplstatus = 0
+
         print(vendor_type, vendor_name, vendor_reason)
 
         if (prid is None or prid==""):
@@ -1312,17 +1322,25 @@ def ajax_save_pr_entry(request):
                 sql = "insert into prpo_pr ("
                 sql += "prid,prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,prAttStatus,"
                 sql += "prvendortype,prurgent,prtotalitem,prtotalamt,prtotalamtusd,prcplstatus,prremarks,"
+                
+                sql += "prrouting,prnexthandler,prconsigner,prnextstatus,"
                 sql += "prverifyamount,practualamount,practualamountusd) "
+
                 sql += "values "
-                sql += "('" + str(prid) + "'," + str(company_id) + "," + str(applicant_id) + ",null,'" + str(today) + "'," + str(division_id) + "," + str(currency_id) + ",'" + str(ship_to) + "','" + str(item_type_option) + "'," + str(attention_to) + ",'" + str(item_type_attribute_option) + "',"
+                sql += "('" + str(prid) + "'," + str(company_id) + "," + str(applicant_id) + ",null,'" + str(today) + "'," + str(division_id) + "," + str(currency_id) + ",'" + str(ship_to) + "','" + str(item_type_option) + "'," + str(attention_to) + ",'" + str(item_type_attribute_option) + "',"                
                 sql += str(vendor_type) + "," + str(pr_urgent_status) + ",0.0,0.0,0.0,0,'" + str(remark) + "',"
+                
+                sql += "null,900538,null,1,"
                 sql += "0,0.0,0.0);"
 
                 cursor = connection.cursor()
                 cursor.execute(sql)
                 cursor.close()
                 is_error = False
-                message = "สร้างใบสั่งซื้อใหม่สำเร็จ"
+                
+                # message = "สร้างใบสั่งซื้อใหม่สำเร็จ"
+                message = "A new PR has been created."
+
             except db.OperationalError as e:
                 is_error = True
                 message = "<b>Error: please send this error to IT team</b><br>" + str(e)      
@@ -1365,11 +1383,16 @@ def ajax_save_pr_entry(request):
                 sql += "prattentionto=" + str(attention_to) + ","
                 sql += "prAttStatus='" + str(item_type_attribute_option) + "',"
                 sql += "prvendortype=" + str(vendor_type) + ","
-                sql += "prurgent=" + str(pr_urgent_status) + " "
-                
-                #prtotalitem,prtotalamt,prtotalamtusd,prcplstatus,prremarks,prverifyamount,practualamount,practualamountusd
+                sql += "prurgent=" + str(pr_urgent_status) + ","
+                sql += "prtotalitem=" + str(prtotalitem) + ","
+                sql += "prtotalamt=" + str(prtotalamt) + ","
+                sql += "prtotalamtusd=" + str(prtotalamtusd) + ","
+                sql += "prcplstatus=" + str(prcplstatus) + ","
+                sql += "prremarks='" + str(remark) + "',"
+                sql += "prverifyamount=" + str(prverifyamount) + ","
+                sql += "practualamount=" + str(practualamount) + ","
+                sql += "practualamountusd=" + str(practualamountusd) + " "
                 sql += "where prID='" + str(prid) + "';"
-
 
                 print("sql : ", sql)
                 cursor = connection.cursor()
@@ -1389,7 +1412,9 @@ def ajax_save_pr_entry(request):
             finally:
                 cursor.close()
 
-            message = "แก้ไขใบสั่งซื้อสำเร็จ"
+            # message = "แก้ไขใบสั่งซื้อสำเร็จ"
+            message = "Updated succesfully."
+
             is_error = False
             response = JsonResponse(data={
                 "success": True,
@@ -1489,3 +1514,4 @@ def generate_new_prid(current_year, current_month):
     else:        
         new_prid = "PR" + str(current_year) + str(current_month) + "0001"
         return new_prid
+
