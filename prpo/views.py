@@ -936,8 +936,14 @@ def ajax_pr_inquiry_list(request):
     return response
 
 
+
+# def pr_entry(request):
 @login_required(login_url='/accounts/login/')
-def pr_entry(request):
+def pr_entry(request, *args, **kwargs):    
+    print("**********************")
+    print("pr_entry()")
+    print("**********************")
+
     user_language = getDefaultLanguage(request.user.username)
     translation.activate(user_language)
     page_title = settings.PROJECT_NAME
@@ -950,10 +956,6 @@ def pr_entry(request):
     is_error = True
     message = ""
     
-    pr_id = request.POST.get("selected_pr_id")
-    selected_vendor_type_option = request.POST.get("vendor_type_options")
-    print("selected_vendor_type_option : ", selected_vendor_type_option)
-
     company_list = []
     project_list = []
     division_list = []
@@ -975,7 +977,8 @@ def pr_entry(request):
     prrecmdreason = ""
     prdeliveryto = ""
     prremarks = ""
-    
+
+
     if user_language == "th":
         username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
     else:
@@ -992,6 +995,7 @@ def pr_entry(request):
         {'item_type_id': 'Spare', 'item_type_name': 'Spare'},
         {'item_type_id': 'Replacement', 'item_type_name': 'Replacement'},
     ]
+
                        
     # Get Company List
     sql = "select cpid,cpname,cpaddress from PRPO_Company;"
@@ -1123,6 +1127,10 @@ def pr_entry(request):
 
 
     if request.method == 'POST':
+        pr_id = request.POST.get("selected_pr_id")
+        selected_vendor_type_option = request.POST.get("vendor_type_options")
+        print("selected_vendor_type_option : ", selected_vendor_type_option)
+
         # Get PR information     
         sql = "select prid,prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,"
         sql += "prattstatus,prattlink,prattrcvddate,prvendortype,prrecmdvendor,prrecmdreason,prurgent,prtotalitem,prtotalamt,"
@@ -1223,51 +1231,205 @@ def pr_entry(request):
             is_error = True
             message = "Error message: " + str(e)
         finally:
-            cursor.close()    
+            cursor.close()
 
-    if pr_id == "" or pr_id is None:
-        pr_id_display = "Create new PR"
+
+        if pr_id == "" or pr_id is None:
+            pr_id_display = "Create new PR"
+        else:
+            # pr_id_display = str(pr_id) + " | edit"
+            pr_id_display = str(pr_id)
+
+        # get last login
+        last_login = getLastLogin(request)
+
+        return render(request,
+            'prpo/pr_entry.html', {
+            'page_title': settings.PROJECT_NAME,
+            'today_date': today_date,
+            'project_version': settings.PROJECT_VERSION,
+            'db_server': settings.DATABASES['default']['HOST'],
+            'project_name': settings.PROJECT_NAME,
+            'user_language': user_language,
+            'username': username,
+            'username_display': username_display,                
+            'company_list': list(company_list),
+            'project_list': list(project_list),
+            'division_list': list(division_list),
+            'item_type_list': list(item_type_list),
+            'vendor_type_list': list(vendor_type_list),
+            'attention_to_list': list(attention_to_list),
+            'pr_detail_list': list(pr_detail_list),
+            'user_list': list(user_list),
+            'pr_id': pr_id,
+            'pr_id_display': pr_id_display,
+            'prcompany': prcompany,
+            'prapplicant': prapplicant,
+            'prcpa': prcpa,
+            'prreqdate': prreqdate,
+            'prcategory': prcategory,
+            'pritemtype': pritemtype,
+            'prvendortype': prvendortype,
+            'prurgent': prurgent,
+            'prrecmdvendor': prrecmdvendor,
+            'prrecmdreason': prrecmdreason,
+            'prdeliveryto': prdeliveryto,
+            'prremarks': prremarks,
+            'last_login': last_login,
+            'selected_vendor_type_option': selected_vendor_type_option,
+        })
+
     else:
-        pr_id_display = str(pr_id) + " | edit"
+        print("TODO")
+        pr_id = kwargs['pr_id']        
 
-    # get last login
-    last_login = getLastLogin(request)
+        # Get PR information     
+        sql = "select prid,prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,"
+        sql += "prattstatus,prattlink,prattrcvddate,prvendortype,prrecmdvendor,prrecmdreason,prurgent,prtotalitem,prtotalamt,"
+        sql += "prtotalamtusd,prcplstatus,prremarks,prrouting,prnexthandler,prconsigner,prnextstatus,prverifyamount,practualamount,practualamountusd "
+        sql += "from prpo_pr where prid='" + str(pr_id) + "';"
+        try:
+            with connection.cursor() as cursor:     
+                cursor.execute(sql)
+                pr_obj = cursor.fetchone()
 
-    return render(request,
-        'prpo/pr_entry.html', {
-        'page_title': settings.PROJECT_NAME,
-        'today_date': today_date,
-        'project_version': settings.PROJECT_VERSION,
-        'db_server': settings.DATABASES['default']['HOST'],
-        'project_name': settings.PROJECT_NAME,
-        'user_language': user_language,
-        'username': username,
-        'username_display': username_display,                
-        'company_list': list(company_list),
-        'project_list': list(project_list),
-        'division_list': list(division_list),
-        'item_type_list': list(item_type_list),
-        'vendor_type_list': list(vendor_type_list),
-        'attention_to_list': list(attention_to_list),
-        'pr_detail_list': list(pr_detail_list),
-        'user_list': list(user_list),
-        'pr_id': pr_id,
-        'pr_id_display': pr_id_display,
-        'prcompany': prcompany,
-        'prapplicant': prapplicant,
-        'prcpa': prcpa,
-        'prreqdate': prreqdate,
-        'prcategory': prcategory,
-        'pritemtype': pritemtype,
-        'prvendortype': prvendortype,
-        'prurgent': prurgent,
-        'prrecmdvendor': prrecmdvendor,
-        'prrecmdreason': prrecmdreason,
-        'prdeliveryto': prdeliveryto,
-        'prremarks': prremarks,
-        'last_login': last_login,
-        'selected_vendor_type_option': selected_vendor_type_option,
-    })
+            if pr_obj is not None:
+                prid = pr_obj[0]
+                prcompany = pr_obj[1]
+                prapplicant = pr_obj[2]
+                prcpa = pr_obj[3]
+                prreqdate = pr_obj[4]
+                prcategory = pr_obj[5]
+                prdeliveryto = pr_obj[7]
+                pritemtype = pr_obj[8]
+                prvendortype = pr_obj[13]
+                
+                prrecmdvendor = pr_obj[14] if pr_obj[14] else ""
+                prrecmdreason = pr_obj[15] if pr_obj[15] else ""
+
+                prurgent = pr_obj[16]
+                prremarks = pr_obj[21]
+
+            is_error = False
+            message = "Able to get pr information."
+
+        except db.OperationalError as e: 
+            is_error = True
+            message = "Error message: " + str(e)
+        except db.Error as e:
+            is_error = True
+            message = "Error message: " + str(e)
+        finally:
+            cursor.close()
+
+        # Get PR Detail
+        sql = "select rdid,rdpr,rdsubcategory,rditem,rditemdesc,rditemprice,rdtaxflag,rdtaxrate,rditemqty,rditemum,rdamount,"
+        sql += "rddlvrydate,rdpodetail,rdactive,rdreleasedate,rdactualprice "
+        sql += "from prpo_prdetail "
+        sql += "where rdpr='" + str(pr_id) + "';" 
+
+        try:
+            with connection.cursor() as cursor:     
+                cursor.execute(sql)
+                pr_detail_obj = cursor.fetchall()
+
+            if pr_detail_obj is not None:
+                for item in pr_detail_obj:
+                    rdid = item[0]
+                    rdpr = item[1]
+                    rdsubcategory = item[2]
+                    rditem = item[3]
+                    rditemdesc = item[4]
+                    rditemprice = item[5]
+                    rdtaxflag = "Yes" if item[6] else "No"
+                    rdtaxrate = item[7]
+                    rditemqty = item[8]
+                    rditemum = item[9]
+                    rdamount = item[10]
+                    rddlvrydate = item[11]
+                    rdpodetail = item[12]
+                    rdactive = item[13]
+                    rdreleasedate = item[14]
+                    prreqdate = item[1]
+                    rdactualprice = item[15]
+
+                    record = {
+                        'rdid': rdid,
+                        'rdpr': rdpr,
+                        'rdsubcategory': rdsubcategory,
+                        'rditem': rditem,
+                        'rditemdesc': rditemdesc,
+                        'rditemprice': rditemprice,
+                        'rdtaxflag': rdtaxflag,
+                        'rdtaxrate': rdtaxrate,
+                        'rditemqty': rditemqty,
+                        'rditemum': rditemum,
+                        'rdamount': rdamount,
+                        'rddlvrydate': rddlvrydate,
+                        'rdpodetail': rdpodetail,
+                        'rdactive': rdactive,
+                        'rdreleasedate': rdreleasedate,
+                        'rdactualprice': rdactualprice,
+                    }
+                    pr_detail_list.append(record)
+
+            is_error = False
+            message = "Able to get pr detail."
+
+        except db.OperationalError as e: 
+            is_error = True
+            message = "Error message: " + str(e)
+        except db.Error as e:
+            is_error = True
+            message = "Error message: " + str(e)
+        finally:
+            cursor.close()
+
+
+        if pr_id == "" or pr_id is None:
+            pr_id_display = "Create new PR"
+        else:
+            # pr_id_display = str(pr_id) + " | edit"
+            pr_id_display = str(pr_id)
+
+        # get last login
+        last_login = getLastLogin(request)
+
+        return render(request,
+            'prpo/pr_entry.html', {
+            'page_title': settings.PROJECT_NAME,
+            'today_date': today_date,
+            'project_version': settings.PROJECT_VERSION,
+            'db_server': settings.DATABASES['default']['HOST'],
+            'project_name': settings.PROJECT_NAME,
+            'user_language': user_language,
+            'username': username,
+            'username_display': username_display,                
+            'company_list': list(company_list),
+            'project_list': list(project_list),
+            'division_list': list(division_list),
+            'item_type_list': list(item_type_list),
+            'vendor_type_list': list(vendor_type_list),
+            'attention_to_list': list(attention_to_list),
+            'pr_detail_list': list(pr_detail_list),
+            'user_list': list(user_list),
+            'pr_id': pr_id,
+            'pr_id_display': pr_id_display,
+            'prcompany': prcompany,
+            'prapplicant': prapplicant,
+            'prcpa': prcpa,
+            'prreqdate': prreqdate,
+            'prcategory': prcategory,
+            'pritemtype': pritemtype,
+            'prvendortype': prvendortype,
+            'prurgent': prurgent,
+            'prrecmdvendor': prrecmdvendor,
+            'prrecmdreason': prrecmdreason,
+            'prdeliveryto': prdeliveryto,
+            'prremarks': prremarks,
+            'last_login': last_login,
+            # 'selected_vendor_type_option': selected_vendor_type_option,
+        })
 
 
 # @permission_required('prpo.view_itcontractdb', login_url='/accounts/login/')
@@ -1313,9 +1475,10 @@ def ajax_save_pr_entry(request):
         
         prcplstatus = 0
 
-        print(vendor_type, vendor_name, vendor_reason)
+        print(prid, vendor_type, vendor_name, vendor_reason)
 
-        if (prid is None or prid==""):
+
+        if (prid is None or prid=="" or prid=='None'):        
             print("Generate a new id and save")
             prid = generate_new_prid(current_year, current_month)     
             try:
@@ -1514,4 +1677,728 @@ def generate_new_prid(current_year, current_month):
     else:        
         new_prid = "PR" + str(current_year) + str(current_month) + "0001"
         return new_prid
+
+
+
+# def new_pr_entry(request, *args, **kwargs):    
+@login_required(login_url='/accounts/login/')
+def new_pr(request):    
+    print("**********************")
+    print("new_pr()")
+    print("**********************")
+
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION    
+    today_date = getDateFormatDisplay(user_language)
+    username = request.user.username
+    
+    is_error = True
+    message = ""
+    
+    company_list = []
+    project_list = []
+    division_list = []
+    currency_list = []
+    attention_to_list = []
+    pr_detail_list = []
+    user_list = []
+    record = {}
+
+    prcompany = ""
+    prapplicant = ""
+    prcpa = ""
+    prreqdate = ""
+    prcategory = ""
+    pritemtype = ""
+    prvendortype = ""
+    prurgent = ""
+    prrecmdvendor = ""
+    prrecmdreason = ""
+    prdeliveryto = ""
+    prremarks = ""
+
+
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
+
+    vendor_type_list = [
+        {'vendor_type_id': '1', 'vendor_type_name': 'Any Vendor'},
+        {'vendor_type_id': '2', 'vendor_type_name': 'Vendor Recommended'},
+        {'vendor_type_id': '3', 'vendor_type_name': 'Vendor Nominated'},
+    ]
+
+    item_type_list = [
+        {'item_type_id': 'New Item', 'item_type_name': 'New Item'},
+        {'item_type_id': 'Spare', 'item_type_name': 'Spare'},
+        {'item_type_id': 'Replacement', 'item_type_name': 'Replacement'},
+    ]
+
+                       
+    # Get Company List
+    sql = "select cpid,cpname,cpaddress from PRPO_Company;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            company_obj = cursor.fetchall()
+
+        if company_obj is not None:
+            for item in company_obj:
+                cpid = item[0]
+                cpname = item[1]
+                cpaddress = item[2]
+                record = {"cpid":cpid, "cpname":cpname, "cpaddress":cpaddress}
+                company_list.append(record)
+            is_error = False
+            message = "Able to get company list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+    # Get Project List
+    sql = "select cpaid,cpanumber name from PRPO_CPA order by cpaNumber;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            project_obj = cursor.fetchall()
+
+        if project_obj is not None:
+            for item in project_obj:
+                cpaid = item[0]
+                cpanumber = item[1]
+                record = {"cpaid":cpaid, "cpanumber":cpanumber}
+                project_list.append(record)
+            is_error = False
+            message = "Able to get project list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+    # Get Division List
+    sql = "select ctID,ctName name from PRPO_Category where ctcountry=14 order by ctName;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            division_obj = cursor.fetchall()
+
+        if division_obj is not None:
+            for item in division_obj:
+                ctid = item[0]
+                ctname = item[1]
+                record = {"ctid":ctid, "ctname":ctname}
+                division_list.append(record)
+            is_error = False
+            message = "Able to get division list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+
+    # Get Attention To List
+    sql = "select * from prpo_user where usstatus=1 order by usname;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            attention_to_obj = cursor.fetchall()
+
+        if attention_to_obj is not None:
+            for item in attention_to_obj:
+                usid = item[0]
+                usname = item[1]
+
+                record = {"usid":usid, "usname":usname}
+                attention_to_list.append(record)
+            is_error = False
+            message = "Able to get Attention To list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+
+    # Get User List
+    sql = "select usid,usname from prpo_user;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            user_obj = cursor.fetchall()
+
+        if user_obj is not None:
+            for item in user_obj:
+                usid = item[0]
+                usname = item[1]
+                record = {"usid":usid, "usname":usname}
+                user_list.append(record)
+            is_error = False
+            message = "Able to get user list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+
+    # get last login
+    last_login = getLastLogin(request)
+
+    return render(request,
+        'prpo/pr_entry.html', {
+        'page_title': settings.PROJECT_NAME,
+        'today_date': today_date,
+        'project_version': settings.PROJECT_VERSION,
+        'db_server': settings.DATABASES['default']['HOST'],
+        'project_name': settings.PROJECT_NAME,
+        'user_language': user_language,
+        'username': username,
+        'username_display': username_display,                
+        'company_list': list(company_list),
+        'project_list': list(project_list),
+        'division_list': list(division_list),
+        'item_type_list': list(item_type_list),
+        'vendor_type_list': list(vendor_type_list),
+        'attention_to_list': list(attention_to_list),        
+        'user_list': list(user_list),
+        'pr_id': None,
+        'pr_id_display': 'Add new PR',
+        'prcompany': prcompany,
+        'prapplicant': prapplicant,
+        'prcpa': prcpa,
+        'prreqdate': prreqdate,
+        'prcategory': prcategory,
+        'pritemtype': pritemtype,
+        'prvendortype': prvendortype,
+        'prurgent': prurgent,
+        'prrecmdvendor': prrecmdvendor,
+        'prrecmdreason': prrecmdreason,
+        'prdeliveryto': prdeliveryto,
+        'prremarks': prremarks,
+        'last_login': last_login,
+    })
+
+
+
+@login_required(login_url='/accounts/login/')
+def edit_pr(request, *args, **kwargs):    
+    print("**********************")
+    print("edit_pr()")
+    print("**********************")
+
+    user_language = getDefaultLanguage(request.user.username)
+    translation.activate(user_language)
+    page_title = settings.PROJECT_NAME
+    db_server = settings.DATABASES['default']['HOST']
+    project_name = settings.PROJECT_NAME
+    project_version = settings.PROJECT_VERSION    
+    today_date = getDateFormatDisplay(user_language)
+    username = request.user.username
+    
+    is_error = True
+    message = ""
+    
+    company_list = []
+    project_list = []
+    division_list = []
+    currency_list = []
+    attention_to_list = []
+    pr_detail_list = []
+    user_list = []
+    record = {}
+
+    prcompany = ""
+    prapplicant = ""
+    prcpa = ""
+    prreqdate = ""
+    prcategory = ""
+    pritemtype = ""
+    prvendortype = ""
+    prurgent = ""
+    prrecmdvendor = ""
+    prrecmdreason = ""
+    prdeliveryto = ""
+    prremarks = ""
+
+
+    if user_language == "th":
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_th', flat=True).get()
+    else:
+        username_display = LeaveEmployee.objects.filter(emp_id=request.user.username).values_list('emp_fname_en', flat=True).get()        
+
+    vendor_type_list = [
+        {'vendor_type_id': '1', 'vendor_type_name': 'Any Vendor'},
+        {'vendor_type_id': '2', 'vendor_type_name': 'Vendor Recommended'},
+        {'vendor_type_id': '3', 'vendor_type_name': 'Vendor Nominated'},
+    ]
+
+    item_type_list = [
+        {'item_type_id': 'New Item', 'item_type_name': 'New Item'},
+        {'item_type_id': 'Spare', 'item_type_name': 'Spare'},
+        {'item_type_id': 'Replacement', 'item_type_name': 'Replacement'},
+    ]
+
+                       
+    # Get Company List
+    sql = "select cpid,cpname,cpaddress from PRPO_Company;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            company_obj = cursor.fetchall()
+
+        if company_obj is not None:
+            for item in company_obj:
+                cpid = item[0]
+                cpname = item[1]
+                cpaddress = item[2]
+                record = {"cpid":cpid, "cpname":cpname, "cpaddress":cpaddress}
+                company_list.append(record)
+            is_error = False
+            message = "Able to get company list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+    # Get Project List
+    sql = "select cpaid,cpanumber name from PRPO_CPA order by cpaNumber;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            project_obj = cursor.fetchall()
+
+        if project_obj is not None:
+            for item in project_obj:
+                cpaid = item[0]
+                cpanumber = item[1]
+                record = {"cpaid":cpaid, "cpanumber":cpanumber}
+                project_list.append(record)
+            is_error = False
+            message = "Able to get project list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+    # Get Division List
+    sql = "select ctID,ctName name from PRPO_Category where ctcountry=14 order by ctName;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            division_obj = cursor.fetchall()
+
+        if division_obj is not None:
+            for item in division_obj:
+                ctid = item[0]
+                ctname = item[1]
+                record = {"ctid":ctid, "ctname":ctname}
+                division_list.append(record)
+            is_error = False
+            message = "Able to get division list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+    # Get Attention To List
+    sql = "select * from prpo_user where usstatus=1 order by usname;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            attention_to_obj = cursor.fetchall()
+
+        if attention_to_obj is not None:
+            for item in attention_to_obj:
+                usid = item[0]
+                usname = item[1]
+
+                record = {"usid":usid, "usname":usname}
+                attention_to_list.append(record)
+            is_error = False
+            message = "Able to get Attention To list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+
+    # Get User List
+    sql = "select usid,usname from prpo_user;"
+    try:
+        with connection.cursor() as cursor:     
+            cursor.execute(sql)
+            user_obj = cursor.fetchall()
+
+        if user_obj is not None:
+            for item in user_obj:
+                usid = item[0]
+                usname = item[1]
+                record = {"usid":usid, "usname":usname}
+                user_list.append(record)
+            is_error = False
+            message = "Able to get user list."
+
+    except db.OperationalError as e: 
+        is_error = True
+        message = "Error message: " + str(e)
+    except db.Error as e:
+        is_error = True
+        message = "Error message: " + str(e)
+    finally:
+        cursor.close()
+
+
+    if request.method == 'POST':
+        pr_id = request.POST.get("selected_pr_id")
+        selected_vendor_type_option = request.POST.get("vendor_type_options")
+        print("selected_vendor_type_option : ", selected_vendor_type_option)
+
+        # Get PR information     
+        sql = "select prid,prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,"
+        sql += "prattstatus,prattlink,prattrcvddate,prvendortype,prrecmdvendor,prrecmdreason,prurgent,prtotalitem,prtotalamt,"
+        sql += "prtotalamtusd,prcplstatus,prremarks,prrouting,prnexthandler,prconsigner,prnextstatus,prverifyamount,practualamount,practualamountusd "
+        sql += "from prpo_pr where prid='" + str(pr_id) + "';"
+        try:
+            with connection.cursor() as cursor:     
+                cursor.execute(sql)
+                pr_obj = cursor.fetchone()
+
+            if pr_obj is not None:
+                prid = pr_obj[0]
+                prcompany = pr_obj[1]
+                prapplicant = pr_obj[2]
+                prcpa = pr_obj[3]
+                prreqdate = pr_obj[4]
+                prcategory = pr_obj[5]
+                prdeliveryto = pr_obj[7]
+                pritemtype = pr_obj[8]
+                prvendortype = pr_obj[13]
+                
+                prrecmdvendor = pr_obj[14] if pr_obj[14] else ""
+                prrecmdreason = pr_obj[15] if pr_obj[15] else ""
+
+                prurgent = pr_obj[16]
+                prremarks = pr_obj[21]
+
+            is_error = False
+            message = "Able to get pr information."
+
+        except db.OperationalError as e: 
+            is_error = True
+            message = "Error message: " + str(e)
+        except db.Error as e:
+            is_error = True
+            message = "Error message: " + str(e)
+        finally:
+            cursor.close()
+
+        # Get PR Detail
+        sql = "select rdid,rdpr,rdsubcategory,rditem,rditemdesc,rditemprice,rdtaxflag,rdtaxrate,rditemqty,rditemum,rdamount,"
+        sql += "rddlvrydate,rdpodetail,rdactive,rdreleasedate,rdactualprice "
+        sql += "from prpo_prdetail "
+        sql += "where rdpr='" + str(pr_id) + "';" 
+
+        try:
+            with connection.cursor() as cursor:     
+                cursor.execute(sql)
+                pr_detail_obj = cursor.fetchall()
+
+            if pr_detail_obj is not None:
+                for item in pr_detail_obj:
+                    rdid = item[0]
+                    rdpr = item[1]
+                    rdsubcategory = item[2]
+                    rditem = item[3]
+                    rditemdesc = item[4]
+                    rditemprice = item[5]
+                    rdtaxflag = "Yes" if item[6] else "No"
+                    rdtaxrate = item[7]
+                    rditemqty = item[8]
+                    rditemum = item[9]
+                    rdamount = item[10]
+                    rddlvrydate = item[11]
+                    rdpodetail = item[12]
+                    rdactive = item[13]
+                    rdreleasedate = item[14]
+                    prreqdate = item[1]
+                    rdactualprice = item[15]
+
+                    record = {
+                        'rdid': rdid,
+                        'rdpr': rdpr,
+                        'rdsubcategory': rdsubcategory,
+                        'rditem': rditem,
+                        'rditemdesc': rditemdesc,
+                        'rditemprice': rditemprice,
+                        'rdtaxflag': rdtaxflag,
+                        'rdtaxrate': rdtaxrate,
+                        'rditemqty': rditemqty,
+                        'rditemum': rditemum,
+                        'rdamount': rdamount,
+                        'rddlvrydate': rddlvrydate,
+                        'rdpodetail': rdpodetail,
+                        'rdactive': rdactive,
+                        'rdreleasedate': rdreleasedate,
+                        'rdactualprice': rdactualprice,
+                    }
+                    pr_detail_list.append(record)
+
+            is_error = False
+            message = "Able to get pr detail."
+
+        except db.OperationalError as e: 
+            is_error = True
+            message = "Error message: " + str(e)
+        except db.Error as e:
+            is_error = True
+            message = "Error message: " + str(e)
+        finally:
+            cursor.close()
+
+
+        if pr_id == "" or pr_id is None:
+            pr_id_display = "Create new PR"
+        else:
+            # pr_id_display = str(pr_id) + " | edit"
+            pr_id_display = str(pr_id)
+
+        # get last login
+        last_login = getLastLogin(request)
+
+        return render(request,
+            'prpo/pr_entry.html', {
+            'page_title': settings.PROJECT_NAME,
+            'today_date': today_date,
+            'project_version': settings.PROJECT_VERSION,
+            'db_server': settings.DATABASES['default']['HOST'],
+            'project_name': settings.PROJECT_NAME,
+            'user_language': user_language,
+            'username': username,
+            'username_display': username_display,                
+            'company_list': list(company_list),
+            'project_list': list(project_list),
+            'division_list': list(division_list),
+            'item_type_list': list(item_type_list),
+            'vendor_type_list': list(vendor_type_list),
+            'attention_to_list': list(attention_to_list),
+            'pr_detail_list': list(pr_detail_list),
+            'user_list': list(user_list),
+            'pr_id': pr_id,
+            'pr_id_display': pr_id_display,
+            'prcompany': prcompany,
+            'prapplicant': prapplicant,
+            'prcpa': prcpa,
+            'prreqdate': prreqdate,
+            'prcategory': prcategory,
+            'pritemtype': pritemtype,
+            'prvendortype': prvendortype,
+            'prurgent': prurgent,
+            'prrecmdvendor': prrecmdvendor,
+            'prrecmdreason': prrecmdreason,
+            'prdeliveryto': prdeliveryto,
+            'prremarks': prremarks,
+            'last_login': last_login,
+            'selected_vendor_type_option': selected_vendor_type_option,
+        })
+
+    else:
+        print("TODO")
+        pr_id = kwargs['pr_id']        
+
+        # Get PR information     
+        sql = "select prid,prcompany,prapplicant,prcpa,prreqdate,prcategory,prcurrency,prdeliveryto,pritemtype,prattentionto,"
+        sql += "prattstatus,prattlink,prattrcvddate,prvendortype,prrecmdvendor,prrecmdreason,prurgent,prtotalitem,prtotalamt,"
+        sql += "prtotalamtusd,prcplstatus,prremarks,prrouting,prnexthandler,prconsigner,prnextstatus,prverifyamount,practualamount,practualamountusd "
+        sql += "from prpo_pr where prid='" + str(pr_id) + "';"
+        try:
+            with connection.cursor() as cursor:     
+                cursor.execute(sql)
+                pr_obj = cursor.fetchone()
+
+            if pr_obj is not None:
+                prid = pr_obj[0]
+                prcompany = pr_obj[1]
+                prapplicant = pr_obj[2]
+                prcpa = pr_obj[3]
+                prreqdate = pr_obj[4]
+                prcategory = pr_obj[5]
+                prdeliveryto = pr_obj[7]
+                pritemtype = pr_obj[8]
+                prvendortype = pr_obj[13]
+                
+                prrecmdvendor = pr_obj[14] if pr_obj[14] else ""
+                prrecmdreason = pr_obj[15] if pr_obj[15] else ""
+
+                prurgent = pr_obj[16]
+                prremarks = pr_obj[21]
+
+            is_error = False
+            message = "Able to get pr information."
+
+        except db.OperationalError as e: 
+            is_error = True
+            message = "Error message: " + str(e)
+        except db.Error as e:
+            is_error = True
+            message = "Error message: " + str(e)
+        finally:
+            cursor.close()
+
+        # Get PR Detail
+        sql = "select rdid,rdpr,rdsubcategory,rditem,rditemdesc,rditemprice,rdtaxflag,rdtaxrate,rditemqty,rditemum,rdamount,"
+        sql += "rddlvrydate,rdpodetail,rdactive,rdreleasedate,rdactualprice "
+        sql += "from prpo_prdetail "
+        sql += "where rdpr='" + str(pr_id) + "';" 
+
+        try:
+            with connection.cursor() as cursor:     
+                cursor.execute(sql)
+                pr_detail_obj = cursor.fetchall()
+
+            if pr_detail_obj is not None:
+                for item in pr_detail_obj:
+                    rdid = item[0]
+                    rdpr = item[1]
+                    rdsubcategory = item[2]
+                    rditem = item[3]
+                    rditemdesc = item[4]
+                    rditemprice = item[5]
+                    rdtaxflag = "Yes" if item[6] else "No"
+                    rdtaxrate = item[7]
+                    rditemqty = item[8]
+                    rditemum = item[9]
+                    rdamount = item[10]
+                    rddlvrydate = item[11]
+                    rdpodetail = item[12]
+                    rdactive = item[13]
+                    rdreleasedate = item[14]
+                    prreqdate = item[1]
+                    rdactualprice = item[15]
+
+                    record = {
+                        'rdid': rdid,
+                        'rdpr': rdpr,
+                        'rdsubcategory': rdsubcategory,
+                        'rditem': rditem,
+                        'rditemdesc': rditemdesc,
+                        'rditemprice': rditemprice,
+                        'rdtaxflag': rdtaxflag,
+                        'rdtaxrate': rdtaxrate,
+                        'rditemqty': rditemqty,
+                        'rditemum': rditemum,
+                        'rdamount': rdamount,
+                        'rddlvrydate': rddlvrydate,
+                        'rdpodetail': rdpodetail,
+                        'rdactive': rdactive,
+                        'rdreleasedate': rdreleasedate,
+                        'rdactualprice': rdactualprice,
+                    }
+                    pr_detail_list.append(record)
+
+            is_error = False
+            message = "Able to get pr detail."
+
+        except db.OperationalError as e: 
+            is_error = True
+            message = "Error message: " + str(e)
+        except db.Error as e:
+            is_error = True
+            message = "Error message: " + str(e)
+        finally:
+            cursor.close()
+
+
+        if pr_id == "" or pr_id is None:
+            pr_id_display = "Create new PR"
+        else:
+            # pr_id_display = str(pr_id) + " | edit"
+            pr_id_display = str(pr_id)
+
+        # get last login
+        last_login = getLastLogin(request)
+
+        return render(request,
+            'prpo/pr_entry.html', {
+            'page_title': settings.PROJECT_NAME,
+            'today_date': today_date,
+            'project_version': settings.PROJECT_VERSION,
+            'db_server': settings.DATABASES['default']['HOST'],
+            'project_name': settings.PROJECT_NAME,
+            'user_language': user_language,
+            'username': username,
+            'username_display': username_display,                
+            'company_list': list(company_list),
+            'project_list': list(project_list),
+            'division_list': list(division_list),
+            'item_type_list': list(item_type_list),
+            'vendor_type_list': list(vendor_type_list),
+            'attention_to_list': list(attention_to_list),
+            'pr_detail_list': list(pr_detail_list),
+            'user_list': list(user_list),
+            'pr_id': pr_id,
+            'pr_id_display': pr_id_display,
+            'prcompany': prcompany,
+            'prapplicant': prapplicant,
+            'prcpa': prcpa,
+            'prreqdate': prreqdate,
+            'prcategory': prcategory,
+            'pritemtype': pritemtype,
+            'prvendortype': prvendortype,
+            'prurgent': prurgent,
+            'prrecmdvendor': prrecmdvendor,
+            'prrecmdreason': prrecmdreason,
+            'prdeliveryto': prdeliveryto,
+            'prremarks': prremarks,
+            'last_login': last_login,
+            # 'selected_vendor_type_option': selected_vendor_type_option,
+        })
 

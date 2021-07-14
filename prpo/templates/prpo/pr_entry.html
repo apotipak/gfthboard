@@ -13,12 +13,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-6">
-            <h3 class="m-0 text-dark" id="id_title">{{ pr_id_display }}</h3>
+            <h3 class="m-0 text-dark" id="id_title"><b>{{ pr_id_display }}</b></h3>
           </div>
           <div class="col-6">
             <ol class="breadcrumb float-right">
               <li class="breadcrumb-item">
-                  <i class="fas fa-reply fa-sm text-secondary"></i>&nbsp;Back to <a href="{% url 'pr-entry-inquiry' %}">PR Inquiry</a>
+                  <i class="fas fa-reply fa-sm text-secondary"></i>&nbsp;Back to <a href="{% url 'pr-inquiry' %}">PR Inquiry</a>
                   <!--<a href="/prpo/pr-entry/" class="btn btn-md btn-success text-light" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;&nbsp;<b>New PR</b>&nbsp;</a>-->
               </li>
             </ol>
@@ -53,10 +53,10 @@
                     </div>
 
                     <div class="card-tools">
-                      <button type="button" class="btn btn-md btn-warning" id="id_send_button">&nbsp;<b>Send</b>&nbsp;</button>
+                      <button type="button" class="btn btn-md btn-warning" id="id_send_button">&nbsp;<i class="fas fa-envelope"></i>&nbsp;&nbsp;Send&nbsp;</button>
                       &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
                       <button type="reset" class="btn btn-md btn-default" id="id_cancel_button">&nbsp;<b>Cancel</b>&nbsp;</button>
-                      <button type="submit" class="btn btn-md btn-primary" id="id_save_button">&nbsp;<b>Save</b>&nbsp;</button>
+                      <button type="submit" class="btn btn-md btn-primary" id="id_save_button">&nbsp;<i class="fas fa-save"></i>&nbsp;&nbsp;Save&nbsp;</button>
                     </div>
                 </div>
   
@@ -224,7 +224,7 @@
 
                 </div>
 
-                <input type="hidden" id="id_prid" name="prid">
+                <input type="hidden" id="id_prid" value="{{pr_id}}" name="prid">
               </div>
             </form>
   
@@ -449,7 +449,7 @@ $(document).ready( function () {
         if(data.is_error) {          
           $(document).Toasts('create', {
             class: "bg-danger", 
-            title: "{% trans 'ข้อความ' %}",
+            title: "{% trans 'Message' %}",
             subtitle: '',
             autohide: true,
             delay: 2000,
@@ -465,7 +465,7 @@ $(document).ready( function () {
 
           $(document).Toasts('create', {
             class: "bg-success", 
-            title: "{% trans 'ข้อความ' %}",
+            title: "{% trans 'Message' %}",
             subtitle: '',
             autohide: true,
             delay: 2000,

@@ -22,7 +22,7 @@ urlpatterns = [
     path('vendor/', views.vendor, name='prpo-vendor'),
 
     # PR/PO
-    path('pr-entry-inquiry/', views.pr_entry_inquiry, name='pr-entry-inquiry'),
+    path('pr-inquiry/', views.pr_entry_inquiry, name='pr-inquiry'),
     path('pr-inbox/', views.pr_inbox, name='prpo-pr-inbox'),
     path('po-inbox/', views.po_inbox, name='prpo-po-inbox'),
 
@@ -35,7 +35,11 @@ urlpatterns = [
     # Ajax PR Entry Inquiry
     path('ajax-pr-inquiry/', views.ajax_pr_inquiry_list, name='ajax-pr-inquiry'),
 
-    # PR Entry
+
+    # PR
     path('pr-entry/', views.pr_entry, name='pr-entry'),
-    path('ajax-save-pr-entry/', views.ajax_save_pr_entry, name='ajax-save-pr-entry'),
+    path('ajax-save-pr-entry/', views.ajax_save_pr_entry, name='ajax-save-pr-entry'),    
+    url(r'^pr-entry/(?P<pr_id>\w+)/$', views.pr_entry, name='pr-entry'),
+    path('new-pr/', views.new_pr, name='new-pr'),
+    url(r'^edit-pr/(?P<pr_id>\w+)/$', views.edit_pr, name='edit-pr'),
 ]

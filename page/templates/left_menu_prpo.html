@@ -75,10 +75,10 @@
                 <ul class="nav nav-treeview">
                 <li class="nav-item">
                     
-                    {% if request.path == '/prpo/pr-entry-inquiry/' %}
-                    <a href="{% url 'pr-entry-inquiry' %}" class="nav-link active">&nbsp;&nbsp;<i class="far fas fa-receipt"></i>&nbsp;&nbsp;<p>PR Entry & Inquiry</p></a>
+                    {% if request.path == '/prpo/pr-inquiry/' %}
+                    <a href="{% url 'pr-inquiry' %}" class="nav-link active">&nbsp;&nbsp;<i class="far fas fa-receipt"></i>&nbsp;&nbsp;<p>PR Entry & Inquiry</p></a>
                     {% else %}
-                    <a href="{% url 'pr-entry-inquiry' %}" class="nav-link">&nbsp;&nbsp;<i class="far fas fa-receipt"></i>&nbsp;&nbsp;<p>PR Entry / Inquiry</p></a>
+                    <a href="{% url 'pr-inquiry' %}" class="nav-link">&nbsp;&nbsp;<i class="far fas fa-receipt"></i>&nbsp;&nbsp;<p>PR Entry / Inquiry</p></a>
                     {% endif %}
 
                     {% if request.path == '/prpo/pr-inbox/' %}

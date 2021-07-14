@@ -12,7 +12,7 @@
   <div class="content-wrapper">
 
             <div class="card-header">
-                <a href="/prpo/pr-entry/" class="btn btn-md btn-success text-light" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;&nbsp;<b>New PR</b>&nbsp;</a>
+                <a href="{% url 'new-pr' %}" class="btn btn-md btn-success text-light" id="id_add_pr_button"><i class="fas fa-plus fa-xs"></i>&nbsp;&nbsp;<b>New PR</b>&nbsp;</a>
             </div>
   
     <div class="content-header">
@@ -373,7 +373,7 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td class="text-nowrap">&nbsp;</td>
                     <!--<td>&nbsp;</td>-->
                     <!--<td>&nbsp;</td>-->
                     <td>&nbsp;</td>
@@ -485,10 +485,23 @@ function pr_entry(pr_id) {
 
 }
 
-
-
 function view_pr(pr_id) {
-  alert(pr_id);
+  alert("view : " + pr_id);
+  return false;
+
+  //window.location.href = '/prpo/pr-entry/';
+  //$("#id_selected_pr_id").val(pr_id);
+  //$("#pr_entry_form").submit();
+}
+
+function edit_pr(pr_id) {
+  //alert("edit : " + pr_id);
+  //return false;
+  window.location.href = '/prpo/edit-pr/' + pr_id + "/";
+}
+
+function delete_pr(pr_id) {
+  alert("delete : " + pr_id);
   return false;
 
   //window.location.href = '/prpo/pr-entry/';
@@ -594,20 +607,20 @@ $('#id_search_pr_form').on('submit', function(event){
               result += "<td><a href='#'>" + ponumber + "</a></td>";
               //result += "<td>" + json.pr_list[i]["prcpa"] + "</td>";            
               result += "<td>" + json.pr_list[i]["prreqdate"] + "</td>";                        
-              result += "<td>" + json.pr_list[i]["stname"] + " by " + json.pr_list[i]["nexthandler_name"] + "</td>";
+              result += "<td class='text-nowrap'>" + json.pr_list[i]["stname"] + " by " + json.pr_list[i]["nexthandler_name"] + "</td>";
               //result += "<td>" + json.pr_list[i]["pr_category_name"] + "</td>";
               //result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
               result += "<td>" + json.pr_list[i]["prtotalamt"] + "</td>";
               //result += "<td>" + json.pr_list[i]["prconsigner"] + "</td>";                            
               
-              result += "<td class='text-left' nowrap>";
+              result += "<td class='text-right' nowrap>";
               //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info btn-block">&nbsp;<i class="fas fa-pen fa-xs"></i>&nbsp;</button>';
               //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info"><i class="fas fa-eye"></i></button>';
               
               //result += '<button type="button" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info">View</button>';
-              result += '<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">view</a>';
-              result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">edit</a>';
-              result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">delete</a>';
+              result += '<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">view.</a>';
+              result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=edit_pr('" + pr_id + "')" + "; " + ' class="text-info">edit</a>';
+              result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=delete_pr('" + pr_id + "')" + "; " + ' class="text-info">delete</a>';
 
               result += "</td>";
 
@@ -694,20 +707,20 @@ $('#id_user_search_pr_form').on('submit', function(event){
               //result += "<td>" + json.pr_list[i]["prcpa"] + "</td>";
               result += "<td>&nbsp;</td>";
               result += "<td>" + json.pr_list[i]["prreqdate"] + "</td>";                        
-              result += "<td>" + json.pr_list[i]["stname"] + " by " + json.pr_list[i]["nexthandler_name"] + "</td>";
+              result += "<td class='text-nowrap'>" + json.pr_list[i]["stname"] + " by " + json.pr_list[i]["nexthandler_name"] + "</td>";
               //result += "<td>" + json.pr_list[i]["pr_category_name"] + "</td>";
               //result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
               result += "<td>" + json.pr_list[i]["prtotalamt"] + "</td>";
               //result += "<td>" + json.pr_list[i]["prconsigner"] + "</td>";                            
               
-              result += "<td class='text-left' nowrap>";
+              result += "<td class='text-right' nowrap>";
               //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info btn-block">&nbsp;<i class="fas fa-pen fa-xs"></i>&nbsp;</button>';
               //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info"><i class="fas fa-eye"></i></button>';
               
               //result += '<button type="button" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info">View</button>';
               result += '<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">view</a>';
-              result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">edit</a>';
-              result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">delete</a>';
+              result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=edit_pr('" + pr_id + "')" + "; " + ' class="text-info">edit</a>';
+              result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=delete_pr('" + pr_id + "')" + "; " + ' class="text-info">delete</a>';
 
               result += "</td>";
 
