@@ -996,6 +996,13 @@ def pr_entry(request, *args, **kwargs):
         {'item_type_id': 'Replacement', 'item_type_name': 'Replacement'},
     ]
 
+    item_type_attribute_list = [
+        {'item_type_attribute_id': '-', 'item_type_attribute_name': 'None'},
+        {'item_type_attribute_id': 'H', 'item_type_attribute_name': 'Hard Copy'},
+        {'item_type_attribute_id': 'S', 'item_type_attribute_name': 'Soft Copy'},
+        {'item_type_attribute_id': 'HS', 'item_type_attribute_name': 'Hard & Soft Copy'},
+    ]
+
     currency_list = [
         {'currency_id': '14', 'currency_name': 'USD'},
         {'currency_id': '15', 'currency_name': 'THB'},
@@ -1263,6 +1270,7 @@ def pr_entry(request, *args, **kwargs):
             'project_list': list(project_list),
             'division_list': list(division_list),
             'item_type_list': list(item_type_list),
+            'item_type_attribute_list': list(item_type_attribute_list),            
             'vendor_type_list': list(vendor_type_list),
             'attention_to_list': list(attention_to_list),
             'pr_detail_list': list(pr_detail_list),
@@ -1416,6 +1424,7 @@ def pr_entry(request, *args, **kwargs):
             'project_list': list(project_list),
             'division_list': list(division_list),
             'item_type_list': list(item_type_list),
+            'item_type_attribute_list': list(item_type_attribute_list),            
             'vendor_type_list': list(vendor_type_list),
             'attention_to_list': list(attention_to_list),
             'pr_detail_list': list(pr_detail_list),
@@ -1553,6 +1562,10 @@ def ajax_save_pr_entry(request):
                 sql += "prattentionto=" + str(attention_to) + ","
                 sql += "prAttStatus='" + str(item_type_attribute_option) + "',"
                 sql += "prvendortype=" + str(vendor_type) + ","
+                
+                sql += "prrecmdvendor='" + str(vendor_name) + "',"
+                sql += "prrecmdreason='" + str(vendor_reason) + "',"
+
                 sql += "prurgent=" + str(pr_urgent_status) + ","
                 sql += "prtotalitem=" + str(prtotalitem) + ","
                 sql += "prtotalamt=" + str(prtotalamt) + ","
@@ -1745,6 +1758,13 @@ def new_pr(request):
         {'item_type_id': 'Spare', 'item_type_name': 'Spare'},
         {'item_type_id': 'Replacement', 'item_type_name': 'Replacement'},
     ]
+    
+    item_type_attribute_list = [
+        {'item_type_attribute_id': '-', 'item_type_attribute_name': 'None'},
+        {'item_type_attribute_id': 'H', 'item_type_attribute_name': 'Hard Copy'},
+        {'item_type_attribute_id': 'S', 'item_type_attribute_name': 'Soft Copy'},
+        {'item_type_attribute_id': 'HS', 'item_type_attribute_name': 'Hard & Soft Copy'},
+    ]    
 
     currency_list = [
         {'currency_id': '14', 'currency_name': 'USD'},
@@ -1900,6 +1920,7 @@ def new_pr(request):
         'project_list': list(project_list),
         'division_list': list(division_list),
         'item_type_list': list(item_type_list),
+        'item_type_attribute_list': list(item_type_attribute_list),        
         'vendor_type_list': list(vendor_type_list),
         'attention_to_list': list(attention_to_list),        
         'user_list': list(user_list),
@@ -1919,7 +1940,6 @@ def new_pr(request):
         'prremarks': prremarks,
         'last_login': last_login,
     })
-
 
 
 @login_required(login_url='/accounts/login/')
@@ -1980,6 +2000,18 @@ def edit_pr(request, *args, **kwargs):
         {'item_type_id': 'Replacement', 'item_type_name': 'Replacement'},
     ]
 
+    item_type_attribute_list = [
+        {'item_type_attribute_id': '-', 'item_type_attribute_name': 'None'},
+        {'item_type_attribute_id': 'H', 'item_type_attribute_name': 'Hard Copy'},
+        {'item_type_attribute_id': 'S', 'item_type_attribute_name': 'Soft Copy'},
+        {'item_type_attribute_id': 'HS', 'item_type_attribute_name': 'Hard & Soft Copy'},
+    ]
+    
+    currency_list = [
+        {'currency_id': '14', 'currency_name': 'USD'},
+        {'currency_id': '15', 'currency_name': 'THB'},
+    ]
+    
                        
     # Get Company List
     sql = "select cpid,cpname,cpaddress from PRPO_Company;"
@@ -2142,6 +2174,9 @@ def edit_pr(request, *args, **kwargs):
                 prurgent = pr_obj[16]
                 prremarks = pr_obj[21]
 
+                prcurrency = pr_obj[6]
+                prattstatus = pr_obj[10]
+
             is_error = False
             message = "Able to get pr information."
 
@@ -2238,9 +2273,11 @@ def edit_pr(request, *args, **kwargs):
             'username': username,
             'username_display': username_display,                
             'company_list': list(company_list),
+            'currency_list': list(currency_list),            
             'project_list': list(project_list),
             'division_list': list(division_list),
             'item_type_list': list(item_type_list),
+            'item_type_attribute_list': list(item_type_attribute_list),            
             'vendor_type_list': list(vendor_type_list),
             'attention_to_list': list(attention_to_list),
             'pr_detail_list': list(pr_detail_list),
@@ -2261,6 +2298,8 @@ def edit_pr(request, *args, **kwargs):
             'prremarks': prremarks,
             'last_login': last_login,
             'selected_vendor_type_option': selected_vendor_type_option,
+            'prcurrency': prcurrency,
+            'prattstatus': prattstatus,
         })
 
     else:
@@ -2294,6 +2333,9 @@ def edit_pr(request, *args, **kwargs):
                 prurgent = pr_obj[16]
                 prremarks = pr_obj[21]
 
+                prcurrency = pr_obj[6]
+                prattstatus = pr_obj[10]
+
             is_error = False
             message = "Able to get pr information."
 
@@ -2390,9 +2432,11 @@ def edit_pr(request, *args, **kwargs):
             'username': username,
             'username_display': username_display,                
             'company_list': list(company_list),
+            'currency_list': list(currency_list),            
             'project_list': list(project_list),
             'division_list': list(division_list),
             'item_type_list': list(item_type_list),
+            'item_type_attribute_list': list(item_type_attribute_list),            
             'vendor_type_list': list(vendor_type_list),
             'attention_to_list': list(attention_to_list),
             'pr_detail_list': list(pr_detail_list),
@@ -2412,6 +2456,8 @@ def edit_pr(request, *args, **kwargs):
             'prdeliveryto': prdeliveryto,
             'prremarks': prremarks,
             'last_login': last_login,
-            # 'selected_vendor_type_option': selected_vendor_type_option,
+            'prcurrency': prcurrency,
+            'prattstatus': prattstatus,
         })
+
 

@@ -78,9 +78,9 @@
 
                     <!-- Division -->
                     <div class="input-group-prepend col-6 bg-secondary p-0"><span class="input-group-text border-bottom-1 rounded-0" style="width:100%;"><b>Division</b></span></div>
-                    <select id="id_division_options" name="division_options" class="form-control form-control-md" style="border-radius: 0; width: 50%;"">
+                    <select id="id_division_options" name="division_options" class="form-control form-control-md" style="border-radius: 0; width: 50%;">
                         {% for item in division_list %}
-                            {%if item.ctid|stringformat:'s' == prcategory|stringformat:'s' %}
+                            {%if item.ctid == prcategory %}
                             <option value="{{item.ctid}}" selected>{{ item.ctname }}</option>
                             {% else %}
                             <option value="{{item.ctid}}">{{ item.ctname }}</option>
@@ -105,11 +105,16 @@
                         {% endfor %}                        
                     </select>                 
 
+
                     <!-- Currency -->
                     <div class="input-group-prepend col-6 p-0 bg-secondary"><span class="input-group-text border-1 rounded-0" style="width:100%;"><b>Currency</b></span></div>
                     <select id="id_currency_options" name="currency_options" class="form-control form-control-md" style="border-radius: 0;">
                         {% for item in currency_list %}
+                        {% if item.currency_id|stringformat:'s' == prcurrency|stringformat:'s' %}
+                          <option value="{{item.currency_id}}" selected>{{item.currency_name}}</option>
+                          {% else %}
                           <option value="{{item.currency_id}}">{{item.currency_name}}</option>  
+                          {% endif %}
                         {% endfor %}
                     </select>                                      
                   </div>
@@ -121,11 +126,13 @@
 
                     <div class="float-left text-left pt-2">
                         &nbsp;&nbsp;&nbsp;
+
+
+                        {% comment %}
                         {% for item in vendor_type_list %}
 
                           {% if forloop.first %}
-                          <div class="form-check form-check-inline pl-10">
-                              
+                          <div class="form-check form-check-inline pl-10">                              
                               <label class="form-check-label">
                                 <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}" checked>
                                 {{item.vendor_type_name}}
@@ -151,6 +158,26 @@
 
                           {% endif %}
 
+                        {% endfor %}
+                        {% endcomment %}
+
+
+                        {% for item in vendor_type_list %}
+                          {% if item.vendor_type_id|stringformat:'s' == prvendortype|stringformat:'s' %}
+                          <div class="form-check form-check-inline pl-10">                              
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}" checked>
+                                {{item.vendor_type_name}}
+                              </label>
+                          </div>
+                          {% else %}
+                          <div class="form-check form-check-inline pl-10">                              
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}">
+                                {{item.vendor_type_name}}
+                              </label>
+                          </div>
+                          {% endif %}
                         {% endfor %}
 
                     </div>                    
@@ -188,10 +215,13 @@
                     </select>
 
                     <select id="id_item_type_attribute_options" name="item_type_attribute_options" class="form-control form-control-md" style="border-radius: 0; width: 25%;">
-                      <option value="-">None</option>
-                      <option value="H">Hard Copy</option>
-                      <option value="S">Soft Copy</option>
-                      <option value="HS">Hard & Soft Copy</option>
+                      {% for item in item_type_attribute_list %}
+                        {% if item.item_type_attribute_id|stringformat:'s' == prattstatus|stringformat:'s' %}
+                          <option value="{{item.item_type_attribute_id}}" selected>{{item.item_type_attribute_name}}</option>
+                        {% else %}
+                          <option value="{{item.item_type_attribute_id}}">{{item.item_type_attribute_name}}</option>
+                        {% endif %}
+                      {% endfor %}
                     </select>
                   </div>                  
 
