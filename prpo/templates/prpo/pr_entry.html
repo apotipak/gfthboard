@@ -127,41 +127,6 @@
                     <div class="float-left text-left pt-2">
                         &nbsp;&nbsp;&nbsp;
 
-
-                        {% comment %}
-                        {% for item in vendor_type_list %}
-
-                          {% if forloop.first %}
-                          <div class="form-check form-check-inline pl-10">                              
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}" checked>
-                                {{item.vendor_type_name}}
-                              </label>
-                          </div>
-                          {% else %}
-
-                            {% if selected_vendor_type_option is not None %}
-                            <div class="form-check form-check-inline pl-10">                                
-                                <label class="form-check-label">
-                                  <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}" checked>
-                                  {{item.vendor_type_name}}
-                                </label>
-                            </div>
-                            {% else %}
-                            <div class="form-check form-check-inline pl-10">                                
-                                <label class="form-check-label">
-                                  <input class="form-check-input" type="radio" name="vendor_type_options" value="{{item.vendor_type_id}}">
-                                  {{item.vendor_type_name}}
-                                </label>
-                            </div>
-                            {% endif %}
-
-                          {% endif %}
-
-                        {% endfor %}
-                        {% endcomment %}
-
-
                         {% for item in vendor_type_list %}
                           {% if item.vendor_type_id|stringformat:'s' == prvendortype|stringformat:'s' %}
                           <div class="form-check form-check-inline pl-10">                              
@@ -412,6 +377,8 @@
 $(document).ready( function () {
 
   var company_list = {{ company_list|safe }};
+  var id_vendor_name_temp = $("#id_vendor_name").val();
+  var id_reason_temp = $("#id_reason").val();
 
   for(var i=0; i<company_list.length; i++) {
     company_address = company_list[i].cpaddress;
@@ -436,13 +403,19 @@ $(document).ready( function () {
 
 
   $('input[type=radio][name="vendor_type_options"]').change(function() {
-    //alert($(this).val());
-    
+    //alert($(this).val());    
     var selected_vendor_type_option = $(this).val();
+
     if(selected_vendor_type_option=="1") {
+      $("#id_vendor_name").val("");
+      $("#id_reason").val("");
+
       $("#id_vendor_name").attr("readonly", true);
-      $("#id_reason").attr("readonly", true);
+      $("#id_reason").attr("readonly", true);      
     } else {
+      $("#id_vendor_name").val(id_vendor_name_temp);
+      $("#id_reason").val(id_reason_temp);
+
       $("#id_vendor_name").prop("readonly", false);
       $("#id_reason").prop("readonly", false);
 
@@ -525,6 +498,15 @@ function save_item() {
 
 function delete_company(company_id) {
   alert("todo: delete company_id " + company_id);
+}
+
+
+if($('input[name=vendor_type_options]:checked').val()=="1") {
+  $("#id_vendor_name").attr("readonly", true);
+  $("#id_reason").attr("readonly", true);
+} else {
+  $("#id_vendor_name").prop("readonly", false);
+  $("#id_reason").prop("readonly", false);
 }
 
 </script>
