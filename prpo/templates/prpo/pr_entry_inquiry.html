@@ -610,7 +610,7 @@ $('#id_search_pr_form').on('submit', function(event){
               result += "<td class='text-nowrap'>" + json.pr_list[i]["stname"] + " by " + json.pr_list[i]["nexthandler_name"] + "</td>";
               //result += "<td>" + json.pr_list[i]["pr_category_name"] + "</td>";
               //result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
-              result += "<td>" + json.pr_list[i]["prtotalamt"] + "</td>";
+              result += "<td class='text-right'>" + json.pr_list[i]["prtotalamt"] + "</td>";
               //result += "<td>" + json.pr_list[i]["prconsigner"] + "</td>";                            
               
               result += "<td class='text-right' nowrap>";
@@ -618,7 +618,7 @@ $('#id_search_pr_form').on('submit', function(event){
               //result += '<button type="submit" ' + "onclick=pr_entry('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info"><i class="fas fa-eye"></i></button>';
               
               //result += '<button type="button" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="btn btn-outline-secondary btn-xs text-info">View</button>';
-              result += '<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">view.</a>';
+              result += '<a href="javascript:void(0)" ' + "onclick=view_pr('" + pr_id + "')" + "; " + ' class="text-info">view</a>';
               result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=edit_pr('" + pr_id + "')" + "; " + ' class="text-info">edit</a>';
               result += '&nbsp;|&nbsp;<a href="javascript:void(0)" ' + "onclick=delete_pr('" + pr_id + "')" + "; " + ' class="text-info">delete</a>';
 
@@ -710,7 +710,7 @@ $('#id_user_search_pr_form').on('submit', function(event){
               result += "<td class='text-nowrap'>" + json.pr_list[i]["stname"] + " by " + json.pr_list[i]["nexthandler_name"] + "</td>";
               //result += "<td>" + json.pr_list[i]["pr_category_name"] + "</td>";
               //result += "<td>" + json.pr_list[i]["ercurrency"] + "</td>";
-              result += "<td>" + json.pr_list[i]["prtotalamt"] + "</td>";
+              result += "<td class='text-right'>" + json.pr_list[i]["prtotalamt"] + "</td>";
               //result += "<td>" + json.pr_list[i]["prconsigner"] + "</td>";                            
               
               result += "<td class='text-right' nowrap>";
